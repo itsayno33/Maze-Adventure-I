@@ -69,18 +69,16 @@ npm run clean
 
 # 以下、package.jsonを作成後に行う
 
-npm install typescript --save-dev
+npm install typescript ts-loader webpack webpack-cli webpack-dev-server --save-dev
 npm install @types/node --save-dev
 npm install ts-node -D
 npm install ts-node-dev -D
-npm install rimraf npm-run-all -D
-npm install webpack webpack-cli --save-dev
+# npm install rimraf npm-run-all -D
 npm install dotenv --save
 npm install mysql2 --save
 npm install @types/mysql --save-dev
 npm install axios
 npm install @types/axios --save-dev
-
 
 # Webpackの設定
 # touch webpack.config.js
@@ -198,8 +196,14 @@ typings/
 /html
 <<<
 
+git config --global user.email "itsayno33@gmail.com"
+git config --global user.name "itsayno33"
 
 git status
 git add .
 git commit -m "First commit"
+
+
+とほほのTypescript入門
+https://www.tohoho-web.com/ex/typescript.html
 

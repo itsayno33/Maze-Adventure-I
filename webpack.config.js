@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
 	mode: 'development',
-	entry: './index.ts', //ファイルをまとめる際のエントリーポイント
+	entry: './src/index.ts', //ファイルをまとめる際のエントリーポイント
 	devtool: 'inline-source-map',
 	output: {
 		filename: 'bundle.js', //まとめた結果出力されるファイル名
