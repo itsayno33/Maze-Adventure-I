@@ -3,6 +3,7 @@
 ///
 
 import {T_attr, C_url_opt} from "./C_url_opt";
+import {T_MzKind, C_MzKind} from "./C_MzKind";
 
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
