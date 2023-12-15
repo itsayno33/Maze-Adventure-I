@@ -4,9 +4,6 @@
   "description": "Maze Adventure Ist",
   "main": "dist/src/index.js",
   "scripts": {
-    "dev": "ts-node src/index.ts",
-    "dev:watch": "ts-node-dev --respawn src/index.ts",
-    "clean": "rimraf dist/src/*",
     "tsc": "tsc",
     "build": "webpack --mode=development",
     "start": "webpack serve --mode=development"
