@@ -2,8 +2,8 @@
 ///   主処理
 ///
 
-import {T_Attr, C_UrlOpt} from "./C_UrlOpt";
-import {T_MzKind, C_MzKind} from "./C_MzKind";
+import {C_UrlOpt} from "./C_UrlOpt";
+import {T_MzKind} from "./T_MzKind";
 
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
