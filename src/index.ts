@@ -76,20 +76,23 @@ class PostOpt {
     }
 }
 
-////////////////////////////////////////////////////////////
 ///
 ///   主処理
 ///
-////////////////////////////////////////////////////////////
 
 const g_url: string  = "http://127.0.0.1/dev/mai/mai_maze.php";
 // const g_opt_assoc: TAttr  = {mode: "new", date: "20231213"} as TAttr;
 // const g_opt: string  = (new PostOpt(g_opt_assoc)).to_string();
 const g_opt: string  = "mode=new&date=20231213";
 
+window.addEventListener('DOMContentLoaded', function() {
+    do_onload();
+});
+
+
 
 function do_onload(): void {
-    getJSON_by_mai('POST', g_url, g_opt, 
+    getJSON_by_mai(g_url, g_opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
             alert("maze id :" + jsonObj.maze_id
@@ -100,18 +103,21 @@ function do_onload(): void {
     });
 }
 
-function getJSON_by_mai(method: string, url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
+function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
          
         const xhr = new XMLHttpRequest();
     
         // リクエスト
-        xhr.open(method, url);
+        xhr.open('POST', url);
+
+        // POSTかつ、send()の引数が「key=value&...」形式であることを指定
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
         // リクエスト状態が変わるとイベント発生
         xhr.onreadystatechange = function () {
             // readyState XMLHttpRequest の状態 4: リクエストが終了して準備が完了
             // status httpステータス 200: 正常終了
-            if (xhr.readyState == 4) {
+            if (xhr.readyState == XMLHttpRequest.DONE) {
                 if (xhr.status == 200) {
                     // jsonをオブジェクトに変更
                     callback(xhr);

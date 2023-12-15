@@ -187,3 +187,20 @@ Object.entries(data).map(([key, value]) => ({[key], value}));
 とかは？
 
 
+JavaScriptのモジュールを理解する
+https://qiita.com/kandalog/items/d8de000101f438e66077
+
+
+【JavaScript入門】onloadイベントの使い方とハマりやすい注意点とは
+https://www.sejuku.net/blog/19754
+
+DOMの読み込み待ちとか
+imgの読み込み待ちとかとか
+
+
+XMLHttpRequestのsend関数の仕様
+https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/send
+
+
+
+

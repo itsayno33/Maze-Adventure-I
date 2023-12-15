@@ -6,7 +6,6 @@ module.exports = {
 	devtool: 'inline-source-map',
 	output: {
 		filename: 'bundle.js', //まとめた結果出力されるファイル名
-//		filename: 'index.js', //まとめた結果出力されるファイル名
 //		path: path.resolve(__dirname, 'dist')
 		path: 'T:/Apache24Root/mai/js'
 },
