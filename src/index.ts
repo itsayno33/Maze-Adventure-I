@@ -1,41 +1,54 @@
-type TAttr = {[key: string]: string};
-class PostOpt {
-    protected v: TAttr;
-    public constructor(s:  string);
-    public constructor(t:  TAttr);
+type T_attr = {[key: string]: string|number};
+class C_url_opt {
+    protected v: T_attr;
+    public constructor(s?:  string);
+    public constructor(t?:  T_attr);
     public constructor(a?: any) {
-        if (a == null) {
-            this.v = {} as TAttr;
+        if (typeof a === "undefined") {
+            this.v = {} as T_attr;
             return;
         }
         if (typeof a === "string") {
             this.set_from_string(a);
         }
-        if (typeof a === "object" && a.constructor.name === "TAttr") {
-            this.v = a as TAttr;
+        if (typeof a === "object") {
+            this.v = a as T_attr;
             return;
         }
-        this.v = {} as TAttr;
+        this.v = {} as T_attr;
         return;
     }
     public get (key: string): string {
-        return this.v[key];
+        if (key in this.v) {
+            if  (typeof this.v[key] === "number") {
+                return this.v[key].toString();
+            }
+            return this.v[key] as string;
+        } else {
+            return "";
+        }
     }
-    public set(key: string, val: string): void;
-    public set(str: string): void;
-    public set(atr: TAttr):  void;
-    public set(ukn: any, val?: string) {
+    public set(str: string):  void;
+    public set(atr: T_attr):  void;
+    public set(key: string, val?: string): void;
+    public set(key: string, val?: number): void;
+    public set(ukn: any,    val?: string|number): void {
         if (typeof ukn === "string") {
-            if (val == null) {
+            if (typeof val === "undefined") {
                 this.add_from_string(ukn);
                 return;
-            } else {
+            } else if (typeof val === "string") {
                 this.v[ukn] = val;
                 return;
+            } else if (typeof val === "number" ){
+                this.v[ukn] = val.toString();
+                return;
+            } else {
+                this.v[ukn] = "";
             }
         }
-        if (typeof ukn === "object" && ukn.constructor.name === "TAttr") {
-            const attr: TAttr = ukn as TAttr;
+        if (typeof ukn === "object") {
+                const attr: T_attr = ukn as T_attr;
             for (const item in attr) {
                 this.v[item] = attr[item];
             }
@@ -43,11 +56,16 @@ class PostOpt {
         }
         return;
     }
+    public remove(key: string): void {
+        if (key in this.v) {
+            delete this.v[key];
+        }
+    }
     public clear(): void {
-        this.v = {} as TAttr;
+        this.v = {} as T_attr;
     }
     public to_string(): string {
-        const len: number =  this.v.keys.length;
+        const len: number =  Object.keys(this.v).length;
         if (len < 1)  return "";
 
         var str_array: string[] = [];
@@ -56,7 +74,6 @@ class PostOpt {
         }
 
         return str_array.join("&");
-
     }
     protected set_from_string(s: string): void {
         this.clear();
@@ -80,19 +97,16 @@ class PostOpt {
 ///   主処理
 ///
 
-const g_url: string  = "http://127.0.0.1/dev/mai/mai_maze.php";
-// const g_opt_assoc: TAttr  = {mode: "new", date: "20231213"} as TAttr;
-// const g_opt: string  = (new PostOpt(g_opt_assoc)).to_string();
-const g_opt: string  = "mode=new&date=20231213";
-
-window.addEventListener('DOMContentLoaded', function() {
-    do_onload();
+window.addEventListener('DOMContentLoaded', function() { 
+    const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
+    const get_maze_opt: string = new C_url_opt({mode: "new", num: 333}).to_string();
+    get_maze(get_maze_url, get_maze_opt);
 });
 
 
 
-function do_onload(): void {
-    getJSON_by_mai(g_url, g_opt, 
+function get_maze(url: string, opt: string): void {
+    getJSON_by_mai(url, opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
             alert("maze id :" + jsonObj.maze_id

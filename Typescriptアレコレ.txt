@@ -204,3 +204,11 @@ https://developer.mozilla.org/ja/docs/Web/API/XMLHttpRequest/send
 
 
 
+//正規表現でカンマ区切りにする
+var num = 1234567;
+var result = String(num).replace(/(d)(?=(d{3})+(?!d))/g, "$1,");
+
+
+
+
+
