@@ -1,22 +1,22 @@
-export type T_attr = {[key: string]: string|number};
+export type T_Attr = {[key: string]: string|number};
 
-export class C_url_opt {
-    protected v: T_attr;
+export class C_UrlOpt {
+    protected v: T_Attr;
     public constructor(s?:  string);
-    public constructor(t?:  T_attr);
+    public constructor(t?:  T_Attr);
     public constructor(a?: any) {
         if (typeof a === "undefined") {
-            this.v = {} as T_attr;
+            this.v = {} as T_Attr;
             return;
         }
         if (typeof a === "string") {
             this.set_from_string(a);
         }
         if (typeof a === "object") {
-            this.v = a as T_attr;
+            this.v = a as T_Attr;
             return;
         }
-        this.v = {} as T_attr;
+        this.v = {} as T_Attr;
         return;
     }
     public get (key: string): string {
@@ -30,7 +30,7 @@ export class C_url_opt {
         }
     }
     public set(str: string):  void;
-    public set(atr: T_attr):  void;
+    public set(atr: T_Attr):  void;
     public set(key: string, val?: string): void;
     public set(key: string, val?: number): void;
     public set(ukn: any,    val?: string|number): void {
@@ -49,7 +49,7 @@ export class C_url_opt {
             }
         }
         if (typeof ukn === "object") {
-                const attr: T_attr = ukn as T_attr;
+                const attr: T_Attr = ukn as T_Attr;
             for (const item in attr) {
                 this.v[item] = attr[item];
             }
@@ -63,7 +63,7 @@ export class C_url_opt {
         }
     }
     public clear(): void {
-        this.v = {} as T_attr;
+        this.v = {} as T_Attr;
     }
     public to_string(): string {
         const len: number =  Object.keys(this.v).length;

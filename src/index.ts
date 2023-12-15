@@ -2,12 +2,12 @@
 ///   主処理
 ///
 
-import {T_attr, C_url_opt} from "./C_url_opt";
+import {T_Attr, C_UrlOpt} from "./C_UrlOpt";
 import {T_MzKind, C_MzKind} from "./C_MzKind";
 
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
-    const get_maze_opt: string = new C_url_opt({mode: "new", num: 333}).to_string();
+    const get_maze_opt: string = new C_UrlOpt({mode: "new", num: 333}).to_string();
     get_maze(get_maze_url, get_maze_opt);
 });
 
