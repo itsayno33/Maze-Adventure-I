@@ -7,8 +7,9 @@ module.exports = {
 	output: {
 		filename: 'bundle.js', //まとめた結果出力されるファイル名
 //		filename: 'index.js', //まとめた結果出力されるファイル名
-		path: path.resolve(__dirname, 'dist')
-	},
+//		path: path.resolve(__dirname, 'dist')
+		path: 'T:/Apache24Root/mai/js'
+},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'] //拡張子がtsだったらTypescirptでコンパイルする
 	},

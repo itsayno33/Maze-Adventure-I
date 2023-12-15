@@ -1,0 +1,189 @@
+とほほのTypescript入門
+https://www.tohoho-web.com/ex/typescript.html
+
+
+TypeScriptで連想配列を定義する
+// 連想配列
+let list1: { str: string; flag: boolean } = {
+    str: 'string',
+    flag: true
+};
+
+// 配列内連想配列
+let list2: { key: string; index: boolean }[] = [
+    {
+      key: 'string',
+      index: true
+    },
+    {
+      key: 'hogehoge',
+      index: false
+    }
+];
+
+// interface
+interface list3 {
+    id: number,
+    season: 'spring' | 'summer' | 'autumn' | 'winter'
+}
+
+let obj: list3 = {
+    id: 1,
+    season: 'spring'
+};
+
+
+オブジェクト(Object)の値(value)からキー(key)を検索して取得する方法は、３つあります。
+
+find()
+
+type Numbers = {
+    [key: string]: number
+}
+
+const nums: Numbers = { 
+    "one": 1, 
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+}
+
+//3のキーを検索して取得
+let result = Object.keys(nums).find(key => nums[key] === 3);
+
+console.log(result);
+
+
+filter()
+
+type Numbers = {
+    [key: string]: number
+}
+
+const nums: Numbers = { 
+    "one": 1, 
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+}
+
+//3のキーを検索して取得
+let result = Object.keys(nums).filter(key => nums[key] === 3);
+console.log(result);
+
+
+ループ
+
+//obj=対象のオブジェクト, value=検索対象の値
+let result = '';
+for (const key in obj) {
+    if (obj[key] === value) { //検索対象の値を検索
+        result = key; //値からキーを取得
+    }
+}
+
+
+
+
+文字列の配列化
+//forEach()を使う場合
+Object.keys(obj).forEach(function(key){
+    if (obj[key] === value) {
+        result = key;
+    }
+});
+
+
+//[...文字列]という形がスプレット演算子です。
+const str = "konnitiwa";
+const array = [...str];
+console.log(array);
+
+// split()でも変換できます。
+const array2 = str.split("");
+console.log(array2);
+
+
+
+区切り文字
+１つ目は、区切り文字で分割する方法です。
+
+//text=対象の文字列, sep=区切り文字
+const result = text.split(sep);
+
+
+文字数
+２つ目は、文字数で分割する方法です。
+
+//text=対象の文字列, n=文字数
+const result = text.match(/.{1,n}/g);
+
+正規表現
+３つ目は、正規表現で分割する方法です。
+
+const result = text.split(/正規表現/オプション);
+使用例
+
+const text = "A0BC1DEF2GH3IJK";
+const result = text.split(/[0-9]/);
+console.log(result);
+
+出力：
+[ 'A', 'BC', 'DEF', 'GH', 'IJK' ]
+
+
+
+配列(array)の要素同士を結合して文字列に変換するには？
+
+//array=対象の配列, sep=区切り文字
+const result = array.join(sep)
+
+
+
+
+
+
+配列に値を追加する(先頭・末尾・位置指定)
+
+先頭に追加する方法
+配列オブジェクト.unshift(追加する値);
+
+末尾に追加する方法
+配列オブジェクト.push(追加する値);
+
+位置を指定して追加する方法
+配列オブジェクト.splice(追加する位置, 0, 追加する値);
+
+
+オブジェクト型を配列にする
+type Data = {
+    a: string,
+    b: string,
+};
+const data: Data = {
+    a: 'A',
+    b: 'B',
+};
+
+Object.entries(data).map(([key, value]) => ({key, value}));
+
+console.log(Object.entries(data)); // [["a", "A"], ["b", "B"]] 
+// mapメソッドは配列の全要素を呼び出して新たな配列を作る
+// ([key, value])で、data[0]の場合は"a"をkey、"A"をvalueとして呼び出し
+// ({key, value})で、{'key': key, 'value': value}として配列に格納する
+console.log(Object.entries(data).map(([key, value]) => ({key, value})));
+// [{
+//  "key": "a",
+//  "value": "A"
+// }, {
+//  "key": "b",
+//  "value": "B"
+// }] 
+
+
+Object.entries(data).map(([key, value]) => ({[key], value}));
+とかは？
+
+
