@@ -6,6 +6,8 @@ import { C_Maze } from "./C_Maze";
 import {C_UrlOpt} from "./C_UrlOpt";
 import {T_MzKind} from "./T_MzKind";
 
+const g_maze = new C_Maze({maze_id: -1});
+
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
     const get_maze_opt: string = new C_UrlOpt({mode: "new", num: 333}).to_string();
@@ -25,15 +27,15 @@ function get_maze(url: string, opt: string): void {
             + "\nsize_y: " + jsonObj.size_y
             + "\nmaze: "   + jsonObj.maze);
 
-            const maze = new C_Maze(
-                jsonObj.maze_id,
-                jsonObj.size_x,
-                jsonObj.size_y,
-                1
-            );
-            maze.decode(jsonObj.maze);
+            g_maze.init({
+                maze_id: jsonObj.maze_id,
+                size_x:  jsonObj.size_x,
+                size_y:  jsonObj.size_y,
+                size_z:  1
+            });
+            g_maze.decode(jsonObj.maze);
 
-            alert(maze.to_string());
+            alert(g_maze.to_string());
     });
 }
 

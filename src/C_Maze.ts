@@ -91,16 +91,32 @@ export class C_Maze {
     protected cells :  C_MazeCell[][][];
 
     public constructor(
-        maze_id: number,
-        size_x:  number,
-        size_y:  number,
-        size_z:  number,
+        {maze_id = -1, size_x = 1, size_y = 1, size_z = 1}: {
+            maze_id?: number,
+            size_x?:  number,
+            size_y?:  number,
+            size_z?:  number,
+        }
     ) {
         this.maze_id = maze_id;
-        this.size_x = size_x;
-        this.size_y = size_y;
-        this.size_z = size_z;
-        this.cells  = this.__init_maze(T_MzKind.Stone);
+        this.size_x  = size_x;
+        this.size_y  = size_y;
+        this.size_z  = size_z;
+        this.cells   = this.__init_maze(T_MzKind.Stone);
+    }
+    public init(
+        {maze_id = -1, size_x, size_y, size_z}: {
+            maze_id: number,
+            size_x:  number,
+            size_y:  number,
+            size_z:  number,
+        }
+    ) {
+        this.maze_id = maze_id;
+        this.size_x  = size_x;
+        this.size_y  = size_y;
+        this.size_z  = size_z;
+        this.cells   = this.__init_maze(T_MzKind.Stone);
     }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
         const cells: C_MazeCell[][][] = Array(this.size_z) as C_MazeCell[][][];
@@ -115,6 +131,7 @@ export class C_Maze {
         }
         return cells;
     }
+
     public get_x_max(): number {return this.size_x;}
     public get_y_max(): number {return this.size_y;}
     public get_z_max(): number {return this.size_z;}
