@@ -7,6 +7,8 @@
     // Floor: 床
     // Unexp: 未踏地
     // Stone: 石壁
+    // StrUp: 上り階段
+    // StrDn: 下り階段
     // Empty: 初期状態・何もなし
     // 
     // function to_int(MzKind):      int        列挙型に対応する値(整数値)を返す
@@ -20,6 +22,8 @@
         Unexp:   2,
         Stone:   3,
         Unkwn:   4,
+        StrUp:   5,
+        StrDn:   6,
         Empty: 255,
     } as const;
     export type T_MzKind   = T_MakeEnumType<typeof T_MzKind>;
@@ -30,6 +34,8 @@
         2:   T_MzKind.Unexp,
         3:   T_MzKind.Stone,
         4:   T_MzKind.Unkwn,
+        5:   T_MzKind.StrUp,
+        6:   T_MzKind.StrDn,
         255: T_MzKind.Empty,
     } as const;
     export type T_RvMzKind = T_MakeEnumType<typeof T_RvMzKind>;

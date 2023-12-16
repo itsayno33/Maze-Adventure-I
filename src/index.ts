@@ -2,6 +2,7 @@
 ///   主処理
 ///
 
+import { C_Maze } from "./C_Maze";
 import {C_UrlOpt} from "./C_UrlOpt";
 import {T_MzKind} from "./T_MzKind";
 
@@ -17,11 +18,22 @@ function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
+
             alert("maze id :" + jsonObj.maze_id
             + "\nfloor: "  + jsonObj.floor
             + "\nsize_x: " + jsonObj.size_x
             + "\nsize_y: " + jsonObj.size_y
             + "\nmaze: "   + jsonObj.maze);
+
+            const maze = new C_Maze(
+                jsonObj.maze_id,
+                jsonObj.size_x,
+                jsonObj.size_y,
+                1
+            );
+            maze.decode(jsonObj.maze);
+
+            alert(maze.to_string());
     });
 }
 
