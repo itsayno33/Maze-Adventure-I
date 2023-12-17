@@ -107,7 +107,7 @@ export class C_Maze {
         this.maze_id = maze_id;
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z));
+            new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.objs    = [] as I_Exist[];
     }
@@ -122,7 +122,7 @@ export class C_Maze {
         this.maze_id = maze_id;
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z));
+            new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.objs    = [] as I_Exist[];
     }
@@ -176,6 +176,7 @@ export class C_Maze {
     }
     public get_cell (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].get();
+        alert ('Why??');
         return T_MzKind.NoDef;
     }
     public set_cell (p: C_Point, k: T_MzKind): void {

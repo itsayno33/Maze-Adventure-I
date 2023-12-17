@@ -254,3 +254,102 @@ HTMLParagraphElement
 この他にも様々な型があります。それだけ、多くの型があるということになります。
 
 
+
+JavaScriptのボタン作成とクリックイベント処理
+https://dev-k.hatenablog.com/entry/js-button-creation-and-click-event-processing-dev-k
+
+// ボタン要素を作成
+let btn = document.createElement("button");
+
+// ボタンのテキストを設定
+btn.innerHTML = "Click Me";
+
+// ボタンを追加する場所を選択
+let target = document.getElementById("target");
+
+// ボタンを追加
+target.appendChild(btn);
+
+
+ボタン オブジェクトのプロパティは下記となります。
+
+Property	概要
+autofocus	ページロード時に
+ボタンに自動的にフォーカスが当たるようにするかどうかを設定または返します
+disabled	ボタンが無効であるかどうかの設定または返します。
+form	ボタンを含むフォームへの参照を返します。
+formAction	ボタンのformaction属性の値を設定または返します。
+formEnctype	ボタンの formenctype 属性の値を設定または返します。
+formMethod	ボタンのformmethod属性の値を設定または返します。
+formNoValidate	送信時にフォームデータの検証を行うか否かを設定または返します。
+formTarget	ボタンのformtarget属性の値を設定または返します。
+name	ボタンのname属性の値を設定または返します。
+type	ボタンの種類を設定または返します。
+value	ボタンのvalue属性の値を設定または返します。
+
+
+// ボタンオブジェクトの作成
+let btn = document.createElement("button");
+
+// ボタンのテキストを設定
+btn.innerHTML = "送信";
+
+// ボタンのタイプを設定
+btn.type = "submit";
+
+// ボタンのname属性を設定
+btn.name = "submitBtn";
+
+// ボタンをドキュメントに追加
+document.body.appendChild(btn);
+
+
+// 新しいボタン要素を作成
+let btn = document.createElement("button");
+
+// ボタンのテキストを設定
+btn.innerHTML = "Click me";
+
+// ボタンにクリックイベントのリスナーを追加
+btn.addEventListener("click",
+function () {
+    alert("最初のクリック動作");
+  },
+  false
+);
+
+btn.addEventListener("click",
+  function () {
+ alert("addEventListenerで2回目のクリック動作を行う。");
+  },
+  false
+);
+
+// ボタンをbody要素に追加
+document.body.appendChild(btn);
+
+
+function clickHandler() {
+  alert("Clicked!");
+  removeClickEvent();
+}
+
+クリックイベントハンドラを定義し、削除する方法を示しています。
+const btn = document.createElement("button");
+document.body.appendChild(btn);
+btn.innerHTML = "Click me";
+btn.addEventListener("click", clickHandler);
+
+function removeClickEvent() {
+  setTimeout(() => {
+    const buttonClicked = clickHandler;
+    btn.removeEventListener("click", buttonClicked);
+    alert("イベントリスナーが削除されました");
+  }, 2000);
+}
+
+
+
+
+
+

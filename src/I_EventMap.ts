@@ -1,26 +1,27 @@
 import { C_Point } from "./C_Point";
 
-export type T_ActionResult = {
-    isOK:    boolean,
-    code?:   number,    // Ordinary, NormalEnd = 0
-    kind?:   string,    // move,atack等
-    option?: {type: string, value: string}, // type: 型名・クラス名　value:JSON string 
+export interface I_HasHope {
+    has_hope: boolean,    // 希望行動の有無
+}
+export interface I_HopeAction extends I_HasHope {
+    hope:    string,     // 行動の種類
+    subj:    C_Point,    // 対象の指定(位置)
+    isOK:    ()=>void,   // 許可時の行動(関数)
+    isNG:    ()=>void,   // 不許可時の行動(関数)
 }
 export interface I_Action {
     // 行動関係
-    where(): T_ActionResult; // optionで現在地を返す。(C_PointかC_Range?)
-    hope():  T_ActionResult; // 希望行動の申請（移動希望、バトル希望。。。）
-    isOK():  T_ActionResult; // 希望行動許可後の処理
-    isNG():  T_ActionResult  // 希望行動不許可後の処理
+    where(): C_Point;   // optionで現在地を返す。
+    hope():  I_HasHope; // 希望行動の申請（移動希望、バトル希望。。。）
 }
 export interface I_Battle {
-    atack():   T_ActionResult; //攻撃値　与えたダメージの種類と大きさ、付帯効果(状態異常とか)
-    defense(): T_ActionResult; //防御値　防いだダメージの種類と大きさ、付帯効果(状態異常解除とか)
-    quick():   T_ActionResult; //回避率 (0から100)
-    add_damage(kind: string, damege: number): T_ActionResult; // 被ダメージの追加(回復も)
-    add_status(kind: string, damege: number): T_ActionResult; // 状態異常の追加(解除も)
-    is_alive():  T_ActionResult;
-    drop_item(): T_ActionResult;
+    atack():   void; //攻撃値　与えたダメージの種類と大きさ、付帯効果(状態異常とか)
+    defense(): void; //防御値　防いだダメージの種類と大きさ、付帯効果(状態異常解除とか)
+    quick():   void; //回避率 (0から100)
+    add_damage(kind: string, damege: number): void; // 被ダメージの追加(回復も)
+    add_status(kind: string, damege: number): void; // 状態異常の追加(解除も)
+    is_alive():  boolean;
+    drop_item(): void;
 }
  
 export interface I_Exist {

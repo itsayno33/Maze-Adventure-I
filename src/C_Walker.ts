@@ -43,8 +43,14 @@ export class C_Walker {
     public get_p_fwd(): C_Point {
         return this.__get_p_move(1);
     }
+    public set_p_fwd(): void {
+        this.set_p(this.get_p_fwd());
+    }
     public get_p_bak(): C_Point {
         return this.__get_p_move(-1);
+    }
+    public set_p_bak(): void {
+        this.set_p(this.get_p_bak());
     }
     public get_p_up(): C_Point {
         const p = new C_Point(this.p);

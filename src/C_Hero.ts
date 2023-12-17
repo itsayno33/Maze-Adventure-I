@@ -1,4 +1,4 @@
-import { I_Exist, T_ActionResult } from "./I_EventMap";
+import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
 import { C_Point }  from "./C_Point";
 import { C_Walker } from "./C_Walker";
 import { T_Direction } from "./T_Direction";
@@ -49,49 +49,43 @@ export class C_Hero implements I_Exist {
         this.walker.set_dir(d);
     }
 
-    public hope_p_fwd(): T_ActionResult {
-        this.hope_motion = 'Forward';
-        return {isOK: true, 
-                kind: "Move",
-                option: {type: "C_POINT", value: JSON.stringify(this.walker.get_p_fwd())}
-               };
+    public hope_p_fwd(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.walker.get_p_fwd(),
+            isOK: ()=>{this.walker.set_p_fwd();},
+            isNG: this.isNG,
+           };
     }
-    public hope_p_bak(): T_ActionResult {
-        this.hope_motion = 'Back';
-        return {isOK:true, 
-            kind: "Move",
-            option: {type: "C_POINT", value: JSON.stringify(this.walker.get_p_bak())}
-               };
+    public hope_p_bak(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.walker.get_p_bak(),
+            isOK: ()=>{this.walker.set_p_bak();},
+            isNG: this.isNG,
+        };
     }
-    public hope_turn_r(): T_ActionResult {
-        this.hope_motion = 'TurnRight';
-        return {isOK:true, kind: "Turn"};
+    public hope_turn_r(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Turn",
+            subj: this.walker.get_p(),
+            isOK: ()=>{this.walker.turn_r();},
+            isNG: this.isNG,
+        };
     }
-    public hope_turn_l(): T_ActionResult {
-        this.hope_motion = 'TurnLeft';
-        return {isOK:true, kind: "Turn"};
+    public hope_turn_l(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Turn",
+            subj: this.walker.get_p(),
+            isOK: ()=>{this.walker.turn_l();},
+            isNG: this.isNG,
+        };
     }
-    public isOK(): T_ActionResult {
-        const w = this.walker;
-        switch (this.hope_motion) {
-            case 'Forward': 
-                w.set_p(w.get_p_fwd());
-                break;
-            case 'Back': 
-                w.set_p(w.get_p_bak());
-                break;
-            case 'TurnRight':
-                w.turn_r();
-                break;
-            case 'TurnLeft':
-                w.turn_l();
-                break;
-        }
-        this.hope_motion = 'NOP';
-        return {isOK: true};
-    }
-    public isNG(): T_ActionResult {
-        this.hope_motion = 'NOP';
-        return {isOK: true};
+    public isNG(): void {
+        return;
     }
 }

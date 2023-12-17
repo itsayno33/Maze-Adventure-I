@@ -8,6 +8,7 @@ import { C_UrlOpt }  from "./C_UrlOpt";
 import { T_MzKind }  from "./T_MzKind";
 import { C_Hero }    from  "./C_Hero";
 import { C_Point }   from "./C_Point";
+import { I_HasHope, I_HopeAction } from "./I_EventMap";
 
 const g_maze = new C_Maze({maze_id: -1});
 const g_hero = new C_Hero();
@@ -42,19 +43,70 @@ function get_maze(url: string, opt: string): void {
             g_maze.add_obj(g_hero);
 //            const maze_map = new C_MazeMap(g_maze);
 //            alert(g_maze.to_string());
-            set_maze2D(g_maze);
+            display_maze2D(g_maze);
+            display_controlles();
         });
 }
 
-function set_maze2D(maze: C_Maze): void {
-    const maze_view2D: HTMLElement|null = document.getElementById('Maze_view2D');
-    const pre: HTMLPreElement = document.createElement('pre');
-    pre.innerText = maze.to_string();
-    maze_view2D?.appendChild(pre);
+function display_maze2D(maze: C_Maze): void {
+    const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
+    if (pre !== null) pre.innerText = maze.to_string();
 }
 
+function display_controlles() {
+    const u_arrow:   HTMLElement|null = document.getElementById('u_arrow');
+    const d_arrow:   HTMLElement|null = document.getElementById('d_arrow');
+    const r_arrow:   HTMLElement|null = document.getElementById('r_arrow');
+    const l_arrow:   HTMLElement|null = document.getElementById('l_arrow');
 
+    u_arrow?.addEventListener("click", go_forward, false);
+    d_arrow?.addEventListener("click", go_back,    false);
+    r_arrow?.addEventListener("click", turn_r,     false);
+    l_arrow?.addEventListener("click", turn_l,     false);
 
+    /************ *************************** **************/
+    /*  HTMLPreElement = document.createElement('pre');    */
+    /*  HTMLElement?.setAttribute('id', 'u_arraw');        */
+    /*  HTMLElement?.style.setProperty('display', 'grid'); */
+    /*  HTMLElement?.appendChild(HTMLElement);             */
+    /************ *************************** **************/
+}
+
+function go_forward(this: HTMLElement, ev: MouseEvent) {
+    const rslt = g_hero.hope_p_fwd();
+    move_check(rslt);
+    display_maze2D(g_maze);
+}
+function go_back(this: HTMLElement, ev: MouseEvent) {
+    const rslt = g_hero.hope_p_bak();
+    move_check(rslt);
+    display_maze2D(g_maze);
+}
+function turn_r(this: HTMLElement, ev: MouseEvent) {
+    const rslt = g_hero.hope_turn_r();
+    move_check(rslt);
+    display_maze2D(g_maze);
+}
+function turn_l(this: HTMLElement, ev: MouseEvent) {
+    const rslt = g_hero.hope_turn_l();
+    move_check(rslt);
+    display_maze2D(g_maze);
+}
+function move_check(rslt: I_HasHope) {
+    if (!rslt.has_hope) return;
+    const r = rslt as I_HopeAction;
+    if (r.hope == 'Turn') {
+        r.isOK();
+        return;
+    }
+    if (r.hope == 'Move') {
+        switch (g_maze.get_cell(r.subj)) {
+            case T_MzKind.Floor: r.isOK();break;
+            default: r.isNG();break;
+        }
+        return;
+    }
+} 
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
          

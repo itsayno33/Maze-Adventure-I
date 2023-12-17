@@ -17,7 +17,7 @@ export class C_Range {
         this.max  = new C_Point(max_x, max_y, max_z);
     }
     public within(a: C_Range|C_Point): boolean {
-        if (typeof a === "object" && a instanceof C_Point) {
+        if (typeof a === "object" && a instanceof C_Point) { 
             const p = a as C_Point;
             if ( p.x < this.min.x || p.x > this.max.x ) return false;
             if ( p.y < this.min.y || p.y > this.max.y ) return false;
