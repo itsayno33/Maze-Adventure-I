@@ -13,4 +13,7 @@ export class C_Point {
         this.y = y ?? -1;
         this.z = z ?? -1;
     }
+    public within(p: C_Point): boolean {
+        return (p.x == this.x && p.y == this.y && p.z == this.z);
+    }
 }

@@ -211,4 +211,46 @@ var result = String(num).replace(/(d)(?=(d{3})+(?!d))/g, "$1,");
 
 
 
+DOMの型いろいろ
+https://www.s-gakuenblog.com/programming/typescript/ts3/
+
+const js_p_1:HTMLElement  | null = document.getElementById("js-p-1");
+
+
+
+
+
+const js_div_selector:HTMLDivElement | null = document.querySelector("div");
+console.log(js_div_selector);
+const js_div_selector_all:NodeListOf<HTMLDivElement> = document.querySelectorAll("div");
+console.log(js_div_selector_all);
+const js_p_1:HTMLElement  | null = document.getElementById("js-p-1");
+
+const js_label:NodeListOf<HTMLLabelElement> = document.querySelectorAll("label");
+const js_btn_1:HTMLElement  | null= document.getElementById("js-btn-1");
+const btn2:HTMLElement | null = document.getElementById("js-btn-2");
+const colorAry:string[] = ["#FFD489","#FFB64D","#FFE543","#C3FF43","#82FF43","#43FFAA","#5FFAFF","#5FBDFF","#5F6DFF"];
+const bg:HTMLElement | null = document.getElementById("js-submit-2");
+
+const randomColor = ():string =>{
+    let i:number = Math.floor(Math.random()*(colorAry.length+1));
+    return colorAry[i];
+}
+const changeBgCol = ():void => {
+    bg.style.backgroundColor = randomColor();
+}
+
+btn2.addEventListener("click",changeBgCol);
+
+
+TypeScriptはJavaScriptを100％カバーしていますので、もちろんDOMの型も用意されています。
+
+HTMLElement
+NodeListOf
+HTMLLabelElement
+HTMLDivElement
+HTMLParagraphElement
+また、VScodeを使っている方で、TSファイルを編集している時、マウスカーソルを変数や関数にホバーさせると、型を推論してくれます。それを参考にして型を宣言するということも一つの手です。
+この他にも様々な型があります。それだけ、多くの型があるということになります。
+
 

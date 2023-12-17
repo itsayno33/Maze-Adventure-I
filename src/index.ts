@@ -2,11 +2,15 @@
 ///   主処理
 ///
 
-import { C_Maze } from "./C_Maze";
-import {C_UrlOpt} from "./C_UrlOpt";
-import {T_MzKind} from "./T_MzKind";
+import { C_Maze }    from "./C_Maze";
+import { C_MazeMap } from "./C_MazeMap";
+import { C_UrlOpt }  from "./C_UrlOpt";
+import { T_MzKind }  from "./T_MzKind";
+import { C_Hero }    from  "./C_Hero";
+import { C_Point }   from "./C_Point";
 
 const g_maze = new C_Maze({maze_id: -1});
+const g_hero = new C_Hero();
 
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
@@ -34,10 +38,23 @@ function get_maze(url: string, opt: string): void {
                 size_z:  1
             });
             g_maze.decode(jsonObj.maze);
-
-            alert(g_maze.to_string());
-    });
+            g_hero.set_p(new C_Point(g_maze.get_x_max() -2, g_maze.get_y_max() -2, 0));
+            g_maze.add_obj(g_hero);
+//            const maze_map = new C_MazeMap(g_maze);
+//            alert(g_maze.to_string());
+            set_maze2D(g_maze);
+        });
 }
+
+function set_maze2D(maze: C_Maze): void {
+    const maze_view2D: HTMLElement|null = document.getElementById('Maze_view2D');
+    const pre: HTMLPreElement = document.createElement('pre');
+    pre.innerText = maze.to_string();
+    maze_view2D?.appendChild(pre);
+}
+
+
+
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
          

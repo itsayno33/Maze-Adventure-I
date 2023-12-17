@@ -10,7 +10,7 @@ export class C_Walker {
     protected fn_dont_hit: (k: T_MzKind) => boolean;
     constructor() {
         this.p  = new C_Point();
-        this.d = T_Direction.X;
+        this.d = T_Direction.N;
         this.fn_dont_hit = this.__default_dont_hit;
     }
     protected __default_dont_hit(k: T_MzKind): boolean {
@@ -33,20 +33,20 @@ export class C_Walker {
     }
     public set_p(p: C_Point, d?: T_Direction): void {
         this.p = p;
-        this.d = d ?? T_Direction.N;
+        this.d = d ?? this.d;
     }
     public get_x(): number {return this.p.x}
     public get_y(): number {return this.p.y}
     public get_z(): number {return this.p.z}
     public get_d(): T_Direction {return this.d}
 
-    public get_p_fwd():C_Point {
+    public get_p_fwd(): C_Point {
         return this.__get_p_move(1);
     }
-    public get_p_bak():C_Point {
+    public get_p_bak(): C_Point {
         return this.__get_p_move(-1);
     }
-    public get_p_up():  C_Point {
+    public get_p_up(): C_Point {
         const p = new C_Point(this.p);
         p.z--;
         return p;

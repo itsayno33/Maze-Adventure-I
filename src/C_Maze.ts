@@ -1,12 +1,16 @@
 import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { C_Point }              from "./C_Point";
+import { C_Point } from "./C_Point";
+import { C_Range } from "./C_Range";
+import { I_Exist } from "./I_EventMap";
 
-class C_MazeCell {
-    protected cell:T_MzKind;
-    public constructor(v?: T_MzKind);
-    public constructor(n?: number);
-    public constructor(a?: any) {
+class C_MazeCell  {
+    protected cell: T_MzKind;
+    protected maze: C_Maze;
+    public constructor(m: C_Maze, v?: T_MzKind);
+    public constructor(m: C_Maze, n?: number);
+    public constructor(m: C_Maze, a?: any) {
         this.cell = T_MzKind.NoDef;
+        this.maze = m;
         this.set(a);
     }
     public get():  T_MzKind {
@@ -32,9 +36,12 @@ class C_MazeCell {
     public static to_int(kind: T_MzKind): number {
         return kind as number;
     }
+    // 普通にnewすれば良いのでたぶん要らない
+    /*
     public static from_int(num: number): C_MazeCell {
         return new C_MazeCell(num);
     }
+    */
     public to_letter(v?: T_MzKind): string {
         const kind: T_MzKind = v ?? this.cell;
         return C_MazeCell.to_letter(kind);
@@ -84,12 +91,11 @@ class C_MazeCell {
 }
 
 export class C_Maze {
-    protected maze_id: number;
-    protected size_x:  number;
-    protected size_y:  number;
-    protected size_z:  number;
-    protected cells :  C_MazeCell[][][];
-
+    protected maze_id:  number;
+    protected my_layer: number = 0;
+    protected size:     C_Range;
+    protected cells:    C_MazeCell[][][];
+    protected objs:     I_Exist[];
     public constructor(
         {maze_id = -1, size_x = 1, size_y = 1, size_z = 1}: {
             maze_id?: number,
@@ -99,10 +105,11 @@ export class C_Maze {
         }
     ) {
         this.maze_id = maze_id;
-        this.size_x  = size_x;
-        this.size_y  = size_y;
-        this.size_z  = size_z;
+        this.size    = new C_Range(
+            new C_Point(0, 0, 0), 
+            new C_Point(size_x - 1, size_y - 1, size_z));
         this.cells   = this.__init_maze(T_MzKind.Stone);
+        this.objs    = [] as I_Exist[];
     }
     public init(
         {maze_id = -1, size_x, size_y, size_z}: {
@@ -113,63 +120,107 @@ export class C_Maze {
         }
     ) {
         this.maze_id = maze_id;
-        this.size_x  = size_x;
-        this.size_y  = size_y;
-        this.size_z  = size_z;
+        this.size    = new C_Range(
+            new C_Point(0, 0, 0), 
+            new C_Point(size_x - 1, size_y - 1, size_z));
         this.cells   = this.__init_maze(T_MzKind.Stone);
+        this.objs    = [] as I_Exist[];
     }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
-        const cells: C_MazeCell[][][] = Array(this.size_z) as C_MazeCell[][][];
-        for (var z = 0; z < this.size_z; z++) {
-            cells[z] = Array(this.size_y) as C_MazeCell[][];
-            for (var y = 0; y < this.size_y; y++) {
-                cells[z][y]  = Array(this.size_x) as C_MazeCell[];
-                for (var x = 0; x < this.size_x; x++) {
-                    cells[z][y][x] = new C_MazeCell(kind);
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+        const size_z = this.size.size_z();
+
+        const cells: C_MazeCell[][][] = Array(size_z) as C_MazeCell[][][];
+        for (var z = 0; z < size_z; z++) {
+            cells[z] = Array(size_y) as C_MazeCell[][];
+            for (var y = 0; y < size_y; y++) {
+                cells[z][y]  = Array(size_x) as C_MazeCell[];
+                for (var x = 0; x < size_x; x++) {
+                    cells[z][y][x] = new C_MazeCell(this, kind);
                 }
             }
         }
         return cells;
     }
+    // メイズ内のオブジェクトやモンスター等の配置
+    public add_obj(obj: I_Exist): void {
+        this.objs.push(obj);
+    }
+    public remove_obj(obj: I_Exist): void {
+        this.objs = this.objs.filter(item => item.id() !== obj.id());
+    }
+    public get_obj_xyz(x: number, y: number, z: number): I_Exist|null {
+        return this.get_obj(new C_Point(x, y, z));
+    }
+    public get_obj(p: C_Point): I_Exist|null {
+        var layer = -1;
+        var obj: I_Exist|null   = null;
+        for (const item of this.objs) {
+            if (item.within(p)) {
+                if (item.layer() > layer) {
+                    layer = item.layer();
+                    obj = item;
+                }
+            }
+        } 
+        return obj;
+    }
 
-    public get_x_max(): number {return this.size_x;}
-    public get_y_max(): number {return this.size_y;}
-    public get_z_max(): number {return this.size_z;}
-    public get_maze_cell (p: C_Point): C_MazeCell { // たぶん要らないメソッド
-        return this.cells[p.z][p.y][p.x];
+    public get_x_max(): number {return this.size.size_x();}
+    public get_y_max(): number {return this.size.size_y();}
+    public get_z_max(): number {return this.size.size_z();}
+    public get_maze_cell (p: C_Point): C_MazeCell|null { // たぶん要らないメソッド
+        if (this.size.within(p)) return this.cells[p.z][p.y][p.x];
+        return null;
     }
     public get_cell (p: C_Point): T_MzKind {
-        return this.cells[p.z][p.y][p.x].get();
+        if (this.size.within(p)) return this.cells[p.z][p.y][p.x].get();
+        return T_MzKind.NoDef;
     }
     public set_cell (p: C_Point, k: T_MzKind): void {
-        this.cells[p.z][p.y][p.x].set(k);
+        if (this.size.within(p)) this.cells[p.z][p.y][p.x].set(k);
     }
     public can_move(p: C_Point): boolean {
-        if (p.x < 1 || p.x >= this.size_x || p.y < 1 || p.y >= this.size_y) return false;
-        return true;
+        return this.size.within(p);
     }
     public can_UD(p: C_Point): boolean {
-        if (p.z < 0 || p.z >= this.size_z) return false;
+        if (p.z < 0 || p.z >= this.size.size_z()) return false;
         // 未実装
         return false;
     }
+    public to_letter(p: C_Point): string {
+        return this.cells[p.z][p.y][p.x].to_letter();
+    }
     public to_string(floor: number = 0): string {
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+
         var ret_str: string = '';
-        for (var y = 0; y < this.size_y; y++) {
-            for (var x = 0; x < this.size_x; x++) {
-                ret_str += this.cells[floor][y][x].to_letter();
+        for (var y = 0; y < size_y; y++) {
+            for (var x = 0; x < size_x; x++) {
+                const obj = this.get_obj_xyz(x, y, floor);
+                if (obj === null) {
+                    ret_str += this.cells[floor][y][x].to_letter();
+                } else {
+                    ret_str += obj.to_letter();
+                }
             }
             ret_str += "\n";
         }
         return ret_str;
     }
     public encode(): string {
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+        const size_z = this.size.size_z();
+
         var z_array: string[] = [];
-        for (var z = 0; z < this.size_z; z++) {
+        for (var z = 0; z < size_z; z++) {
             var y_array: string[] = [];
-            for (var y = 0; y < this.size_y; y++) {
+            for (var y = 0; y < size_y; y++) {
                 var x_array: string[] = [];
-                for (var x = 0; x < this.size_x; x++) {
+                for (var x = 0; x < size_x; x++) {
                     x_array.push(this.cells[z][y][x].encode());
                 }
                 y_array.push(x_array.join(':'));
@@ -179,20 +230,24 @@ export class C_Maze {
         return z_array.join('@');
     }
     public decode(str: string): void {
-        for (var z = 0; z < this.size_z; z++)
-        for (var y = 0; y < this.size_y; y++)
-        for (var x = 0; x < this.size_x; x++) {
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+        const size_z = this.size.size_z();
+
+        for (var z = 0; z < size_z; z++)
+        for (var y = 0; y < size_y; y++)
+        for (var x = 0; x < size_x; x++) {
             this.cells[z][y][x].set(T_MzKind.Stone);
         }
 
         const z_array: string[] = str.split('@');
-        const z_max = _min(this.size_z, z_array.length);
+        const z_max = _min(size_z, z_array.length);
         for (var z = 0; z < z_max; z++) {
             const y_array: string[] = z_array[z].split('&');
-            const y_max =  _min(this.size_y, y_array.length); 
+            const y_max =  _min(size_y, y_array.length); 
             for (var y = 0; y < y_max; y++) {
                 const x_array: string[] = y_array[y].split(':');
-                const x_max =  _min(this.size_x, x_array.length); 
+                const x_max =  _min(size_x, x_array.length); 
                 for (var x = 0; x < x_max; x++) {
                     this.cells[z][y][x].decode(x_array[x]);
                 }
