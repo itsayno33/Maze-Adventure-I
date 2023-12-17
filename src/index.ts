@@ -44,7 +44,7 @@ function get_maze(url: string, opt: string): void {
 //            const maze_map = new C_MazeMap(g_maze);
 //            alert(g_maze.to_string());
             display_maze2D(g_maze);
-            display_controlles();
+            set_controlles();
         });
 }
 
@@ -53,7 +53,7 @@ function display_maze2D(maze: C_Maze): void {
     if (pre !== null) pre.innerText = maze.to_string();
 }
 
-function display_controlles() {
+function set_controlles() {
     const u_arrow:   HTMLElement|null = document.getElementById('u_arrow');
     const d_arrow:   HTMLElement|null = document.getElementById('d_arrow');
     const r_arrow:   HTMLElement|null = document.getElementById('r_arrow');
@@ -64,13 +64,34 @@ function display_controlles() {
     r_arrow?.addEventListener("click", turn_r,     false);
     l_arrow?.addEventListener("click", turn_l,     false);
 
+    document.addEventListener('keypress', (event)=>{
+        switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
+            case 'ArrowUp': 
+            case 'KeyK': 
+            case 'Numpad5': 
+                u_arrow?.click();break;
+            case 'ArrowDown': 
+            case 'KeyJ': 
+            case 'Numpad2': 
+                d_arrow?.click();break;
+            case 'ArrowRight': 
+            case 'KeyL': 
+            case 'Numpad3': 
+                r_arrow?.click();break;
+            case 'ArrowLeft': 
+            case 'KeyH': 
+            case 'Numpad1': 
+                l_arrow?.click();break;
+        }
+    });
+}
+
     /************ *************************** **************/
     /*  HTMLPreElement = document.createElement('pre');    */
     /*  HTMLElement?.setAttribute('id', 'u_arraw');        */
     /*  HTMLElement?.style.setProperty('display', 'grid'); */
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
-}
 
 function go_forward(this: HTMLElement, ev: MouseEvent) {
     const rslt = g_hero.hope_p_fwd();
