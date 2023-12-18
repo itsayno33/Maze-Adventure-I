@@ -32,120 +32,132 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
     const min_x: number = gap_x;
     const min_y: number = gap_y;
     const max_x: number = canvas.clientWidth  - gap_x;
-    const max_y: number = canvas.clientHeight ^ gap_y;
+    const max_y: number = canvas.clientHeight - gap_y;
 
     const side_wall_size_x: number = (max_x - min_x) / depth;
     const side_wall_size_y: number = (max_y - min_y) / ((depth - 1) * 2 + 1);
 
     const lv0_left_wall: T_Wall = {
         min_x: 0, 
+        max_x: 0, 
+        min_y: 0, 
+        max_y: canvas.clientHeight - 1,
+    };
+    const lv0_right_wall: T_Wall = {
+        min_x: canvas.clientWidth  - 1, 
+        max_x: canvas.clientWidth  - 1, 
+        min_y: 0, 
+        max_y: canvas.clientHeight - 1,
+    };
+    const lv1_left_wall: T_Wall = {
+        min_x: 0, 
         max_x: min_x, 
         min_y: min_y, 
         max_y: max_y,
     };
-    const lv0_right_wall: T_Wall = {
+    const lv1_right_wall: T_Wall = {
         min_x: max_x, 
         max_x: canvas.clientWidth, 
         min_y: min_y, 
         max_y: max_y,
     };
-    const lv0_center_wall: T_Wall = {
+    const lv1_center_wall: T_Wall = {
         min_x: min_x, 
         max_x: max_x, 
         min_y: min_y, 
         max_y: max_y,
     };
-    const lv1_left_wall: T_Wall = {
-        min_x: 0, 
-        max_x: min_x + side_wall_size_x * 1, 
-        min_y: min_y + side_wall_size_y * 1, 
-        max_y: max_y - side_wall_size_y * 1,
-    };
-    const lv1_right_wall: T_Wall = {
-        min_x: max_x - side_wall_size_x * 1, 
-        max_x: canvas.clientWidth, 
-        min_y: min_y + side_wall_size_y * 1, 
-        max_y: max_y - side_wall_size_y * 1,
-    };
-    const lv1_center_wall: T_Wall = {
-        min_x: min_x + side_wall_size_x * 1, 
-        max_x: max_x - side_wall_size_x * 1, 
-        min_y: min_y + side_wall_size_y * 1, 
-        max_y: max_y - side_wall_size_y * 1,
-    };
     const lv2_left_wall: T_Wall = {
         min_x: 0, 
-        max_x: min_x + side_wall_size_x * 2, 
-        min_y: min_y + side_wall_size_y * 2, 
-        max_y: max_y - side_wall_size_y * 2,
+        max_x: min_x + side_wall_size_x * 1, 
+        min_y: min_y + side_wall_size_y * 1, 
+        max_y: max_y - side_wall_size_y * 1,
     };
     const lv2_right_wall: T_Wall = {
-        min_x: max_x - side_wall_size_x * 2, 
-        max_x: canvas.clientWidth, 
-        min_y: min_y + side_wall_size_y * 2, 
-        max_y: max_y - side_wall_size_y * 2,
-    };
-    const lv2_center_wall: T_Wall = {
-        min_x: min_x + side_wall_size_x * 2, 
-        max_x: max_x - side_wall_size_x * 2, 
-        min_y: min_y + side_wall_size_y * 2, 
-        max_y: max_y - side_wall_size_y * 2,
-    };
-    const lv3_most_left_wall: T_Wall = {
-        min_x: 0, 
-        max_x: min_x + side_wall_size_x * 1, 
-        min_y: min_y + side_wall_size_y * 3, 
-        max_y: max_y - side_wall_size_y * 3,
-    };
-    const lv3_mid_left_wall: T_Wall = {
-        min_x: min_x + side_wall_size_x * 1, 
-        max_x: min_x + side_wall_size_x * 2, 
-        min_y: min_y + side_wall_size_y * 3, 
-        max_y: max_y - side_wall_size_y * 3,
-    };
-    const lv3_most_right_wall: T_Wall = {
         min_x: max_x - side_wall_size_x * 1, 
         max_x: canvas.clientWidth, 
-        min_y: min_y + side_wall_size_y * 3, 
-        max_y: max_y - side_wall_size_y * 3,
+        min_y: min_y + side_wall_size_y * 1, 
+        max_y: max_y - side_wall_size_y * 1,
     };
-    const lv3_mid_right_wall: T_Wall = {
-        min_x: max_x - side_wall_size_x * 2, 
+    const lv2_center_wall: T_Wall = {
+        min_x: min_x + side_wall_size_x * 1, 
         max_x: max_x - side_wall_size_x * 1, 
-        min_y: min_y + side_wall_size_y * 3, 
-        max_y: max_y - side_wall_size_y * 3,
+        min_y: min_y + side_wall_size_y * 1, 
+        max_y: max_y - side_wall_size_y * 1,
+    };
+    const lv3_left_wall: T_Wall = {
+        min_x: 0, 
+        max_x: min_x + side_wall_size_x * 2, 
+        min_y: min_y + side_wall_size_y * 2, 
+        max_y: max_y - side_wall_size_y * 2,
+    };
+    const lv3_right_wall: T_Wall = {
+        min_x: max_x - side_wall_size_x * 2, 
+        max_x: canvas.clientWidth, 
+        min_y: min_y + side_wall_size_y * 2, 
+        max_y: max_y - side_wall_size_y * 2,
     };
     const lv3_center_wall: T_Wall = {
         min_x: min_x + side_wall_size_x * 2, 
         max_x: max_x - side_wall_size_x * 2, 
+        min_y: min_y + side_wall_size_y * 2, 
+        max_y: max_y - side_wall_size_y * 2,
+    };
+    const lv4_most_left_wall: T_Wall = {
+        min_x: 0, 
+        max_x: min_x + side_wall_size_x * 1, 
         min_y: min_y + side_wall_size_y * 3, 
         max_y: max_y - side_wall_size_y * 3,
     };
-    const lv4_most_left_wall: T_Wall = {
+    const lv4_mid_left_wall: T_Wall = {
+        min_x: min_x + side_wall_size_x * 1, 
+        max_x: min_x + side_wall_size_x * 2, 
+        min_y: min_y + side_wall_size_y * 3, 
+        max_y: max_y - side_wall_size_y * 3,
+    };
+    const lv4_most_right_wall: T_Wall = {
+        min_x: max_x - side_wall_size_x * 1, 
+        max_x: canvas.clientWidth, 
+        min_y: min_y + side_wall_size_y * 3, 
+        max_y: max_y - side_wall_size_y * 3,
+    };
+    const lv4_mid_right_wall: T_Wall = {
+        min_x: max_x - side_wall_size_x * 2, 
+        max_x: max_x - side_wall_size_x * 1, 
+        min_y: min_y + side_wall_size_y * 3, 
+        max_y: max_y - side_wall_size_y * 3,
+    };
+    const lv4_center_wall: T_Wall = {
+        min_x: min_x + side_wall_size_x * 2, 
+        max_x: max_x - side_wall_size_x * 2, 
+        min_y: min_y + side_wall_size_y * 3, 
+        max_y: max_y - side_wall_size_y * 3,
+    };
+    const lv5_most_left_wall: T_Wall = {
         min_x: 0, 
         max_x: min_x + side_wall_size_x * 1, 
         min_y: min_y + side_wall_size_y * 4, 
         max_y: max_y - side_wall_size_y * 4,
     };
-    const lv4_mid_left_wall: T_Wall = {
+    const lv5_mid_left_wall: T_Wall = {
         min_x: min_x + side_wall_size_x * 1, 
         max_x: min_x + side_wall_size_x * 2, 
         min_y: min_y + side_wall_size_y * 4, 
         max_y: max_y - side_wall_size_y * 4,
     };
-    const lv4_most_right_wall: T_Wall = {
+    const lv5_most_right_wall: T_Wall = {
         min_x: max_x - side_wall_size_x * 1, 
         max_x: canvas.clientWidth, 
         min_y: min_y + side_wall_size_y * 4, 
         max_y: max_y - side_wall_size_y * 4,
     };
-    const lv4_mid_right_wall: T_Wall = {
+    const lv5_mid_right_wall: T_Wall = {
         min_x: max_x - side_wall_size_x * 2, 
         max_x: max_x - side_wall_size_x * 1, 
         min_y: min_y + side_wall_size_y * 4, 
         max_y: max_y - side_wall_size_y * 4,
     };
-    const lv4_center_wall: T_Wall = {
+    const lv5_center_wall: T_Wall = {
         min_x: min_x + side_wall_size_x * 2, 
         max_x: max_x - side_wall_size_x * 2, 
         min_y: min_y + side_wall_size_y * 4, 
@@ -157,13 +169,13 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
         0, 
         0, 
         canvas.clientWidth - 1, 
-        3 * (canvas.clientHeight - 1) / 4
+        1 * (canvas.clientHeight - 1) / 2
     );
 
     con.fillStyle = '#6666ff';
     con.fillRect(
         0, 
-        3 * (canvas.clientHeight - 1) / 4, 
+        1 * (canvas.clientHeight - 1) / 2, 
         canvas.clientWidth   - 1, 
         canvas.clientHeight  - 1
     );
@@ -183,7 +195,7 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
     if (maze.get_cell(hero.get_around(4, 0)) == T_MzKind.Stone){
         drow_front_wall(con, lv4_center_wall);
     };
-
+/*
     if (maze.get_cell(hero.get_around(3,-2)) == T_MzKind.Stone){
         drow_side_wall (con, lv3_most_left_wall, lv4_mid_left_wall);
         drow_front_wall(con, lv3_most_left_wall);
@@ -192,13 +204,14 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
         drow_side_wall (con, lv4_mid_right_wall, lv3_most_right_wall);
         drow_front_wall(con, lv3_most_right_wall);
     };
+*/
     if (maze.get_cell(hero.get_around(3,-1)) == T_MzKind.Stone){
-        drow_side_wall (con, lv3_mid_left_wall, lv4_center_wall);
-        drow_front_wall(con, lv3_mid_left_wall);
+        drow_side_wall (con, lv3_left_wall, lv4_center_wall);
+        drow_front_wall(con, lv3_left_wall);
     };
     if (maze.get_cell(hero.get_around(3, 1)) == T_MzKind.Stone){
-        drow_side_wall (con, lv4_center_wall, lv3_mid_right_wall);
-        drow_front_wall(con, lv3_mid_right_wall);
+        drow_side_wall (con, lv4_center_wall, lv3_right_wall);
+        drow_front_wall(con, lv3_right_wall);
     };
     if (maze.get_cell(hero.get_around(3, 0)) == T_MzKind.Stone){
         drow_front_wall(con, lv3_center_wall);
@@ -230,11 +243,9 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
 
     if (maze.get_cell(hero.get_around(0,-1)) == T_MzKind.Stone){
         drow_side_wall (con, lv0_left_wall, lv1_center_wall);
-        drow_front_wall(con, lv0_left_wall);
     };
     if (maze.get_cell(hero.get_around(0, 1)) == T_MzKind.Stone){
         drow_side_wall (con, lv1_center_wall, lv0_right_wall);
-        drow_front_wall(con, lv0_right_wall);
     };
 
 }

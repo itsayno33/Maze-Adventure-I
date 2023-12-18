@@ -176,7 +176,6 @@ export class C_Maze {
     }
     public get_cell (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].get();
-        alert ('Why??');
         return T_MzKind.NoDef;
     }
     public set_cell (p: C_Point, k: T_MzKind): void {
