@@ -25,7 +25,7 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
         alert('Browser dont surpport 2D graphics!');
         return;
     }
-    const depth = 5;
+    const depth = 3; // 奇数のみ対応。ダンジョンの見通しを良くするなら 5 かもしれない
 
     const min_x: number = 0;
     const min_y: number = 0;
@@ -34,18 +34,18 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
 
     const center_x: number = (max_x - min_x) / 2;
 
-    const front_wall_size_x_5: number = (max_x - min_x) / depth;
-    const side_wall_size_x: number = (center_x - front_wall_size_x_5 / 2) / depth;
+    const front_wall_size_x: number = (max_x - min_x) / depth;
+    const side_wall_size_x:  number = (center_x - front_wall_size_x / 2) / depth;
 
     const front_wall_H_size_x: number[] = new Array(depth + 1);
 
-    front_wall_H_size_x[depth] = front_wall_size_x_5 / 2;
+    front_wall_H_size_x[depth] = front_wall_size_x / 2;
     for (var i = depth - 1; i >= 0; i--) {
         front_wall_H_size_x[i] = front_wall_H_size_x[i + 1] + side_wall_size_x;
     }
 
-    const side_wall_size_T: number = (max_y - min_y) * 1.4 / ((depth + 1) * 2 + 1);
-    const side_wall_size_B: number = (max_y - min_y) * 0.6 / ((depth + 1) * 2 + 1);
+    const side_wall_size_T: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
+    const side_wall_size_B: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
 
     const wall: T_Wall[][] = new Array(depth + 1);
     for (var j = 0; j < depth + 1; j++) {
@@ -61,21 +61,7 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
         }
     }
 
-    con.fillStyle = '#aaaaff';
-    con.fillRect(
-        0, 
-        0, 
-        canvas.clientWidth - 1, 
-        14 * (canvas.clientHeight - 1) / 20
-    );
-
-    con.fillStyle = '#6666ff';
-    con.fillRect(
-        0, 
-        14 * (canvas.clientHeight - 1) / 20, 
-        canvas.clientWidth   - 1, 
-        canvas.clientHeight  - 1
-    );
+    draw_init_maze(canvas, con, wall);
 
     for (var j = depth - 1; j >= 0; j--) {
         const H_depth = (depth - 1) / 2;
@@ -95,8 +81,29 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
     }
 }
 
+function draw_init_maze(canvas: HTMLCanvasElement, con: CanvasRenderingContext2D, wall: T_Wall[][]): void {
+    con.fillStyle = '#aaaaff';
+    con.fillRect(
+        0, 
+        0, 
+        canvas.clientWidth - 1, 
+        10 * (canvas.clientHeight - 1) / 20
+    );
+
+    con.fillStyle = '#6666ff';
+    con.fillRect(
+        0, 
+        10 * (canvas.clientHeight - 1) / 20, 
+        canvas.clientWidth   - 1, 
+        canvas.clientHeight  - 1
+    );
+
+    // 床と天井にラインを引くこと
+}
+
 function drow_front_wall(con: CanvasRenderingContext2D, rect: T_Wall): void {
     con.beginPath();
+    con.lineJoin = 'round';
     con.moveTo(rect.min_x, rect.min_y);
     con.lineTo(rect.max_x, rect.min_y);
     con.lineTo(rect.max_x, rect.max_y);
@@ -112,6 +119,7 @@ function drow_front_wall(con: CanvasRenderingContext2D, rect: T_Wall): void {
 }
 function drow_side_wall(con: CanvasRenderingContext2D, rect_left: T_Wall, rect_right: T_Wall): void {
     con.beginPath();
+    con.lineJoin = 'round';
     con.moveTo(rect_left. max_x, rect_left.min_y);
     con.lineTo(rect_right.min_x, rect_right.min_y);
     con.lineTo(rect_right.min_x, rect_right.max_y);
