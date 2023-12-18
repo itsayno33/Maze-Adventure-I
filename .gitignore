@@ -50,5 +50,7 @@ typings/
 .next
 
 # 共通
+**/.gitignore
 /dist
 /html
+**/_ord_src
