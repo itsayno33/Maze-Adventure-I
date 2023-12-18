@@ -72,6 +72,32 @@ export class C_Walker {
         }
         return p;
     }
+    public get_around(front: number, right:number, up: number = 0): C_Point {
+        const cur_pos = this.p;
+        const cur_dir = this.d;
+        var target_x  = this.p.x;
+        var target_y  = this.p.y;
+        var target_z  = this.p.z - up;
+        switch (this.d) {
+            case T_Direction.N:
+                target_x += right;
+                target_y -= front;
+                break;
+            case T_Direction.E:
+                target_x += front;
+                target_y += right;
+                break;
+            case T_Direction.S:
+                target_x -= right;
+                target_y += front;
+                break;
+            case T_Direction.W:
+                target_x -= front;
+                target_y -= right;
+                break;
+        }
+        return new C_Point(target_x, target_y, target_z);
+    }
     public dont_hit(k: T_MzKind): boolean {
         return this.fn_dont_hit(k);
     }

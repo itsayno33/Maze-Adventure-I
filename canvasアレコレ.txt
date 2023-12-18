@@ -1,0 +1,45 @@
+// canvas要素の取得
+const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+const ctx = canvas.getContext('2d');
+
+// 円を描画
+ctx.beginPath();
+ctx.arc(150, 150, 100, 0, Math.PI * 2); // 中心座標(150,150)、半径100の円を描画
+ctx.fillStyle = "#FFD700"; // 塗りつぶしの色を金色に指定
+ctx.fill();
+ctx.lineWidth = 5; // 線の太さを5に指定
+ctx.strokeStyle = "#8B4513"; // 線の色を茶色に指定
+ctx.stroke(); // 円の輪郭を描画
+
+
+
+// キャンバス要素を取得
+const canvas = document.getElementById('myCanvas') as HTMLCanvasElement;
+const ctx = canvas.getContext('2d')!;
+
+// 多角形の頂点を定義
+const vertices = [
+    { x: 250, y: 50 },
+    { x: 350, y: 150 },
+    { x: 300, y: 250 },
+    { x: 200, y: 250 },
+    { x: 150, y: 150 }
+];
+
+// 多角形の描画
+ctx.beginPath();
+ctx.moveTo(vertices[0].x, vertices[0].y);
+for(let i = 1; i < vertices.length; i++) {
+    ctx.lineTo(vertices[i].x, vertices[i].y);
+}
+ctx.closePath();
+
+// 多角形の内部を塗りつぶす
+ctx.fillStyle = '#00FF00';
+ctx.fill();
+
+// 多角形の輪郭を描画
+ctx.strokeStyle = '#FF0000';
+ctx.lineWidth = 5;
+ctx.stroke();
+

@@ -49,6 +49,10 @@ export class C_Hero implements I_Exist {
         this.walker.set_dir(d);
     }
 
+    public get_around(front: number, right:number, up: number = 0): C_Point {
+        return this.walker.get_around(front, right, up);
+    }
+
     public hope_p_fwd(): I_HopeAction {
         return {
             has_hope: true, 

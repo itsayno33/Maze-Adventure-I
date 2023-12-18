@@ -3,12 +3,11 @@
 ///
 
 import { C_Maze }    from "./C_Maze";
-import { C_MazeMap } from "./C_MazeMap";
 import { C_UrlOpt }  from "./C_UrlOpt";
-import { T_MzKind }  from "./T_MzKind";
-import { C_Hero }    from  "./C_Hero";
+import { C_Hero }    from "./C_Hero";
 import { C_Point }   from "./C_Point";
-import { I_HasHope, I_HopeAction } from "./I_EventMap";
+import { display_maze2D, display_maze_3D } from "./F_display_maze";
+import { set_move_controlles } from "./F_set_controlles";
 
 const g_maze = new C_Maze({maze_id: -1});
 const g_hero = new C_Hero();
@@ -19,18 +18,18 @@ window.addEventListener('DOMContentLoaded', function() {
     get_maze(get_maze_url, get_maze_opt);
 });
 
-
-
 function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
 
+            /*
             alert("maze id :" + jsonObj.maze_id
             + "\nfloor: "  + jsonObj.floor
             + "\nsize_x: " + jsonObj.size_x
             + "\nsize_y: " + jsonObj.size_y
             + "\nmaze: "   + jsonObj.maze);
+            */
 
             g_maze.init({
                 maze_id: jsonObj.maze_id,
@@ -41,93 +40,11 @@ function get_maze(url: string, opt: string): void {
             g_maze.decode(jsonObj.maze);
             g_hero.set_p(new C_Point(g_maze.get_x_max() -2, g_maze.get_y_max() -2, 0));
             g_maze.add_obj(g_hero);
-//            const maze_map = new C_MazeMap(g_maze);
-//            alert(g_maze.to_string());
             display_maze2D(g_maze);
-            set_controlles();
+            set_move_controlles(g_maze, g_hero);
+            display_maze_3D(g_maze, g_hero);
         });
 }
-
-function display_maze2D(maze: C_Maze): void {
-    const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = maze.to_string();
-}
-
-function set_controlles() {
-    const u_arrow:   HTMLElement|null = document.getElementById('u_arrow');
-    const d_arrow:   HTMLElement|null = document.getElementById('d_arrow');
-    const r_arrow:   HTMLElement|null = document.getElementById('r_arrow');
-    const l_arrow:   HTMLElement|null = document.getElementById('l_arrow');
-
-    u_arrow?.addEventListener("click", go_forward, false);
-    d_arrow?.addEventListener("click", go_back,    false);
-    r_arrow?.addEventListener("click", turn_r,     false);
-    l_arrow?.addEventListener("click", turn_l,     false);
-
-    document.addEventListener('keypress', (event)=>{
-        switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
-            case 'ArrowUp': 
-            case 'KeyK': 
-            case 'Numpad5': 
-                u_arrow?.click();break;
-            case 'ArrowDown': 
-            case 'KeyJ': 
-            case 'Numpad2': 
-                d_arrow?.click();break;
-            case 'ArrowRight': 
-            case 'KeyL': 
-            case 'Numpad3': 
-                r_arrow?.click();break;
-            case 'ArrowLeft': 
-            case 'KeyH': 
-            case 'Numpad1': 
-                l_arrow?.click();break;
-        }
-    });
-}
-
-    /************ *************************** **************/
-    /*  HTMLPreElement = document.createElement('pre');    */
-    /*  HTMLElement?.setAttribute('id', 'u_arraw');        */
-    /*  HTMLElement?.style.setProperty('display', 'grid'); */
-    /*  HTMLElement?.appendChild(HTMLElement);             */
-    /************ *************************** **************/
-
-function go_forward(this: HTMLElement, ev: MouseEvent) {
-    const rslt = g_hero.hope_p_fwd();
-    move_check(rslt);
-    display_maze2D(g_maze);
-}
-function go_back(this: HTMLElement, ev: MouseEvent) {
-    const rslt = g_hero.hope_p_bak();
-    move_check(rslt);
-    display_maze2D(g_maze);
-}
-function turn_r(this: HTMLElement, ev: MouseEvent) {
-    const rslt = g_hero.hope_turn_r();
-    move_check(rslt);
-    display_maze2D(g_maze);
-}
-function turn_l(this: HTMLElement, ev: MouseEvent) {
-    const rslt = g_hero.hope_turn_l();
-    move_check(rslt);
-    display_maze2D(g_maze);
-}
-function move_check(rslt: I_HasHope) {
-    if (!rslt.has_hope) return;
-    const r = rslt as I_HopeAction;
-    if (r.hope == 'Turn') {
-        r.isOK();
-        return;
-    }
-    if (r.hope == 'Move') {
-        switch (g_maze.get_cell(r.subj)) {
-            case T_MzKind.Floor: r.isOK();break;
-            default: r.isNG();break;
-        }
-        return;
-    }
-} 
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
          
