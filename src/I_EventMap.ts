@@ -6,8 +6,8 @@ export interface I_HasHope {
 export interface I_HopeAction extends I_HasHope {
     hope:    string,     // 行動の種類
     subj:    C_Point,    // 対象の指定(位置)
-    isOK:    ()=>void,   // 許可時の行動(関数)
-    isNG:    ()=>void,   // 不許可時の行動(関数)
+    doOK:    ()=>void,   // 許可時の行動(関数)
+    doNG:    ()=>void,   // 不許可時の行動(関数)
 }
 export interface I_Action {
     // 行動関係

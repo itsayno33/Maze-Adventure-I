@@ -58,8 +58,8 @@ export class C_Hero implements I_Exist {
             has_hope: true, 
             hope: "Move",
             subj: this.walker.get_p_fwd(),
-            isOK: ()=>{this.walker.set_p_fwd();},
-            isNG: this.isNG,
+            doOK: ()=>{this.walker.set_p_fwd();},
+            doNG: this.isNG,
            };
     }
     public hope_p_bak(): I_HopeAction {
@@ -67,8 +67,8 @@ export class C_Hero implements I_Exist {
             has_hope: true, 
             hope: "Move",
             subj: this.walker.get_p_bak(),
-            isOK: ()=>{this.walker.set_p_bak();},
-            isNG: this.isNG,
+            doOK: ()=>{this.walker.set_p_bak();},
+            doNG: this.isNG,
         };
     }
     public hope_turn_r(): I_HopeAction {
@@ -76,8 +76,8 @@ export class C_Hero implements I_Exist {
             has_hope: true, 
             hope: "Turn",
             subj: this.walker.get_p(),
-            isOK: ()=>{this.walker.turn_r();},
-            isNG: this.isNG,
+            doOK: ()=>{this.walker.turn_r();},
+            doNG: this.isNG,
         };
     }
     public hope_turn_l(): I_HopeAction {
@@ -85,8 +85,8 @@ export class C_Hero implements I_Exist {
             has_hope: true, 
             hope: "Turn",
             subj: this.walker.get_p(),
-            isOK: ()=>{this.walker.turn_l();},
-            isNG: this.isNG,
+            doOK: ()=>{this.walker.turn_l();},
+            doNG: this.isNG,
         };
     }
     public isNG(): void {

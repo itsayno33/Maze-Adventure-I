@@ -79,13 +79,13 @@ function move_check(rslt: I_HasHope) {
     if (!rslt.has_hope) return;
     const r = rslt as I_HopeAction;
     if (r.hope == 'Turn') {
-        r.isOK();
+        r.doOK();
         return;
     }
     if (r.hope == 'Move') {
         switch (g_maze.get_cell(r.subj)) {
-            case T_MzKind.Floor: r.isOK();break;
-            default: r.isNG();break;
+            case T_MzKind.Floor: r.doOK();break;
+            default: r.doNG();break;
         }
         return;
     }
