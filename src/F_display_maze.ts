@@ -1,23 +1,18 @@
+import { C_Point }  from "./C_Point";
+import { C_Range }  from "./C_Range";
 import { T_MzKind } from "./T_MzKind";
+import { T_Wall, C_Wall }   from "./C_Wall";
 import { g_maze, g_hero, g_ds } from "./global";
 
 export function display_maze2D(): void {
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
     if (pre !== null) pre.innerText = g_maze.to_string();
 }
-
-export type T_Wall = {
-    min_x: number,
-    max_x: number,
-    min_y: number,
-    max_y: number,
-}
-
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
     con:    CanvasRenderingContext2D|null,
     depth:  number,
-    wall:   T_Wall[][]|null,
+    wall:   C_Wall|null,
 }
 
 export function init_maze_3D(): T_DrowSet {
@@ -34,39 +29,10 @@ export function init_maze_3D(): T_DrowSet {
 
     const depth = 5; // 奇数のみ対応。ダンジョンの見通しを良くするなら 5 かもしれない
 
-    const min_x: number = 0;
-    const min_y: number = 0;
-    const max_x: number = canvas.clientWidth  - 1;
-    const max_y: number = canvas.clientHeight - 1;
-
-    const center_x: number = (max_x - min_x) / 2;
-
-    const front_wall_size_x: number = (max_x - min_x) / depth;
-    const side_wall_size_x:  number = (center_x - front_wall_size_x / 2) / depth;
-
-    const front_wall_H_size_x: number[] = new Array(depth + 1);
-
-    front_wall_H_size_x[depth] = front_wall_size_x / 2;
-    for (var i = depth - 1; i >= 0; i--) {
-        front_wall_H_size_x[i] = front_wall_H_size_x[i + 1] + side_wall_size_x;
-    }
-
-    const side_wall_size_T: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
-    const side_wall_size_B: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
-
-    const wall: T_Wall[][] = new Array(depth + 1);
-    for (var j = 0; j < depth + 1; j++) {
-        wall[j] = new Array(depth + 1);
-        for (var k = 0; k < depth + 1; k++) {
-            const wk_x = center_x - front_wall_H_size_x[j] * (depth - 2 * k);
-            wall[j][k] = {
-                min_x: wk_x,
-                max_x: wk_x  + front_wall_H_size_x[j] * 2,
-                min_y: min_y + side_wall_size_T * j,
-                max_y: max_y - side_wall_size_B * j,
-            }
-        }
-    }
+    const top_p = new C_Point(0, 0, 0);
+    const btm_p = new C_Point(canvas.clientWidth  - 1, canvas.clientHeight - 1, 0);
+    const wall  = new C_Wall(depth, new C_Range(top_p, btm_p));
+    
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
 
@@ -75,26 +41,32 @@ export function display_maze_3D(): void {
 
     draw_init_maze();
 
+    const depth   =  g_ds.depth;
+    const H_depth = (depth - 1) / 2;
     for (var j = g_ds.depth - 1; j >= 0; j--) {
-        const H_depth = (g_ds.depth - 1) / 2;
-        for (var k = 0; k < H_depth; k++) {
-            if (g_maze.get_cell(g_hero.get_around(j, k - H_depth)) == T_MzKind.Stone) {
+        // 右側が見えている壁の描写 (左側から描写)
+        for (var k = -H_depth; k < 0; k++) {
+            if (g_maze.get_cell(g_hero.get_around(j, k)) == T_MzKind.Stone) {
                 drow_right_side_wall (
-                    g_ds.wall[j][k],    // front wall
-                    g_ds.wall[j + 1][k] // back  wall
+                    g_ds.wall.get(j,     k), // front wall
+                    g_ds.wall.get(j + 1, k)  // back  wall
                 );
-                drow_front_wall(g_ds.wall[j][k]);
-            }
-            if (g_maze.get_cell(g_hero.get_around(j, H_depth - k)) == T_MzKind.Stone) {
-                drow_left_side_wall (
-                    g_ds.wall[j][g_ds.depth - k - 1],    // front wall
-                    g_ds.wall[j + 1][g_ds.depth - k - 1] // back  wall 
-                );
-                drow_front_wall(g_ds.wall[j][g_ds.depth - k - 1]);
+                drow_front_wall(g_ds.wall.get(j,k));
             }
         }
+        // 　左側が見えている壁の描写 (右側から描写)
+        for (var k = H_depth; k > 0; k--) {
+            if (g_maze.get_cell(g_hero.get_around(j, k)) == T_MzKind.Stone) {
+                drow_left_side_wall (
+                    g_ds.wall.get(j,     k), // front wall
+                    g_ds.wall.get(j + 1, k)  // back  wall 
+                );
+                drow_front_wall(g_ds.wall.get(j, k));
+            }
+        }
+        // 正面の壁の描写
         if (g_maze.get_cell(g_hero.get_around(j, 0)) == T_MzKind.Stone) {
-            drow_front_wall(g_ds.wall[j][H_depth]);
+            drow_front_wall(g_ds.wall.get(j, 0));
         }
     }
 }
@@ -124,7 +96,7 @@ function draw_init_maze(): void {
 
 function get_holizon_line(): number {
     if (g_ds.wall === null) return -1;
-    return g_ds.wall[g_ds.depth][0].max_y;
+    return g_ds.wall.get(g_ds.depth, 0).max_y;
 }
 
 function drow_floor_line(): void {
@@ -132,6 +104,7 @@ function drow_floor_line(): void {
     const con   = g_ds.con;
     const wall  = g_ds.wall;
     const depth = g_ds.depth;
+    const H_dept = (depth - 1) / 2;
 
     const left_x  = 0;
     const right_x = g_ds.canvas.clientWidth  - 1;
@@ -141,17 +114,19 @@ function drow_floor_line(): void {
     con.strokeStyle = '#9999ff';
     con.lineWidth   = 1;
 
+    // 横線(画面に対して水平)を引く
     for (var y = 0; y < depth + 1; y++) {
         con.beginPath();
-        con.moveTo(left_x , wall[y][0].max_y);
-        con.lineTo(right_x, wall[y][0].max_y);
+        con.moveTo(left_x , wall.get(y, 0).max_y);
+        con.lineTo(right_x, wall.get(y, 0).max_y);
         con.stroke();
     }
 
-    for (var x = 0; x < depth + 1; x++) {
+    // 縦線を引く
+    for (var x = -H_dept; x < H_dept + 1; x++) {
         con.beginPath();
-        con.moveTo(wall[0][x].min_x,     front_y);
-        con.lineTo(wall[depth][x].min_x, back_y );
+        con.moveTo(wall.get(0,     x).min_x, front_y);
+        con.lineTo(wall.get(depth, x).min_x, back_y );
         con.stroke();
     }
 }
