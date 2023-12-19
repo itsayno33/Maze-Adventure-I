@@ -9,10 +9,10 @@ import { set_move_controlles } from "./F_set_controlles";
 import { g_maze, g_hero, init_after_loaded_DOM }      from "./global";
 
 window.addEventListener('DOMContentLoaded', function() { 
+    init_after_loaded_DOM();
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
     const get_maze_opt: string = new C_UrlOpt({mode: "new", num: 333}).to_string();
     get_maze(get_maze_url, get_maze_opt);
-    init_after_loaded_DOM();
 });
 
 function get_maze(url: string, opt: string): void {
