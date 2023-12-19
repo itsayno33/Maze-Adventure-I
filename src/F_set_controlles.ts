@@ -1,6 +1,7 @@
 import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
-import { display_maze2D, display_maze_3D } from "./F_display_maze";
+import { display_maze2D, display_maze_3D, 
+         maze_3D_blink_on_direction, maze_3D_blink_off_direction } from "./F_display_maze";
 import { g_maze, g_hero } from "./global";
 
 export function set_move_controlles() {
@@ -56,24 +57,28 @@ function go_forward() {
     move_check(rslt);
     display_maze2D();
     display_maze_3D();
+    maze_3D_blink_on_direction();
 }
 function go_back() {
     const rslt = g_hero.hope_p_bak();
     move_check(rslt);
     display_maze2D();
     display_maze_3D();
+    maze_3D_blink_on_direction();
 }
 function turn_r() {
     const rslt = g_hero.hope_turn_r();
     move_check(rslt);
     display_maze2D();
     display_maze_3D();
+    maze_3D_blink_off_direction();
 }
 function turn_l() {
     const rslt = g_hero.hope_turn_l();
     move_check(rslt);
     display_maze2D();
     display_maze_3D();
+    maze_3D_blink_off_direction();
 }
 function move_check(rslt: I_HasHope) {
     if (!rslt.has_hope) return;

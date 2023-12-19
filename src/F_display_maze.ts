@@ -3,6 +3,7 @@ import { C_Range }  from "./C_Range";
 import { T_MzKind } from "./T_MzKind";
 import { T_Wall, C_Wall }   from "./C_Wall";
 import { g_maze, g_hero, g_ds } from "./global";
+import { T_Direction } from "./T_Direction";
 
 export function display_maze2D(): void {
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
@@ -40,6 +41,7 @@ export function display_maze_3D(): void {
     if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
 
     draw_init_maze();
+    displey_mase_3d_direction();
 
     const depth   =  g_ds.depth;
     const H_depth = (depth - 1) / 2;
@@ -186,3 +188,65 @@ function drow_right_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
     con.lineWidth   = 5;
     con.stroke();
 }
+
+export function displey_mase_3d_direction(): void {
+    const p_dir = document.getElementById('Maze_view3D_direction_info') as HTMLParagraphElement;
+    if (p_dir === null) {
+        alert('P element isnt found! id=Maze_view3D_direction_info');
+        return;
+    }
+    var direction: string;
+    switch (g_hero.get_dir()) {
+        case T_Direction.N:
+            direction = '<span class="direction_N">《北》</span>';
+            break;
+        case T_Direction.E:
+            direction = '<span class="direction_E">《東》</span>';
+            break;
+        case T_Direction.S:
+            direction = '<span class="direction_S">《南》</span>';
+            break;
+        case T_Direction.W:
+            direction = '<span class="direction_W">《西》</span>';
+            break;
+        default:
+            direction = '<span class="direction_D">《謎》</span>';
+            break;
+    }
+
+    const p = g_hero.get_p();
+    const mes = '地下 ' + (p.z + 1) + '階　' + direction + '　(x = <span id="direction_X">' + p.x + '</span>, y = <span id="direction_Y">' + p.y + '</span>)';
+    p_dir.innerHTML = mes;
+}
+
+
+export function maze_3D_blink_on_direction(): void {
+    const dir_x = document.getElementById('direction_X') as HTMLSpanElement;
+    if (dir_x === null) return;
+
+    const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
+    if (dir_y === null) return;
+
+    switch (g_hero.get_dir()) {
+        case T_Direction.N:
+        case T_Direction.S:
+            dir_x.classList.remove('blink');
+            dir_y.classList.add   ('blink');
+            return;
+        case T_Direction.E:
+        case T_Direction.W:
+            dir_x.classList.add   ('blink');
+            dir_y.classList.remove('blink');
+            return;
+    }
+}
+export function maze_3D_blink_off_direction(): void {
+    const dir_x = document.getElementById('direction_X') as HTMLSpanElement;
+    if (dir_x === null) return;
+    dir_x.classList.remove('blink');
+
+    const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
+    if (dir_y === null) return;
+    dir_y.classList.remove('blink');
+}
+
