@@ -348,6 +348,10 @@ function removeClickEvent() {
   }, 2000);
 }
 
+イベントあれこれ
+https://developer.mozilla.org/ja/docs/Web/API/Event
+
+
 
 
 

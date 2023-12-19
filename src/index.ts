@@ -19,7 +19,7 @@ function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
-
+/*
             alert(
                   "\nmaze id :" + jsonObj.maze.maze_id
                 + "\nfloor: "   + jsonObj.maze.floor
@@ -34,7 +34,7 @@ function get_maze(url: string, opt: string): void {
             alert(
                   "\nmask: "    + jsonObj.maze.mask
             );
-
+*/
             g_maze.init({
                 maze_id:    jsonObj.maze.maze_id,
                 floor:      jsonObj.maze.floor,
