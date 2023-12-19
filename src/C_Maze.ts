@@ -1,7 +1,8 @@
 import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { C_Point } from "./C_Point";
-import { C_Range } from "./C_Range";
-import { I_Exist } from "./I_EventMap";
+import { C_Point }      from "./C_Point";
+import { C_Range }      from "./C_Range";
+import { I_Exist }      from "./I_EventMap";
+import { g_debug_mode } from "./global";
 
 class C_MazeCell  {
     protected cell: T_MzKind;
@@ -92,38 +93,51 @@ class C_MazeCell  {
 
 export class C_Maze {
     protected maze_id:  number;
+    protected floor:    number;
+    protected title:    string;
     protected my_layer: number = 0;
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
+    protected masks:    boolean[][][];
     protected objs:     I_Exist[];
     public constructor(
-        {maze_id = -1, size_x = 1, size_y = 1, size_z = 1}: {
+        {maze_id = -1, floor = 0, title = '', size_x = 1, size_y = 1, size_z = 1}: {
             maze_id?: number,
+            floor?:   number,
+            title?:   string,
             size_x?:  number,
             size_y?:  number,
             size_z?:  number,
         }
     ) {
         this.maze_id = maze_id;
+        this.floor   = floor;
+        this.title   = title;
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
             new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
+        this.masks   = this.__init_mask(true);
         this.objs    = [] as I_Exist[];
     }
     public init(
-        {maze_id = -1, size_x, size_y, size_z}: {
+        {maze_id, floor, title, size_x, size_y, size_z}: {
             maze_id: number,
+            floor:   number,
+            title:   string,
             size_x:  number,
             size_y:  number,
             size_z:  number,
         }
     ) {
         this.maze_id = maze_id;
+        this.floor   = floor;
+        this.title   = title;
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
             new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
+        this.masks   = this.__init_mask(true);
         this.objs    = [] as I_Exist[];
     }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
@@ -142,6 +156,23 @@ export class C_Maze {
             }
         }
         return cells;
+    }
+    protected __init_mask(YN: boolean): boolean[][][] {
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+        const size_z = this.size.size_z();
+
+        const masks: boolean[][][] = Array(size_z) as boolean[][][];
+        for (var z = 0; z < size_z; z++) {
+            masks[z] = Array(size_y) as boolean[][];
+            for (var y = 0; y < size_y; y++) {
+                masks[z][y]  = Array(size_x) as boolean[];
+                for (var x = 0; x < size_x; x++) {
+                    masks[z][y][x] = YN;
+                }
+            }
+        }
+        return masks;
     }
     // メイズ内のオブジェクトやモンスター等の配置
     public add_obj(obj: I_Exist): void {
@@ -200,10 +231,14 @@ export class C_Maze {
         for (var y = 0; y < size_y; y++) {
             for (var x = 0; x < size_x; x++) {
                 const obj = this.get_obj_xyz(x, y, floor);
-                if (obj === null) {
-                    ret_str += this.cells[floor][y][x].to_letter();
+                if (!g_debug_mode && this.masks[floor][y][x]) {
+                    ret_str += '■';
                 } else {
-                    ret_str += obj.to_letter();
+                    if (obj === null) {
+                        ret_str += this.cells[floor][y][x].to_letter();
+                    } else {
+                        ret_str += obj.to_letter();
+                    }
                 }
             }
             ret_str += "\n";
@@ -229,7 +264,7 @@ export class C_Maze {
         }
         return z_array.join('@');
     }
-    public decode(str: string): void {
+    public decode({maze:maze_str,mask:mask_str} : {maze: string, mask?: string}): void {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
         const size_z = this.size.size_z();
@@ -240,7 +275,7 @@ export class C_Maze {
             this.cells[z][y][x].set(T_MzKind.Stone);
         }
 
-        const z_array: string[] = str.split('@');
+        const z_array: string[] = maze_str.split('@');
         const z_max = _min(size_z, z_array.length);
         for (var z = 0; z < z_max; z++) {
             const y_array: string[] = z_array[z].split('&');
@@ -252,7 +287,29 @@ export class C_Maze {
                     this.cells[z][y][x].decode(x_array[x]);
                 }
             }
-        }        
+        }  
+
+        if (mask_str !== undefined) {
+            const z_array: string[] = mask_str.split('@');
+            const z_max = _min(size_z, z_array.length);
+            for (var z = 0; z < z_max; z++) {
+                const y_array: string[] = z_array[z].split('&');
+                const y_max =  _min(size_y, y_array.length); 
+                for (var y = 0; y < y_max; y++) {
+                    const x_array: string[] = y_array[y].split(':');
+                    const x_max =  _min(size_x, x_array.length); 
+                    for (var x = 0; x < x_max; x++) {
+                        if (x_array[x] !== '0') {
+                            this.masks[z][y][x] = true;
+                        } else {
+                            this.masks[z][y][x] = false;
+                        }
+                    }
+                }
+            }      
+        } else {
+            this.__init_mask(true);
+        }
     }
 }
 function  _min(a: number, b: number): number {

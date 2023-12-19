@@ -10,3 +10,4 @@ export function init_after_loaded_DOM(): void {
     g_ds = init_maze_3D();
 }
 
+export var g_debug_mode: boolean = false;

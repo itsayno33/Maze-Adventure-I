@@ -20,21 +20,30 @@ function get_maze(url: string, opt: string): void {
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
 
-            /*
-            alert("maze id :" + jsonObj.maze_id
-            + "\nfloor: "  + jsonObj.floor
-            + "\nsize_x: " + jsonObj.size_x
-            + "\nsize_y: " + jsonObj.size_y
-            + "\nmaze: "   + jsonObj.maze);
-            */
+            alert(
+                  "\nmaze id :" + jsonObj.maze.maze_id
+                + "\nfloor: "   + jsonObj.maze.floor
+                + "\ntitle: "   + jsonObj.maze.title
+                + "\nsize_x: "  + jsonObj.maze.size_x
+                + "\nsize_y: "  + jsonObj.maze.size_y
+                + "\nsize_z: "  + jsonObj.maze.size_z
+            )
+            alert(
+                  "\nmaze: "    + jsonObj.maze.maze
+            );
+            alert(
+                  "\nmask: "    + jsonObj.maze.mask
+            );
 
             g_maze.init({
-                maze_id: jsonObj.maze_id,
-                size_x:  jsonObj.size_x,
-                size_y:  jsonObj.size_y,
-                size_z:  1
+                maze_id:    jsonObj.maze.maze_id,
+                floor:      jsonObj.maze.floor,
+                title:      jsonObj.maze.title,
+                size_x:     jsonObj.maze.size_x,
+                size_y:     jsonObj.maze.size_y,
+                size_z:     jsonObj.maze.size_z,
             });
-            g_maze.decode(jsonObj.maze);
+            g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.maze});
             g_hero.set_p(new C_Point(g_maze.get_x_max() -2, g_maze.get_y_max() -2, 0));
             g_maze.add_obj(g_hero);
             display_maze2D();
