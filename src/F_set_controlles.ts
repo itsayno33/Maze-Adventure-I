@@ -1,20 +1,19 @@
-import { C_Maze } from "./C_Maze";
-import { C_Hero } from "./C_Hero";
 import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze_3D } from "./F_display_maze";
+import { g_maze, g_hero } from "./global";
 
-export function set_move_controlles(maze: C_Maze, hero: C_Hero) {
+export function set_move_controlles() {
     hide_controlles();
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
 
-    u_arrow?.addEventListener("click", ()=>{go_forward(maze, hero);}, false);
-    d_arrow?.addEventListener("click", ()=>{go_back(maze, hero);},    false);
-    r_arrow?.addEventListener("click", ()=>{turn_r(maze, hero);},     false);
-    l_arrow?.addEventListener("click", ()=>{turn_l(maze, hero);},     false);
+    u_arrow?.addEventListener("click", ()=>{go_forward();}, false);
+    d_arrow?.addEventListener("click", ()=>{go_back();},    false);
+    r_arrow?.addEventListener("click", ()=>{turn_r();},     false);
+    l_arrow?.addEventListener("click", ()=>{turn_l();},     false);
 
     document.addEventListener('keypress', (event)=>{
         switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
@@ -52,31 +51,31 @@ function hide_controlles() {
     move_ctl_view?.style.setProperty('display', 'none');
 }
     
-function go_forward(maze: C_Maze, hero: C_Hero) {
-    const rslt = hero.hope_p_fwd();
-    move_check(rslt, maze);
-    display_maze2D(maze);
-    display_maze_3D(maze, hero);
+function go_forward() {
+    const rslt = g_hero.hope_p_fwd();
+    move_check(rslt);
+    display_maze2D();
+    display_maze_3D();
 }
-function go_back(maze: C_Maze, hero: C_Hero) {
-    const rslt = hero.hope_p_bak();
-    move_check(rslt, maze);
-    display_maze2D(maze);
-    display_maze_3D(maze, hero);
+function go_back() {
+    const rslt = g_hero.hope_p_bak();
+    move_check(rslt);
+    display_maze2D();
+    display_maze_3D();
 }
-function turn_r(maze: C_Maze, hero: C_Hero) {
-    const rslt = hero.hope_turn_r();
-    move_check(rslt, maze);
-    display_maze2D(maze);
-    display_maze_3D(maze, hero);
+function turn_r() {
+    const rslt = g_hero.hope_turn_r();
+    move_check(rslt);
+    display_maze2D();
+    display_maze_3D();
 }
-function turn_l(maze: C_Maze, hero: C_Hero) {
-    const rslt = hero.hope_turn_l();
-    move_check(rslt, maze);
-    display_maze2D(maze);
-    display_maze_3D(maze, hero);
+function turn_l() {
+    const rslt = g_hero.hope_turn_l();
+    move_check(rslt);
+    display_maze2D();
+    display_maze_3D();
 }
-function move_check(rslt: I_HasHope, maze: C_Maze) {
+function move_check(rslt: I_HasHope) {
     if (!rslt.has_hope) return;
     const r = rslt as I_HopeAction;
     if (r.hope == 'Turn') {
@@ -84,7 +83,7 @@ function move_check(rslt: I_HasHope, maze: C_Maze) {
         return;
     }
     if (r.hope == 'Move') {
-        switch (maze.get_cell(r.subj)) {
+        switch (g_maze.get_cell(r.subj)) {
             case T_MzKind.Floor: r.isOK();break;
             default: r.isNG();break;
         }

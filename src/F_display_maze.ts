@@ -1,31 +1,38 @@
-import { C_Hero } from "./C_Hero";
-import { C_Maze }   from "./C_Maze";
 import { T_MzKind } from "./T_MzKind";
+import { g_maze, g_hero, g_ds } from "./global";
 
-export function display_maze2D(maze: C_Maze): void {
+export function display_maze2D(): void {
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = maze.to_string();
+    if (pre !== null) pre.innerText = g_maze.to_string();
 }
 
-type T_Wall = {
+export type T_Wall = {
     min_x: number,
     max_x: number,
     min_y: number,
     max_y: number,
 }
 
-export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
+export type T_DrowSet = {
+    canvas: HTMLCanvasElement|null,
+    con:    CanvasRenderingContext2D|null,
+    depth:  number,
+    wall:   T_Wall[][]|null,
+}
+
+export function init_maze_3D(): T_DrowSet {
     const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
         alert('Canvas isnt found! id=Maze_view3D_canvas');
-        return;
+        return {canvas: null, con: null, depth: 0, wall: null};
     }
     const con: CanvasRenderingContext2D|null = canvas.getContext('2d');
     if (con === null) {
         alert('Browser dont surpport 2D graphics!');
-        return;
+        return {canvas: null, con: null, depth: 0, wall: null};
     }
-    const depth = 3; // 奇数のみ対応。ダンジョンの見通しを良くするなら 5 かもしれない
+
+    const depth = 5; // 奇数のみ対応。ダンジョンの見通しを良くするなら 5 かもしれない
 
     const min_x: number = 0;
     const min_y: number = 0;
@@ -60,48 +67,64 @@ export function display_maze_3D(maze: C_Maze, hero: C_Hero): void {
             }
         }
     }
+    return {canvas: canvas, con: con, depth: depth, wall: wall};
+}
 
-    draw_init_maze(canvas, con, wall);
+export function display_maze_3D(): void {
+    if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
 
-    for (var j = depth - 1; j >= 0; j--) {
-        const H_depth = (depth - 1) / 2;
+    draw_init_maze();
+
+    for (var j = g_ds.depth - 1; j >= 0; j--) {
+        const H_depth = (g_ds.depth - 1) / 2;
         for (var k = 0; k < H_depth; k++) {
-            if (maze.get_cell(hero.get_around(j, k - H_depth)) == T_MzKind.Stone) {
-                drow_side_wall(con, wall[j][k], wall[j + 1][k + 1]);
+            if (g_maze.get_cell(g_hero.get_around(j, k - H_depth)) == T_MzKind.Stone) {
+                drow_side_wall (
+                    g_ds.wall[j][k], 
+                    g_ds.wall[j + 1][k + 1]
+                );
+                drow_front_wall(g_ds.wall[j][k]);
             }
-            if (maze.get_cell(hero.get_around(j, H_depth - k)) == T_MzKind.Stone) {
-                drow_side_wall(con, wall[j + 1][depth - k - 2], wall[j][depth - k - 1]);
+            if (g_maze.get_cell(g_hero.get_around(j, H_depth - k)) == T_MzKind.Stone) {
+                drow_side_wall (
+                    g_ds.wall[j + 1][g_ds.depth - k - 2], 
+                    g_ds.wall[j][g_ds.depth - k - 1]
+                );
+                drow_front_wall(g_ds.wall[j][g_ds.depth - k - 1]);
             }
         }
-        for (var k = 0; k < depth; k++) {
-            if (maze.get_cell(hero.get_around(j, k - H_depth)) == T_MzKind.Stone) {
-                drow_front_wall(con, wall[j][k]);
-            }
+        if (g_maze.get_cell(g_hero.get_around(j, 0)) == T_MzKind.Stone) {
+            drow_front_wall(g_ds.wall[j][H_depth]);
         }
     }
 }
 
-function draw_init_maze(canvas: HTMLCanvasElement, con: CanvasRenderingContext2D, wall: T_Wall[][]): void {
-    con.fillStyle = '#aaaaff';
-    con.fillRect(
+function draw_init_maze(): void {
+    if (g_ds.canvas === null || g_ds.con === null) return;
+
+    g_ds.con.fillStyle = '#aaaaff';
+    g_ds.con.fillRect(
         0, 
         0, 
-        canvas.clientWidth - 1, 
-        10 * (canvas.clientHeight - 1) / 20
+        g_ds.canvas.clientWidth - 1, 
+        10 * (g_ds.canvas.clientHeight - 1) / 20
     );
 
-    con.fillStyle = '#6666ff';
-    con.fillRect(
+    g_ds.con.fillStyle = '#6666ff';
+    g_ds.con.fillRect(
         0, 
-        10 * (canvas.clientHeight - 1) / 20, 
-        canvas.clientWidth   - 1, 
-        canvas.clientHeight  - 1
+        10 * (g_ds.canvas.clientHeight - 1) / 20, 
+        g_ds.canvas.clientWidth   - 1, 
+        g_ds.canvas.clientHeight  - 1
     );
 
     // 床と天井にラインを引くこと
 }
 
-function drow_front_wall(con: CanvasRenderingContext2D, rect: T_Wall): void {
+function drow_front_wall(rect: T_Wall): void {
+    if (g_ds.con === null) return;
+    const con = g_ds.con;
+
     con.beginPath();
     con.lineJoin = 'round';
     con.moveTo(rect.min_x, rect.min_y);
@@ -117,7 +140,10 @@ function drow_front_wall(con: CanvasRenderingContext2D, rect: T_Wall): void {
     con.stroke();
 
 }
-function drow_side_wall(con: CanvasRenderingContext2D, rect_left: T_Wall, rect_right: T_Wall): void {
+function drow_side_wall(rect_left: T_Wall, rect_right: T_Wall): void {
+    if (g_ds.con === null) return;
+    const con = g_ds.con;
+
     con.beginPath();
     con.lineJoin = 'round';
     con.moveTo(rect_left. max_x, rect_left.min_y);

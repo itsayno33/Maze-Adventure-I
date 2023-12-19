@@ -2,20 +2,17 @@
 ///   主処理
 ///
 
-import { C_Maze }    from "./C_Maze";
 import { C_UrlOpt }  from "./C_UrlOpt";
-import { C_Hero }    from "./C_Hero";
 import { C_Point }   from "./C_Point";
 import { display_maze2D, display_maze_3D } from "./F_display_maze";
 import { set_move_controlles } from "./F_set_controlles";
-
-const g_maze = new C_Maze({maze_id: -1});
-const g_hero = new C_Hero();
+import { g_maze, g_hero, init_after_loaded_DOM }      from "./global";
 
 window.addEventListener('DOMContentLoaded', function() { 
     const get_maze_url: string = "http://127.0.0.1/dev/mai/mai_maze.php";
     const get_maze_opt: string = new C_UrlOpt({mode: "new", num: 333}).to_string();
     get_maze(get_maze_url, get_maze_opt);
+    init_after_loaded_DOM();
 });
 
 function get_maze(url: string, opt: string): void {
@@ -40,9 +37,9 @@ function get_maze(url: string, opt: string): void {
             g_maze.decode(jsonObj.maze);
             g_hero.set_p(new C_Point(g_maze.get_x_max() -2, g_maze.get_y_max() -2, 0));
             g_maze.add_obj(g_hero);
-            display_maze2D(g_maze);
-            set_move_controlles(g_maze, g_hero);
-            display_maze_3D(g_maze, g_hero);
+            display_maze2D();
+            set_move_controlles();
+            display_maze_3D();
         });
 }
 
