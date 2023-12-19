@@ -56,8 +56,8 @@ export function init_maze_3D(): T_DrowSet {
 
     const wall: T_Wall[][] = new Array(depth + 1);
     for (var j = 0; j < depth + 1; j++) {
-        wall[j] = new Array(depth);
-        for (var k = 0; k < depth; k++) {
+        wall[j] = new Array(depth + 1);
+        for (var k = 0; k < depth + 1; k++) {
             const wk_x = center_x - front_wall_H_size_x[j] * (depth - 2 * k);
             wall[j][k] = {
                 min_x: wk_x,
@@ -107,18 +107,53 @@ function draw_init_maze(): void {
         0, 
         0, 
         g_ds.canvas.clientWidth - 1, 
-        10 * (g_ds.canvas.clientHeight - 1) / 20
+        get_holizon_line(),
     );
 
     g_ds.con.fillStyle = '#6666ff';
     g_ds.con.fillRect(
         0, 
-        10 * (g_ds.canvas.clientHeight - 1) / 20, 
+        get_holizon_line(), 
         g_ds.canvas.clientWidth   - 1, 
-        g_ds.canvas.clientHeight  - 1
+        g_ds.canvas.clientHeight  - 1,
     );
 
     // 床と天井にラインを引くこと
+    drow_floor_line();
+}
+
+function get_holizon_line(): number {
+    if (g_ds.wall === null) return -1;
+    return g_ds.wall[g_ds.depth][0].max_y;
+}
+
+function drow_floor_line(): void {
+    if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
+    const con   = g_ds.con;
+    const wall  = g_ds.wall;
+    const depth = g_ds.depth;
+
+    const left_x  = 0;
+    const right_x = g_ds.canvas.clientWidth  - 1;
+    const front_y = g_ds.canvas.clientHeight - 1;
+    const back_y  = get_holizon_line();
+
+    con.strokeStyle = '#9999ff';
+    con.lineWidth   = 1;
+
+    for (var y = 0; y < depth + 1; y++) {
+        con.beginPath();
+        con.moveTo(left_x , wall[y][0].max_y);
+        con.lineTo(right_x, wall[y][0].max_y);
+        con.stroke();
+    }
+
+    for (var x = 0; x < depth + 1; x++) {
+        con.beginPath();
+        con.moveTo(wall[0][x].min_x,     front_y);
+        con.lineTo(wall[depth][x].min_x, back_y );
+        con.stroke();
+    }
 }
 
 function drow_front_wall(rect_front: T_Wall): void {
