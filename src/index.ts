@@ -4,7 +4,7 @@
 
 import { C_UrlOpt }  from "./C_UrlOpt";
 import { C_Point }   from "./C_Point";
-import { display_maze2D, display_maze_3D } from "./F_display_maze";
+import { display_maze2D, display_maze3D } from "./F_display_maze";
 import { set_move_controlles } from "./F_set_controlles";
 import { g_maze, g_hero, init_after_loaded_DOM }      from "./global";
 import { T_Direction } from "./T_Direction";
@@ -20,7 +20,7 @@ function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
-
+/*
             alert(
                   "\nmaze id :" + (jsonObj.maze.maze_id ?? '?')
                 + "\nfloor: "   + (jsonObj.maze.floor ?? '?')
@@ -43,16 +43,17 @@ function get_maze(url: string, opt: string): void {
               + "\ncur_z: "     + (jsonObj.hero.point.z ?? '?')
               + "\ncur_d: "     + (jsonObj.hero.direct.d ?? '?')
             );
-
+*/
             decode_all(jsonObj);
 
             display_maze2D();
             set_move_controlles();
-            display_maze_3D();
+            display_maze3D();
         });
 }
 
 function decode_all(jsonObj: any) {
+    // MAZE関連のデコード
     g_maze.init({
         maze_id:    jsonObj.maze.maze_id ?? 0,
         floor:      jsonObj.maze.floor   ?? 0,
@@ -63,6 +64,7 @@ function decode_all(jsonObj: any) {
     });
     g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.maze});
 
+    //　HERO関連のデコード
     jsonObj.hero.id       ?? g_hero.set_prp({id:   jsonObj.hero.id});
     jsonObj.hero.name     ?? g_hero.set_prp({name: jsonObj.hero.name});
     g_hero.set_p(new C_Point(
@@ -71,6 +73,7 @@ function decode_all(jsonObj: any) {
         jsonObj.hero.point.z ?? 0));
     g_hero.set_dir(jsonObj.hero.direct.d ?? T_Direction.N);
 
+    // MAZEにHEROを追加
     g_maze.add_obj(g_hero);
 }
 

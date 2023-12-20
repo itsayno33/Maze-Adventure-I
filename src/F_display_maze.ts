@@ -16,7 +16,7 @@ export type T_DrowSet = {
     wall:   C_Wall|null,
 }
 
-export function init_maze_3D(): T_DrowSet {
+export function init_maze3D(): T_DrowSet {
     const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
         alert('Canvas isnt found! id=Maze_view3D_canvas');
@@ -37,11 +37,11 @@ export function init_maze_3D(): T_DrowSet {
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
 
-export function display_maze_3D(): void {
+export function display_maze3D(): void {
     if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
 
-    draw_init_maze();
-    displey_mase_3d_direction();
+    draw_init_maze3D();
+    displey_mase3D_direction();
 
     const depth   =  g_ds.depth;
     const H_depth = (depth - 1) / 2;
@@ -73,7 +73,7 @@ export function display_maze_3D(): void {
     }
 }
 
-function draw_init_maze(): void {
+function draw_init_maze3D(): void {
     if (g_ds.canvas === null || g_ds.con === null) return;
 
     g_ds.con.fillStyle = '#aaaaff';
@@ -189,7 +189,7 @@ function drow_right_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
     con.stroke();
 }
 
-export function displey_mase_3d_direction(): void {
+export function displey_mase3D_direction(): void {
     const p_dir = document.getElementById('Maze_view3D_direction_info') as HTMLParagraphElement;
     if (p_dir === null) {
         alert('P element isnt found! id=Maze_view3D_direction_info');
@@ -220,7 +220,7 @@ export function displey_mase_3d_direction(): void {
 }
 
 
-export function maze_3D_blink_on_direction(): void {
+export function maze3D_blink_on_direction(): void {
     const dir_x = document.getElementById('direction_X') as HTMLSpanElement;
     if (dir_x === null) return;
 
@@ -240,7 +240,7 @@ export function maze_3D_blink_on_direction(): void {
             return;
     }
 }
-export function maze_3D_blink_off_direction(): void {
+export function maze3D_blink_off_direction(): void {
     const dir_x = document.getElementById('direction_X') as HTMLSpanElement;
     if (dir_x === null) return;
     dir_x.classList.remove('blink');

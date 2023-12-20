@@ -198,6 +198,25 @@ export class C_Maze {
         return obj;
     }
 
+    public clear_mask(cur_pos: C_Point, clr_pos: C_Point): void {
+        if (cur_pos.z !== clr_pos.z) return;
+
+        const z = cur_pos.z;
+        for (var y = cur_pos.y; y < clr_pos.y; y++) {
+            for (var x = cur_pos.x; x < clr_pos.x; x++) {
+                switch (this.cells[z][y][x].get()) {
+                    case T_MzKind.NoDef:
+                    case T_MzKind.Unexp:
+                    case T_MzKind.Stone:
+                    case T_MzKind.Unkwn:
+                    case T_MzKind.Empty:
+                        return;
+                }
+            }
+        }
+        this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
+    }
+
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
     public get_z_max(): number {return this.size.size_z();}
