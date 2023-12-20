@@ -2,7 +2,7 @@ import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
-import { g_maze, g_hero } from "./global";
+import { g_maze, g_hero, g_ds } from "./global";
 
 export function set_move_controlles() {
     hide_controlles();
@@ -11,10 +11,10 @@ export function set_move_controlles() {
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
 
-    u_arrow?.addEventListener("click", ()=>{go_forward();}, false);
-    d_arrow?.addEventListener("click", ()=>{go_back();},    false);
-    r_arrow?.addEventListener("click", ()=>{turn_r();},     false);
-    l_arrow?.addEventListener("click", ()=>{turn_l();},     false);
+    u_arrow?.addEventListener("click", ()=>{go_F();}, false);
+    d_arrow?.addEventListener("click", ()=>{go_B();}, false);
+    r_arrow?.addEventListener("click", ()=>{tr_R();}, false);
+    l_arrow?.addEventListener("click", ()=>{tr_L();}, false);
 
     document.addEventListener('keypress', (event)=>{
         switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
@@ -51,38 +51,46 @@ function hide_controlles() {
     const move_ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     move_ctl_view?.style.setProperty('display', 'none');
 }
-    
-function go_forward() {
+
+
+export function clear_mask_around_hero(): void {
+    g_maze.clear_mask_around_hero();
+}
+
+function go_F() {
     const rslt = g_hero.hope_p_fwd();
     move_check(rslt);
+    clear_mask_around_hero();
     display_maze2D();
     display_maze3D();
     maze3D_blink_on_direction();
 }
-function go_back() {
+function go_B() {
     const rslt = g_hero.hope_p_bak();
     move_check(rslt);
+    clear_mask_around_hero();
     display_maze2D();
     display_maze3D();
     maze3D_blink_on_direction();
 }
-function turn_r() {
+function tr_R() {
     const rslt = g_hero.hope_turn_r();
     move_check(rslt);
+    clear_mask_around_hero();
     display_maze2D();
     display_maze3D();
     maze3D_blink_off_direction();
 }
-function turn_l() {
+function tr_L() {
     const rslt = g_hero.hope_turn_l();
     move_check(rslt);
+    clear_mask_around_hero();
     display_maze2D();
     display_maze3D();
     maze3D_blink_off_direction();
 }
-function move_check(rslt: I_HasHope) {
-    if (!rslt.has_hope) return;
-    const r = rslt as I_HopeAction;
+function move_check(r: I_HopeAction) {
+    if (!r.has_hope) return;
     if (r.hope == 'Turn') {
         r.doOK();
         return;

@@ -3,6 +3,7 @@ import { C_Point }      from "./C_Point";
 import { C_Range }      from "./C_Range";
 import { I_Exist }      from "./I_EventMap";
 import { g_debug_mode } from "./global";
+import { g_hero }       from "./global";
 
 class C_MazeCell  {
     protected cell: T_MzKind;
@@ -198,23 +199,60 @@ export class C_Maze {
         return obj;
     }
 
-    public clear_mask(cur_pos: C_Point, clr_pos: C_Point): void {
-        if (cur_pos.z !== clr_pos.z) return;
+    // 2Dマップのマスク外し関連
+    public clear_mask_around_hero(): void {
+        // 現在地と真横は自動的に見える
+        this.__clear_mask(g_hero.get_around(0, -1));
+        this.__clear_mask(g_hero.get_around(0,  0));
+        this.__clear_mask(g_hero.get_around(0,  1));
+        // 目の前とその真横も自動的に見える
+        this.__clear_mask(g_hero.get_around(1, -1));
+        this.__clear_mask(g_hero.get_around(1,  0));
+        this.__clear_mask(g_hero.get_around(1,  1));
+
+        // その他は壁に邪魔されて見えないかもしれないのでチェックする
+        const cur_pos = g_hero.get_p();
+        const depth   =  5; // 3Dマップに合わせると2Dマップが見えすぎるので限定した笑
+        const H_depth = (depth - 1) / 2;
+        for (var d = 0; d < depth; d++) {
+            for (var s = -H_depth; s < H_depth + 1; s++) {
+                const clr_pos = g_hero.get_around(d, s);
+                this.__judge_and_clear_mask(cur_pos, clr_pos);
+            }
+        }
+    }
+    protected __clear_mask(clr_pos: C_Point): void {
+        if (!this.size.within(clr_pos)) return;
+        this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
+    }
+    protected __judge_and_clear_mask(cur_pos: C_Point, clr_pos: C_Point): void {
+        if (cur_pos.z !== clr_pos.z)    return;
+        if (!this.size.within(cur_pos)) return;
+        if (!this.size.within(clr_pos)) return;
 
         const z = cur_pos.z;
-        for (var y = cur_pos.y; y < clr_pos.y; y++) {
-            for (var x = cur_pos.x; x < clr_pos.x; x++) {
+
+        const min_y = _min(cur_pos.y, clr_pos.y);
+        const max_y = _max(cur_pos.y, clr_pos.y);
+
+        const min_x = _min(cur_pos.x, clr_pos.x);
+        const max_x = _max(cur_pos.x, clr_pos.x);
+
+        for (var y = min_y; y <= max_y; y++) {
+            for (var x = min_x; x <= max_x; x++) {
                 switch (this.cells[z][y][x].get()) {
+                    case T_MzKind.Stone:
+                        if (y != clr_pos.y || x != clr_pos.x) return;
+                        break;
                     case T_MzKind.NoDef:
                     case T_MzKind.Unexp:
-                    case T_MzKind.Stone:
                     case T_MzKind.Unkwn:
                     case T_MzKind.Empty:
                         return;
                 }
             }
         }
-        this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
+        this.__clear_mask(clr_pos);
     }
 
     public get_x_max(): number {return this.size.size_x();}
@@ -333,5 +371,8 @@ export class C_Maze {
 }
 function  _min(a: number, b: number): number {
     return (a <= b) ? a : b;
+}
+function  _max(a: number, b: number): number {
+    return (a >= b) ? a : b;
 }
 

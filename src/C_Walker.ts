@@ -1,29 +1,13 @@
 import { T_Direction } from "./T_Direction";
 import { C_Point }     from "./C_Point";
-import { T_MzKind }    from "./T_MzKind";
-import { C_Maze }      from "./C_Maze";
 
 
 export class C_Walker {
     protected p:  C_Point;
     protected d: T_Direction;
-    protected fn_dont_hit: (k: T_MzKind) => boolean;
     constructor() {
         this.p  = new C_Point();
         this.d = T_Direction.N;
-        this.fn_dont_hit = this.__default_dont_hit;
-    }
-    protected __default_dont_hit(k: T_MzKind): boolean {
-        switch (k) {
-            case T_MzKind.Floor:
-            case T_MzKind.Unexp:
-                return true;
-            default:
-                return false;
-        }
-    }
-    public set_dont_hit(f: (k: T_MzKind) => boolean): void {
-        this.fn_dont_hit = f;
     }
     public set_dir(d: T_Direction): void {
         this.d = d;
@@ -97,9 +81,6 @@ export class C_Walker {
                 break;
         }
         return new C_Point(target_x, target_y, target_z);
-    }
-    public dont_hit(k: T_MzKind): boolean {
-        return this.fn_dont_hit(k);
     }
     public turn_r(): void {
         switch (this.d) {
