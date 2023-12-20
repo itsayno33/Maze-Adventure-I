@@ -36,31 +36,42 @@ function get_maze(url: string, opt: string): void {
                   "\nmask: "    + (jsonObj.maze.mask ?? '?')
             );
             alert(
-                "\ncur_x: "     + (jsonObj.hero.point.x ?? '?')
+                "\nid:    "     + (jsonObj.hero.id      ?? '?')
+              + "\nname:  "     + (jsonObj.hero.name    ?? '?')
+              + "\ncur_x: "     + (jsonObj.hero.point.x ?? '?')
               + "\ncur_y: "     + (jsonObj.hero.point.y ?? '?')
               + "\ncur_z: "     + (jsonObj.hero.point.z ?? '?')
               + "\ncur_d: "     + (jsonObj.hero.direct.d ?? '?')
             );
 
-            g_maze.init({
-                maze_id:    jsonObj.maze.maze_id,
-                floor:      jsonObj.maze.floor,
-                title:      jsonObj.maze.title,
-                size_x:     jsonObj.maze.size_x,
-                size_y:     jsonObj.maze.size_y,
-                size_z:     jsonObj.maze.size_z,
-            });
-            g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.maze});
-            g_hero.set_p(new C_Point(
-                jsonObj.hero.point.x ?? g_maze.get_x_max() -2, 
-                jsonObj.hero.point.y ?? g_maze.get_y_max() -2, 
-                jsonObj.hero.point.z ?? 0));
-            g_maze.add_obj(g_hero);
-            g_hero.set_dir(jsonObj.hero.direct.d ?? T_Direction.N);
+            decode_all(jsonObj);
+
             display_maze2D();
             set_move_controlles();
             display_maze_3D();
         });
+}
+
+function decode_all(jsonObj: any) {
+    g_maze.init({
+        maze_id:    jsonObj.maze.maze_id ?? 0,
+        floor:      jsonObj.maze.floor   ?? 0,
+        title:      jsonObj.maze.title   ?? 'UnKnown Dungeon',
+        size_x:     jsonObj.maze.size_x  ?? 3,
+        size_y:     jsonObj.maze.size_y  ?? 3,
+        size_z:     jsonObj.maze.size_z  ?? 1,
+    });
+    g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.maze});
+
+    jsonObj.hero.id       ?? g_hero.set_prp({id:   jsonObj.hero.id});
+    jsonObj.hero.name     ?? g_hero.set_prp({name: jsonObj.hero.name});
+    g_hero.set_p(new C_Point(
+        jsonObj.hero.point.x ?? g_maze.get_x_max() -2, 
+        jsonObj.hero.point.y ?? g_maze.get_y_max() -2, 
+        jsonObj.hero.point.z ?? 0));
+    g_hero.set_dir(jsonObj.hero.direct.d ?? T_Direction.N);
+
+    g_maze.add_obj(g_hero);
 }
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 

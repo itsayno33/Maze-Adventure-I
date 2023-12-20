@@ -3,23 +3,41 @@ import { C_Point }  from "./C_Point";
 import { C_Walker } from "./C_Walker";
 import { T_Direction } from "./T_Direction";
 
+type __init_arg = {
+    id?:number, 
+    name?: string, 
+    p?: C_Point, 
+    d?: T_Direction,
+    motion?: string,
+}
 export class C_Hero implements I_Exist {
+    protected my_id: number;
+    protected my_name: string;
     protected walker: C_Walker;
     protected my_layer: number = 99;
 
     protected hope_motion: string;
 
-    public constructor(p?: C_Point, d?: T_Direction) {
-        const pos = p ?? new C_Point(1, 1, 0);
-        const dir = d ?? T_Direction.N;
-        this.walker = new C_Walker();
-        this.walker.set_p(pos);
-        this.walker.set_dir(dir);
+    public constructor(a?: __init_arg) {
 
-        this.hope_motion = 'NOP';
+        this.my_id   = a?.id ?? 0;
+        this.my_name = a?.name ?? 'Neo Hero?';
+        this.walker = new C_Walker();
+        this.hope_motion = a?.motion ?? 'NOP';    
+        if (a !== undefined) this.__init(a);
+    }
+    protected __init(a: __init_arg): void {
+            this.my_id   = a.id   ?? this.my_id
+            this.my_name = a.name ?? this.my_name;
+            if (a.p !== undefined) this.walker.set_p(a.p);
+            if (a.d !== undefined) this.walker.set_dir(a.d);
+            this.hope_motion = a.motion ?? this.hope_motion; 
+    }
+    public set_prp(arg : __init_arg) {
+        this.__init(arg);
     }
     public id(): string {
-        return "ImHero";
+        return 'Hero_' + this.my_id.toString(16).padStart(5, '0');
     }
     public within(p: C_Point): boolean {
         const here = this.walker.get_p();
