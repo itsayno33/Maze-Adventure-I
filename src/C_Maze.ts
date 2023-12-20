@@ -207,23 +207,31 @@ export class C_Maze {
         this.__clear_mask(g_hero.get_around(0,  1));
 
         const depth   =  5; // 2Dマップ用の奥行き限界
+        var loop_break = false;
 
         // 前方の見通しをチェックしながら見えるところは解放する
         for (var d = 1; d < depth; d++) {
             const front_pos = g_hero.get_around(d, 0)
-            if (this.get_cell(front_pos) == T_MzKind.Floor) {
-                // 正面に障害物が無ければ、その両側も見える
-                this.__clear_mask(g_hero.get_around(d, -1));
-                this.__clear_mask(g_hero.get_around(d,  0));
-                this.__clear_mask(g_hero.get_around(d,  1));
-            } else {
-                // 正面が壁でもその手前まで見えてたなら、その壁と両側は見える
-                this.__clear_mask(g_hero.get_around(d, -1));
-                this.__clear_mask(g_hero.get_around(d,  0));
-                this.__clear_mask(g_hero.get_around(d,  1));
-                // 正面に障害物が有ったらその奥は見えないので探索終了
-                break;
+            switch (this.get_cell(front_pos)) {
+                case T_MzKind.Floor:
+                case T_MzKind.Unexp:
+                case T_MzKind.StrUp:
+                case T_MzKind.StrDn:
+                    // 正面に障害物が無ければ、その両側も見える
+                    this.__clear_mask(g_hero.get_around(d, -1));
+                    this.__clear_mask(g_hero.get_around(d,  0));
+                    this.__clear_mask(g_hero.get_around(d,  1));
+                    break;
+                default:
+                    // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
+                    this.__clear_mask(g_hero.get_around(d, -1));
+                    this.__clear_mask(g_hero.get_around(d,  0));
+                    this.__clear_mask(g_hero.get_around(d,  1));
+                    // 正面に障害物が有ったらその奥は見えないので探索終了
+                    loop_break = true;
+                    break;
             }
+            if (loop_break) break;
         }
 /*
         // その他は壁に邪魔されて見えないかもしれないのでチェックする
@@ -241,6 +249,7 @@ export class C_Maze {
         if (!this.size.within(clr_pos)) return;
         this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
     }
+/*
     protected __judge_and_clear_mask(cur_pos: C_Point, clr_pos: C_Point): void {
         if (cur_pos.z !== clr_pos.z)    return;
         if (!this.size.within(cur_pos)) return;
@@ -270,6 +279,7 @@ export class C_Maze {
         }
         this.__clear_mask(clr_pos);
     }
+*/
 
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
