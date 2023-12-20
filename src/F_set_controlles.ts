@@ -16,7 +16,7 @@ export function set_move_controlles() {
     r_arrow?.addEventListener("click", ()=>{tr_R();}, false);
     l_arrow?.addEventListener("click", ()=>{tr_L();}, false);
 
-    document.addEventListener('keypress', (event)=>{
+    window.addEventListener('keypress', (event)=>{
         switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
             case 'ArrowUp': 
             case 'KeyK': 
@@ -53,41 +53,33 @@ function hide_controlles() {
 }
 
 
-export function clear_mask_around_hero(): void {
-    g_maze.clear_mask_around_hero();
+function clear_mask_around_the_hero(): void {
+    g_maze.clear_mask_around_the_hero();
+}
+
+function change_unexp_to_floor(): void {
+    g_maze.change_unexp_to_floor();
 }
 
 function go_F() {
     const rslt = g_hero.hope_p_fwd();
     move_check(rslt);
-    clear_mask_around_hero();
-    display_maze2D();
-    display_maze3D();
-    maze3D_blink_on_direction();
+    do_bottom_half('blink_on');
 }
 function go_B() {
     const rslt = g_hero.hope_p_bak();
     move_check(rslt);
-    clear_mask_around_hero();
-    display_maze2D();
-    display_maze3D();
-    maze3D_blink_on_direction();
+    do_bottom_half('blink_on');
 }
 function tr_R() {
     const rslt = g_hero.hope_turn_r();
     move_check(rslt);
-    clear_mask_around_hero();
-    display_maze2D();
-    display_maze3D();
-    maze3D_blink_off_direction();
+    do_bottom_half('blink_off');
 }
 function tr_L() {
     const rslt = g_hero.hope_turn_l();
     move_check(rslt);
-    clear_mask_around_hero();
-    display_maze2D();
-    display_maze3D();
-    maze3D_blink_off_direction();
+    do_bottom_half('blink_off');
 }
 function move_check(r: I_HopeAction) {
     if (!r.has_hope) return;
@@ -97,9 +89,22 @@ function move_check(r: I_HopeAction) {
     }
     if (r.hope == 'Move') {
         switch (g_maze.get_cell(r.subj)) {
-            case T_MzKind.Floor: r.doOK();break;
-            default: r.doNG();break;
+            case T_MzKind.Floor:
+            case T_MzKind.Unexp:
+            case T_MzKind.StrUp:
+            case T_MzKind.StrDn:
+                 r.doOK();return;
         }
+        r.doNG();
         return;
     }
 } 
+
+export function do_bottom_half(blink_mode: string): void {
+    change_unexp_to_floor();
+    clear_mask_around_the_hero();
+    display_maze2D();
+    display_maze3D();
+    if (blink_mode === 'blink_on') maze3D_blink_on_direction();
+    else maze3D_blink_off_direction();
+}

@@ -22,6 +22,12 @@ function init_debug_mode(): void {
     if (btn === null) return;
     toggle_debug_mode();
     btn.addEventListener("click", (event)=>{toggle_debug_mode();}, false);
+    window.addEventListener("keydown",(event)=>{
+        switch (event.key) {
+            case "Escape":
+                btn.click();
+        }
+    })
 }
 
 function toggle_debug_mode(): void {

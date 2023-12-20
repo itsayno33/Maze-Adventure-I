@@ -199,8 +199,15 @@ export class C_Maze {
         return obj;
     }
 
+    // Heroが来たポイントが未踏地だったらただの床に変える
+    public change_unexp_to_floor() {
+        if (this.get_cell(g_hero.get_p()) == T_MzKind.Unexp) {
+            this.set_cell(g_hero.get_p(), T_MzKind.Floor);
+        }
+    }
+
     // 2Dマップのマスク外し関連
-    public clear_mask_around_hero(): void {
+    public clear_mask_around_the_hero(): void {
         // 現在地と真横は自動的に見える
         this.__clear_mask(g_hero.get_around(0, -1));
         this.__clear_mask(g_hero.get_around(0,  0));

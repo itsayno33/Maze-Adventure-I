@@ -5,7 +5,7 @@
 import { C_UrlOpt }  from "./C_UrlOpt";
 import { C_Point }   from "./C_Point";
 import { display_maze2D, display_maze3D } from "./F_display_maze";
-import { set_move_controlles, clear_mask_around_hero } from "./F_set_controlles";
+import { set_move_controlles, do_bottom_half } from "./F_set_controlles";
 import { g_maze, g_hero, init_after_loaded_DOM }      from "./global";
 import { T_Direction } from "./T_Direction";
 
@@ -46,11 +46,9 @@ function get_maze(url: string, opt: string): void {
 */
             decode_all(jsonObj);
 
-            clear_mask_around_hero();
-            display_maze2D();
             set_move_controlles();
-            display_maze3D();
-        });
+            do_bottom_half('blink_off');
+    });
 }
 
 function decode_all(jsonObj: any) {

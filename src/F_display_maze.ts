@@ -148,7 +148,7 @@ function drow_front_wall(rect_front: T_Wall): void {
     con.fillStyle = '#00ff00';
     con.fill();
     con.strokeStyle = '#0000ff';
-    con.lineWidth   = 5;
+    con.lineWidth   = 3;
     con.stroke();
 
 }
@@ -167,7 +167,7 @@ function drow_left_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
     con.fillStyle = '#00cc00';
     con.fill();
     con.strokeStyle = '#0000ff';
-    con.lineWidth   = 5;
+    con.lineWidth   = 3;
     con.stroke();
 }
 function drow_right_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
@@ -185,7 +185,7 @@ function drow_right_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
     con.fillStyle = '#00cc00';
     con.fill();
     con.strokeStyle = '#0000ff';
-    con.lineWidth   = 5;
+    con.lineWidth   = 3;
     con.stroke();
 }
 
