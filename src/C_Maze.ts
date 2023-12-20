@@ -205,21 +205,37 @@ export class C_Maze {
         this.__clear_mask(g_hero.get_around(0, -1));
         this.__clear_mask(g_hero.get_around(0,  0));
         this.__clear_mask(g_hero.get_around(0,  1));
-        // 目の前とその真横も自動的に見える
-        this.__clear_mask(g_hero.get_around(1, -1));
-        this.__clear_mask(g_hero.get_around(1,  0));
-        this.__clear_mask(g_hero.get_around(1,  1));
 
+        const depth   =  5; // 2Dマップ用の奥行き限界
+
+        // 前方の見通しをチェックしながら見えるところは解放する
+        for (var d = 1; d < depth; d++) {
+            const front_pos = g_hero.get_around(d, 0)
+            if (this.get_cell(front_pos) == T_MzKind.Floor) {
+                // 正面に障害物が無ければ、その両側も見える
+                this.__clear_mask(g_hero.get_around(d, -1));
+                this.__clear_mask(g_hero.get_around(d,  0));
+                this.__clear_mask(g_hero.get_around(d,  1));
+            } else {
+                // 正面が壁でもその手前まで見えてたなら、その壁と両側は見える
+                this.__clear_mask(g_hero.get_around(d, -1));
+                this.__clear_mask(g_hero.get_around(d,  0));
+                this.__clear_mask(g_hero.get_around(d,  1));
+                // 正面に障害物が有ったらその奥は見えないので探索終了
+                break;
+            }
+        }
+/*
         // その他は壁に邪魔されて見えないかもしれないのでチェックする
         const cur_pos = g_hero.get_p();
-        const depth   =  5; // 3Dマップに合わせると2Dマップが見えすぎるので限定した笑
         const H_depth = (depth - 1) / 2;
-        for (var d = 0; d < depth; d++) {
+        for (var d = 2; d < depth; d++) {
             for (var s = -H_depth; s < H_depth + 1; s++) {
                 const clr_pos = g_hero.get_around(d, s);
                 this.__judge_and_clear_mask(cur_pos, clr_pos);
             }
         }
+*/
     }
     protected __clear_mask(clr_pos: C_Point): void {
         if (!this.size.within(clr_pos)) return;
