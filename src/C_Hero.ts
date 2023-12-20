@@ -7,6 +7,9 @@ type __init_arg = {
     id?:number, 
     name?: string, 
     p?: C_Point, 
+    x?: number,
+    y?: number,
+    z?: number,
     d?: T_Direction,
     motion?: string,
 }
@@ -30,6 +33,9 @@ export class C_Hero implements I_Exist {
             this.my_id   = a.id   ?? this.my_id
             this.my_name = a.name ?? this.my_name;
             if (a.p !== undefined) this.walker.set_p(a.p);
+            if (a.x !== undefined) this.walker.set_x(a.x);
+            if (a.y !== undefined) this.walker.set_x(a.y);
+            if (a.z !== undefined) this.walker.set_x(a.z);
             if (a.d !== undefined) this.walker.set_dir(a.d);
             this.hope_motion = a.motion ?? this.hope_motion; 
     }
@@ -46,7 +52,7 @@ export class C_Hero implements I_Exist {
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}
     public to_letter(): string|null {
-        switch (this.walker.get_d()) {
+        switch (this.walker.get_dir()) {
             case T_Direction.N: return '↑';
             case T_Direction.E: return '→';
             case T_Direction.S: return '↓';
@@ -60,8 +66,15 @@ export class C_Hero implements I_Exist {
     public set_p(p:C_Point, d?: T_Direction): void {
         this.walker.set_p(p, d);
     }
+    public get_z(): number {
+        return this.walker.get_z();
+    }
+    public set_z(z: number): void {
+        if (z < 0) return;
+        this.walker.set_z(z);
+    }
     public get_dir(): T_Direction {
-        return this.walker.get_d();
+        return this.walker.get_dir();
     }
     public set_dir(d: T_Direction): void {
         this.walker.set_dir(d);
@@ -104,6 +117,24 @@ export class C_Hero implements I_Exist {
             hope: "Turn",
             subj: this.walker.get_p(),
             doOK: ()=>{this.walker.turn_l();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+    public hope_p_up(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Up",
+            subj: this.walker.get_p(),
+            doOK: ()=>{this.walker.set_p_up();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+    public hope_p_down(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Down",
+            subj: this.walker.get_p(),
+            doOK: ()=>{this.walker.set_p_down();},
             doNG: ()=>{this.isNG();},
         };
     }

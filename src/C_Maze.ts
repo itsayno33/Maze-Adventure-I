@@ -214,31 +214,23 @@ export class C_Maze {
         this.__clear_mask(g_hero.get_around(0,  1));
 
         const depth   =  5; // 2Dマップ用の奥行き限界
-        var loop_break = false;
 
         // 前方の見通しをチェックしながら見えるところは解放する
         for (var d = 1; d < depth; d++) {
             const front_pos = g_hero.get_around(d, 0)
-            switch (this.get_cell(front_pos)) {
-                case T_MzKind.Floor:
-                case T_MzKind.Unexp:
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                    // 正面に障害物が無ければ、その両側も見える
-                    this.__clear_mask(g_hero.get_around(d, -1));
-                    this.__clear_mask(g_hero.get_around(d,  0));
-                    this.__clear_mask(g_hero.get_around(d,  1));
-                    break;
-                default:
-                    // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
-                    this.__clear_mask(g_hero.get_around(d, -1));
-                    this.__clear_mask(g_hero.get_around(d,  0));
-                    this.__clear_mask(g_hero.get_around(d,  1));
-                    // 正面に障害物が有ったらその奥は見えないので探索終了
-                    loop_break = true;
-                    break;
+            if (this.is_movable(front_pos)) {
+                // 正面に障害物が無ければ、その両側も見える
+                this.__clear_mask(g_hero.get_around(d, -1));
+                this.__clear_mask(g_hero.get_around(d,  0));
+                this.__clear_mask(g_hero.get_around(d,  1));
+            } else {
+                // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
+                this.__clear_mask(g_hero.get_around(d, -1));
+                this.__clear_mask(g_hero.get_around(d,  0));
+                this.__clear_mask(g_hero.get_around(d,  1));
+                // 正面に障害物が有ったらその奥は見えないので探索終了
+                break;
             }
-            if (loop_break) break;
         }
 /*
         // その他は壁に邪魔されて見えないかもしれないのでチェックする
@@ -286,7 +278,18 @@ export class C_Maze {
         this.__clear_mask(clr_pos);
     }
 */
-    
+    public is_movable(p: C_Point): boolean {
+        if (!this.size.within(p)) return false;
+        switch (this.get_cell(p)) {
+            case T_MzKind.Floor:
+            case T_MzKind.Unexp:
+            case T_MzKind.StrUp:
+            case T_MzKind.StrDn:
+                return true;
+        }
+        return false;
+    }    
+
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
     public get_z_max(): number {return this.size.size_z();}
@@ -305,9 +308,7 @@ export class C_Maze {
         return this.size.within(p);
     }
     public can_UD(p: C_Point): boolean {
-        if (p.z < 0 || p.z >= this.size.size_z()) return false;
-        // 未実装
-        return false;
+        return this.is_movable(p);
     }
     public to_letter(p: C_Point): string {
         return this.cells[p.z][p.y][p.x].to_letter();

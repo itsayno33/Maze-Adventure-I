@@ -5,9 +5,9 @@ import { T_Wall, C_Wall }   from "./C_Wall";
 import { g_maze, g_hero, g_ds } from "./global";
 import { T_Direction } from "./T_Direction";
 
-export function display_maze2D(): void {
+export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string();
+    if (pre !== null) pre.innerText = g_maze.to_string(g_hero.get_p().z);
 }
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -48,7 +48,7 @@ export function display_maze3D(): void {
     for (var j = g_ds.depth - 1; j >= 0; j--) {
         // 右側が見えている壁の描写 (左側から描写)
         for (var k = -H_depth; k < 0; k++) {
-            if (g_maze.get_cell(g_hero.get_around(j, k)) == T_MzKind.Stone) {
+            if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
                 drow_right_side_wall (
                     g_ds.wall.get(j,     k), // front wall
                     g_ds.wall.get(j + 1, k)  // back  wall
@@ -58,7 +58,7 @@ export function display_maze3D(): void {
         }
         // 　左側が見えている壁の描写 (右側から描写)
         for (var k = H_depth; k > 0; k--) {
-            if (g_maze.get_cell(g_hero.get_around(j, k)) == T_MzKind.Stone) {
+            if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
                 drow_left_side_wall (
                     g_ds.wall.get(j,     k), // front wall
                     g_ds.wall.get(j + 1, k)  // back  wall 
@@ -67,7 +67,7 @@ export function display_maze3D(): void {
             }
         }
         // 正面の壁の描写
-        if (g_maze.get_cell(g_hero.get_around(j, 0)) == T_MzKind.Stone) {
+        if (g_maze.get_cell(g_hero.get_around(j, 0, 0)) == T_MzKind.Stone) {
             drow_front_wall(g_ds.wall.get(j, 0));
         }
     }

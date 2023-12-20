@@ -12,10 +12,9 @@ export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
 export function init_after_loaded_DOM(): void {
     g_ds = init_maze3D();
-    init_debug_mode();
 }
 
-function init_debug_mode(): void {
+export function init_debug_mode(): void {
     g_debug_mode = true;
 
     const btn = document.getElementById('debug_mode') as HTMLButtonElement;

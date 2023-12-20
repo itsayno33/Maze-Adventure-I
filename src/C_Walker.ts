@@ -3,12 +3,13 @@ import { C_Point }     from "./C_Point";
 
 
 export class C_Walker {
-    protected p:  C_Point;
+    protected p: C_Point;
     protected d: T_Direction;
     constructor() {
         this.p  = new C_Point();
         this.d = T_Direction.N;
     }
+    public get_dir(): T_Direction {return this.d}
     public set_dir(d: T_Direction): void {
         this.d = d;
     }
@@ -22,7 +23,10 @@ export class C_Walker {
     public get_x(): number {return this.p.x}
     public get_y(): number {return this.p.y}
     public get_z(): number {return this.p.z}
-    public get_d(): T_Direction {return this.d}
+
+    public set_x(x: number): void {this.p.x = x}
+    public set_y(y: number): void {this.p.y = y}
+    public set_z(z: number): void {this.p.z = z}
 
     public get_p_fwd(): C_Point {
         return this.__get_p_move(1);
@@ -41,10 +45,16 @@ export class C_Walker {
         p.z--;
         return p;
     }
+    public set_p_up() {
+        this.set_p(this.get_p_up());
+    }
     public get_p_down(): C_Point {
         const p = new C_Point(this.p);
         p.z++;
         return p;
+    }
+    public set_p_down() {
+        this.set_p(this.get_p_down());
     }
     protected __get_p_move(offset: number):C_Point {
         const p = new C_Point(this.p);
@@ -56,7 +66,7 @@ export class C_Walker {
         }
         return p;
     }
-    public get_around(front: number, right:number, up: number = 0): C_Point {
+    public get_around(front: number, right:number, up: number): C_Point {
         const cur_pos = this.p;
         const cur_dir = this.d;
         var target_x  = this.p.x;

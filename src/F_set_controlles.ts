@@ -2,7 +2,7 @@ import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
-import { g_maze, g_hero, g_ds } from "./global";
+import { g_maze, g_hero, g_debug_mode } from "./global";
 
 export function set_move_controlles() {
     hide_controlles();
@@ -34,6 +34,18 @@ export function set_move_controlles() {
             case 'KeyH': 
             case 'Numpad1': 
                 l_arrow?.click();break;
+            case 'KeyU':
+                if (g_debug_mode && g_hero.get_z() > 0) {
+                    g_hero.set_z(g_hero.get_z() - 1);
+                    do_bottom_half('blink_off');
+                }
+                break;
+            case 'KeyD':
+                if (g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
+                    g_hero.set_z(g_hero.get_z() + 1);
+                    do_bottom_half('blink_off');
+                }
+                break;
         }
     });
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
@@ -100,7 +112,7 @@ function move_check(r: I_HopeAction) {
     }
 } 
 
-export function do_bottom_half(blink_mode: string): void {
+export function do_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
     change_unexp_to_floor();
     clear_mask_around_the_hero();
     display_maze2D();

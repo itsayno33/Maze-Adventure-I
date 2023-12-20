@@ -4,9 +4,8 @@
 
 import { C_UrlOpt }  from "./C_UrlOpt";
 import { C_Point }   from "./C_Point";
-import { display_maze2D, display_maze3D } from "./F_display_maze";
 import { set_move_controlles, do_bottom_half } from "./F_set_controlles";
-import { g_maze, g_hero, init_after_loaded_DOM }      from "./global";
+import { g_maze, g_hero, init_after_loaded_DOM, init_debug_mode } from "./global";
 import { T_Direction } from "./T_Direction";
 
 window.addEventListener('DOMContentLoaded', function() { 
@@ -18,7 +17,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
-        (xhr:XMLHttpRequest)=> {
+        async (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
 /*
             alert(
@@ -28,13 +27,14 @@ function get_maze(url: string, opt: string): void {
                 + "\nsize_x: "  + (jsonObj.maze.size_x ?? '?')
                 + "\nsize_y: "  + (jsonObj.maze.size_y ?? '?')
                 + "\nsize_z: "  + (jsonObj.maze.size_z ?? '?')
-            )
+            );
             alert(
                   "\nmaze: "    + (jsonObj.maze.maze ?? '?')
             );
             alert(
                   "\nmask: "    + (jsonObj.maze.mask ?? '?')
             );
+
             alert(
                 "\nid:    "     + (jsonObj.hero.id      ?? '?')
               + "\nname:  "     + (jsonObj.hero.name    ?? '?')
@@ -45,13 +45,13 @@ function get_maze(url: string, opt: string): void {
             );
 */
             decode_all(jsonObj);
-
+            init_debug_mode();
             set_move_controlles();
             do_bottom_half('blink_off');
     });
 }
 
-function decode_all(jsonObj: any) {
+async function decode_all(jsonObj: any) {
     // MAZE関連のデコード
     g_maze.init({
         maze_id:    jsonObj.maze.maze_id ?? 0,
@@ -61,7 +61,7 @@ function decode_all(jsonObj: any) {
         size_y:     jsonObj.maze.size_y  ?? 3,
         size_z:     jsonObj.maze.size_z  ?? 1,
     });
-    g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.maze});
+    g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.mask});
 
     //　HERO関連のデコード
     jsonObj.hero.id       ?? g_hero.set_prp({id:   jsonObj.hero.id});
