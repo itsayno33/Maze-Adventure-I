@@ -237,7 +237,7 @@ export class C_Maze {
         // その他は壁に邪魔されて見えないかもしれないのでチェックする
         const cur_pos = g_hero.get_p();
         const H_depth = (depth - 1) / 2;
-        for (var d = 2; d < depth; d++) {
+        for (var d = 4; d < depth; d++) {
             for (var s = -H_depth; s < H_depth + 1; s++) {
                 const clr_pos = g_hero.get_around(d, s);
                 this.__judge_and_clear_mask(cur_pos, clr_pos);
@@ -270,7 +270,6 @@ export class C_Maze {
                         if (y != clr_pos.y || x != clr_pos.x) return;
                         break;
                     case T_MzKind.NoDef:
-                    case T_MzKind.Unexp:
                     case T_MzKind.Unkwn:
                     case T_MzKind.Empty:
                         return;
@@ -280,7 +279,7 @@ export class C_Maze {
         this.__clear_mask(clr_pos);
     }
 */
-
+    
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
     public get_z_max(): number {return this.size.size_z();}
