@@ -14,6 +14,8 @@ export function init_after_loaded_DOM(): void {
     g_ds = init_maze3D();
 }
 
+export var g_action_mode: string = 'move';
+
 export function init_debug_mode(): void {
     g_debug_mode = true;
 

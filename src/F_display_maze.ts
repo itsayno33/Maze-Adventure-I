@@ -19,6 +19,7 @@ export type T_DrowSet = {
 type T_xy   = {x: number, y: number}
 type T_Rect = {tl: T_xy, tr: T_xy, bl: T_xy, br: T_xy};
 
+// 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
     const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
@@ -40,78 +41,7 @@ export function init_maze3D(): T_DrowSet {
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
 
-export function display_maze3D(): void {
-    if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
-
-    draw_init_maze3D();
-    displey_mase3D_direction();
-
-    const depth   =  g_ds.depth;
-    const H_depth = (depth - 1) / 2;
-    for (var j = g_ds.depth - 1; j >= 0; j--) {
-        // 右側が見えている壁の描写 (左側から描写)
-        for (var k = -H_depth; k < 0; k++) {
-            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
-                case T_MzKind.Stone:
-                    drow_right_side_stone(j, k);
-                    drow_front_stone(j, k);
-                    break;
-                case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
-                    break;
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                case T_MzKind.StrUD:
-                    drow_right_side_stairs(j, k);
-                    break;
-                case T_MzKind.Floor: 
-                default:
-                    drow_floor(j ,k);
-                    break;
-            }
-        }
-        // 　左側が見えている壁の描写 (右側から描写)
-        for (var k = H_depth; k > 0; k--) {
-            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
-                case T_MzKind.Stone:
-                    drow_left_side_stone(j, k);
-                    drow_front_stone(j, k);
-                    break;
-                case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
-                    break;
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                case T_MzKind.StrUD:
-                    drow_left_side_stairs(j, k);
-                    break;
-                case T_MzKind.Floor: 
-                default:
-                    drow_floor(j ,k);
-                    break;
-            }
-        }
-        // 正面の壁の描写
-        switch (g_maze.get_cell(g_hero.get_around(j, 0, 0))) {
-            case T_MzKind.Stone:
-                drow_front_stone(j, 0);
-                break;
-            case T_MzKind.Unexp: 
-                drow_floor_unexp(j ,0);
-                break;
-            case T_MzKind.StrUp:
-            case T_MzKind.StrDn:
-            case T_MzKind.StrUD:
-                drow_front_stairs(j, 0);
-                break;
-            case T_MzKind.Floor: 
-            default:
-                drow_floor(j ,0);
-                break;
-        }
-    }
-}
-
+// 3D描写時の画面初期化。とりあえず天井と床を描く
 function draw_init_maze3D(): void {
     if (g_ds.canvas === null || g_ds.con === null) return;
 
@@ -131,7 +61,6 @@ function draw_init_maze3D(): void {
         g_ds.canvas.clientHeight  - 1,
     );
 
-    // 床と天井にラインを引くこと
     drow_floor_line();
 }
 
@@ -172,8 +101,78 @@ function drow_floor_line(): void {
     }
 }
 
+export function display_maze3D(): void {
+    if (g_ds.canvas === null || g_ds.con === null || g_ds.wall === null) return;
+
+    draw_init_maze3D();
+    displey_mase3D_direction();
+
+    const depth   =  g_ds.depth;
+    const H_depth = (depth - 1) / 2;
+    for (var j = g_ds.depth - 1; j >= 0; j--) {
+        // 右側が見えている壁の描写 (左側から描写)
+        for (var k = -H_depth; k < 0; k++) {
+            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+                case T_MzKind.Stone:
+                    drow_right_side_stone(j, k);
+                    break;
+                case T_MzKind.Unexp: 
+                    drow_floor_unexp(j ,k);
+                    break;
+                case T_MzKind.StrUp:
+                case T_MzKind.StrDn:
+                case T_MzKind.StrUD:
+                    drow_right_side_stairs(j, k);
+                    break;
+                case T_MzKind.Floor: 
+                default:
+                    drow_floor(j ,k);
+                    break;
+            }
+        }
+        // 　左側が見えている壁の描写 (右側から描写)
+        for (var k = H_depth; k > 0; k--) {
+            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+                case T_MzKind.Stone:
+                    drow_left_side_stone(j, k);
+                    break;
+                case T_MzKind.Unexp: 
+                    drow_floor_unexp(j ,k);
+                    break;
+                case T_MzKind.StrUp:
+                case T_MzKind.StrDn:
+                case T_MzKind.StrUD:
+                    drow_left_side_stairs(j, k);
+                    break;
+                case T_MzKind.Floor: 
+                default:
+                    drow_floor(j ,k);
+                    break;
+            }
+        }
+        // 正面の壁の描写
+        switch (g_maze.get_cell(g_hero.get_around(j, 0, 0))) {
+            case T_MzKind.Stone:
+                drow_front_stone(j, 0);
+                break;
+            case T_MzKind.Unexp: 
+                drow_floor_unexp(j ,0);
+                break;
+            case T_MzKind.StrUp:
+            case T_MzKind.StrDn:
+            case T_MzKind.StrUD:
+                drow_front_stairs(j, 0);
+                break;
+            case T_MzKind.Floor: 
+            default:
+                drow_floor(j ,0);
+                break;
+        }
+    }
+}
+
 function drow_floor_unexp(d: number, w:number): void {
-    drow_floor  (d, w, '#66ffff');
+    drow_floor(d, w, '#66ffff');
 }
 
 function drow_front_stone(d: number, w: number): void {
@@ -181,9 +180,11 @@ function drow_front_stone(d: number, w: number): void {
 }
 function drow_left_side_stone(d: number, w: number): void {
     drow_left_side(d, w, '#00ff00', '#0000ff');
+    drow_front    (d, w, '#00ff00', '#0000ff');
 }
 function drow_right_side_stone(d: number, w: number): void {
     drow_right_side(d, w, '#00ff00', '#0000ff');
+    drow_front     (d, w, '#00ff00', '#0000ff');
 }
 
 function drow_front_stairs(d: number, w: number): void {
@@ -319,136 +320,6 @@ function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
     if (line !== null) {
         con.strokeStyle = line;
         con.lineWidth   = 1;
-        con.stroke();
-    }
-}
-
-function drow_floor_(
-            d: number, 
-            w: number, 
-            fill_color: string = '#6666ff', 
-            line_color: string = '#9999ff'
-            ): void {
-
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.moveTo(rect_front.min_x, rect_front.max_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.lineTo(rect_back .max_x, rect_back .max_y);
-    con.lineTo(rect_back .min_x, rect_back .max_y);
-    con.closePath();
-
-    con.fillStyle   = fill_color;
-    con.fill();
-    con.strokeStyle = line_color;
-    con.lineWidth   = 1;
-    con.stroke();
-}
-
-function drow_ceiling_(
-    d: number, 
-    w: number, 
-    fill_color: string = '#aaaaaa', 
-    line_color: string = '#9999ff'
-    ): void {
-
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_back .max_x, rect_back .min_y);
-    con.lineTo(rect_back .min_x, rect_back .min_y);
-    con.closePath();
-
-    con.fillStyle   = fill_color;
-    con.fill();
-    con.strokeStyle = line_color;
-    con.lineWidth   = 1;
-    con.stroke();
-}
-
-function drow_front_(d: number, w: number, fill: string|null = '#00ff00', line: string|null = '#0000ff'): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.lineTo(rect_front.min_x, rect_front.max_y);
-    con.closePath();
-
-    if (fill !== null) {
-        con.fillStyle = fill;
-        con.fill();
-    }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 3;
-        con.stroke();
-    }
-}
-function drow_left_side_(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_back .min_x, rect_back .min_y);
-    con.lineTo(rect_back .min_x, rect_back .max_y);
-    con.lineTo(rect_front.min_x, rect_front.max_y);
-    con.closePath();
-
-    if (fill !== null) {
-        con.fillStyle = fill;
-        con.fill();
-    }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 3;
-        con.stroke();
-    }
-}
-
-function drow_right_side_(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_back .max_x, rect_back .min_y);
-    con.lineTo(rect_back .max_x, rect_back .max_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.closePath();
-
-    if (fill !== null) {
-        con.fillStyle = fill;
-        con.fill();
-    }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 3;
         con.stroke();
     }
 }

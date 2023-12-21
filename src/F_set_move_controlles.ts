@@ -2,7 +2,7 @@ import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
-import { g_maze, g_hero, g_debug_mode } from "./global";
+import { g_maze, g_hero, g_debug_mode, g_action_mode } from "./global";
 
 export function set_move_controlles() {
     hide_controlles();
@@ -11,10 +11,10 @@ export function set_move_controlles() {
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
 
-    u_arrow?.addEventListener("click", ()=>{go_F();}, false);
-    d_arrow?.addEventListener("click", ()=>{go_B();}, false);
-    r_arrow?.addEventListener("click", ()=>{tr_R();}, false);
-    l_arrow?.addEventListener("click", ()=>{tr_L();}, false);
+    u_arrow?.addEventListener("click", go_F, false);
+    d_arrow?.addEventListener("click", go_B, false);
+    r_arrow?.addEventListener("click", tr_R, false);
+    l_arrow?.addEventListener("click", tr_L, false);
 
     window.addEventListener('keypress', (event)=>{
         switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
@@ -35,15 +35,15 @@ export function set_move_controlles() {
             case 'Numpad1': 
                 l_arrow?.click();break;
             case 'KeyU':
-                if (g_debug_mode && g_hero.get_z() > 0) {
+                if (g_action_mode == 'move' && g_debug_mode && g_hero.get_z() > 0) {
                     g_hero.set_z(g_hero.get_z() - 1);
-                    do_bottom_half('blink_off');
+                    do_move_bottom_half('blink_off');
                 }
                 break;
             case 'KeyD':
-                if (g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
+                if (g_action_mode == 'move' && g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
                     g_hero.set_z(g_hero.get_z() + 1);
-                    do_bottom_half('blink_off');
+                    do_move_bottom_half('blink_off');
                 }
                 break;
         }
@@ -76,22 +76,22 @@ function change_unexp_to_floor(): void {
 function go_F() {
     const rslt = g_hero.hope_p_fwd();
     move_check(rslt);
-    do_bottom_half('blink_on');
+    do_move_bottom_half('blink_on');
 }
 function go_B() {
     const rslt = g_hero.hope_p_bak();
     move_check(rslt);
-    do_bottom_half('blink_on');
+    do_move_bottom_half('blink_on');
 }
 function tr_R() {
     const rslt = g_hero.hope_turn_r();
     move_check(rslt);
-    do_bottom_half('blink_off');
+    do_move_bottom_half('blink_off');
 }
 function tr_L() {
     const rslt = g_hero.hope_turn_l();
     move_check(rslt);
-    do_bottom_half('blink_off');
+    do_move_bottom_half('blink_off');
 }
 function move_check(r: I_HopeAction) {
     if (!r.has_hope) return;
@@ -112,7 +112,7 @@ function move_check(r: I_HopeAction) {
     }
 } 
 
-export function do_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
+export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
     change_unexp_to_floor();
     clear_mask_around_the_hero();
     display_maze2D();
