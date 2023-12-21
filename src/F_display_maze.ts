@@ -50,11 +50,11 @@ export function display_maze3D(): void {
         for (var k = -H_depth; k < 0; k++) {
             switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
                 case T_MzKind.Stone:
-                    drow_right_side_wall(j, k);
-                    drow_front_wall(j, k);
+                    drow_right_side_stone(j, k);
+                    drow_front_stone(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_floor(j ,k, '#66ffff');
+                    drow_floor_unexp(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
@@ -63,7 +63,7 @@ export function display_maze3D(): void {
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_floor(j ,k, '#6666ff');
+                    drow_floor(j ,k);
                     break;
             }
         }
@@ -71,11 +71,11 @@ export function display_maze3D(): void {
         for (var k = H_depth; k > 0; k--) {
             switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
                 case T_MzKind.Stone:
-                    drow_left_side_wall(j, k);
-                    drow_front_wall(j, k);
+                    drow_left_side_stone(j, k);
+                    drow_front_stone(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_floor(j ,k, '#66ffff');
+                    drow_floor_unexp(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
@@ -84,17 +84,17 @@ export function display_maze3D(): void {
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_floor(j ,k, '#6666ff');
+                    drow_floor(j ,k);
                     break;
             }
         }
         // 正面の壁の描写
         switch (g_maze.get_cell(g_hero.get_around(j, 0, 0))) {
             case T_MzKind.Stone:
-                drow_front_wall(j, 0);
+                drow_front_stone(j, 0);
                 break;
             case T_MzKind.Unexp: 
-                drow_floor(j ,0, '#66ffff');
+                drow_floor_unexp(j ,0);
                 break;
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
@@ -103,7 +103,7 @@ export function display_maze3D(): void {
                 break;
             case T_MzKind.Floor: 
             default:
-                drow_floor(j ,0, '#6666ff');
+                drow_floor(j ,0);
                 break;
         }
     }
@@ -169,6 +169,37 @@ function drow_floor_line(): void {
     }
 }
 
+function drow_floor_unexp(d: number, w:number): void {
+    drow_floor  (d, w, '#66ffff');
+}
+
+function drow_front_stone(d: number, w: number): void {
+    drow_front(d, w, '#00ff00', '#0000ff');
+}
+function drow_left_side_stone(d: number, w: number): void {
+    drow_left_side(d, w, '#00ff00', '#0000ff');
+}
+function drow_right_side_stone(d: number, w: number): void {
+    drow_right_side(d, w, '#00ff00', '#0000ff');
+}
+
+function drow_front_stairs(d: number, w: number): void {
+    drow_floor  (d, w, '#ffffcc', '#ffff00');
+    drow_ceiling(d, w, '#ffffcc', '#ffff00');
+    drow_front  (d, w,  null,     '#ffff00');
+}
+function drow_left_side_stairs(d: number, w: number): void {
+    drow_floor    (d, w, '#ffffcc', '#ffff00');
+    drow_ceiling  (d, w, '#ffffcc', '#ffff00');
+    drow_left_side(d, w,  null,     '#ffff00');
+
+}
+function drow_right_side_stairs(d: number, w: number): void {
+    drow_floor     (d, w, '#ffffcc', '#ffff00');
+    drow_ceiling   (d, w, '#ffffcc', '#ffff00');
+    drow_right_side(d, w,  null,     '#ffff00');
+}
+
 function drow_floor(
             d: number, 
             w: number, 
@@ -183,7 +214,6 @@ function drow_floor(
     const rect_back  = g_ds.wall.get(d + 1, w);
 
     con.beginPath();
-//     con.lineJoin = 'round';
     con.moveTo(rect_front.min_x, rect_front.max_y);
     con.lineTo(rect_front.max_x, rect_front.max_y);
     con.lineTo(rect_back .max_x, rect_back .max_y);
@@ -198,7 +228,34 @@ function drow_floor(
 
 }
 
-function drow_front_wall(d: number, w: number): void {
+function drow_ceiling(
+    d: number, 
+    w: number, 
+    fill_color: string = '#aaaaaa', 
+    line_color: string = '#9999ff'
+    ): void {
+
+    if (g_ds.con === null || g_ds.wall === null) return;
+    const con = g_ds.con;
+
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    con.beginPath();
+    con.moveTo(rect_front.min_x, rect_front.min_y);
+    con.lineTo(rect_front.max_x, rect_front.min_y);
+    con.lineTo(rect_back .max_x, rect_back .min_y);
+    con.lineTo(rect_back .min_x, rect_back .min_y);
+    con.closePath();
+
+    con.fillStyle   = fill_color;
+    con.fill();
+    con.strokeStyle = line_color;
+    con.lineWidth   = 1;
+    con.stroke();
+}
+
+function drow_front(d: number, w: number, fill: string|null = '#00ff00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
@@ -212,14 +269,17 @@ function drow_front_wall(d: number, w: number): void {
     con.lineTo(rect_front.min_x, rect_front.max_y);
     con.closePath();
 
-    con.fillStyle = '#00ff00';
-    con.fill();
-    con.strokeStyle = '#0000ff';
-    con.lineWidth   = 3;
-    con.stroke();
-
+    if (fill !== null) {
+        con.fillStyle = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 3;
+        con.stroke();
+    }
 }
-function drow_left_side_wall(d: number, w: number): void {
+function drow_left_side(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
@@ -234,13 +294,18 @@ function drow_left_side_wall(d: number, w: number): void {
     con.lineTo(rect_front.min_x, rect_front.max_y);
     con.closePath();
 
-    con.fillStyle = '#00cc00';
-    con.fill();
-    con.strokeStyle = '#0000ff';
-    con.lineWidth   = 3;
-    con.stroke();
+    if (fill !== null) {
+        con.fillStyle = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 3;
+        con.stroke();
+    }
 }
-function drow_right_side_wall(d: number, w: number): void {
+
+function drow_right_side(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
@@ -255,141 +320,17 @@ function drow_right_side_wall(d: number, w: number): void {
     con.lineTo(rect_front.max_x, rect_front.max_y);
     con.closePath();
 
-    con.fillStyle = '#00cc00';
-    con.fill();
-    con.strokeStyle = '#0000ff';
-    con.lineWidth   = 3;
-    con.stroke();
+    if (fill !== null) {
+        con.fillStyle = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 3;
+        con.stroke();
+    }
 }
 
-function drow_front_stairs(d: number, w: number): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    drow_stairs_floor(d, w);
-    drow_stairs_ceiling(d, w);
-
-    const rect_front = g_ds.wall.get(d, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.lineTo(rect_front.min_x, rect_front.max_y);
-    con.closePath();
-
-//    con.fillStyle = '#00ff00';
-//    con.fill();
-    con.strokeStyle = '#ffff00';
-    con.lineWidth   = 3;
-    con.stroke();
-
-}
-function drow_left_side_stairs(d: number, w: number): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    drow_stairs_floor(d, w);
-    drow_stairs_ceiling(d, w);
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_back .min_x, rect_back .min_y);
-    con.lineTo(rect_back .min_x, rect_back .max_y);
-    con.lineTo(rect_front.min_x, rect_front.max_y);
-    con.closePath();
-
-//    con.fillStyle = '#00cc00';
-//    con.fill();
-    con.strokeStyle = '#ffff00';
-    con.lineWidth   = 3;
-    con.stroke();
-}
-function drow_right_side_stairs(d: number, w: number): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    drow_stairs_floor(d, w);
-    drow_stairs_ceiling(d, w);
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-    con.lineJoin = 'round';
-    con.moveTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_back .max_x, rect_back .min_y);
-    con.lineTo(rect_back .max_x, rect_back .max_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.closePath();
-
-//    con.fillStyle = '#00cc00';
-//    con.fill();
-    con.strokeStyle = '#ffff00';
-    con.lineWidth   = 3;
-    con.stroke();
-}
-
-function drow_stairs_floor(
-    d: number, 
-    w: number, 
-    fill_color: string = '#ffffcc', 
-    line_color: string = '#ffff00'
-    ): void {
-
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-//     con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.max_y);
-    con.lineTo(rect_front.max_x, rect_front.max_y);
-    con.lineTo(rect_back .max_x, rect_back .max_y);
-    con.lineTo(rect_back .min_x, rect_back .max_y);
-    con.closePath();
-
-    con.fillStyle   = fill_color;
-    con.fill();
-    con.strokeStyle = line_color;
-    con.lineWidth   = 1;
-    con.stroke();
-}
-
-function drow_stairs_ceiling(
-    d: number, 
-    w: number, 
-    fill_color: string = '#ffffcc', 
-    line_color: string = '#ffff00'
-    ): void {
-
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    con.beginPath();
-//     con.lineJoin = 'round';
-    con.moveTo(rect_front.min_x, rect_front.min_y);
-    con.lineTo(rect_front.max_x, rect_front.min_y);
-    con.lineTo(rect_back .max_x, rect_back .min_y);
-    con.lineTo(rect_back .min_x, rect_back .min_y);
-    con.closePath();
-
-    con.fillStyle   = fill_color;
-    con.fill();
-    con.strokeStyle = line_color;
-    con.lineWidth   = 1;
-    con.stroke();
-}
 
 export function displey_mase3D_direction(): void {
     const p_dir = document.getElementById('Maze_view3D_direction_info') as HTMLParagraphElement;
