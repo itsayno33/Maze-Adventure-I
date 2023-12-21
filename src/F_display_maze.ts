@@ -48,45 +48,49 @@ export function display_maze3D(): void {
     for (var j = g_ds.depth - 1; j >= 0; j--) {
         // 右側が見えている壁の描写 (左側から描写)
         for (var k = -H_depth; k < 0; k++) {
-            if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
-                drow_right_side_wall(
-                    g_ds.wall.get(j,     k), // front wall
-                    g_ds.wall.get(j + 1, k)  // back  wall
-                );
-                drow_front_wall(g_ds.wall.get(j,k));
-            } else { 
-                drow_front_floor(
-                    g_ds.wall.get(j,     k), // front wall
-                    g_ds.wall.get(j + 1, k), // back  wall
-                );
+            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+                case T_MzKind.Stone:
+                    drow_right_side_wall(j, k);
+                    drow_front_wall(j, k);
+                    break;
+                case T_MzKind.Unexp: 
+                    drow_floor(j ,k, '#66ffff');
+                    break;
+                case T_MzKind.Floor: 
+                default:
+                    drow_floor(j ,k, '#6666ff');
+                    break;
             }
         }
         // 　左側が見えている壁の描写 (右側から描写)
         for (var k = H_depth; k > 0; k--) {
-            if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
-                drow_left_side_wall(
-                    g_ds.wall.get(j,     k), // front wall
-                    g_ds.wall.get(j + 1, k)  // back  wall 
-                );
-                drow_front_wall(g_ds.wall.get(j, k));
-            } else {
-                drow_front_floor(
-                    g_ds.wall.get(j,     k), // front wall
-                    g_ds.wall.get(j + 1, k), // back  wall
-                );
+            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+                case T_MzKind.Stone:
+                    drow_left_side_wall(j, k);
+                    drow_front_wall(j, k);
+                    break;
+                case T_MzKind.Unexp: 
+                    drow_floor(j ,k, '#66ffff');
+                    break;
+                case T_MzKind.Floor: 
+                default:
+                    drow_floor(j ,k, '#6666ff');
+                    break;
             }
-
         }
         // 正面の壁の描写
-        if (g_maze.get_cell(g_hero.get_around(j, 0, 0)) == T_MzKind.Stone) {
-            drow_front_wall(g_ds.wall.get(j, 0));
-        } else {
-            drow_front_floor(
-                g_ds.wall.get(j,     0), // front wall
-                g_ds.wall.get(j + 1, 0), // back  wall
-                );
+        switch (g_maze.get_cell(g_hero.get_around(j, 0, 0))) {
+            case T_MzKind.Stone:
+                drow_front_wall(j, 0);
+                break;
+            case T_MzKind.Unexp: 
+                drow_floor(j ,0, '#66ffff');
+                break;
+            case T_MzKind.Floor: 
+            default:
+                drow_floor(j ,0, '#6666ff');
+                break;
         }
-
     }
 }
 
@@ -150,14 +154,18 @@ function drow_floor_line(): void {
     }
 }
 
-function drow_front_floor(
-            rect_front: T_Wall, 
-            rect_back:  T_Wall, 
+function drow_floor(
+            d: number, 
+            w: number, 
             fill_color: string = '#6666ff', 
             line_color: string = '#9999ff'
             ): void {
-    if (g_ds.con === null) return;
+
+    if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
+
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
 
     con.beginPath();
 //     con.lineJoin = 'round';
@@ -175,9 +183,11 @@ function drow_front_floor(
 
 }
 
-function drow_front_wall(rect_front: T_Wall): void {
-    if (g_ds.con === null) return;
+function drow_front_wall(d: number, w: number): void {
+    if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
+
+    const rect_front = g_ds.wall.get(d, w);
 
     con.beginPath();
     con.lineJoin = 'round';
@@ -194,9 +204,12 @@ function drow_front_wall(rect_front: T_Wall): void {
     con.stroke();
 
 }
-function drow_left_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
-    if (g_ds.con === null) return;
+function drow_left_side_wall(d: number, w: number): void {
+    if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
+
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
 
     con.beginPath();
     con.lineJoin = 'round';
@@ -212,9 +225,12 @@ function drow_left_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
     con.lineWidth   = 3;
     con.stroke();
 }
-function drow_right_side_wall(rect_front: T_Wall, rect_back: T_Wall): void {
-    if (g_ds.con === null) return;
+function drow_right_side_wall(d: number, w: number): void {
+    if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
+
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
 
     con.beginPath();
     con.lineJoin = 'round';
