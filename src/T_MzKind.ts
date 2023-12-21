@@ -24,6 +24,7 @@
         Unkwn:   4,
         StrUp:   5,
         StrDn:   6,
+        StrUD:   7,
         Empty: 255,
     } as const;
     export type T_MzKind   = T_MakeEnumType<typeof T_MzKind>;
@@ -36,6 +37,7 @@
         4:   T_MzKind.Unkwn,
         5:   T_MzKind.StrUp,
         6:   T_MzKind.StrDn,
+        7:   T_MzKind.StrUD,
         255: T_MzKind.Empty,
     } as const;
     export type T_RvMzKind = T_MakeEnumType<typeof T_RvMzKind>;

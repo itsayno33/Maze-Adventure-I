@@ -56,6 +56,7 @@ class C_MazeCell  {
             case T_MzKind.Unkwn: return '？';
             case T_MzKind.StrUp: return '上';
             case T_MzKind.StrDn: return '下';
+            case T_MzKind.StrUD: return '通';
             case T_MzKind.Empty: return 'Ｏ';
             case T_MzKind.NoDef: return 'Ｘ';
             default: return 'Ｘ';
@@ -73,6 +74,7 @@ class C_MazeCell  {
             case '？': return T_MzKind.Unkwn;
             case '上': return T_MzKind.StrUp;
             case '下': return T_MzKind.StrDn;
+            case '通': return T_MzKind.StrUD;
             case 'Ｏ': return T_MzKind.Empty;
             case 'Ｘ': return T_MzKind.NoDef;
             default:   return T_MzKind.NoDef;
