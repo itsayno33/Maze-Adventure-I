@@ -49,34 +49,51 @@ export function display_maze3D(): void {
         // 右側が見えている壁の描写 (左側から描写)
         for (var k = -H_depth; k < 0; k++) {
             if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
-                drow_right_side_wall (
+                drow_right_side_wall(
                     g_ds.wall.get(j,     k), // front wall
                     g_ds.wall.get(j + 1, k)  // back  wall
                 );
                 drow_front_wall(g_ds.wall.get(j,k));
+            } else { 
+                drow_front_floor(
+                    g_ds.wall.get(j,     k), // front wall
+                    g_ds.wall.get(j + 1, k), // back  wall
+                );
             }
         }
         // 　左側が見えている壁の描写 (右側から描写)
         for (var k = H_depth; k > 0; k--) {
             if (g_maze.get_cell(g_hero.get_around(j, k, 0)) == T_MzKind.Stone) {
-                drow_left_side_wall (
+                drow_left_side_wall(
                     g_ds.wall.get(j,     k), // front wall
                     g_ds.wall.get(j + 1, k)  // back  wall 
                 );
                 drow_front_wall(g_ds.wall.get(j, k));
+            } else {
+                drow_front_floor(
+                    g_ds.wall.get(j,     k), // front wall
+                    g_ds.wall.get(j + 1, k), // back  wall
+                );
             }
+
         }
         // 正面の壁の描写
         if (g_maze.get_cell(g_hero.get_around(j, 0, 0)) == T_MzKind.Stone) {
             drow_front_wall(g_ds.wall.get(j, 0));
+        } else {
+            drow_front_floor(
+                g_ds.wall.get(j,     0), // front wall
+                g_ds.wall.get(j + 1, 0), // back  wall
+                );
         }
+
     }
 }
 
 function draw_init_maze3D(): void {
     if (g_ds.canvas === null || g_ds.con === null) return;
 
-    g_ds.con.fillStyle = '#aaaaff';
+    g_ds.con.fillStyle = '#aaaaaa';
     g_ds.con.fillRect(
         0, 
         0, 
@@ -131,6 +148,31 @@ function drow_floor_line(): void {
         con.lineTo(wall.get(depth, x).min_x, back_y );
         con.stroke();
     }
+}
+
+function drow_front_floor(
+            rect_front: T_Wall, 
+            rect_back:  T_Wall, 
+            fill_color: string = '#6666ff', 
+            line_color: string = '#9999ff'
+            ): void {
+    if (g_ds.con === null) return;
+    const con = g_ds.con;
+
+    con.beginPath();
+//     con.lineJoin = 'round';
+    con.moveTo(rect_front.min_x, rect_front.max_y);
+    con.lineTo(rect_front.max_x, rect_front.max_y);
+    con.lineTo(rect_back .max_x, rect_back .max_y);
+    con.lineTo(rect_back .min_x, rect_back .max_y);
+    con.closePath();
+
+    con.fillStyle   = fill_color;
+    con.fill();
+    con.strokeStyle = line_color;
+    con.lineWidth   = 1;
+    con.stroke();
+
 }
 
 function drow_front_wall(rect_front: T_Wall): void {
