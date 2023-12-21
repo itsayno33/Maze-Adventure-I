@@ -16,6 +16,9 @@ export type T_DrowSet = {
     wall:   C_Wall|null,
 }
 
+type T_xy   = {x: number, y: number}
+type T_Rect = {tl: T_xy, tr: T_xy, bl: T_xy, br: T_xy};
+
 export function init_maze3D(): T_DrowSet {
     const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
@@ -201,6 +204,126 @@ function drow_right_side_stairs(d: number, w: number): void {
 }
 
 function drow_floor(
+            d:    number, 
+            w:    number, 
+            fill: string = '#6666ff', 
+            line: string = '#9999ff'
+            ): void {
+
+    if (g_ds.wall === null) return;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const rect: T_Rect = {
+        tl: {x: rect_front.min_x, y: rect_front.max_y},
+        tr: {x: rect_front.max_x, y: rect_front.max_y},
+        br: {x: rect_back .max_x, y: rect_back .max_y},
+        bl: {x: rect_back .min_x, y: rect_back .max_y}
+    }
+    drow_cell(rect, fill, line);
+}
+function drow_ceiling(
+            d: number, 
+            w: number, 
+            fill: string = '#aaaaaa', 
+            line: string = '#9999ff'
+    ): void {
+
+    if (g_ds.wall === null) return;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const rect: T_Rect = {
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_front.max_x, y: rect_front.min_y},
+        br: {x: rect_back .max_x, y: rect_back .min_y},
+        bl: {x: rect_back .min_x, y: rect_back .min_y}
+    }
+    drow_cell(rect, fill, line);
+}
+function drow_front(
+        d: number, 
+        w: number, 
+        fill: string|null = '#00ff00', 
+        line: string|null = '#0000ff'
+    ): void {
+        
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d, w);
+
+    const rect: T_Rect = {
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_front.max_x, y: rect_front.min_y},
+        br: {x: rect_front.max_x, y: rect_front.max_y},
+        bl: {x: rect_front.min_x, y: rect_front.max_y}
+    }
+    drow_cell(rect, fill, line);
+}
+function drow_left_side(
+        d: number, 
+        w: number, 
+        fill: string|null = '#00cc00', 
+        line: string|null = '#0000ff'
+    ): void {
+
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const rect: T_Rect = {
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_back .min_x, y: rect_back .min_y},
+        br: {x: rect_back .min_x, y: rect_back .max_y},
+        bl: {x: rect_front.min_x, y: rect_front.max_y}
+    }
+    drow_cell(rect, fill, line);
+}
+function drow_right_side(
+        d: number, 
+        w: number, 
+        fill: string|null = '#00cc00', 
+        line: string|null = '#0000ff'
+    ): void {
+
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const rect: T_Rect = {
+        tl: {x: rect_front.max_x, y: rect_front.min_y},
+        tr: {x: rect_back .max_x, y: rect_back .min_y},
+        br: {x: rect_back .max_x, y: rect_back .max_y},
+        bl: {x: rect_front.max_x, y: rect_front.max_y}
+    }
+    drow_cell(rect, fill, line);
+}
+
+function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
+    if (g_ds.con === null || g_ds.wall === null) return;
+    const con = g_ds.con;
+
+    con.beginPath();
+    con.moveTo(r.tl.x, r.tl.y);
+    con.lineTo(r.tr.x, r.tr.y);
+    con.lineTo(r.br.x, r.br.y);
+    con.lineTo(r.bl.x, r.bl.y);
+    con.closePath();
+
+    if (fill != null) {
+        con.fillStyle   = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 1;
+        con.stroke();
+    }
+}
+
+function drow_floor_(
             d: number, 
             w: number, 
             fill_color: string = '#6666ff', 
@@ -225,10 +348,9 @@ function drow_floor(
     con.strokeStyle = line_color;
     con.lineWidth   = 1;
     con.stroke();
-
 }
 
-function drow_ceiling(
+function drow_ceiling_(
     d: number, 
     w: number, 
     fill_color: string = '#aaaaaa', 
@@ -255,7 +377,7 @@ function drow_ceiling(
     con.stroke();
 }
 
-function drow_front(d: number, w: number, fill: string|null = '#00ff00', line: string|null = '#0000ff'): void {
+function drow_front_(d: number, w: number, fill: string|null = '#00ff00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
@@ -279,7 +401,7 @@ function drow_front(d: number, w: number, fill: string|null = '#00ff00', line: s
         con.stroke();
     }
 }
-function drow_left_side(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
+function drow_left_side_(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
@@ -305,7 +427,7 @@ function drow_left_side(d: number, w: number, fill: string|null = '#00cc00', lin
     }
 }
 
-function drow_right_side(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
+function drow_right_side_(d: number, w: number, fill: string|null = '#00cc00', line: string|null = '#0000ff'): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
