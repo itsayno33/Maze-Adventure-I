@@ -7,7 +7,7 @@
     /************ *************************** **************/
 
 import { clr_move_controlles, set_move_controlles } from "./F_set_move_controlles";
-import { clr_UD_controlles } from "./set_UD_controlles";
+import { clr_UD_controlles } from "./F_set_UD_controlles";
 
 export function hide_controlles() {
     clr_move_controlles();
