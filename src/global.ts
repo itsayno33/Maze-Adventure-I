@@ -4,20 +4,22 @@ export const g_maze = new C_Maze({maze_id: -1});
 import { C_Hero } from "./C_Hero";
 export const g_hero = new C_Hero();
 
+import { T_CtlsMode } from "./T_CtlsMode";
+export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
+
 import { display_maze2D } from "./F_display_maze";
 export var g_debug_mode: boolean = false;
 
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
-import { init_p_maze_view_message } from "./F_p_maze_view_message";
+import { C_MazeViewMessage } from "./C_MazeViewMessage";
+export var g_mvm: C_MazeViewMessage;
 
 export function init_after_loaded_DOM(): void {
-    init_p_maze_view_message();
-    g_ds = init_maze3D();
+    g_ds   = init_maze3D();
+    g_mvm  = C_MazeViewMessage.get(); g_mvm.clear_message();
 }
-
-export var g_action_mode: string = 'move';
 
 export function init_debug_mode(): void {
     g_debug_mode = true;

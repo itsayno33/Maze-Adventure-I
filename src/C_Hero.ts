@@ -120,12 +120,13 @@ export class C_Hero implements I_Exist {
             doNG: ()=>{this.isNG();},
         };
     }
+
     public hope_p_up(): I_HopeAction {
         return {
             has_hope: true, 
             hope: "Up",
-            subj: this.walker.get_p(),
-            doOK: ()=>{this.walker.set_p_up();},
+            subj: this.walker.get_p_up(),
+            doOK: ()=>{this.move_p_up();},
             doNG: ()=>{this.isNG();},
         };
     }
@@ -133,11 +134,19 @@ export class C_Hero implements I_Exist {
         return {
             has_hope: true, 
             hope: "Down",
-            subj: this.walker.get_p(),
-            doOK: ()=>{this.walker.set_p_down();},
+            subj: this.walker.get_p_down(),
+            doOK: ()=>{this.move_p_down();},
             doNG: ()=>{this.isNG();},
         };
     }
+
+    public move_p_up(): void {
+        this.walker.set_p_up();
+    }
+    public move_p_down(): void {
+        this.walker.set_p_down();
+    }
+
     public isNG(): void {
         return;
     }

@@ -1,56 +1,90 @@
 import { hide_controlles } from "./F_set_controlles";
-import { I_HasHope, I_HopeAction } from "./I_EventMap";
+import { I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
-import { g_maze, g_hero, g_debug_mode, g_action_mode } from "./global";
+import { T_CtlsMode } from "./T_CtlsMode";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./set_UD_controlles";
+import { g_maze, g_hero, g_debug_mode, g_ctls_mode } from "./global";
 
-export function set_move_controlles() {
-    hide_controlles();
+export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
 
-    u_arrow?.addEventListener("click", go_F, false);
-    d_arrow?.addEventListener("click", go_B, false);
-    r_arrow?.addEventListener("click", tr_R, false);
-    l_arrow?.addEventListener("click", tr_L, false);
+    window.removeEventListener('keypress', key_press_function1);
 
-    window.addEventListener('keypress', (event)=>{
-        switch(event.code) { // Arrowは反応せず(イベント自体が発生せず)
-            case 'ArrowUp': 
-            case 'KeyK': 
-            case 'Numpad5': 
-                u_arrow?.click();break;
-            case 'ArrowDown': 
-            case 'KeyJ': 
-            case 'Numpad2': 
-                d_arrow?.click();break;
-            case 'ArrowRight': 
-            case 'KeyL': 
-            case 'Numpad3': 
-                r_arrow?.click();break;
-            case 'ArrowLeft': 
-            case 'KeyH': 
-            case 'Numpad1': 
-                l_arrow?.click();break;
-            case 'KeyU':
-                if (g_action_mode == 'move' && g_debug_mode && g_hero.get_z() > 0) {
-                    g_hero.set_z(g_hero.get_z() - 1);
-                    do_move_bottom_half('blink_off');
-                }
-                break;
-            case 'KeyD':
-                if (g_action_mode == 'move' && g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
-                    g_hero.set_z(g_hero.get_z() + 1);
-                    do_move_bottom_half('blink_off');
-                }
-                break;
-        }
-    });
+    u_arrow.removeEventListener("click", go_F);
+    d_arrow.removeEventListener("click", go_B);
+    r_arrow.removeEventListener("click", tr_R);
+    l_arrow.removeEventListener("click", tr_L);
+
+    u_arrow.style.setProperty('display', 'none');
+    d_arrow.style.setProperty('display', 'none');
+    l_arrow.style.setProperty('display', 'none');
+    r_arrow.style.setProperty('display', 'none');
+}
+
+export function set_move_controlles(): void {
+    hide_controlles();
+    g_ctls_mode[0] = T_CtlsMode.Move;
+    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
+    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
+    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
+    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+
+    u_arrow.addEventListener("click", go_F, false);
+    d_arrow.addEventListener("click", go_B, false);
+    r_arrow.addEventListener("click", tr_R, false);
+    l_arrow.addEventListener("click", tr_L, false);
+
+    window.addEventListener('keypress', key_press_function1);
+
+    u_arrow.style.setProperty('display', 'block');
+    d_arrow.style.setProperty('display', 'block');
+    l_arrow.style.setProperty('display', 'block');
+    r_arrow.style.setProperty('display', 'block');
+
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
+}
+
+function key_press_function1(e: KeyboardEvent):void  {
+    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
+        case 'ArrowUp': 
+        case 'KeyK': 
+        case 'Numpad5': 
+                (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+                break;
+        case 'ArrowDown': 
+        case 'KeyJ': 
+        case 'Numpad2': 
+                (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+                break;
+        case 'ArrowLeft': 
+        case 'KeyH': 
+        case 'Numpad1': 
+                (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
+                break;
+        case 'ArrowRight': 
+        case 'KeyL': 
+        case  'Numpad3': 
+                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                break;
+        case 'KeyU':
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_hero.get_z() > 0) {
+                g_hero.set_z(g_hero.get_z() - 1);
+                do_move_bottom_half('blink_off');
+            }
+            break;
+        case 'KeyD':
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
+                g_hero.set_z(g_hero.get_z() + 1);
+                do_move_bottom_half('blink_off');
+            }
+            break;
+    }
 }
 
     /************ *************************** **************/
@@ -95,7 +129,8 @@ function move_check(r: I_HopeAction) {
         return;
     }
     if (r.hope == 'Move') {
-        switch (g_maze.get_cell(r.subj)) {
+        const kind = g_maze.get_cell(r.subj);
+        switch (kind) {
             case T_MzKind.Floor:
             case T_MzKind.Unexp:
                  r.doOK();return;
@@ -103,7 +138,7 @@ function move_check(r: I_HopeAction) {
             case T_MzKind.StrDn:
             case T_MzKind.StrUD:
                  r.doOK();
-                 do_stairs_motion(g_maze.get_cell(r.subj));
+                 do_stairs_motion(kind);
                  return;
         }
         r.doNG();
@@ -111,12 +146,21 @@ function move_check(r: I_HopeAction) {
     }
 } 
 
-export function do_stairs_motion(kind:T_MzKind): void {
+function do_stairs_motion(kind: T_MzKind): void {
     switch (kind) {
+        case T_MzKind.StrUp:
+            set_Up_controlles();
+            break;
+        case T_MzKind.StrDn:
+            set_Dn_controlles();
+            break;
         case T_MzKind.StrUD:
-            
+            set_UD_controlles();
+            break;
     }
 }
+
+
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
     change_unexp_to_floor();
     clear_mask_around_the_hero();

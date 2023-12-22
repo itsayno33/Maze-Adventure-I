@@ -39,3 +39,11 @@ window.addEventListener(
   },
   true,
 );
+
+キーボードイベントの code の値(IMPORTANT!!)
+https://developer.mozilla.org/ja/docs/Web/API/UI_Events/Keyboard_event_code_values
+
+
+キーボードイベントの key の値
+https://developer.mozilla.org/ja/docs/Web/API/UI_Events/Keyboard_event_key_values
+

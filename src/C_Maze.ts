@@ -177,6 +177,11 @@ export class C_Maze {
         }
         return masks;
     }
+
+    public within(p: C_Point): boolean {
+        return this.size.within(p);
+    }
+    
     // メイズ内のオブジェクトやモンスター等の配置
     public add_obj(obj: I_Exist): void {
         this.objs.push(obj);
