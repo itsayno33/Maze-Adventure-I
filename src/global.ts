@@ -10,7 +10,10 @@ export var g_debug_mode: boolean = false;
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
+import { init_p_maze_view_message } from "./F_p_maze_view_message";
+
 export function init_after_loaded_DOM(): void {
+    init_p_maze_view_message();
     g_ds = init_maze3D();
 }
 

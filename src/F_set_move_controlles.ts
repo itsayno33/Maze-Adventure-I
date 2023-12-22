@@ -1,3 +1,4 @@
+import { hide_controlles } from "./F_set_controlles";
 import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
@@ -59,12 +60,6 @@ export function set_move_controlles() {
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
-function hide_controlles() {
-    const move_ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    move_ctl_view?.style.setProperty('display', 'none');
-}
-
-
 function clear_mask_around_the_hero(): void {
     g_maze.clear_mask_around_the_hero();
 }
@@ -103,15 +98,25 @@ function move_check(r: I_HopeAction) {
         switch (g_maze.get_cell(r.subj)) {
             case T_MzKind.Floor:
             case T_MzKind.Unexp:
+                 r.doOK();return;
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
-                 r.doOK();return;
+            case T_MzKind.StrUD:
+                 r.doOK();
+                 do_stairs_motion(g_maze.get_cell(r.subj));
+                 return;
         }
         r.doNG();
         return;
     }
 } 
 
+export function do_stairs_motion(kind:T_MzKind): void {
+    switch (kind) {
+        case T_MzKind.StrUD:
+            
+    }
+}
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
     change_unexp_to_floor();
     clear_mask_around_the_hero();
