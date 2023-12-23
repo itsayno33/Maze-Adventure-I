@@ -5,7 +5,7 @@ import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlle
 import { T_MzKind } from "./T_MzKind";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
-import { g_maze, g_hero, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
+import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
 import { C_Point } from "./C_Point";
 
 
@@ -135,8 +135,8 @@ function key_press_function2(e: KeyboardEvent):void  {
             (document.getElementById('n_btn') as HTMLButtonElement)?.click();
             return;
         case 'KeyU':
-            if (g_debug_mode && g_hero.get_z() > 0) {
-                g_hero.set_z(g_hero.get_z() - 1);
+            if (g_debug_mode && g_team.get_z() > 0) {
+                g_team.set_z(g_team.get_z() - 1);
                 return;
             }
             if (canUp) {
@@ -144,8 +144,8 @@ function key_press_function2(e: KeyboardEvent):void  {
             }
             return;
         case 'KeyD':
-            if (g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
-                g_hero.set_z(g_hero.get_z() + 1);
+            if (g_debug_mode && g_team.get_z() < (g_maze.get_z_max() - 1)) {
+                g_team.set_z(g_team.get_z() + 1);
                 return;
             }
             if (canDn) {
@@ -161,7 +161,7 @@ function do_cancel(): void {
 }
 
 function do_up(): void {
-    const rslt = g_hero.hope_p_up();
+    const rslt = g_team.hope_p_up();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {
@@ -173,7 +173,7 @@ function do_up(): void {
 }
 
 function do_down(): void {
-    const rslt = g_hero.hope_p_down();
+    const rslt = g_team.hope_p_down();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {

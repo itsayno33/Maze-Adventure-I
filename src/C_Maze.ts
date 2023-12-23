@@ -3,7 +3,7 @@ import { C_Point }      from "./C_Point";
 import { C_Range }      from "./C_Range";
 import { I_Exist }      from "./I_EventMap";
 import { g_debug_mode } from "./global";
-import { g_hero }       from "./global";
+import { g_team }       from "./global";
 
 class C_MazeCell  {
     protected cell: T_MzKind;
@@ -206,46 +206,46 @@ export class C_Maze {
         return obj;
     }
 
-    // Heroが来たポイントが未踏地だったらただの床に変える
+    // Teamが来たポイントが未踏地だったらただの床に変える
     public change_unexp_to_floor() {
-        if (this.get_cell(g_hero.get_p()) == T_MzKind.Unexp) {
-            this.set_cell(g_hero.get_p(), T_MzKind.Floor);
+        if (this.get_cell(g_team.get_p()) == T_MzKind.Unexp) {
+            this.set_cell(g_team.get_p(), T_MzKind.Floor);
         }
     }
 
     // 2Dマップのマスク外し関連
-    public clear_mask_around_the_hero(): void {
+    public clear_mask_around_the_team(): void {
         // 現在地と真横は自動的に見える
-        this.__clear_mask(g_hero.get_around(0, -1));
-        this.__clear_mask(g_hero.get_around(0,  0));
-        this.__clear_mask(g_hero.get_around(0,  1));
+        this.__clear_mask(g_team.get_around(0, -1));
+        this.__clear_mask(g_team.get_around(0,  0));
+        this.__clear_mask(g_team.get_around(0,  1));
 
         const depth   =  5; // 2Dマップ用の奥行き限界
 
         // 前方の見通しをチェックしながら見えるところは解放する
         for (var d = 1; d < depth; d++) {
-            const front_pos = g_hero.get_around(d, 0)
+            const front_pos = g_team.get_around(d, 0)
             if (this.is_movable(front_pos)) {
                 // 正面に障害物が無ければ、その両側も見える
-                this.__clear_mask(g_hero.get_around(d, -1));
-                this.__clear_mask(g_hero.get_around(d,  0));
-                this.__clear_mask(g_hero.get_around(d,  1));
+                this.__clear_mask(g_team.get_around(d, -1));
+                this.__clear_mask(g_team.get_around(d,  0));
+                this.__clear_mask(g_team.get_around(d,  1));
             } else {
                 // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
-                this.__clear_mask(g_hero.get_around(d, -1));
-                this.__clear_mask(g_hero.get_around(d,  0));
-                this.__clear_mask(g_hero.get_around(d,  1));
+                this.__clear_mask(g_team.get_around(d, -1));
+                this.__clear_mask(g_team.get_around(d,  0));
+                this.__clear_mask(g_team.get_around(d,  1));
                 // 正面に障害物が有ったらその奥は見えないので探索終了
                 break;
             }
         }
 /*
         // その他は壁に邪魔されて見えないかもしれないのでチェックする
-        const cur_pos = g_hero.get_p();
+        const cur_pos = g_team.get_p();
         const H_depth = (depth - 1) / 2;
         for (var d = 4; d < depth; d++) {
             for (var s = -H_depth; s < H_depth + 1; s++) {
-                const clr_pos = g_hero.get_around(d, s);
+                const clr_pos = g_team.get_around(d, s);
                 this.__judge_and_clear_mask(cur_pos, clr_pos);
             }
         }

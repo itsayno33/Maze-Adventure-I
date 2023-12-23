@@ -1,8 +1,8 @@
 import { C_Maze } from "./C_Maze";
 export const g_maze = new C_Maze({maze_id: -1});
 
-import { C_Hero } from "./C_Hero";
-export const g_hero = new C_Hero();
+import { C_Team } from "./C_Team";
+export const g_team = new C_Team();
 
 import { T_CtlsMode } from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];

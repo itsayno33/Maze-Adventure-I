@@ -6,7 +6,7 @@ import { C_UrlOpt }  from "./C_UrlOpt";
 import { C_Point }   from "./C_Point";
 import { init_controlles } from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
-import { g_maze, g_hero, init_after_loaded_DOM, init_debug_mode } from "./global";
+import { g_maze, g_team, init_after_loaded_DOM, init_debug_mode } from "./global";
 import { T_Direction } from "./T_Direction";
 
 window.addEventListener('DOMContentLoaded', function() { 
@@ -37,12 +37,12 @@ function get_maze(url: string, opt: string): void {
             );
 
             alert(
-                "\nid:    "     + (jsonObj.hero.id      ?? '?')
-              + "\nname:  "     + (jsonObj.hero.name    ?? '?')
-              + "\ncur_x: "     + (jsonObj.hero.point.x ?? '?')
-              + "\ncur_y: "     + (jsonObj.hero.point.y ?? '?')
-              + "\ncur_z: "     + (jsonObj.hero.point.z ?? '?')
-              + "\ncur_d: "     + (jsonObj.hero.direct.d ?? '?')
+                "\nid:    "     + (jsonObj.team.id      ?? '?')
+              + "\nname:  "     + (jsonObj.team.name    ?? '?')
+              + "\ncur_x: "     + (jsonObj.team.point.x ?? '?')
+              + "\ncur_y: "     + (jsonObj.team.point.y ?? '?')
+              + "\ncur_z: "     + (jsonObj.team.point.z ?? '?')
+              + "\ncur_d: "     + (jsonObj.team.direct.d ?? '?')
             );
 */
             decode_all(jsonObj);
@@ -63,17 +63,17 @@ async function decode_all(jsonObj: any) {
     });
     g_maze.decode({maze: jsonObj.maze.maze, mask: jsonObj.maze.mask});
 
-    //　HERO関連のデコード
-    jsonObj.hero.id       ?? g_hero.set_prp({id:   jsonObj.hero.id});
-    jsonObj.hero.name     ?? g_hero.set_prp({name: jsonObj.hero.name});
-    g_hero.set_p(new C_Point(
-        jsonObj.hero.point.x ?? g_maze.get_x_max() -2, 
-        jsonObj.hero.point.y ?? g_maze.get_y_max() -2, 
-        jsonObj.hero.point.z ?? 0));
-    g_hero.set_dir(jsonObj.hero.direct.d ?? T_Direction.N);
+    //　Team関連のデコード
+    jsonObj.team.id       ?? g_team.set_prp({id:   jsonObj.team.id});
+    jsonObj.team.name     ?? g_team.set_prp({name: jsonObj.team.name});
+    g_team.set_p(new C_Point(
+        jsonObj.team.point.x ?? g_maze.get_x_max() -2, 
+        jsonObj.team.point.y ?? g_maze.get_y_max() -2, 
+        jsonObj.team.point.z ?? 0));
+    g_team.set_dir(jsonObj.team.direct.d ?? T_Direction.N);
 
-    // MAZEにHEROを追加
-    g_maze.add_obj(g_hero);
+    // MazeにTeamを追加
+    g_maze.add_obj(g_team);
 }
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 

@@ -5,7 +5,7 @@ import { display_maze2D, display_maze3D,
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
 import { T_CtlsMode } from "./T_CtlsMode";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
-import { g_maze, g_hero, g_debug_mode, g_ctls_mode } from "./global";
+import { g_maze, g_team, g_debug_mode, g_ctls_mode } from "./global";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -73,14 +73,14 @@ function key_press_function1(e: KeyboardEvent):void  {
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
                 break;
         case 'KeyU':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_hero.get_z() > 0) {
-                g_hero.set_z(g_hero.get_z() - 1);
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_team.get_z() > 0) {
+                g_team.set_z(g_team.get_z() - 1);
                 do_move_bottom_half('blink_off');
             }
             break;
         case 'KeyD':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_hero.get_z() < (g_maze.get_z_max() - 1)) {
-                g_hero.set_z(g_hero.get_z() + 1);
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_team.get_z() < (g_maze.get_z_max() - 1)) {
+                g_team.set_z(g_team.get_z() + 1);
                 do_move_bottom_half('blink_off');
             }
             break;
@@ -94,8 +94,8 @@ function key_press_function1(e: KeyboardEvent):void  {
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
-function clear_mask_around_the_hero(): void {
-    g_maze.clear_mask_around_the_hero();
+function clear_mask_around_the_team(): void {
+    g_maze.clear_mask_around_the_team();
 }
 
 function change_unexp_to_floor(): void {
@@ -103,22 +103,22 @@ function change_unexp_to_floor(): void {
 }
 
 function go_F() {
-    const rslt = g_hero.hope_p_fwd();
+    const rslt = g_team.hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
 function go_B() {
-    const rslt = g_hero.hope_p_bak();
+    const rslt = g_team.hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
 function tr_R() {
-    const rslt = g_hero.hope_turn_r();
+    const rslt = g_team.hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
 function tr_L() {
-    const rslt = g_hero.hope_turn_l();
+    const rslt = g_team.hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
@@ -161,9 +161,9 @@ function do_stairs_motion(kind: T_MzKind): void {
 }
 
 
-export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_hero.get_p().z);
+export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor();
-    clear_mask_around_the_hero();
+    clear_mask_around_the_team();
     display_maze2D();
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();

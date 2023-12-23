@@ -2,12 +2,12 @@ import { C_Point }  from "./C_Point";
 import { C_Range }  from "./C_Range";
 import { T_MzKind } from "./T_MzKind";
 import { T_Wall, C_Wall }   from "./C_Wall";
-import { g_maze, g_hero, g_ds } from "./global";
+import { g_maze, g_team, g_ds } from "./global";
 import { T_Direction } from "./T_Direction";
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_hero.get_p().z);
+    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z);
 }
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -112,7 +112,7 @@ export function display_maze3D(): void {
     for (var j = g_ds.depth - 1; j >= 0; j--) {
         // 右側が見えている壁の描写 (左側から描写)
         for (var k = -H_depth; k < 0; k++) {
-            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
                 case T_MzKind.Stone:
                     drow_right_side_stone(j, k);
                     break;
@@ -132,7 +132,7 @@ export function display_maze3D(): void {
         }
         // 　左側が見えている壁の描写 (右側から描写)
         for (var k = H_depth; k > 0; k--) {
-            switch (g_maze.get_cell(g_hero.get_around(j, k, 0))) {
+            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
                 case T_MzKind.Stone:
                     drow_left_side_stone(j, k);
                     break;
@@ -151,7 +151,7 @@ export function display_maze3D(): void {
             }
         }
         // 正面の壁の描写
-        switch (g_maze.get_cell(g_hero.get_around(j, 0, 0))) {
+        switch (g_maze.get_cell(g_team.get_around(j, 0, 0))) {
             case T_MzKind.Stone:
                 drow_front_stone(j, 0);
                 break;
@@ -332,7 +332,7 @@ export function displey_mase3D_direction(): void {
         return;
     }
     var direction: string;
-    switch (g_hero.get_dir()) {
+    switch (g_team.get_dir()) {
         case T_Direction.N:
             direction = '<span class="direction_N">《北》</span>';
             break;
@@ -350,7 +350,7 @@ export function displey_mase3D_direction(): void {
             break;
     }
 
-    const p = g_hero.get_p();
+    const p = g_team.get_p();
     const mes = '地下 ' + (p.z + 1) + '階　' + direction + '　(x = <span id="direction_X">' + p.x + '</span>, y = <span id="direction_Y">' + p.y + '</span>)';
     p_dir.innerHTML = mes;
 }
@@ -363,7 +363,7 @@ export function maze3D_blink_on_direction(): void {
     const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
     if (dir_y === null) return;
 
-    switch (g_hero.get_dir()) {
+    switch (g_team.get_dir()) {
         case T_Direction.N:
         case T_Direction.S:
             dir_x.classList.remove('blink');

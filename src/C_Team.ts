@@ -13,7 +13,7 @@ type __init_arg = {
     d?: T_Direction,
     motion?: string,
 }
-export class C_Hero implements I_Exist {
+export class C_Team implements I_Exist {
     protected my_id: number;
     protected my_name: string;
     protected walker: C_Walker;
@@ -24,7 +24,7 @@ export class C_Hero implements I_Exist {
     public constructor(a?: __init_arg) {
 
         this.my_id   = a?.id ?? 0;
-        this.my_name = a?.name ?? 'Neo Hero?';
+        this.my_name = a?.name ?? 'Neo Team?';
         this.walker = new C_Walker();
         this.hope_motion = a?.motion ?? 'NOP';    
         if (a !== undefined) this.__init(a);
