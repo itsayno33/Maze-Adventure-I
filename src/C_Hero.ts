@@ -8,6 +8,19 @@ export type JSON_Hero = {
     name?: string, 
 }
 
+export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void { 
+    if (a === undefined) return;
+    alert('Number of Hero = ' + a.length.toString());
+    for (var i in a) {
+        if (a[i] === undefined) continue;
+        alert("Hero[" + i.toString() + "] Info:\n" 
+            + "\nid:    "     + (a[i]?.id        ?? '?')
+            + "\nname:  "     + (a[i]?.name      ?? '?')
+            + "\n"
+        );
+    }
+}
+
 export class C_Hero {
     protected my_id:   number;
     protected my_name: string;

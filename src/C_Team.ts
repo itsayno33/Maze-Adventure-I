@@ -28,6 +28,22 @@ export type JSON_Team = {
     motion?: string,
 }
 
+export function alert_team_info(a: JSON_Team|undefined): void {
+    if (a === undefined) return;
+    alert("Team Info:" 
+        + "\nid:    "     + (a.id        ?? '?')
+        + "\nname:  "     + (a.name      ?? '?')
+        + "\ncur_x: "     + (a.point?.x  ?? '?')
+        + "\ncur_y: "     + (a.point?.y  ?? '?')
+        + "\ncur_z: "     + (a.point?.z  ?? '?')
+        + "\ncur_d: "     + (a.direct?.d ?? '?')
+        + "\n"
+    );
+
+//    if (a.heroes !== undefined) alert_heroes_info(a.heroes);
+}
+
+
 export class C_Team implements I_Exist {
     protected my_id:    number;
     protected my_name:  string;
