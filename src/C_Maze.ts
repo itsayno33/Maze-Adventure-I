@@ -277,52 +277,12 @@ export class C_Maze {
                 break;
             }
         }
-/*
-        // その他は壁に邪魔されて見えないかもしれないのでチェックする
-        const cur_pos = g_team.get_p();
-        const H_depth = (depth - 1) / 2;
-        for (var d = 4; d < depth; d++) {
-            for (var s = -H_depth; s < H_depth + 1; s++) {
-                const clr_pos = g_team.get_around(d, s);
-                this.__judge_and_clear_mask(cur_pos, clr_pos);
-            }
-        }
-*/
     }
     protected __clear_mask(clr_pos: C_Point): void {
         if (!this.size.within(clr_pos)) return;
         this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
     }
-/*
-    protected __judge_and_clear_mask(cur_pos: C_Point, clr_pos: C_Point): void {
-        if (cur_pos.z !== clr_pos.z)    return;
-        if (!this.size.within(cur_pos)) return;
-        if (!this.size.within(clr_pos)) return;
 
-        const z = cur_pos.z;
-
-        const min_y = _min(cur_pos.y, clr_pos.y);
-        const max_y = _max(cur_pos.y, clr_pos.y);
-
-        const min_x = _min(cur_pos.x, clr_pos.x);
-        const max_x = _max(cur_pos.x, clr_pos.x);
-
-        for (var y = min_y; y <= max_y; y++) {
-            for (var x = min_x; x <= max_x; x++) {
-                switch (this.cells[z][y][x].get()) {
-                    case T_MzKind.Stone:
-                        if (y != clr_pos.y || x != clr_pos.x) return;
-                        break;
-                    case T_MzKind.NoDef:
-                    case T_MzKind.Unkwn:
-                    case T_MzKind.Empty:
-                        return;
-                }
-            }
-        }
-        this.__clear_mask(clr_pos);
-    }
-*/
     public is_movable(p: C_Point): boolean {
         if (!this.size.within(p)) return false;
         switch (this.get_cell(p)) {
@@ -393,11 +353,11 @@ export class C_Maze {
                 for (var x = 0; x < size_x; x++) {
                     x_array.push(this.cells[z][y][x].encode());
                 }
-                y_array.push(x_array.join(':'));
+                y_array.push(x_array.join('X'));
             }
-            z_array.push(y_array.join('&'));
+            z_array.push(y_array.join('Y'));
         }
-        const maze_str = z_array.join('@');
+        const maze_str = z_array.join('Z');
 
         var z_array: string[] = [];
         for (var z = 0; z < size_z; z++) {
@@ -407,11 +367,11 @@ export class C_Maze {
                 for (var x = 0; x < size_x; x++) {
                     x_array.push(this.masks[z][y][x] ? '1' : '0');
                 }
-                y_array.push(x_array.join(':'));
+                y_array.push(x_array.join('X'));
             }
-            z_array.push(y_array.join('&'));
+            z_array.push(y_array.join('Y'));
         }
-        const mask_str = z_array.join('@');
+        const mask_str = z_array.join('Z');
 
         return {
             id:     this.maze_id,
@@ -453,13 +413,13 @@ export class C_Maze {
                 this.cells[z][y][x].set(T_MzKind.Stone);
             }
 
-            const z_array: string[] = a.maze.split('@');
+            const z_array: string[] = a.maze.split('Z');
             const z_max = _min(size_z, z_array.length);
             for (var z = 0; z < z_max; z++) {
-                const y_array: string[] = z_array[z].split('&');
+                const y_array: string[] = z_array[z].split('Y');
                 const y_max =  _min(size_y, y_array.length); 
                 for (var y = 0; y < y_max; y++) {
-                    const x_array: string[] = y_array[y].split(':');
+                    const x_array: string[] = y_array[y].split('X');
                     const x_max =  _min(size_x, x_array.length); 
                     for (var x = 0; x < x_max; x++) {
                         this.cells[z][y][x].decode(x_array[x]);
@@ -469,13 +429,13 @@ export class C_Maze {
         }
         if (a.mask !== undefined) {
             this.__init_mask(true);
-            const z_array: string[] = a.mask.split('@');
+            const z_array: string[] = a.mask.split('Z');
             const z_max = _min(size_z, z_array.length);
             for (var z = 0; z < z_max; z++) {
-                const y_array: string[] = z_array[z].split('&');
+                const y_array: string[] = z_array[z].split('Y');
                 const y_max =  _min(size_y, y_array.length); 
                 for (var y = 0; y < y_max; y++) {
-                    const x_array: string[] = y_array[y].split(':');
+                    const x_array: string[] = y_array[y].split('X');
                     const x_max =  _min(size_x, x_array.length); 
                     for (var x = 0; x < x_max; x++) {
                         if (x_array[x] !== '0') {
