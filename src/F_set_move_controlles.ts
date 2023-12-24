@@ -5,6 +5,7 @@ import { display_maze2D, display_maze3D,
          maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
 import { T_CtlsMode } from "./T_CtlsMode";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
+import { instant_load, instant_save } from "./F_instant_save";
 import { g_maze, g_team, g_debug_mode, g_ctls_mode } from "./global";
 
 export function clr_move_controlles(): void {
@@ -72,6 +73,18 @@ function key_press_function1(e: KeyboardEvent):void  {
         case  'Numpad3': 
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
                 break;
+        case 'KeyL':
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) {
+                instant_load();
+                do_move_bottom_half('blink_off');
+            }
+            break;
+        case 'KeyS':
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) {
+                instant_save();
+                do_move_bottom_half('blink_off');
+            }
+            break;
         case 'KeyU':
             if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_team.get_z() > 0) {
                 g_team.set_z(g_team.get_z() - 1);

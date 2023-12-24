@@ -3,12 +3,11 @@
 ///
 
 import { C_UrlOpt }  from "./C_UrlOpt";
-import { C_Point }   from "./C_Point";
+import { JSON_maze } from "./C_Maze";
+import { JSON_team } from "./C_Team";
 import { init_controlles } from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { g_maze, g_team, init_after_loaded_DOM, init_debug_mode } from "./global";
-import { T_Direction } from "./T_Direction";
-import { C_Hero } from "./C_Hero";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM();
@@ -21,32 +20,10 @@ function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         async (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
-/*
-            alert( ''
-                + "\nmaze id :" + (jsonObj.maze.id      ?? '?')
-                + "\nfloor: "   + (jsonObj.maze.floor   ?? '?')
-                + "\ntitle: "   + (jsonObj.maze.title   ?? '?')
-                + "\nsize_x: "  + (jsonObj.maze.size_x  ?? '?')
-                + "\nsize_y: "  + (jsonObj.maze.size_y  ?? '?')
-                + "\nsize_z: "  + (jsonObj.maze.size_z  ?? '?')
-            );
+            if (jsonObj.maze        !== "undefined") alert_maze_info(jsonObj.maze);
+            if (jsonObj.team        !== "undefined") alert_team_info(jsonObj.team);
+            if (jsonObj.team.heroes !== "undefined") alert_heroes_info(jsonObj.team.heroes);
 
-            alert(
-                  "\nmaze: "    + (jsonObj.maze.maze ?? '?')
-            );
-            alert(
-                  "\nmask: "    + (jsonObj.maze.mask ?? '?')
-            );
-
-            alert( ''
-              + "\nid:    "     + (jsonObj.team.id       ?? '?')
-              + "\nname:  "     + (jsonObj.team.name     ?? '?')
-              + "\ncur_x: "     + (jsonObj.team.point.x  ?? '?')
-              + "\ncur_y: "     + (jsonObj.team.point.y  ?? '?')
-              + "\ncur_z: "     + (jsonObj.team.point.z  ?? '?')
-              + "\ncur_d: "     + (jsonObj.team.direct.d ?? '?')
-            );
-*/
             decode_all(jsonObj);
             init_debug_mode();
             init_controlles();
@@ -56,46 +33,62 @@ function get_maze(url: string, opt: string): void {
 
 function decode_all(jsonObj: any) {
     // MAZE関連のデコード
-    if (jsonObj.maze !== undefined) {
-        g_maze.decode(jsonObj.maze);
-/*
-        g_maze.decode({
-            id:         jsonObj.maze.id      ?? 0,
-            floor:      jsonObj.maze.floor   ?? 0,
-            title:      jsonObj.maze.title   ?? 'UnKnown Dungeon',
-            size_x:     jsonObj.maze.size_x  ?? 3,
-            size_y:     jsonObj.maze.size_y  ?? 3,
-            size_z:     jsonObj.maze.size_z  ?? 1,
-            maze:       jsonObj.maze.maze    ?? '',
-            mask:       jsonObj.maze.mask    ?? '',
-            });
-*/
-    }
-
+    if (jsonObj.maze !== undefined) g_maze.decode(jsonObj.maze);
 
     //　Team関連のデコード
-    if (jsonObj.team !== undefined) {
-        g_team.decode(jsonObj.team);
-/*
-        jsonObj.team.id       ?? g_team.set_prp({id:     jsonObj.team.id});
-        jsonObj.team.name     ?? g_team.set_prp({name:   jsonObj.team.name});
-        g_team.set_p(new C_Point(
-            jsonObj.team.point.x ?? g_maze.get_x_max() -2, 
-            jsonObj.team.point.y ?? g_maze.get_y_max() -2, 
-            jsonObj.team.point.z ?? 0));
-        g_team.set_dir(jsonObj.team.direct.d ?? T_Direction.N);
-
-        if (jsonObj.team.heroes !== undefined) {
-            for (const hero_data of jsonObj.team.heroes) {
-                const hero = new C_Hero().decode(hero_data); 
-                g_team.append_hero(hero);
-            }
-        }
-*/
-    }
+    if (jsonObj.team !== undefined) g_team.decode(jsonObj.team);
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team);
+}
+
+function alert_maze_info(a: JSON_maze): void {
+    alert("Maze Info:" 
+        + "\nmaze id :" + (a.id      ?? '?')
+        + "\nfloor: "   + (a.floor   ?? '?')
+        + "\ntitle: "   + (a.title   ?? '?')
+        + "\nsize_x: "  + (a.size_x  ?? '?')
+        + "\nsize_y: "  + (a.size_y  ?? '?')
+        + "\nsize_z: "  + (a.size_z  ?? '?')
+        + "\n"
+    );
+
+    alert(
+        "maze:\n"    + (a.maze ?? '?')
+        + "\n"
+    );
+    
+    alert(
+        "mask:\n"    + (a.mask ?? '?')
+        + "\n"
+    );
+}
+
+function alert_team_info(a: JSON_team): void {
+    alert("Team Info:" 
+        + "\nid:    "     + (a.id        ?? '?')
+        + "\nname:  "     + (a.name      ?? '?')
+        + "\ncur_x: "     + (a.point?.x  ?? '?')
+        + "\ncur_y: "     + (a.point?.y  ?? '?')
+        + "\ncur_z: "     + (a.point?.z  ?? '?')
+        + "\ncur_d: "     + (a.direct?.d ?? '?')
+        + "\n"
+    );
+
+//    if (a.heroes !== undefined) alert_heroes_info(a.heroes);
+}
+
+function alert_heroes_info(a: {
+    id?:     number,
+    name?:   string,
+}[]): void { alert('Number of Hero = ' + a.length.toString());
+    for (var i in a) {
+        alert("Hero[" + i.toString() + "] Info:n" 
+            + "\nid:    "     + (a[i].id        ?? '?')
+            + "\nname:  "     + (a[i].name      ?? '?')
+            + "\n"
+        );
+    }
 }
 
 function getJSON_by_mai(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 

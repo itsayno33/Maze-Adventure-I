@@ -16,7 +16,7 @@ type __init_arg = {
     motion?: string,
 }
 
-type __JSON_arg = {
+export type JSON_team = {
     id?:number, 
     name?: string, 
     point?: {x: number, y: number, z: number}, 
@@ -181,7 +181,7 @@ export class C_Team implements I_Exist {
         this.heroes = this.heroes.filter((item) => item !== hero);
     }
 
-    public encode(): __JSON_arg {
+    public encode(): JSON_team {
         const x = this.walker.get_x();
         const y = this.walker.get_y();
         const z = this.walker.get_z();
@@ -196,7 +196,7 @@ export class C_Team implements I_Exist {
             motion:  this.hope_motion,
         };
     }
-    public decode(a: __JSON_arg): C_Team {
+    public decode(a: JSON_team): C_Team {
         if (a.id   !== undefined)   this.my_id       = a.id;
         if (a.name !== undefined)   this.my_name     = a.name;
         if (a.motion !== undefined) this.hope_motion = a.motion;
