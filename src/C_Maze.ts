@@ -5,6 +5,18 @@ import { I_Exist }      from "./I_EventMap";
 import { g_debug_mode } from "./global";
 import { g_team }       from "./global";
 
+type __JSON_arg = {
+    id?:     number,
+    floor?:  number,
+    title?:  string,
+    size_x?: number,
+    size_y?: number,
+    size_z?: number,
+    maze?:   string, 
+    mask?:   string, 
+    objs?:   I_Exist[],
+}
+
 class C_MazeCell  {
     protected cell: T_MzKind;
     protected maze: C_Maze;
@@ -104,7 +116,7 @@ export class C_Maze {
     protected masks:    boolean[][][];
     protected objs:     I_Exist[];
     public constructor(
-        {maze_id = -1, floor = 0, title = '', size_x = 1, size_y = 1, size_z = 1}: {
+        {maze_id = -1, floor = 0, title = '', size_x = 3, size_y = 3, size_z = 1}: {
             maze_id?: number,
             floor?:   number,
             title?:   string,
@@ -342,7 +354,7 @@ export class C_Maze {
         }
         return ret_str;
     }
-    public encode(): string {
+    public encode(): __JSON_arg {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
         const size_z = this.size.size_z();
@@ -359,35 +371,77 @@ export class C_Maze {
             }
             z_array.push(y_array.join('&'));
         }
-        return z_array.join('@');
+        const maze_str = z_array.join('@');
+
+        var z_array: string[] = [];
+        for (var z = 0; z < size_z; z++) {
+            var y_array: string[] = [];
+            for (var y = 0; y < size_y; y++) {
+                var x_array: string[] = [];
+                for (var x = 0; x < size_x; x++) {
+                    x_array.push(this.masks[z][y][x] ? '1' : '0');
+                }
+                y_array.push(x_array.join(':'));
+            }
+            z_array.push(y_array.join('&'));
+        }
+        const mask_str = z_array.join('@');
+
+        return {
+            id:     this.maze_id,
+            floor:  this.floor,
+            title:  this.title,
+            size_x: this.size.size_x(),
+            size_y: this.size.size_y(),
+            size_z: this.size.size_z(),
+            maze:   maze_str,
+            mask:   mask_str,
+        }
     }
-    public decode({maze:maze_str,mask:mask_str} : {maze: string, mask?: string}): void {
+    public decode(a: __JSON_arg): void {
+        if (a.id    !== undefined) this.maze_id = a.id;
+        if (a.floor !== undefined) this.floor   = a.floor;
+        if (a.title !== undefined) this.title   = a.title;
+        if (a.objs  !== undefined) this.objs    = a.objs;
+
+        if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
+            this.size  = new C_Range(
+                new C_Point(0, 0, 0), 
+                new C_Point(a.size_x - 1, a.size_y - 1, a.size_z - 1)
+                );
+            this.cells   = this.__init_maze(T_MzKind.Stone);
+            this.masks   = this.__init_mask(true);
+        }
+
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
         const size_z = this.size.size_z();
 
-        for (var z = 0; z < size_z; z++)
-        for (var y = 0; y < size_y; y++)
-        for (var x = 0; x < size_x; x++) {
-            this.cells[z][y][x].set(T_MzKind.Stone);
-        }
 
-        const z_array: string[] = maze_str.split('@');
-        const z_max = _min(size_z, z_array.length);
-        for (var z = 0; z < z_max; z++) {
-            const y_array: string[] = z_array[z].split('&');
-            const y_max =  _min(size_y, y_array.length); 
-            for (var y = 0; y < y_max; y++) {
-                const x_array: string[] = y_array[y].split(':');
-                const x_max =  _min(size_x, x_array.length); 
-                for (var x = 0; x < x_max; x++) {
-                    this.cells[z][y][x].decode(x_array[x]);
-                }
+        if (a.maze !== undefined) {
+            for (var z = 0; z < size_z; z++)
+            for (var y = 0; y < size_y; y++)
+            for (var x = 0; x < size_x; x++) {
+                this.cells[z][y][x].set(T_MzKind.Stone);
             }
-        }  
 
-        if (mask_str !== undefined) {
-            const z_array: string[] = mask_str.split('@');
+            const z_array: string[] = a.maze.split('@');
+            const z_max = _min(size_z, z_array.length);
+            for (var z = 0; z < z_max; z++) {
+                const y_array: string[] = z_array[z].split('&');
+                const y_max =  _min(size_y, y_array.length); 
+                for (var y = 0; y < y_max; y++) {
+                    const x_array: string[] = y_array[y].split(':');
+                    const x_max =  _min(size_x, x_array.length); 
+                    for (var x = 0; x < x_max; x++) {
+                        this.cells[z][y][x].decode(x_array[x]);
+                    }
+                }
+            }  
+        }
+        if (a.mask !== undefined) {
+            this.__init_mask(true);
+            const z_array: string[] = a.mask.split('@');
             const z_max = _min(size_z, z_array.length);
             for (var z = 0; z < z_max; z++) {
                 const y_array: string[] = z_array[z].split('&');
@@ -404,8 +458,6 @@ export class C_Maze {
                     }
                 }
             }      
-        } else {
-            this.__init_mask(true);
         }
     }
 }

@@ -1,7 +1,12 @@
 import { T_Direction } from "./T_Direction";
 import { C_Point }     from "./C_Point";
 
-
+type __JSON_arg = {
+    x?: number,
+    y?: number,
+    z?: number,
+    d?: number,
+}
 export class C_Walker {
     protected p: C_Point;
     protected d: T_Direction;
@@ -115,6 +120,23 @@ export class C_Walker {
             case T_Direction.S: this.d = T_Direction.N;break;
             case T_Direction.W: this.d = T_Direction.W;break;
         }
+    }
+    public encode(): __JSON_arg {
+        return {
+            x: this.p.x,
+            y: this.p.y,
+            z: this.p.z,
+            d: this.d as number,
+        }
+    }
+    public decode(a: __JSON_arg): C_Walker {
+        if (a.x !== undefined && a.y !== undefined && a.z !== undefined) {
+            this.p.x = a.x;
+            this.p.y = a.y;
+            this.p.z = a.z;
+        }
+        if (a.d !== undefined) this.d   = a.d as T_Direction;
+        return this;
     }
 }
 
