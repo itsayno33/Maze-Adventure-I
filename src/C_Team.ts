@@ -2,7 +2,7 @@ import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
 import { C_Point }     from "./C_Point";
 import { C_Walker }    from "./C_Walker";
 import { T_Direction } from "./T_Direction";
-import { C_Hero }      from "./C_Hero";
+import { C_Hero, JSON_Hero }      from "./C_Hero";
 
 type __init_arg = {
     id?:number, 
@@ -16,7 +16,7 @@ type __init_arg = {
     motion?: string,
 }
 
-export type JSON_team = {
+export type JSON_Team = {
     id?:number, 
     name?: string, 
     point?: {x: number, y: number, z: number}, 
@@ -24,7 +24,7 @@ export type JSON_team = {
     y?: number,
     z?: number,
     direct?: {d: number},
-    heroes?: object[], 
+    heroes?: JSON_Hero[], 
     motion?: string,
 }
 
@@ -181,7 +181,7 @@ export class C_Team implements I_Exist {
         this.heroes = this.heroes.filter((item) => item !== hero);
     }
 
-    public encode(): JSON_team {
+    public encode(): JSON_Team {
         const x = this.walker.get_x();
         const y = this.walker.get_y();
         const z = this.walker.get_z();
@@ -196,7 +196,9 @@ export class C_Team implements I_Exist {
             motion:  this.hope_motion,
         };
     }
-    public decode(a: JSON_team): C_Team {
+    public decode(a: JSON_Team|undefined): C_Team {
+        if (a === undefined) return this;
+
         if (a.id   !== undefined)   this.my_id       = a.id;
         if (a.name !== undefined)   this.my_name     = a.name;
         if (a.motion !== undefined) this.hope_motion = a.motion;

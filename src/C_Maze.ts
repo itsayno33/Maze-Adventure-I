@@ -5,7 +5,7 @@ import { I_Exist }      from "./I_EventMap";
 import { g_debug_mode } from "./global";
 import { g_team }       from "./global";
 
-export type JSON_maze = {
+export type JSON_Maze = {
     id?:     number,
     floor?:  number,
     title?:  string,
@@ -354,7 +354,7 @@ export class C_Maze {
         }
         return ret_str;
     }
-    public encode(): JSON_maze {
+    public encode(): JSON_Maze {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
         const size_z = this.size.size_z();
@@ -398,7 +398,9 @@ export class C_Maze {
             mask:   mask_str,
         }
     }
-    public decode(a: JSON_maze): void {
+    public decode(a: JSON_Maze|undefined): void {
+        if (a === undefined) return;
+
         if (a.id    !== undefined) this.maze_id = a.id;
         if (a.floor !== undefined) this.floor   = a.floor;
         if (a.title !== undefined) this.title   = a.title;

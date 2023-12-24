@@ -3,7 +3,7 @@ type __init_arg = {
     name?: string, 
 }
 
-export type JSON_hero = {
+export type JSON_Hero = {
     id?:   number, 
     name?: string, 
 }
@@ -31,14 +31,15 @@ export class C_Hero {
     public neme(): string {
         return this.my_name;
     }
-    public encode(): JSON_hero {
-        const ret: JSON_hero = {
+    public encode(): JSON_Hero {
+        const ret: JSON_Hero = {
             id:    this.my_id,
             name:  this.my_name,
         }
         return ret;
     }
-    public decode(a: JSON_hero): C_Hero {
+    public decode(a: JSON_Hero|undefined): C_Hero {
+        if (a === undefined) return this;
         if (a.id   !== undefined) this.my_id   = a.id;
         if (a.name !== undefined) this.my_name = a.name;
         return this;
@@ -49,14 +50,14 @@ export class C_Hero {
         new_hero.set_prp({name:  new_hero.id()});
         return new_hero;
     }
-    public static encode_heroes(heroes: C_Hero[]): JSON_hero[] {
-        const heroes_data = [] as JSON_hero[];
+    public static encode_heroes(heroes: C_Hero[]): JSON_Hero[] {
+        const heroes_data = [] as JSON_Hero[];
         for (var hero of heroes) {
             heroes_data.push(hero.encode());
         }
         return heroes_data;
     }
-    public static decode_heroes(heroes_data: JSON_hero[]): C_Hero[] {
+    public static decode_heroes(heroes_data: (JSON_Hero|undefined)[]|undefined): C_Hero[] {
         const heroes = [] as C_Hero[];
         if (heroes_data !== undefined) {
             for (var hero_data of heroes_data) {

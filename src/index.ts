@@ -3,8 +3,9 @@
 ///
 
 import { C_UrlOpt }  from "./C_UrlOpt";
-import { JSON_maze } from "./C_Maze";
-import { JSON_team } from "./C_Team";
+import { JSON_Maze } from "./C_Maze";
+import { JSON_Team } from "./C_Team";
+import { JSON_Hero } from "./C_Hero";
 import { init_controlles } from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { g_maze, g_team, init_after_loaded_DOM, init_debug_mode } from "./global";
@@ -20,9 +21,9 @@ function get_maze(url: string, opt: string): void {
     getJSON_by_mai(url, opt, 
         async (xhr:XMLHttpRequest)=> {
             const jsonObj = JSON.parse(xhr.responseText);
-            if (jsonObj.maze        !== "undefined") alert_maze_info(jsonObj.maze);
-            if (jsonObj.team        !== "undefined") alert_team_info(jsonObj.team);
-            if (jsonObj.team.heroes !== "undefined") alert_heroes_info(jsonObj.team.heroes);
+            alert_maze_info(jsonObj.maze);
+            alert_team_info(jsonObj.team);
+            alert_heroes_info(jsonObj.team.heroes);
 
             decode_all(jsonObj);
             init_debug_mode();
@@ -42,7 +43,8 @@ function decode_all(jsonObj: any) {
     g_maze.add_obj(g_team);
 }
 
-function alert_maze_info(a: JSON_maze): void {
+function alert_maze_info(a: JSON_Maze|undefined): void {
+    if (a === undefined) return;
     alert("Maze Info:" 
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
@@ -64,7 +66,8 @@ function alert_maze_info(a: JSON_maze): void {
     );
 }
 
-function alert_team_info(a: JSON_team): void {
+function alert_team_info(a: JSON_Team|undefined): void {
+    if (a === undefined) return;
     alert("Team Info:" 
         + "\nid:    "     + (a.id        ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
@@ -78,14 +81,14 @@ function alert_team_info(a: JSON_team): void {
 //    if (a.heroes !== undefined) alert_heroes_info(a.heroes);
 }
 
-function alert_heroes_info(a: {
-    id?:     number,
-    name?:   string,
-}[]): void { alert('Number of Hero = ' + a.length.toString());
+function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void { 
+    if (a === undefined) return;
+    alert('Number of Hero = ' + a.length.toString());
     for (var i in a) {
-        alert("Hero[" + i.toString() + "] Info:n" 
-            + "\nid:    "     + (a[i].id        ?? '?')
-            + "\nname:  "     + (a[i].name      ?? '?')
+        if (a[i] === undefined) continue;
+        alert("Hero[" + i.toString() + "] Info:\n" 
+            + "\nid:    "     + (a[i]?.id        ?? '?')
+            + "\nname:  "     + (a[i]?.name      ?? '?')
             + "\n"
         );
     }
