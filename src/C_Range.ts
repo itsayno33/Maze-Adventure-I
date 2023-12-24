@@ -10,8 +10,8 @@ export class C_Range {
         const min_y = _min(p1.y, p2.y);
         const max_y = _max(p1.y, p2.y);
 
-        const min_z = _min(p1.z, p2.x);
-        const max_z = _max(p1.z, p2.x);
+        const min_z = _min(p1.z, p2.z);
+        const max_z = _max(p1.z, p2.z);
 
         this.min  = new C_Point(min_x, min_y, min_z);
         this.max  = new C_Point(max_x, max_y, max_z);

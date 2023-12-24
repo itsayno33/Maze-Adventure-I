@@ -1,5 +1,5 @@
 import { C_UrlOpt }           from "./C_UrlOpt";
-import { POST_and_move_page }./F_Post_and_move_page_and_move_page";
+import { POST_and_move_page } from "./F_POST_and_move_page";
 import { g_check_JSON_url, g_maze, g_team } from "./global";
 
 export function instant_load(): void {}
