@@ -19,6 +19,13 @@ export class C_UrlOpt {
         this.v = {} as T_Attr;
         return;
     }
+    public get_keys(): string[] {
+        const key_list: string[] = new Array as string[];
+        for (var key in this.v) {
+            key_list.push(key);
+        }
+        return key_list;
+    }
     public get (key: string): string {
         if (key in this.v) {
             if  (typeof this.v[key] === "number") {

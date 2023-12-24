@@ -79,8 +79,8 @@ function key_press_function1(e: KeyboardEvent):void  {
                 do_move_bottom_half('blink_off');
             }
             break;
-        case 'KeyS':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) {
+        case 'KeyS': 
+            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) { 
                 instant_save();
                 do_move_bottom_half('blink_off');
             }

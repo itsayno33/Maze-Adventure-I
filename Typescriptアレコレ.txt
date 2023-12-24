@@ -354,6 +354,50 @@ https://developer.mozilla.org/ja/docs/Web/API/Event
 
 
 
+Fetch APIでPOSTリクエストの送信
+https://apidog.com/jp/blog/fetch-api-post/
 
+基本的な使い方は下記のようになります。
+
+fetch(url, options) 
+  .then(response => {
+    // responseを処理
+  })
+  .catch(error => {
+    // エラーハンドリング
+  });
+
+Fetch APIでPOSTリクエストのボディを設定する際に利用できる主なデータフォーマットは以下の通りです。
+
+JSON
+FormData
+Blob
+ArrayBuffer
+URLSearchParams
+
+Fetch APIでJSONデータをPostする場合は、次のように、Bodyで具体的なJSONデータを記述して、
+Bodyで「JSON.stringify(body)」を指定する必要があります。
+
+const body = {
+  name: 'John',
+  age: 30 
+};
+
+fetch(url, {
+  method: 'POST',
+  body: JSON.stringify(body)
+});
+
+
+
+Fetch POST FormData
+FormDataでフォームデータを送信する場合、次のような実装コードになります。
+
+const formData = new FormData();
+formData.append('name', 'John');
+
+fetch(url, { 
+  body: formData 
+});
 
 

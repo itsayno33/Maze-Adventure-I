@@ -33,7 +33,7 @@ function decode_all(jsonObj: any) {
 }
 
 
-function getJSON_by_POST(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
+export function getJSON_by_POST(url: string, opt: string, callback:(req:XMLHttpRequest)=>void) { 
          
         const xhr = new XMLHttpRequest();
     
