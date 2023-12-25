@@ -23,6 +23,9 @@ export class C_MazeViewMessage {
     public clear_message() {
         this.display_message('　');
     }
+    public normal_message(mes: string) {
+        this.display_message(mes);
+    }
     public notice_message(mes: string) {
         this.display_message(mes, '#006600', '#ccffcc');
     }

@@ -83,6 +83,21 @@ export class C_UrlOpt {
 
         return str_array.join("&");
     }
+    public to_FormData(): FormData|null {
+        const len: number =  Object.keys(this.v).length;
+        if (len < 1)  return null;
+
+        var form_data = new FormData();
+        for (const key in this.v) {
+            const value: string|number = this.v[key];
+            if (typeof value === "string")
+                form_data.append(key, value);
+            else
+                form_data.append(key, value.toString());
+        }
+
+        return form_data;
+    }
     protected set_from_string(s: string): void {
         this.clear();
         this.add_from_string(s);

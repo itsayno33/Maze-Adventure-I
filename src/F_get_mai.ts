@@ -21,7 +21,7 @@ export function get_mai_maze(url: string, opt: string): void {
     });
 }
 
-function decode_all(jsonObj: any) {
+export function decode_all(jsonObj: any) {
     // MAZE関連のデコード
     if (jsonObj.maze !== undefined) g_maze.decode(jsonObj.maze);
 

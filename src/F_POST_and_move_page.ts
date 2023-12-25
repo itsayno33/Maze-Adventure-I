@@ -1,4 +1,30 @@
 import { C_UrlOpt } from "./C_UrlOpt";
+import { g_mvm } from "./global";
+
+export async function POST_and_get_JSON(
+    url: string, 
+    opt: C_UrlOpt, 
+): Promise<any> {
+    const form_data = opt.to_FormData();
+    if (form_data === null) return '';
+    try {
+        const res = await fetch(url, {
+            method: 'POST',
+            body: form_data
+        });
+/***
+        res.text().then(txt=>{
+            for (var i = 0;i < (txt.length < 1000?txt.length:1000); i += 250) 
+                alert(txt.substring(i, i+250));
+        })
+***/
+        return await res.json();
+    }
+    catch (err) {
+        g_mvm.warning_message('通信エラー: ' + err);
+        return undefined;
+    }
+}
 
 export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
     const form = create_form(url, opt);
@@ -6,7 +32,7 @@ export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
     form.submit();
 }
 
-export function create_form(url: string, opt: C_UrlOpt): HTMLFormElement {
+function create_form(url: string, opt: C_UrlOpt): HTMLFormElement {
     const form = document.createElement('form') as HTMLFormElement;
     form.setAttribute('id',     'dummy_form_' + new Date().valueOf().toString());
     form.setAttribute('method', 'POST');

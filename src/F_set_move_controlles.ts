@@ -6,7 +6,7 @@ import { display_maze2D, display_maze3D,
 import { T_CtlsMode } from "./T_CtlsMode";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { instant_load, instant_save } from "./F_instant_save";
-import { g_maze, g_team, g_debug_mode, g_ctls_mode } from "./global";
+import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -181,4 +181,5 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();
     else maze3D_blink_off_direction();
+    g_mvm.clear_message();
 }
