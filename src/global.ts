@@ -1,4 +1,4 @@
-const my_url_base: string = "http://127.0.0.1/dev/mai/";
+const my_url_base: string = "http://127.0.0.1/dev/mai/mai_maze/";
 export const g_get_maze_url:   string = my_url_base + "mai_maze.php";
 export const g_check_JSON_url: string = my_url_base + "check_JSON.php";
 
