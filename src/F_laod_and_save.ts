@@ -10,10 +10,19 @@ import { g_get_maze_url, g_maze, g_team, g_mvm, init_debug_mode } from "./global
 
 export function get_mai_maze(url: string, opt: C_UrlOpt): void {
     POST_and_get_JSON(url, opt)?.then(jsonObj=>{
-//            alert_maze_info(jsonObj?.maze);
-//            alert_team_info(jsonObj?.team);
-//            alert_heroes_info(jsonObj?.team?.heroes);
+        if (jsonObj.ecode != 0) {
+            g_mvm.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
+            alert(jsonObj.emsg);
+            return;
+        }
 
+        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+        if (monitor) {
+//            alert_maze_info(jsonObj?.maze);
+            alert_team_info(jsonObj?.team);
+            alert_heroes_info(jsonObj?.team?.heroes);
+            
+        }
             decode_all(jsonObj);
             init_debug_mode();
             init_controlles();
@@ -31,10 +40,14 @@ export function instant_load(): void {
     POST_and_get_JSON(g_get_maze_url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mvm.normal_message('正常にロードされました');
-//            alert_maze_info(jsonObj?.maze);
-//            alert_team_info(jsonObj?.team);
-//            alert_heroes_info(jsonObj?.team?.heroes);
-    
+        
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+    //            alert_maze_info(jsonObj?.maze);
+                alert_team_info(jsonObj?.team);
+                alert_heroes_info(jsonObj?.team?.heroes);
+            }
+        
             decode_all(jsonObj);
             init_controlles();
             do_move_bottom_half('blink_off');
@@ -63,9 +76,13 @@ export function instant_save(): void {
             g_mvm.warning_message("セーブできませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
         }
-//        alert_maze_info(jsonObj?.maze);
-//        alert_team_info(jsonObj?.team);
-//        alert_heroes_info(jsonObj?.team?.heroes);
+        
+        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+        if (monitor) {
+//            alert_maze_info(jsonObj?.maze);
+            alert_team_info(jsonObj?.team);
+            alert_heroes_info(jsonObj?.team?.heroes);
+        }
     
         decode_all(jsonObj);
     });

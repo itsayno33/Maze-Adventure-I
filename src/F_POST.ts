@@ -7,31 +7,39 @@ export async function POST_and_get_JSON(
 ): Promise<any> {
     const form_data = opt.to_FormData();
     if (form_data === null) return '';
+    var res: Response;
     try {
-        const res = await fetch(url, {
+        res = await fetch(url, {
             method: 'POST',
             body: form_data
-        });
-
-        const txt = res.text().then(txt=>{
-//            for (var i = 0;i < (txt.length < 1000?txt.length:1000); i += 250) 
-//                alert(txt.substring(i, i+250));
-            return txt;
-        })
-
-        return txt.then(txt=>{
-            try {
-                return JSON.parse(txt);
-            } catch(err) {
-                g_mvm.warning_message('JSON・デコードエラー');
-                return undefined;
-            }
         });
     }
     catch (err) {
         g_mvm.warning_message('通信エラー: ' + err);
         return undefined;
     }
+
+    const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+
+    var txt:Promise<string>;
+    if (monitor) {
+        txt = res.text().then(tx=>{
+            for (var i = 0;i < (tx.length < 1000?tx.length:1000); i += 250) 
+                alert(tx.substring(i, i+250));
+            return tx;
+        })
+    } else {
+        txt = res.text();
+    }
+
+    return txt.then(txt=>{
+        try {
+            return JSON.parse(txt);
+        } catch(err) {
+            g_mvm.warning_message('JSON形式のデコードエラー');
+            return undefined;
+        }
+    });
 }
 
 function readStream(stream: ReadableStream): any {

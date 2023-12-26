@@ -21,7 +21,7 @@ export type JSON_Maze = {
 export function alert_maze_info(a: JSON_Maze|undefined): void {
     if (a === undefined) return;
 
-    alert("Maze Info:" 
+    alert("Maze Info:"
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
         + "\nsave id :" + (a.save_id ?? '?')
@@ -36,12 +36,11 @@ export function alert_maze_info(a: JSON_Maze|undefined): void {
         "maze:\n"    + (a.maze ?? '?')
         + "\n"
     );
-    
+
     alert(
         "mask:\n"    + (a.mask ?? '?')
         + "\n"
     );
-
 }
 
 
