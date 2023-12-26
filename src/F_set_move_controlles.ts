@@ -69,18 +69,19 @@ function key_press_function1(e: KeyboardEvent):void  {
                 (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
-        case 'KeyL': 
         case  'Numpad3': 
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
                 break;
         case 'KeyL':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) {
+            if (g_debug_mode) {
                 instant_load();
                 do_move_bottom_half('blink_off');
+            } else {
+                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
             }
             break;
         case 'KeyS': 
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode) { 
+            if (g_debug_mode) { 
                 instant_save();
                 do_move_bottom_half('blink_off');
             }
