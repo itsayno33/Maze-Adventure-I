@@ -1,7 +1,7 @@
 import { C_Point }  from "./C_Point"
 import { C_Range }  from "./C_Range";
 import { T_MzKind } from "./T_MzKind";
-import { T_Wall, C_Wall }       from "./C_Wall";
+import { C_Wall }   from "./C_Wall";
 import { g_maze, g_team, g_ds } from "./global";
 import { T_Direction }          from "./T_Direction";
 

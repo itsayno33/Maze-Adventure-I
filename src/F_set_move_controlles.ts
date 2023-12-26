@@ -119,27 +119,24 @@ function go_F() {
     const rslt = g_team.hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
-    g_mvm.clear_message();
 }
 function go_B() {
     const rslt = g_team.hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
-    g_mvm.clear_message();
 }
 function tr_R() {
     const rslt = g_team.hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
-    g_mvm.clear_message();
 }
 function tr_L() {
     const rslt = g_team.hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
-    g_mvm.clear_message();
 }
 function move_check(r: I_HopeAction) {
+    g_mvm.clear_message();
     if (!r.has_hope) return;
     if (r.hope == 'Turn') {
         r.doOK();
@@ -158,6 +155,7 @@ function move_check(r: I_HopeAction) {
                  do_stairs_motion(kind);
                  return;
         }
+        g_mvm.normal_message('進めない！（笑）');
         r.doNG();
         return;
     }
