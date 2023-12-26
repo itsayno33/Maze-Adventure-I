@@ -1,3 +1,5 @@
+import { C_UrlOpt }            from "./C_UrlOpt";
+import { decode_all }          from "./F_laod_and_save";
 import { alert_maze_info }     from "./C_Maze"; // 通常時はコメントアウトされている関数
 import { alert_team_info }     from "./C_Team"; // 通常時はコメントアウトされている関数
 import { alert_heroes_info }   from "./C_Hero"; // 通常時はコメントアウトされている関数
@@ -5,8 +7,8 @@ import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { g_maze, g_team, init_debug_mode } from "./global";
 
-export function get_mai_maze(url: string, opt: string): void {
-    getJSON_by_POST(url, opt, 
+export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
+    getJSON_by_POST(url, opt.to_string(), 
         (xhr:XMLHttpRequest)=> {
 //            alert(xhr.responseText);
             const jsonObj = JSON.parse(xhr.responseText);
@@ -19,17 +21,6 @@ export function get_mai_maze(url: string, opt: string): void {
             init_controlles();
             do_move_bottom_half('blink_off');
     });
-}
-
-export function decode_all(jsonObj: any) {
-    // MAZE関連のデコード
-    if (jsonObj.maze !== undefined) g_maze.decode(jsonObj.maze);
-
-    //　Team関連のデコード
-    if (jsonObj.team !== undefined) g_team.decode(jsonObj.team);
-
-    // MazeにTeamを追加
-    g_maze.add_obj(g_team);
 }
 
 
