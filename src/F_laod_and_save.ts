@@ -7,8 +7,7 @@ import { POST_and_get_JSON }   from "./F_POST";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { _round, _min, _max  } from "./F_Math";
-import { g_get_maze_url, g_maze, g_team, g_mvm, init_debug_mode, 
-         g_view2D_width, g_view2D_height } from "./global";
+import { g_get_maze_url, g_maze, g_team, g_mvm, init_debug_mode } from "./global";
 
 export function get_mai_maze(url: string, opt: C_UrlOpt): void {
     POST_and_get_JSON(url, opt)?.then(jsonObj=>{
@@ -107,11 +106,14 @@ function calc_view2D_width(): void {
     const pre = document.getElementById('Maze_view2D_pre') as HTMLPreElement;
     if (pre === null) return;
 
+    const view2D_width  = pre.clientWidth;
+    const view2D_height = pre.clientHeight;
+
     const col    = g_maze.get_x_max();
-    const col_px = g_view2D_width  / col;
+    const col_px = view2D_width  / col;
 
     const row    = g_maze.get_y_max();
-    const row_px = g_view2D_height / row;
+    const row_px = view2D_height / row;
 
     const font_size   = _round(1.0 *  _min([col_px, row_px]), 2);
     const line_height = _round(1.1 *  _min([col_px, row_px]), 2);
