@@ -5,27 +5,29 @@ import { T_Direction } from "./T_Direction";
 import { C_Hero, JSON_Hero }      from "./C_Hero";
 
 type __init_arg = {
-    id?:number, 
-    name?: string, 
-    heroes?: C_Hero[], 
-    p?: C_Point, 
-    x?: number,
-    y?: number,
-    z?: number,
-    d?: T_Direction,
-    motion?: string,
+    id?:      number, 
+    save_id?: number, 
+    name?:    string, 
+    heroes?:  C_Hero[], 
+    p?:       C_Point, 
+    x?:       number,
+    y?:       number,
+    z?:       number,
+    d?:       T_Direction,
+    motion?:  string,
 }
 
 export type JSON_Team = {
-    id?:number, 
-    name?: string, 
-    point?: {x: number, y: number, z: number}, 
-    x?: number,
-    y?: number,
-    z?: number,
+    id?:      number, 
+    save_id?: number, 
+    name?:    string, 
+    point?:  {x: number, y: number, z: number}, 
+    x?:       number,
+    y?:       number,
+    z?:       number,
     direct?: {d: number},
-    heroes?: JSON_Hero[], 
-    motion?: string,
+    heroes?:  JSON_Hero[], 
+    motion?:  string,
 }
 
 export function alert_team_info(a: JSON_Team|undefined): void {
@@ -33,6 +35,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
     alert("Team Info:" 
         + "\nid:    "     + (a.id        ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
+        + "\nsave_id: "   + (a.save_id   ?? '?')
         + "\ncur_x: "     + (a.point?.x  ?? '?')
         + "\ncur_y: "     + (a.point?.y  ?? '?')
         + "\ncur_z: "     + (a.point?.z  ?? '?')
@@ -47,6 +50,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 export class C_Team implements I_Exist {
     protected my_id:    number;
     protected my_name:  string;
+    protected save_id:  number;
     protected walker:   C_Walker;
     protected my_layer: number = 99;
     protected heroes:   C_Hero[];
@@ -57,14 +61,16 @@ export class C_Team implements I_Exist {
 
         this.my_id   = a?.id ?? 0;
         this.my_name = a?.name ?? 'Neo Team?';
+        this.save_id = a?.save_id ?? 0;
         this.walker = new C_Walker();
         this.heroes = [];
         this.hope_motion = a?.motion ?? 'NOP';    
         if (a !== undefined) this.__init(a);
     }
     protected __init(a: __init_arg): void {
-        this.my_id   = a.id   ?? this.my_id
-        this.my_name = a.name ?? this.my_name;
+        this.my_id   = a.id      ?? this.my_id
+        this.my_name = a.name    ?? this.my_name;
+        this.save_id = a.save_id ?? this.save_id;
         if (a.p !== undefined) this.walker.set_p(a.p);
         if (a.x !== undefined) this.walker.set_x(a.x);
         if (a.y !== undefined) this.walker.set_x(a.y);
@@ -206,6 +212,7 @@ export class C_Team implements I_Exist {
         return {
             id:      this.my_id,
             name:    this.my_name,
+            save_id: this.save_id,
             point:   {x: x, y: y, z: z},
             direct:  {d: d},
             heroes:  C_Hero.encode_heroes(this.heroes),
@@ -215,9 +222,10 @@ export class C_Team implements I_Exist {
     public decode(a: JSON_Team|undefined): C_Team {
         if (a === undefined) return this;
 
-        if (a.id   !== undefined)   this.my_id       = a.id;
-        if (a.name !== undefined)   this.my_name     = a.name;
-        if (a.motion !== undefined) this.hope_motion = a.motion;
+        if (a.id   !== undefined)    this.my_id       = a.id;
+        if (a.name !== undefined)    this.my_name     = a.name;
+        if (a.save_id !== undefined) this.save_id     = a.save_id;
+        if (a.motion !== undefined)  this.hope_motion = a.motion;
 
         if (a.point !== undefined && typeof a.point == 'object') {
             this.walker.decode(a.point);

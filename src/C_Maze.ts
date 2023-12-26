@@ -6,15 +6,16 @@ import { g_debug_mode } from "./global";
 import { g_team }       from "./global";
 
 export type JSON_Maze = {
-    id?:     number,
-    floor?:  number,
-    title?:  string,
-    size_x?: number,
-    size_y?: number,
-    size_z?: number,
-    maze?:   string, 
-    mask?:   string, 
-    objs?:   object[],
+    id?:      number,
+    save_id?: number,
+    floor?:   number,
+    title?:   string,
+    size_x?:  number,
+    size_y?:  number,
+    size_z?:  number,
+    maze?:    string, 
+    mask?:    string, 
+    objs?:    object[],
 }
 
 export function alert_maze_info(a: JSON_Maze|undefined): void {
@@ -23,6 +24,7 @@ export function alert_maze_info(a: JSON_Maze|undefined): void {
     alert("Maze Info:" 
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
+        + "\nsave id :" + (a.save_id ?? '?')
         + "\ntitle: "   + (a.title   ?? '?')
         + "\nsize_x: "  + (a.size_x  ?? '?')
         + "\nsize_y: "  + (a.size_y  ?? '?')
@@ -134,6 +136,7 @@ class C_MazeCell  {
 
 export class C_Maze {
     protected maze_id:  number;
+    protected save_id:  number;
     protected floor:    number;
     protected title:    string;
     protected my_layer: number = 0;
@@ -142,8 +145,9 @@ export class C_Maze {
     protected masks:    boolean[][][];
     protected objs:     I_Exist[];
     public constructor(
-        {maze_id = -1, floor = 0, title = '', size_x = 3, size_y = 3, size_z = 1}: {
+        {maze_id = -1, save_id = -1, floor = 0, title = '', size_x = 3, size_y = 3, size_z = 1}: {
             maze_id?: number,
+            save_id?: number,
             floor?:   number,
             title?:   string,
             size_x?:  number,
@@ -152,6 +156,7 @@ export class C_Maze {
         }
     ) {
         this.maze_id = maze_id;
+        this.save_id = save_id;
         this.floor   = floor;
         this.title   = title;
         this.size    = new C_Range(
@@ -162,8 +167,9 @@ export class C_Maze {
         this.objs    = [] as I_Exist[];
     }
     public init(
-        {maze_id, floor, title, size_x, size_y, size_z}: {
+        {maze_id, save_id, floor, title, size_x, size_y, size_z}: {
             maze_id: number,
+            save_id: number,
             floor:   number,
             title:   string,
             size_x:  number,
@@ -172,6 +178,7 @@ export class C_Maze {
         }
     ) {
         this.maze_id = maze_id;
+        this.save_id = save_id;
         this.floor   = floor;
         this.title   = title;
         this.size    = new C_Range(
@@ -374,23 +381,25 @@ export class C_Maze {
         const mask_str = z_array.join('Z');
 
         return {
-            id:     this.maze_id,
-            floor:  this.floor,
-            title:  this.title,
-            size_x: this.size.size_x(),
-            size_y: this.size.size_y(),
-            size_z: this.size.size_z(),
-            maze:   maze_str,
-            mask:   mask_str,
+            id:      this.maze_id,
+            save_id: this.save_id,
+            floor:   this.floor,
+            title:   this.title,
+            size_x:  this.size.size_x(),
+            size_y:  this.size.size_y(),
+            size_z:  this.size.size_z(),
+            maze:    maze_str,
+            mask:    mask_str,
         }
     }
     public decode(a: JSON_Maze|undefined): void {
         if (a === undefined) return;
 
-        if (a.id    !== undefined) this.maze_id = a.id;
-        if (a.floor !== undefined) this.floor   = a.floor;
-        if (a.title !== undefined) this.title   = a.title;
-        if (a.objs  !== undefined) this.objs    = a.objs as I_Exist[];
+        if (a.id      !== undefined) this.maze_id = a.id;
+        if (a.save_id !== undefined) this.save_id = a.save_id;
+        if (a.floor   !== undefined) this.floor   = a.floor;
+        if (a.title   !== undefined) this.title   = a.title;
+        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
 
         if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
             this.size  = new C_Range(
