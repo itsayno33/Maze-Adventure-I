@@ -1,5 +1,5 @@
 import { C_UrlOpt } from "./C_UrlOpt";
-import { g_mvm } from "./global";
+import { g_mvm }    from "./global";
 
 export async function POST_and_get_JSON(
     url: string, 

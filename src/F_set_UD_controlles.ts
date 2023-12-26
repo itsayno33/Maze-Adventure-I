@@ -1,12 +1,7 @@
 import { hide_controlles } from "./F_set_controlles";
-import { I_HasHope, I_HopeAction } from "./I_EventMap";
 import { T_CtlsMode } from "./T_CtlsMode";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { T_MzKind } from "./T_MzKind";
-import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction } from "./F_display_maze";
 import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
-import { C_Point } from "./C_Point";
 
 
 export function clr_UD_controlles(): void {

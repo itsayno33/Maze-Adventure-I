@@ -26,9 +26,9 @@ export function instant_save(): void {
             g_mvm.warning_message("保存できませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
         }
-//        alert_maze_info(jsonObj?.maze);
-//        alert_team_info(jsonObj?.team);
-//        alert_heroes_info(jsonObj?.team?.heroes);
+        alert_maze_info(jsonObj?.maze);
+        alert_team_info(jsonObj?.team);
+        alert_heroes_info(jsonObj?.team?.heroes);
     
         decode_all(jsonObj);
     });
