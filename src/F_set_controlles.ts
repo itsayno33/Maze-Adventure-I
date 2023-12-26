@@ -17,6 +17,5 @@ export function hide_controlles() {
 }
 
 export function init_controlles() {
-    hide_controlles();
     set_move_controlles();
 }

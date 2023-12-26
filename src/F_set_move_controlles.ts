@@ -75,7 +75,6 @@ function key_press_function1(e: KeyboardEvent):void  {
         case 'KeyL':
             if (g_debug_mode) {
                 instant_load();
-                do_move_bottom_half('blink_off');
             } else {
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
             }
@@ -120,21 +119,25 @@ function go_F() {
     const rslt = g_team.hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
+    g_mvm.clear_message();
 }
 function go_B() {
     const rslt = g_team.hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
+    g_mvm.clear_message();
 }
 function tr_R() {
     const rslt = g_team.hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
+    g_mvm.clear_message();
 }
 function tr_L() {
     const rslt = g_team.hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
+    g_mvm.clear_message();
 }
 function move_check(r: I_HopeAction) {
     if (!r.has_hope) return;
@@ -182,5 +185,4 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();
     else maze3D_blink_off_direction();
-    g_mvm.clear_message();
 }
