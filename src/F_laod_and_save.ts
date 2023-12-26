@@ -115,8 +115,8 @@ function calc_view2D_width(): void {
     const row    = g_maze.get_y_max();
     const row_px = view2D_height / row;
 
-    const font_size   = _round(1.0 *  _min([col_px, row_px]), 2);
-    const line_height = _round(1.1 *  _min([col_px, row_px]), 2);
+    const font_size   = _round(0.95 *  _min([col_px, row_px]), 2);
+    const line_height = _round(1.00 *  _min([col_px, row_px]), 2);
 
     pre.style.setProperty('font-size',  `${font_size}px`);
     pre.style.setProperty('line-height',`${line_height}px`);
