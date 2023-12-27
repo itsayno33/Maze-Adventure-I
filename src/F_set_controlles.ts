@@ -8,10 +8,12 @@
 
 import { clr_move_controlles, set_move_controlles } from "./F_set_move_controlles";
 import { clr_UD_controlles } from "./F_set_UD_controlles";
+import { clr_camp_controlles } from "./F_set_camp_controlles";
 
 export function hide_controlles() {
     clr_move_controlles();
     clr_UD_controlles();
+    clr_camp_controlles()
     const move_ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     move_ctl_view?.style.setProperty('display', 'none');
 }

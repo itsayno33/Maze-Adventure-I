@@ -20,7 +20,9 @@ export class C_DisplayMessage {
         p.style.setProperty('color',            fr_color);
         p.style.setProperty('background-color', bg_color);
         p.innerHTML = mes;
-        this.div.appendChild(p);
+        // 記録型メッセージなので先頭に追加していく
+        this.div.insertBefore(p, this.div.firstChild); 
+//        this.div.appendChild(p);
     }
 
     public clear_message() {

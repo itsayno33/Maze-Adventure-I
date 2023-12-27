@@ -18,25 +18,25 @@ export class C_SwitchView {
         return this.me;
     }
     public hide_all(): void {
-        this._maze.setAttribute('display', 'none');
-        this._camp.setAttribute('display', 'none');
-        this._load.setAttribute('display', 'none');
-        this._save.setAttribute('display', 'none');
+        this._maze.style.setProperty('display', 'none');
+        this._camp.style.setProperty('display', 'none');
+        this._load.style.setProperty('display', 'none');
+        this._save.style.setProperty('display', 'none');
     }
     public view_maze(): void {
         this.hide_all();
-        this._maze.setAttribute('display', 'block');
+        this._maze.style.setProperty('display', 'block');
     }
     public view_camp(): void {
         this.hide_all();
-        this._camp.setAttribute('display', 'block');
+        this._camp.style.setProperty('display', 'block');
     }
     public view_load(): void {
         this.hide_all();
-        this._load.setAttribute('display', 'block');
+        this._load.style.setProperty('display', 'block');
     }
     public view_save(): void {
         this.hide_all();
-        this._save.setAttribute('display', 'block');
+        this._save.style.setProperty('display', 'block');
     }
 }

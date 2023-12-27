@@ -11,8 +11,8 @@ export function clr_UD_controlles(): void {
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
-    const n_btn  = document.getElementById('n_btn') as HTMLButtonElement;
+    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
+    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
 
     window.removeEventListener('keypress', key_press_function2);
 
@@ -26,8 +26,8 @@ export function clr_UD_controlles(): void {
 
     u_arrow.style.setProperty('display', 'none');
     d_arrow.style.setProperty('display', 'none');
-    y_btn.style.setProperty('display', 'none');
-    n_btn.style.setProperty('display', 'none');
+    y_btn.style  .setProperty('display', 'none');
+    n_btn.style  .setProperty('display', 'none');
 }
 
 

@@ -6,13 +6,15 @@ import { instant_load, instant_save } from "./F_laod_and_save";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
-import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
+import { set_camp_controlles }        from "./F_set_camp_controlles";
+import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+    const c_btn   = document.getElementById('c_btn')   as HTMLButtonElement;
 
     window.removeEventListener('keypress', key_press_function1);
 
@@ -20,11 +22,13 @@ export function clr_move_controlles(): void {
     d_arrow.removeEventListener("click", go_B);
     r_arrow.removeEventListener("click", tr_R);
     l_arrow.removeEventListener("click", tr_L);
+    c_btn  .removeEventListener("click", camp);
 
     u_arrow.style.setProperty('display', 'none');
     d_arrow.style.setProperty('display', 'none');
-    l_arrow.style.setProperty('display', 'none');
     r_arrow.style.setProperty('display', 'none');
+    l_arrow.style.setProperty('display', 'none');
+    c_btn  .style.setProperty('display', 'none');
 }
 
 export function set_move_controlles(): void {
@@ -34,18 +38,21 @@ export function set_move_controlles(): void {
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+    const c_btn   = document.getElementById('c_btn')   as HTMLButtonElement;
 
     u_arrow.addEventListener("click", go_F, false);
     d_arrow.addEventListener("click", go_B, false);
     r_arrow.addEventListener("click", tr_R, false);
     l_arrow.addEventListener("click", tr_L, false);
+    c_btn  .addEventListener("click", camp, false);
 
     window.addEventListener('keypress', key_press_function1);
 
     u_arrow.style.setProperty('display', 'block');
     d_arrow.style.setProperty('display', 'block');
-    l_arrow.style.setProperty('display', 'block');
     r_arrow.style.setProperty('display', 'block');
+    l_arrow.style.setProperty('display', 'block');
+    c_btn  .style.setProperty('display', 'block');
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
@@ -71,6 +78,9 @@ function key_press_function1(e: KeyboardEvent):void  {
         case 'ArrowRight': 
         case  'Numpad3': 
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                break;
+        case 'KeyC':
+                (document.getElementById('c_btn')   as HTMLButtonElement)?.click();
                 break;
         case 'KeyL':
             if (g_debug_mode) {
@@ -161,6 +171,18 @@ function move_check(r: I_HopeAction) {
     }
 } 
 
+
+export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
+    change_unexp_to_floor();
+    clear_mask_around_the_team();
+    display_maze2D();
+    display_maze3D();
+    if (blink_mode === 'blink_on') maze3D_blink_on_direction();
+    else maze3D_blink_off_direction();
+}
+
+
+
 function do_stairs_motion(kind: T_MzKind): void {
     switch (kind) {
         case T_MzKind.StrUp:
@@ -176,11 +198,7 @@ function do_stairs_motion(kind: T_MzKind): void {
 }
 
 
-export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
-    change_unexp_to_floor();
-    clear_mask_around_the_team();
-    display_maze2D();
-    display_maze3D();
-    if (blink_mode === 'blink_on') maze3D_blink_on_direction();
-    else maze3D_blink_off_direction();
+function camp(): void {
+    g_vsw.view_camp();
+    set_camp_controlles();
 }
