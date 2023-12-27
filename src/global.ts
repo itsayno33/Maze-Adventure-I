@@ -23,9 +23,13 @@ export var g_mes: C_DisplayMessage;
 import { C_MazeViewMessage } from "./C_MazeViewMessage";
 export var g_mvm: C_MazeViewMessage;
 
+import { C_SwitchView } from "./C_SwitchView";
+export var g_vsw: C_SwitchView;
+
 export function init_after_loaded_DOM(): void {
     g_mes  = C_DisplayMessage.get();
     g_mvm  = C_MazeViewMessage.get();
+    g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
 }
 

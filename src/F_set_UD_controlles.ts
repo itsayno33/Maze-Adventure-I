@@ -117,7 +117,6 @@ function key_press_function2(e: KeyboardEvent):void  {
             return;
         case 'KeyO':
         case 'KeyY':
-        case 'Numpad0':
         case 'Digit0':
         case 'Enter':
         case 'NumpadEnter':
@@ -125,6 +124,7 @@ function key_press_function2(e: KeyboardEvent):void  {
             return;
         case 'KeyN':
         case 'KeyX':
+        case 'Numpad0':
         case 'NumpadAdd':
 //        case 'NumpadSubtract':
             (document.getElementById('n_btn') as HTMLButtonElement)?.click();
