@@ -46,10 +46,10 @@ export class C_Wall {
         // 天井の縦幅の増分を求める。割合は適当（笑）
         // キャンバスの高さ(max_y - min_y)から一番遠くの壁の高さを引いて
         // 深さ(depth + 1)で割ることにより増分とした
-        const side_wall_size_T =  (max_y - min_y - front_wall_size_y) / ((depth + 1) * 2);
+        const side_wall_size_T =  (max_y - min_y - front_wall_size_y) / (depth * 2);
 
         // 床の増分を求める。求め方は上記と同じ
-        const side_wall_size_B =  (max_y - min_y - front_wall_size_y) / ((depth + 1) * 2);
+        const side_wall_size_B =  (max_y - min_y - front_wall_size_y) / (depth * 2);
 
         // 以上の値を用いて各距離(depth)の正面壁の位置決めをする
         // wallの第一引数は距離、第二引数は左右の位置（一番左が0、一番右がdepth-1)

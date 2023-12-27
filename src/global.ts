@@ -17,11 +17,15 @@ export var g_debug_mode: boolean = false;
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
+import { C_DisplayMessage } from "./C_DisplayMessage";
+export var g_mes: C_DisplayMessage;
+
 import { C_MazeViewMessage } from "./C_MazeViewMessage";
 export var g_mvm: C_MazeViewMessage;
 
 export function init_after_loaded_DOM(): void {
-    g_mvm  = C_MazeViewMessage.get(); g_mvm.clear_message();
+    g_mes  = C_DisplayMessage.get();
+    g_mvm  = C_MazeViewMessage.get();
     g_ds   = init_maze3D();
 }
 

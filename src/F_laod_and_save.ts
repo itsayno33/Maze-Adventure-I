@@ -7,12 +7,12 @@ import { POST_and_get_JSON }   from "./F_POST";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { _round, _min, _max  } from "./F_Math";
-import { g_get_maze_url, g_maze, g_team, g_mvm, init_debug_mode } from "./global";
+import { g_get_maze_url, g_maze, g_team, g_mes, g_mvm, init_debug_mode } from "./global";
 
 export function get_mai_maze(url: string, opt: C_UrlOpt): void {
     POST_and_get_JSON(url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
-            g_mvm.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
+            g_mes.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
             return;
         }
@@ -40,7 +40,7 @@ export function instant_load(): void {
 
     POST_and_get_JSON(g_get_maze_url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
-            g_mvm.normal_message('正常にロードされました');
+            g_mes.normal_message('正常にロードされました');
         
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
@@ -53,7 +53,7 @@ export function instant_load(): void {
             init_controlles();
             do_move_bottom_half('blink_off');
         } else {
-            g_mvm.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
         }
     });
@@ -72,9 +72,9 @@ export function instant_save(): void {
 
     POST_and_get_JSON(g_get_maze_url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
-            g_mvm.normal_message('正常にセーブされました');
+            g_mes.normal_message('正常にセーブされました');
         } else {
-            g_mvm.warning_message("セーブできませんでした\n" + jsonObj.emsg);
+            g_mes.warning_message("セーブできませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
         }
         

@@ -2,12 +2,13 @@ import { C_Point }  from "./C_Point"
 import { C_Range }  from "./C_Range";
 import { T_MzKind } from "./T_MzKind";
 import { C_Wall }   from "./C_Wall";
-import { g_maze, g_team, g_ds, g_mvm } from "./global";
+import { g_maze, g_team, g_ds, g_mes } from "./global";
 import { T_Direction }          from "./T_Direction";
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
     if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z);
+    else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -23,12 +24,12 @@ type T_Rect = {tl: T_xy, tr: T_xy, bl: T_xy, br: T_xy};
 export function init_maze3D(): T_DrowSet {
     const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
-        g_mvm?.warning_message('Canvas isnt found! id=Maze_view3D_canvas');
+        g_mes.warning_message('Canvas isnt found! id=Maze_view3D_canvas');
         return {canvas: null, con: null, depth: 0, wall: null};
     }
     const con: CanvasRenderingContext2D|null = canvas.getContext('2d');
     if (con === null) {
-        g_mvm?.warning_message('Browser dont surpport 2D graphics!');
+        g_mes.warning_message('Browser dont surpport 2D graphics!');
         return {canvas: null, con: null, depth: 0, wall: null};
     }
 
@@ -39,7 +40,7 @@ export function init_maze3D(): T_DrowSet {
     const depth = 5; // 奇数のみ対応。ダンジョンの見通しを良くするなら 5 かもしれない
 
     const top_p = new C_Point(0, 0, 0);
-    const btm_p = new C_Point(canvas.clientWidth  - 1, canvas.clientHeight - 1, 0);
+    const btm_p = new C_Point(canvas.width  - 1, canvas.height - 1, 0);
     const wall  = new C_Wall(depth, new C_Range(top_p, btm_p));
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
@@ -331,7 +332,7 @@ function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
 export function displey_mase3D_direction(): void {
     const p_dir = document.getElementById('Maze_view3D_direction_info') as HTMLParagraphElement;
     if (p_dir === null) {
-        g_mvm?.warning_message('P element isnt found! id=Maze_view3D_direction_info');
+        g_mes.warning_message('P element isnt found! id=Maze_view3D_direction_info');
         return;
     }
     var direction: string;
