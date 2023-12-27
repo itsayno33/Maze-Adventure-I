@@ -401,3 +401,51 @@ fetch(url, {
 });
 
 
+
+TypeScriptの関数をHTML（JavaScript）から呼び出す
+https://hirocks.jp/typescript%e3%81%ae%e9%96%a2%e6%95%b0%e3%82%92html%ef%bc%88javascript%ef%bc%89%e3%81%8b%e3%82%89%e5%91%bc%e3%81%b3%e5%87%ba%e3%81%99/
+
+
+TypeScriptの型の恩恵を受けながらHTML（JavaScript）から必要な関数だけを呼び出したい。
+
+そんな時はグローバルなWindowにメソッドを生やす事で対応できます。
+
+生やしたいメソッドのinterfaceを定義する
+globalなWindowのプロパティにinterfaceを定義する
+関数をWindowのプロパティに代入する
+
+
+interface TsFunc {
+  print(message: string): void;
+}
+
+declare global {
+  interface Window {
+    tsFunc: TsFunc;
+  }
+}
+
+const tsFunc: TsFunc = (() => {
+  return {
+    print: (message: string) => {
+      console.log(message);
+    },
+  };
+})();
+window.tsFunc = tsFunc;
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <script src="bundle.js"></script>
+  <script>
+    tsFunc.print("JavaScriptからコール");
+  </script>
+</body>
+</html>
+

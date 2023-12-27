@@ -4,14 +4,50 @@
 
 import { C_UrlOpt }     from "./C_UrlOpt";
 import { get_mai_maze } from "./F_laod_and_save";
-import { g_get_maze_url, init_after_loaded_DOM } from "./global";
+import { g_get_maze_url, g_pid, init_after_loaded_DOM } from "./global";
 
 window.addEventListener('DOMContentLoaded', function() { 
-    init_after_loaded_DOM();
-    const get_maze_opt = new C_UrlOpt({mode: "new", num: 333});
-    get_mai_maze(g_get_maze_url, get_maze_opt);
+    init_after_loaded_DOM(); 
+    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
+    get_mai_maze();
 });
 
+// 以下、HTML側から呼び出せる関数の定義
+// windowオブジェクトに渡すインターフェースを定義
+interface I_TsCall {
+    get_player_id(player_id: number): void;
+}
+// windowオブジェクトにインターフェースの定義を追加
+declare global {
+    interface Window {
+        tsCall: I_TsCall;
+    }
+}
+// インターフェースの実装
+//（どうやらインターフェースはプロパティ定義のオブジェクトになってるらしい）
+const tsCaller: I_TsCall = (() => {
+    return {
+        get_player_id: (player_id: number): void => {
+            g_pid[0] = player_id;
+        },
+    };
+})();
+// windowオブジェクトに追加したインターフェースに上記の実装を代入
+window.tsCall = tsCaller;
+
+// これでHTML側のscriptタグ内から <script>windows.tsCall.getplayer(1);</script>
+// みたいに呼び出せる。ただし、bundle.jsのscriptタグでtype属性をmoduleにしていると失敗する。
 
 
 
+/*
+function get_player_id(player_id: number) {
+    g_pid[0] = player_id;
+}
+declare global {
+    interface Window {
+        get_player_id: (id: number)=>void;
+    }
+}
+window.get_player_id = (id: number)=>{get_player_id(id);};
+*/

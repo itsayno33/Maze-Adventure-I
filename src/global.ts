@@ -2,6 +2,8 @@ const my_url_base: string = "http://127.0.0.1/dev/mai/mai_maze/";
 export const g_get_maze_url:   string = my_url_base + "mai_maze.php";
 export const g_check_JSON_url: string = my_url_base + "check_JSON.php";
 
+export var g_pid: number[] = new Array(1) as number[];
+
 import { C_Maze } from "./C_Maze";
 export const g_maze = new C_Maze({maze_id: -1});
 

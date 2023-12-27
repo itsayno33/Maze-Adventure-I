@@ -1,6 +1,6 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_mes, g_vsw }     from "./global";
+import { g_ctls_mode, g_mes, g_pid, g_vsw }     from "./global";
 import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
 
 var canUp: boolean  =  false;
@@ -52,7 +52,8 @@ export function set_camp_controlles(): void {
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 
-    idx = 0; high_light_on(); 
+    idx = 0; high_light_on();
+
 }
 
 
