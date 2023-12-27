@@ -21,8 +21,8 @@ import { C_MazeViewMessage } from "./C_MazeViewMessage";
 export var g_mvm: C_MazeViewMessage;
 
 export function init_after_loaded_DOM(): void {
-    g_ds   = init_maze3D();
     g_mvm  = C_MazeViewMessage.get(); g_mvm.clear_message();
+    g_ds   = init_maze3D();
 }
 
 export function init_debug_mode(): void {

@@ -1,4 +1,5 @@
 import { C_Range } from "./C_Range";
+import { _round } from "./F_Math";
 
 export type T_Wall = {
     min_x: number,
@@ -37,12 +38,19 @@ export class C_Wall {
         for (var i = depth - 1; i >= 0; i--) {
             front_wall_H_size_x[i] = front_wall_H_size_x[i + 1] + side_wall_size_x;
         }
-    
+
+        // 基準となる壁(一番遠くの壁)の正面サイズ(縦幅)を求める
+        // 一番遠く(depth - 1)の壁の数がdepth個になるように調整する
+        const front_wall_size_y: number = (max_y - min_y) / depth;
+
         // 天井の縦幅の増分を求める。割合は適当（笑）
-        const side_wall_size_T: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
-        // 床の増分を求める。
-        const side_wall_size_B: number = (max_y - min_y) * 1.0 / ((depth + 1) * 2 + 1);
-    
+        // キャンバスの高さ(max_y - min_y)から一番遠くの壁の高さを引いて
+        // 深さ(depth + 1)で割ることにより増分とした
+        const side_wall_size_T =  (max_y - min_y - front_wall_size_y) / ((depth + 1) * 2);
+
+        // 床の増分を求める。求め方は上記と同じ
+        const side_wall_size_B =  (max_y - min_y - front_wall_size_y) / ((depth + 1) * 2);
+
         // 以上の値を用いて各距離(depth)の正面壁の位置決めをする
         // wallの第一引数は距離、第二引数は左右の位置（一番左が0、一番右がdepth-1)
         const wall: T_Wall[][] = new Array(depth + 1);
@@ -51,10 +59,10 @@ export class C_Wall {
             for (var k = 0; k < depth + 1; k++) {
                 const wk_x = center_x - front_wall_H_size_x[j] * (depth - 2 * k);
                 wall[j][k] = {
-                    min_x: wk_x,
-                    max_x: wk_x  + front_wall_H_size_x[j] * 2,
-                    min_y: min_y + side_wall_size_T * j,
-                    max_y: max_y - side_wall_size_B * j,
+                    min_x: _round(wk_x, 0),
+                    max_x: _round(wk_x  + front_wall_H_size_x[j] * 2, 0),
+                    min_y: _round(min_y + side_wall_size_T * j, 0),
+                    max_y: _round(max_y - side_wall_size_B * j, 0),
                 }
             }
         }
