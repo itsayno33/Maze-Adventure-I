@@ -33,6 +33,7 @@ export function init_after_loaded_DOM(): void {
     g_mvm  = C_MazeViewMessage.get();
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
+    stop_double_click();
 }
 
 export function init_debug_mode(): void {
@@ -68,3 +69,8 @@ function toggle_debug_mode(): void {
     }
     display_maze2D();
 }
+
+function stop_double_click(): void {
+    window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
+}
+
