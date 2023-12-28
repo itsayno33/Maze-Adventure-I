@@ -19,7 +19,7 @@ export function get_mai_maze(): void {
             return;
         }
 
-        const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
         if (monitor) {
 //            alert_maze_info(jsonObj?.maze);
             alert_team_info(jsonObj?.team);
@@ -35,8 +35,16 @@ export function get_mai_maze(): void {
 
 
 export function instant_load(): void {
+    __auto_load('instant_load');
+}
+
+export function UD_load(): void {
+    __auto_load('UD_load');
+}
+
+function __auto_load(mode: string): void {
     const opt = new C_UrlOpt();
-    opt.set('mode',       'instant_load'); 
+    opt.set('mode',        mode); 
     opt.set('pid',         g_pid[0]); 
 
     POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
@@ -60,12 +68,22 @@ export function instant_load(): void {
     });
 }
 
+
 export function instant_save(): void { 
+    const jsonObj = __auto_save('instant_save');
+    decode_all(jsonObj);
+}
+
+export function UD_save(): void { 
+    __auto_save('UD_save');
+}
+
+function __auto_save(mode: string): any { 
     const maze_data = JSON.stringify(g_maze.encode(), null, "\t");
     const team_data = JSON.stringify(g_team.encode(), null, "\t");
 
     const opt = new C_UrlOpt();
-    opt.set('mode',       'instant_save'); 
+    opt.set('mode',        mode); 
     opt.set('pid',         g_pid[0]); 
     opt.set('maze',        maze_data);
     opt.set('team',        team_data);
@@ -75,7 +93,7 @@ export function instant_save(): void {
             g_mes.normal_message('正常にセーブされました');
         } else {
             g_mes.warning_message("セーブできませんでした\n" + jsonObj.emsg);
-            alert(jsonObj.emsg);
+//            alert(jsonObj.emsg);
         }
         
         const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
@@ -84,8 +102,7 @@ export function instant_save(): void {
             alert_team_info(jsonObj?.team);
             alert_heroes_info(jsonObj?.team?.heroes);
         }
-    
-        decode_all(jsonObj);
+        return jsonObj;
     });
 //    POST_and_move_page(g_check_JSON_url, opt);
 }

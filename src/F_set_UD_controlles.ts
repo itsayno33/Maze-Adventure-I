@@ -2,6 +2,7 @@ import { hide_controlles } from "./F_set_controlles";
 import { T_CtlsMode } from "./T_CtlsMode";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global";
+import { UD_save } from "./F_laod_and_save";
 
 
 export function clr_UD_controlles(): void {
@@ -160,6 +161,7 @@ function do_up(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {
+        UD_save();
         rslt.doOK();
     }
     g_mvm.clear_message();
@@ -172,6 +174,7 @@ function do_down(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {
+        UD_save();
         rslt.doOK();
     }
     g_mvm.clear_message();
