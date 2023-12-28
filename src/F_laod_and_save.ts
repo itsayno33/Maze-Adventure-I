@@ -19,7 +19,7 @@ export function get_mai_maze(): void {
             return;
         }
 
-        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+        const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
         if (monitor) {
 //            alert_maze_info(jsonObj?.maze);
             alert_team_info(jsonObj?.team);
