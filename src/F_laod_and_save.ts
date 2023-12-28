@@ -7,12 +7,12 @@ import { POST_and_get_JSON }   from "./F_POST";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { _round, _min, _max  } from "./F_Math";
-import { g_get_maze_url, g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid } from "./global";
+import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./global";
 
 export function get_mai_maze(): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
  
-    POST_and_get_JSON(g_get_maze_url, get_maze_opt)?.then(jsonObj=>{
+    POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
             g_mes.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
             alert(jsonObj.emsg);
@@ -39,7 +39,7 @@ export function instant_load(): void {
     opt.set('mode',       'instant_load'); 
     opt.set('pid',         g_pid[0]); 
 
-    POST_and_get_JSON(g_get_maze_url, opt)?.then(jsonObj=>{
+    POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -70,7 +70,7 @@ export function instant_save(): void {
     opt.set('maze',        maze_data);
     opt.set('team',        team_data);
 
-    POST_and_get_JSON(g_get_maze_url, opt)?.then(jsonObj=>{
+    POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にセーブされました');
         } else {

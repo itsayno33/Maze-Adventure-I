@@ -1,6 +1,6 @@
-const my_url_base: string = "http://127.0.0.1/dev/mai/mai_maze/";
-export const g_get_maze_url:   string = my_url_base + "mai_maze.php";
-export const g_check_JSON_url: string = my_url_base + "check_JSON.php";
+export const g_url_get_maze    = 0;
+export const g_url_check_JSON  = 1;
+export const g_url: string[] = new Array(2);
 
 export var g_pid: number[] = new Array(1) as number[];
 

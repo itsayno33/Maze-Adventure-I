@@ -4,7 +4,7 @@
 
 import { C_UrlOpt }     from "./C_UrlOpt";
 import { get_mai_maze } from "./F_laod_and_save";
-import { g_get_maze_url, g_pid, init_after_loaded_DOM } from "./global";
+import { g_pid, g_url, g_url_check_JSON, g_url_get_maze, init_after_loaded_DOM } from "./global";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function() {
 // 以下、HTML側から呼び出せる関数の定義
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
-    get_player_id(player_id: number): void;
+    get_init_data(url_baze: string, player_id: number): void;
 }
 // windowオブジェクトにインターフェースの定義を追加
 declare global {
@@ -27,8 +27,11 @@ declare global {
 //（どうやらインターフェースはプロパティ定義のオブジェクトになってるらしい）
 const tsCaller: I_TsCall = (() => {
     return {
-        get_player_id: (player_id: number): void => {
+        get_init_data: (url_baze: string, player_id: number): void => {
+            g_url[g_url_get_maze]   = url_baze + "/mai_maze.php";
+            g_url[g_url_check_JSON] = url_baze + "/check_JSON.php";
             g_pid[0] = player_id;
+//            alert(g_url[g_url_get_maze]);alert(g_url[g_url_check_JSON]);alert(g_pid[0]);
         },
     };
 })();
