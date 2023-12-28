@@ -127,15 +127,17 @@ function calc_view2D_width(): void {
     const view2D_width  = pre.clientWidth;
     const view2D_height = pre.clientHeight;
 
-    const col    = g_maze.get_x_max();
+    const col    = g_maze.get_x_max() + 1;
     const col_px = view2D_width  / col;
 
-    const row    = g_maze.get_y_max();
+    const row    = g_maze.get_y_max() + 1;
     const row_px = view2D_height / row;
 
     const font_size   = _round(0.95 *  _min([col_px, row_px]), 2);
     const line_height = _round(1.00 *  _min([col_px, row_px]), 2);
 
+    pre.setAttribute('width',  view2D_width .toString());
+    pre.setAttribute('height', view2D_height.toString());
     pre.style.setProperty('font-size',  `${font_size}px`);
     pre.style.setProperty('line-height',`${line_height}px`);
 }

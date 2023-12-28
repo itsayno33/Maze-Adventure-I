@@ -333,7 +333,7 @@ export class C_Maze {
             for (var x = 0; x < size_x; x++) {
                 const obj = this.get_obj_xyz(x, y, floor);
                 if (!g_debug_mode && this.masks[floor][y][x]) {
-                    ret_str += '■';
+                    ret_str += 'Ｘ';
                 } else {
                     if (obj === null) {
                         ret_str += this.cells[floor][y][x].to_letter();
