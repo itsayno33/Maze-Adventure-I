@@ -53,7 +53,7 @@ function draw_init_maze3D(): void {
     g_ds.con.fillRect(
         0, 
         0, 
-        g_ds.canvas.clientWidth - 1, 
+        g_ds.canvas.width - 1, 
         get_holizon_line(),
     );
 
@@ -61,8 +61,8 @@ function draw_init_maze3D(): void {
     g_ds.con.fillRect(
         0, 
         get_holizon_line(), 
-        g_ds.canvas.clientWidth   - 1, 
-        g_ds.canvas.clientHeight  - 1,
+        g_ds.canvas.width   - 1, 
+        g_ds.canvas.height  - 1,
     );
 
     drow_floor_line();
@@ -81,8 +81,8 @@ function drow_floor_line(): void {
     const H_dept = (depth - 1) / 2;
 
     const left_x  = 0;
-    const right_x = g_ds.canvas.clientWidth  - 1;
-    const front_y = g_ds.canvas.clientHeight - 1;
+    const right_x = g_ds.canvas.width  - 1;
+    const front_y = g_ds.canvas.height - 1;
     const back_y  = get_holizon_line();
 
     con.strokeStyle = '#9999ff';
