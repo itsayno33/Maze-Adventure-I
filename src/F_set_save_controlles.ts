@@ -3,6 +3,7 @@ import { hide_controlles } from "./F_set_controlles";
 import { g_ctls_mode, g_maze, g_mes, g_pid, g_team, g_vsw }     from "./global";
 import { get_save_info } from "./F_laod_and_save";
 import { set_camp_controlles } from "./F_set_camp_controlles";
+import { _round } from "./F_Math";
 
 var   idx: number = 0;
 var   save_UL_list: HTMLUListElement;
@@ -26,11 +27,15 @@ var   link_list:    T_save_list[];
 export function clr_save_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
+    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
     const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
 
     u_arrow.removeEventListener("click", do_U, false);
     d_arrow.removeEventListener("click", do_D, false);
+    l_arrow.removeEventListener("click", do_L, false);
+    r_arrow.removeEventListener("click", do_R, false);
     y_btn  .removeEventListener("click", isOK, false);
     n_btn  .removeEventListener("click", isNG, false);
 
@@ -38,6 +43,8 @@ export function clr_save_controlles(): void {
 
     u_arrow.style.setProperty('display', 'none');
     d_arrow.style.setProperty('display', 'none');
+    l_arrow.style.setProperty('display', 'none');
+    r_arrow.style.setProperty('display', 'none');
     y_btn  .style.setProperty('display', 'none');
     n_btn  .style.setProperty('display', 'none');
 }
@@ -48,11 +55,15 @@ export function set_save_controlles(): void {
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
+    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
     const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
 
     u_arrow.addEventListener("click", do_U, false);
     d_arrow.addEventListener("click", do_D, false);
+    l_arrow.addEventListener("click", do_L, false);
+    r_arrow.addEventListener("click", do_R, false);
     y_btn  .addEventListener("click", isOK, false);
     n_btn  .addEventListener("click", isNG, false);
 
@@ -60,6 +71,8 @@ export function set_save_controlles(): void {
 
     u_arrow.style.setProperty('display', 'block');
     d_arrow.style.setProperty('display', 'block');
+    l_arrow.style.setProperty('display', 'block');
+    r_arrow.style.setProperty('display', 'block');
     y_btn  .style.setProperty('display', 'block');
     n_btn  .style.setProperty('display', 'block');
 
@@ -81,6 +94,16 @@ function key_press_function5(e: KeyboardEvent):void  {
         case 'KeyJ': 
         case 'Numpad2': 
             (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+            return;
+        case 'ArrowLeft': 
+        case 'KeyH': 
+        case 'Numpad1': 
+            (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
+            return;
+        case 'ArrowRight': 
+        case 'KeyL': 
+        case  'Numpad3': 
+            (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
             return;
         case 'KeyO':
         case 'KeyY':
@@ -128,6 +151,22 @@ function do_D() {
     high_light_on();  form_set();
 }
 
+function do_L() {
+    const limit = _round((link_list.length - 1) / 2, 0);
+    if (idx < limit) return;
+    idx -= limit; 
+    g_mes.normal_message(`Down... (${idx})`);
+    high_light_on();  form_set();
+}
+
+function do_R() {
+    const limit = _round((link_list.length - 1) / 2, 0);
+    if (idx >= limit) return;
+    idx += limit; 
+    g_mes.normal_message(`Down... (${idx})`);
+    high_light_on();  form_set();
+}
+
 function high_light_on(): void {
     if (save_UL_list === null) return;
 
@@ -160,7 +199,7 @@ function form_set():void {
     if (idx < 0 || idx > children.length - 1) return;
 
     form_title .setAttribute('value', link_list[idx].title);
-    form_detail.innerText = link_list[idx].detail;
+    form_detail.setAttribute('value', link_list[idx].detail);
     form_point .innerHTML = link_list[idx].point;
 // 以下は実際のセーブの時に使う
 //    form_point .innerHTML = `『${g_maze.get_title()}』迷宮 ` 
