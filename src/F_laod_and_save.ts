@@ -8,6 +8,7 @@ import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { _round, _min, _max  } from "./F_Math";
 import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./global";
+import { T_save_list } from "./F_set_save_controlles";
 
 export function get_mai_maze(): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
@@ -33,6 +34,28 @@ export function get_mai_maze(): void {
     });
 }
 
+export async function get_save_info() {
+    const opt = new C_UrlOpt();
+    opt.set('mode',       'save_info'); 
+    opt.set('pid',         g_pid[0]); 
+
+    return await POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+        if (jsonObj.ecode == 0) {
+            g_mes.normal_message('正常にロードされました');
+        
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+    //            alert_maze_info(jsonObj?.maze);
+                alert_team_info(jsonObj?.team);
+                alert_heroes_info(jsonObj?.team?.heroes);
+            }
+            return jsonObj;
+        } else {
+            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            return undefined;
+        }
+    });
+}
 
 export function instant_load(): void {
     __auto_load('instant_load');

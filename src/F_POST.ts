@@ -1,5 +1,5 @@
 import { C_UrlOpt } from "./C_UrlOpt";
-import { g_mvm }    from "./global";
+import { g_mes, g_mvm }    from "./global";
 
 export async function POST_and_get_JSON(
     url: string, 
@@ -36,7 +36,7 @@ export async function POST_and_get_JSON(
         try {
             return JSON.parse(txt);
         } catch(err) {
-            g_mvm.warning_message('JSON形式のデコードエラー');
+            g_mes.warning_message('JSON形式のデコードエラー');
             return undefined;
         }
     });

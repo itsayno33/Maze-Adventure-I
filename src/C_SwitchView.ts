@@ -35,7 +35,7 @@ export class C_SwitchView {
         this.hide_all();
         this._load.style.setProperty('display', 'block');
     }
-    public view_save(): void {
+    public view_save(): void { 
         this.hide_all();
         this._save.style.setProperty('display', 'block');
     }

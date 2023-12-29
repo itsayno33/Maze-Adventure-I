@@ -222,6 +222,10 @@ export class C_Maze {
         return masks;
     }
 
+    public get_title(): string {
+        return this.title;
+    }
+
     public within(p: C_Point): boolean {
         return this.size.within(p);
     }
