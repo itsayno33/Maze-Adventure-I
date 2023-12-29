@@ -138,14 +138,18 @@ function isNG() {
 
 
 function do_U() {
-    if (idx < 1) return;
+    if (idx < 1) {
+        idx = link_list.length;
+    }
     --idx;
     g_mes.normal_message(`Up! (${idx})`);
     high_light_on(); form_set();
 }
 
 function do_D() { 
-    if (idx > link_list.length - 2) return;
+    if (idx > link_list.length - 2) {
+        idx = -1;
+    }
     ++idx; 
     g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
@@ -153,16 +157,22 @@ function do_D() {
 
 function do_L() {
     const limit = _round((link_list.length - 1) / 2, 0);
-    if (idx < limit) return;
-    idx -= limit; 
+    if (idx < limit) {
+        idx += limit;
+    } else {
+        idx -= limit;
+    } 
     g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
 }
 
 function do_R() {
     const limit = _round((link_list.length - 1) / 2, 0);
-    if (idx >= limit) return;
-    idx += limit; 
+    if (idx >= limit) {
+        idx -= limit;
+    } else {
+        idx += limit;
+    } 
     g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
 }
