@@ -1,7 +1,7 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
 import { g_ctls_mode, g_maze, g_mes, g_mvm, g_pid, g_team, g_vsw }     from "./global";
-import { general_save, get_save_info } from "./F_laod_and_save";
+import { general_load, general_save, get_save_info } from "./F_laod_and_save";
 import { set_camp_controlles } from "./F_set_camp_controlles";
 import { _round } from "./F_Math";
 import { C_UrlOpt } from "./C_UrlOpt";
@@ -357,7 +357,7 @@ function check_load(): void{ // 入力チェックと既存データ上書きの
         g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
     }
     is_kakunin = true;
-    g_mvm.notice_message('ロードしますか？　保存:〇　キャンセル:✖');
+    g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
 }
 
 function check_save(): void{ // 入力チェックと既存データ上書きの確認
@@ -371,7 +371,15 @@ function check_save(): void{ // 入力チェックと既存データ上書きの
     g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
-function load(): void {}
+function load(): void {
+    const opt = new C_UrlOpt();
+    opt.set('save_id',     Number(form_id.value)); 
+    general_load(opt);
+
+    is_kakunin = false;
+    g_mvm.clear_message();
+    g_vsw.view_maze();
+}
 
 function save(): void{
     const opt = new C_UrlOpt();
@@ -384,6 +392,7 @@ function save(): void{
         + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
     );
     general_save(opt);
+
     is_kakunin = false;
     g_mvm.clear_message();
     set_camp_controlles();

@@ -37,7 +37,7 @@ export function get_mai_maze(): void {
 export async function get_save_info() {
     const opt = new C_UrlOpt();
     opt.set('mode',       'save_info'); 
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_pid[0]);
 
     return await POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
@@ -66,6 +66,11 @@ export function instant_load(): void {
 export function UD_load(): void {
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_load'); 
+    __auto_load(opt);
+}
+
+export function general_load(opt: C_UrlOpt): void {
+    opt.set('mode',        'load'); 
     __auto_load(opt);
 }
 
