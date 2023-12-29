@@ -2,7 +2,7 @@ import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
 import { g_ctls_mode, g_mes, g_pid, g_vsw }     from "./global";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { set_save_controlles, display_save_list   } from "./F_set_save_controlles";
+import { set_save_controlles, display_save_list, set_load_controlles   } from "./F_set_save_controlles";
 
 var canUp: boolean  =  false;
 var canDn: boolean  =  false;
@@ -146,9 +146,11 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
     }
 }
 
-function do_load(): void {g_mes.notice_message('Do Load!');}
+function do_load(): void {
+    g_mes.notice_message('Do Load!');
+    set_load_controlles();
+}
 
 function do_save(): void {
-    g_mes.notice_message('Do Save!');
     set_save_controlles();
 }

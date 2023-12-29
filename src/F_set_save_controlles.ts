@@ -8,7 +8,8 @@ import { C_UrlOpt } from "./C_UrlOpt";
 
 var   idx: number = 0;
 var   save_UL_list: HTMLUListElement;
-var   form_title:   HTMLInputElement;
+var   form_id:      HTMLInputElement;
+var   form_time:    HTMLParagraphElement;
 var   form_detail:  HTMLTextAreaElement;
 var   form_point:   HTMLParagraphElement;
 
@@ -27,7 +28,15 @@ export type T_save_list = {
 var   save_list:    T_save_list[];
 var   link_list:    T_save_list[];
 
+export function clr_load_controlles(): void {
+    __clr_controlles(false);
+}
+
 export function clr_save_controlles(): void {
+    __clr_controlles(true);
+}
+
+function __clr_controlles(for_save: boolean): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
@@ -39,7 +48,7 @@ export function clr_save_controlles(): void {
     d_arrow.removeEventListener("click", do_D, false);
     l_arrow.removeEventListener("click", do_L, false);
     r_arrow.removeEventListener("click", do_R, false);
-    y_btn  .removeEventListener("click", isOK, false);
+    y_btn  .removeEventListener("click", for_save ? isOK_for_save : is_OK_for_load, false);
     n_btn  .removeEventListener("click", isNG, false);
 
     window.removeEventListener('keypress', key_press_function5);
@@ -52,10 +61,22 @@ export function clr_save_controlles(): void {
     n_btn  .style.setProperty('display', 'none');
 }
 
+export function set_load_controlles(): void {
+    hide_controlles();
+    g_ctls_mode[0] = T_CtlsMode.Load;
+
+    __set_controlles(false);
+}
+
 export function set_save_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Save;
 
+    __set_controlles(true);
+}
+
+function __set_controlles(for_save: boolean): void {
+//    hide_controlles();
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
@@ -67,7 +88,7 @@ export function set_save_controlles(): void {
     d_arrow.addEventListener("click", do_D, false);
     l_arrow.addEventListener("click", do_L, false);
     r_arrow.addEventListener("click", do_R, false);
-    y_btn  .addEventListener("click", isOK, false);
+    y_btn  .addEventListener("click", for_save ? isOK_for_save : is_OK_for_load, false);
     n_btn  .addEventListener("click", isNG, false);
 
     window.addEventListener('keypress', key_press_function5);
@@ -83,7 +104,7 @@ export function set_save_controlles(): void {
     ctl_view?.style.setProperty('display', 'block');
 
     is_kakunin = false;
-    display_save_list();
+    display_save_list(for_save); // true: For Save.
 }
 
 
@@ -126,13 +147,22 @@ function key_press_function5(e: KeyboardEvent):void  {
     }
 }
 
-function isOK() {
+function is_OK_for_load() {
     if (save_UL_list === null) return;
 
     const children = save_UL_list.children;
     if (idx < 0 || idx > children.length - 1) return;
 
-    if (!is_kakunin) check(); else save();
+    if (!is_kakunin) check_load(); else load();
+}
+
+function isOK_for_save() {
+    if (save_UL_list === null) return;
+
+    const children = save_UL_list.children;
+    if (idx < 0 || idx > children.length - 1) return;
+
+    if (!is_kakunin) check_save(); else save();
 }
 
 function isNG() {
@@ -149,7 +179,8 @@ function isNG() {
 function do_U() {
     if (is_kakunin) return;
     if (idx < 1) {
-        idx = link_list.length;
+//        idx = link_list.length;
+        idx = 1;
     }
     --idx;
     high_light_on(); form_set();
@@ -158,7 +189,8 @@ function do_U() {
 function do_D() { 
     if (is_kakunin) return;
     if (idx > link_list.length - 2) {
-        idx = -1;
+//        idx = -1;
+        idx = link_list.length - 2
     }
     ++idx; 
     high_light_on();  form_set();
@@ -204,10 +236,11 @@ function high_light_on(): void {
 
 function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
     if (elm === null) return;
+    const fw_color = elm.parentElement?.style.getPropertyValue('color')            ?? 'black';
     const bg_color = elm.parentElement?.style.getPropertyValue('background-color') ?? 'white';
-    elm.style.setProperty('background-color', bg_color);
+    elm.style.setProperty('color',            isOn ? bg_color : fw_color);
+    elm.style.setProperty('background-color', isOn ? fw_color : bg_color);
 
-    elm.style.setProperty('mix-blend-mode',   isOn ? 'differnce' : 'normal');
     elm.style.setProperty('font-weight',      isOn ? 'bold' : 'normal');
     for (var j = 0; j < elm.children.length; j++) {
         const p = elm.children.item(j) as HTMLElement;
@@ -218,13 +251,26 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
 function form_set():void {
     const children = save_UL_list.children;
     if (idx < 0 || idx > children.length - 1) return;
+    form_id   .value      = link_list[idx].id.toString();
+    form_time .innerText  = link_list[idx].save_time;
+    form_point.innerText  = link_list[idx].point;
 
-    form_title .value = link_list[idx].title;
-    form_detail.value = link_list[idx].detail;
-    form_point .innerHTML = link_list[idx].point;
+    if (form_detail.hasAttribute('readonly')) {
+        form_detail.removeAttribute('readonly');
+        form_detail.value = link_list[idx].detail;
+        form_detail.setAttribute('readonly', 'readonly');
+    }else {
+        form_detail.value = link_list[idx].detail;
+    }
 }
 
-export function display_save_list() {
+export function display_save_list(for_save: boolean) {
+    const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
+    const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
+    const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
+    const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
+    const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
+
     get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
             g_mes.warning_message('セーブ情報の受信に失敗しました。【受信データ無し】');
@@ -248,19 +294,21 @@ export function display_save_list() {
                     __is_new:   false,
                 } as T_save_list)
             }
-            for (var j = save_list.length - 2; j < 10; j++) { // -2は自動保存の分
-                save_list.push({
-                    id:         -1,
-                    title:      `保存データ`,
-                    detail:    '',
-                    point:     '',
-                    save_time: '',
-                    auto_mode: 'N',
-                    __is_new:   true,
-                })
+            if (for_save) {
+                for (var j = save_list.length; j < 10; j++) { 
+                    save_list.push({
+                        id:         -1,
+                        title:      `保存データ`,
+                        detail:    '',
+                        point:     '',
+                        save_time: '',
+                        auto_mode: 'N',
+                        __is_new:   true,
+                    })
+                }
             }
 
-            save_UL_list = document.getElementById('save_data_list') as HTMLUListElement;
+            save_UL_list = document.getElementById(data_list) as HTMLUListElement;
             if (save_UL_list === null) return;
         
             while (save_UL_list.firstChild !== null) {
@@ -272,26 +320,27 @@ export function display_save_list() {
                 const li = document.createElement('li') as HTMLLIElement;
                 switch (save_list[i].title) {
                     case '__InstantSaveData__':
-//                        save_list[i].title  = '簡易保存データ';
-//                        save_list[i].detail = 'デバッグモードで簡易保存したデータです';
-//                        break;
-                        continue;
+                        if (for_save) continue;
+                        save_list[i].title  = '簡易保存データ';
+                        save_list[i].detail = 'デバッグモードで簡易保存したデータです';
+                        break;
                     case '__UpDownSaveData__':
-//                        save_list[i].title  = 'フロア移動直前データ';
-//                        save_list[i].detail = '一番最近のフロア移動直前に自動保存したデータです';
-//                        break;
-                        continue;
+                        if (for_save) continue;
+                        save_list[i].title  = '階段直前データ';
+                        save_list[i].detail = '一番最近のフロア移動直前に自動保存したデータです';
+                        break;
                 }
-                li.innerHTML = `『${save_list[i].title}』<p>保存日時: ${save_list[i].save_time}</p>`;
+                li.innerHTML = `『${save_list[i].title}』`;
                 save_UL_list.appendChild(li);
                 link_list.push(save_list[i]);
             }
 
-            form_title  = document.getElementById('save_data_title')  as HTMLInputElement;
-            form_detail = document.getElementById('save_data_detail') as HTMLTextAreaElement;
-            form_point  = document.getElementById('save_data_point')  as HTMLParagraphElement; 
+            form_id     = document.getElementById(data_id)     as HTMLInputElement;
+            form_time   = document.getElementById(data_time)   as HTMLParagraphElement;
+            form_detail = document.getElementById(data_detail) as HTMLTextAreaElement;
+            form_point  = document.getElementById(data_point)  as HTMLParagraphElement; 
 
-            g_vsw.view_save();
+            if (for_save) g_vsw.view_save(); else g_vsw.view_load();
             idx = 0; high_light_on(); form_set()
         
             return;
@@ -303,7 +352,15 @@ export function display_save_list() {
     });
 }
 
-function check(): void{ // 入力チェックと既存データ上書きの確認
+function check_load(): void{ // 入力チェックと既存データ上書きの確認
+    if (idx < 0 || idx > link_list.length - 1) {
+        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+    }
+    is_kakunin = true;
+    g_mvm.notice_message('ロードしますか？　保存:〇　キャンセル:✖');
+}
+
+function check_save(): void{ // 入力チェックと既存データ上書きの確認
     if (idx < 0 || idx > link_list.length - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
     }
@@ -314,14 +371,15 @@ function check(): void{ // 入力チェックと既存データ上書きの確�
     g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
+function load(): void {}
 
 function save(): void{
     const opt = new C_UrlOpt();
-    opt.set('save_id',     link_list[idx].id); 
-    opt.set('save_title',  form_title.value ?? '');
+    opt.set('save_id',     Number(form_id.value)); 
+    opt.set('save_title',  `保存データ`);
     opt.set('save_detail', form_detail.value);
     opt.set('save_point',  
-        `『${g_maze.get_title()}』迷宮 ` 
+        `『${g_maze.get_title()}』 ` 
         + `地下 ${g_team.get_p().z + 1}階層 ` 
         + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
     );
