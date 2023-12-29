@@ -58,16 +58,18 @@ export async function get_save_info() {
 }
 
 export function instant_load(): void {
-    __auto_load('instant_load');
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'instant_load'); 
+    __auto_load(opt);
 }
 
 export function UD_load(): void {
-    __auto_load('UD_load');
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'UD_load'); 
+    __auto_load(opt);
 }
 
-function __auto_load(mode: string): void {
-    const opt = new C_UrlOpt();
-    opt.set('mode',        mode); 
+function __auto_load(opt: C_UrlOpt): void {
     opt.set('pid',         g_pid[0]); 
 
     POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
@@ -93,20 +95,27 @@ function __auto_load(mode: string): void {
 
 
 export function instant_save(): void { 
-    const jsonObj = __auto_save('instant_save');
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'instant_save'); 
+    const jsonObj = __auto_save(opt);
     decode_all(jsonObj);
 }
 
 export function UD_save(): void { 
-    __auto_save('UD_save');
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'UD_save'); 
+    __auto_save(opt);
 }
 
-function __auto_save(mode: string): any { 
+export function general_save(opt: C_UrlOpt): void {
+    opt.set('mode',        'save'); 
+    const jsonObj = __auto_save(opt);
+}
+
+function __auto_save(opt: C_UrlOpt): any { 
     const maze_data = JSON.stringify(g_maze.encode(), null, "\t");
     const team_data = JSON.stringify(g_team.encode(), null, "\t");
 
-    const opt = new C_UrlOpt();
-    opt.set('mode',        mode); 
     opt.set('pid',         g_pid[0]); 
     opt.set('maze',        maze_data);
     opt.set('team',        team_data);

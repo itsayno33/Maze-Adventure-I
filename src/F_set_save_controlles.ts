@@ -1,15 +1,18 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_maze, g_mes, g_pid, g_team, g_vsw }     from "./global";
-import { get_save_info } from "./F_laod_and_save";
+import { g_ctls_mode, g_maze, g_mes, g_mvm, g_pid, g_team, g_vsw }     from "./global";
+import { general_save, get_save_info } from "./F_laod_and_save";
 import { set_camp_controlles } from "./F_set_camp_controlles";
 import { _round } from "./F_Math";
+import { C_UrlOpt } from "./C_UrlOpt";
 
 var   idx: number = 0;
 var   save_UL_list: HTMLUListElement;
 var   form_title:   HTMLInputElement;
 var   form_detail:  HTMLTextAreaElement;
 var   form_point:   HTMLParagraphElement;
+
+var   is_kakunin = false;
 
 export type T_save_list = {
     id:        number,
@@ -79,6 +82,7 @@ export function set_save_controlles(): void {
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 
+    is_kakunin = false;
     display_save_list();
 }
 
@@ -128,52 +132,59 @@ function isOK() {
     const children = save_UL_list.children;
     if (idx < 0 || idx > children.length - 1) return;
 
-    check(idx);
+    if (!is_kakunin) check(); else save();
 }
 
 function isNG() {
-    set_camp_controlles();
-    g_vsw.view_camp();
+    if (!is_kakunin) {
+        set_camp_controlles();
+        g_vsw.view_camp();
+    } else {
+        g_mvm.clear_message();
+        is_kakunin = false;
+    }
 }
 
 
 function do_U() {
+    if (is_kakunin) return;
     if (idx < 1) {
         idx = link_list.length;
     }
     --idx;
-    g_mes.normal_message(`Up! (${idx})`);
     high_light_on(); form_set();
 }
 
 function do_D() { 
+    if (is_kakunin) return;
     if (idx > link_list.length - 2) {
         idx = -1;
     }
     ++idx; 
-    g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
 }
 
 function do_L() {
+    if (is_kakunin) return;
+
     const limit = _round((link_list.length - 1) / 2, 0);
     if (idx < limit) {
         idx += limit;
     } else {
         idx -= limit;
     } 
-    g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
 }
 
 function do_R() {
+    if (is_kakunin) return;
+
     const limit = _round((link_list.length - 1) / 2, 0);
     if (idx >= limit) {
         idx -= limit;
     } else {
         idx += limit;
     } 
-    g_mes.normal_message(`Down... (${idx})`);
     high_light_on();  form_set();
 }
 
@@ -208,13 +219,9 @@ function form_set():void {
     const children = save_UL_list.children;
     if (idx < 0 || idx > children.length - 1) return;
 
-    form_title .setAttribute('value', link_list[idx].title);
-    form_detail.setAttribute('value', link_list[idx].detail);
+    form_title .value = link_list[idx].title;
+    form_detail.value = link_list[idx].detail;
     form_point .innerHTML = link_list[idx].point;
-// 以下は実際のセーブの時に使う
-//    form_point .innerHTML = `『${g_maze.get_title()}』迷宮 ` 
-//        + `地下 ${g_team.get_p().z + 1}階 ` 
-//        + `(X= ${g_team.get_p().x}, Y=${g_team.get_p().y})`;
 }
 
 export function display_save_list() {
@@ -244,7 +251,7 @@ export function display_save_list() {
             for (var j = save_list.length - 2; j < 10; j++) { // -2は自動保存の分
                 save_list.push({
                     id:         -1,
-                    title:      `保存データ #${j + 1}`,
+                    title:      `保存データ`,
                     detail:    '',
                     point:     '',
                     save_time: '',
@@ -275,8 +282,7 @@ export function display_save_list() {
 //                        break;
                         continue;
                 }
-                li.innerHTML = `『${save_list[i].title}<p>保存日時: ${save_list[i].save_time}</p>`;
-//                if (save_list[i].auto_mode == 'Y') li.style.setProperty('display','none');
+                li.innerHTML = `『${save_list[i].title}』<p>保存日時: ${save_list[i].save_time}</p>`;
                 save_UL_list.appendChild(li);
                 link_list.push(save_list[i]);
             }
@@ -297,17 +303,31 @@ export function display_save_list() {
     });
 }
 
-function check(idx: number): void{ // 入力チェックと既存データ上書きの確認
+function check(): void{ // 入力チェックと既存データ上書きの確認
     if (idx < 0 || idx > link_list.length - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
     }
     if (link_list[idx].auto_mode == 'Y') {
         g_mes.warning_message(`check!! This is Auto Mode!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
     }
-    g_mes.normal_message(`check 『${link_list[idx].title}』(id: ${link_list[idx].id})`);
-    save(idx);
+    is_kakunin = true;
+    g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
-function save(idx: number): void{
-    g_mes.normal_message(`save 『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+
+function save(): void{
+    const opt = new C_UrlOpt();
+    opt.set('save_id',     link_list[idx].id); 
+    opt.set('save_title',  form_title.value ?? '');
+    opt.set('save_detail', form_detail.value);
+    opt.set('save_point',  
+        `『${g_maze.get_title()}』迷宮 ` 
+        + `地下 ${g_team.get_p().z + 1}階層 ` 
+        + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
+    );
+    general_save(opt);
+    is_kakunin = false;
+    g_mvm.clear_message();
+    set_camp_controlles();
+    g_vsw.view_camp();
 }
