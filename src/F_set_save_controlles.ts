@@ -383,13 +383,13 @@ function display_load_fields(): void {
     } else {
         // ロードできるデータ無し
         // ロードデータリストと詳細パネルを非表示にして
-        // その旨を表示
+        // その旨を表示する
         const ul = document.getElementById('load_data_list')   as HTMLUListElement;
         const fs = document.getElementById('load_data_fields') as HTMLFieldSetElement;
 
         ul.style.setProperty('display', 'none');
         fs.style.setProperty('display', 'none');
-        g_mvm.notice_message('ロードできる保存データが有りません。戻る: ✖');
+        g_mvm.notice_message('ロードできる保存データが有りません。✖ボタンで戻って下さい。');
     }
 }
 
