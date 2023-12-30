@@ -1,8 +1,8 @@
-import { hide_controlles }            from "./F_set_controlles";
-import { I_HopeAction }               from "../I_EventMap";
 import { T_MzKind }                   from "../T_MzKind";
+import { I_HopeAction }               from "../I_EventMap";
 import { T_CtlsMode }                 from "./T_CtlsMode";
-import { instant_load, instant_save } from "../F_load_and_save";
+import { hide_controlles }            from "./F_set_controlles";
+import { instant_load, instant_save } from "./F_load_and_save";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";

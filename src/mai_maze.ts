@@ -3,7 +3,7 @@
 ///
 
 import { C_UrlOpt }     from "./C_UrlOpt";
-import { get_mai_maze } from "./F_load_and_save";
+import { get_mai_maze } from "./mai_maze/F_load_and_save";
 import { g_pid, g_url, g_url_check_JSON, g_url_get_maze, init_after_loaded_DOM } from "./mai_maze/global_for_maze";
 
 window.addEventListener('DOMContentLoaded', function() { 

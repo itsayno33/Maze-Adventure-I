@@ -1,13 +1,13 @@
-import { alert_maze_info }     from "./C_Maze"; // 通常時はコメントアウトされている関数
-import { alert_team_info }     from "./C_Team"; // 通常時はコメントアウトされている関数
-import { alert_heroes_info }   from "./C_Hero"; // 通常時はコメントアウトされている関数
+import { alert_maze_info }     from "../C_Maze"; // 通常時はコメントアウトされている関数
+import { alert_team_info }     from "../C_Team"; // 通常時はコメントアウトされている関数
+import { alert_heroes_info }   from "../C_Hero"; // 通常時はコメントアウトされている関数
 
-import { C_UrlOpt }            from "./C_UrlOpt";          
-import { POST_and_get_JSON }   from "./F_POST";
-import { init_controlles }     from "./mai_maze/F_set_controlles";
-import { do_move_bottom_half } from "./mai_maze/F_set_move_controlles";
-import { _round, _min, _max  } from "./F_Math";
-import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./mai_maze/global_for_maze";
+import { _round, _min, _max  } from "../F_Math";
+import { C_UrlOpt }            from "../C_UrlOpt";          
+import { POST_and_get_JSON }   from "../F_POST";
+import { init_controlles }     from "./F_set_controlles";
+import { do_move_bottom_half } from "./F_set_move_controlles";
+import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./global_for_maze";
 
 export function get_mai_maze(): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
@@ -26,10 +26,10 @@ export function get_mai_maze(): void {
             alert_heroes_info(jsonObj?.team?.heroes);
             
         }
-            decode_all(jsonObj);
-            init_debug_mode();
-            init_controlles();
-            do_move_bottom_half('blink_off');
+        decode_all(jsonObj);
+        init_debug_mode();
+        init_controlles();
+        do_move_bottom_half('blink_off');
     });
 }
 

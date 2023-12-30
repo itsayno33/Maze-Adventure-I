@@ -1,6 +1,6 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { UD_save }         from "../F_load_and_save";
+import { UD_save }         from "./F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm } from "./global_for_maze";
 

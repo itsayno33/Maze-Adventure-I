@@ -1,18 +1,30 @@
 
 
 export class C_DisplayMessage {
-    protected static  me : C_DisplayMessage;
-    protected div  : HTMLDivElement;
+    protected static  me: C_DisplayMessage;
+    protected id:  string;
+    protected div: HTMLDivElement;
 
-    protected constructor() {
+    protected constructor(con: HTMLElement, id: string = 'client_message') {
         C_DisplayMessage.me = this;
-        this.div = document.getElementById('client_message') as HTMLDivElement;
+
+        this.id   = id;
+        this.div  = document.createElement('div') as HTMLDivElement;
         if (this.div === null) alert('Can not founnd Div#client_message!');
+        this.div.setAttribute('id', this.id);
+
+        con.appendChild(this.div);
         C_DisplayMessage.me.clear_message();
     }
-    public static get(): C_DisplayMessage  {
-        if (typeof this.me !== "object" || !(this.me instanceof C_DisplayMessage)) 
-            this.me = new C_DisplayMessage();
+    public static get(con: HTMLElement|null = null, id: string = 'client_message')
+                : C_DisplayMessage  {
+        if (typeof this.me !== "object" || !(this.me instanceof C_DisplayMessage)) { 
+            if (con === null) {
+                con = document.createElement('div') as HTMLDivElement;
+                document.body.appendChild(con);
+            }
+            this.me = new C_DisplayMessage(con, id);
+        }
         return this.me;
     }
     public display_message(mes: string, fr_color = 'inherit', bg_color: string = 'inherit') {
@@ -22,7 +34,6 @@ export class C_DisplayMessage {
         p.innerHTML = mes;
         // 記録型メッセージなので先頭に追加していく
         this.div.insertBefore(p, this.div.firstChild); 
-//        this.div.appendChild(p);
     }
 
     public clear_message() {

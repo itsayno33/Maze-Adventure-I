@@ -29,7 +29,9 @@ import { C_SwitchView } from "./C_SwitchView";
 export var g_vsw: C_SwitchView;
 
 export function init_after_loaded_DOM(): void {
-    g_mes  = C_DisplayMessage.get();
+    const  con = document.getElementById('message_pane');
+    g_mes  = C_DisplayMessage.get(con, 'client_message');
+
     g_mvm  = C_MazeViewMessage.get();
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
