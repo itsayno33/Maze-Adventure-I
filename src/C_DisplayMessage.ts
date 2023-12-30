@@ -13,7 +13,7 @@ export class C_DisplayMessage {
         if (this.div === null) alert('Can not founnd Div#client_message!');
         this.div.setAttribute('id', this.id);
 
-        con.appendChild(this.div);
+        con.insertBefore(this.div, con.firstChild);
         C_DisplayMessage.me.clear_message();
     }
     public static get(con: HTMLElement|null = null, id: string = 'client_message')
