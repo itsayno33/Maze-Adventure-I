@@ -1,6 +1,6 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_mes, g_pid, g_vsw }     from "./global";
+import { g_ctls_mode, g_mes, g_mvm, g_pid, g_vsw }     from "./global";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { set_save_controlles, display_save_list, set_load_controlles   } from "./F_set_save_controlles";
 
@@ -102,6 +102,7 @@ function isOK() {
 }
 
 function isNG() {
+    g_mvm.clear_message();
     set_move_controlles();
     g_vsw.view_maze();
     do_move_bottom_half('blink_off');
@@ -109,11 +110,13 @@ function isNG() {
 
 
 function do_U() {
+    g_mvm.clear_message();
     idx = (idx > 0) ? --idx : idx;
     high_light_on(); 
 }
 
 function do_D() {
+    g_mvm.clear_message();
     idx = (idx < mode.length - 1) ? ++idx : idx;
     high_light_on(); 
 }

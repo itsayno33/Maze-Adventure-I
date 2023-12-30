@@ -166,6 +166,7 @@ function isOK_for_save() {
 }
 
 function isNG() {
+    g_mvm.clear_message();
     if (!is_kakunin) {
         set_camp_controlles();
         g_vsw.view_camp();
@@ -178,6 +179,8 @@ function isNG() {
 
 function do_U() {
     if (is_kakunin) return;
+
+    g_mvm.clear_message();
     if (idx < 1) {
 //        idx = link_list.length;
         idx = 1;
@@ -188,6 +191,8 @@ function do_U() {
 
 function do_D() { 
     if (is_kakunin) return;
+
+    g_mvm.clear_message();
     if (idx > link_list.length - 2) {
 //        idx = -1;
         idx = link_list.length - 2
@@ -199,6 +204,7 @@ function do_D() {
 function do_L() {
     if (is_kakunin) return;
 
+    g_mvm.clear_message();
     const limit = _round((link_list.length - 1) / 2, 0);
     if (idx < limit) {
         idx += limit;
@@ -211,6 +217,7 @@ function do_L() {
 function do_R() {
     if (is_kakunin) return;
 
+    g_mvm.clear_message();
     const limit = _round((link_list.length - 1) / 2, 0);
     if (idx >= limit) {
         idx -= limit;
@@ -288,6 +295,8 @@ export function display_save_list(for_save: boolean) {
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
     const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
     const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
+
+    g_mvm.clear_message();
 
     get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
@@ -418,7 +427,7 @@ function load(): void {
     general_load(opt);
 
     is_kakunin = false;
-    g_mvm.clear_message();
+    g_mvm.notice_message('ロードしました');
     g_vsw.view_maze();
 }
 
@@ -435,7 +444,7 @@ function save(): void{
     general_save(opt);
 
     is_kakunin = false;
-    g_mvm.clear_message();
+    g_mvm.notice_message('保存しました');
     set_camp_controlles();
     g_vsw.view_camp();
 }
