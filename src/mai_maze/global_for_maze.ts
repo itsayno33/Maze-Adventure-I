@@ -1,15 +1,3 @@
-export const g_url_get_maze    = 0;
-export const g_url_check_JSON  = 1;
-export const g_url: string[] = new Array(2);
-
-export var g_pid: number[] = new Array(1) as number[];
-
-import { C_Maze } from "../C_Maze";
-export const g_maze = new C_Maze({maze_id: -1});
-
-import { C_Team } from "../C_Team";
-export const g_team = new C_Team();
-
 import { T_CtlsMode } from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
@@ -19,18 +7,16 @@ export var g_debug_mode: boolean = false;
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
-import { C_DisplayMessage } from "../C_DisplayMessage";
-export var g_mes: C_DisplayMessage;
-
 import { C_MazeViewMessage } from "./C_MazeViewMessage";
 export var g_mvm: C_MazeViewMessage;
 
 import { C_SwitchView } from "./C_SwitchView";
 export var g_vsw: C_SwitchView;
 
+import { init_after_loaded_DOM_in_common } from "../common/global";
+
 export function init_after_loaded_DOM(): void {
-    const  con = document.getElementById('message_pane');
-    g_mes  = C_DisplayMessage.get(con, 'client_message');
+    init_after_loaded_DOM_in_common();
 
     g_mvm  = C_MazeViewMessage.get();
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
@@ -72,7 +58,7 @@ function toggle_debug_mode(): void {
     display_maze2D();
 }
 
+
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
 }
-

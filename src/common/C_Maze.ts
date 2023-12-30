@@ -2,7 +2,7 @@ import { T_MzKind, T_RvMzKind } from "./T_MzKind";
 import { C_Point }              from "./C_Point";
 import { C_Range }              from "./C_Range";
 import { I_Exist }              from "./I_EventMap";
-import { g_debug_mode, g_team } from "./mai_maze/global_for_maze";
+import { g_team  }              from "./global";
 
 export type JSON_Maze = {
     id?:      number,
@@ -254,9 +254,9 @@ export class C_Maze {
     }
 
     // Teamが来たポイントが未踏地だったらただの床に変える
-    public change_unexp_to_floor() {
-        if (this.get_cell(g_team.get_p()) == T_MzKind.Unexp) {
-            this.set_cell(g_team.get_p(), T_MzKind.Floor);
+    public change_unexp_to_floor(p: C_Point) {
+        if (this.get_cell(p) == T_MzKind.Unexp) {
+            this.set_cell(p, T_MzKind.Floor);
         }
     }
 
@@ -327,7 +327,7 @@ export class C_Maze {
     public to_letter(p: C_Point): string {
         return this.cells[p.z][p.y][p.x].to_letter();
     }
-    public to_string(floor: number = 0): string {
+    public to_string(floor: number = 0, debug_mode: boolean = false): string {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
 
@@ -335,7 +335,7 @@ export class C_Maze {
         for (var y = 0; y < size_y; y++) {
             for (var x = 0; x < size_x; x++) {
                 const obj = this.get_obj_xyz(x, y, floor);
-                if (!g_debug_mode && this.masks[floor][y][x]) {
+                if (!debug_mode && this.masks[floor][y][x]) {
                     ret_str += 'Ｘ';
                 } else {
                     if (obj === null) {

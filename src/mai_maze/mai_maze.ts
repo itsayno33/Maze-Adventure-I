@@ -2,9 +2,10 @@
 ///   主処理
 ///
 
-import { C_UrlOpt }     from "./C_UrlOpt";
-import { get_mai_maze } from "./mai_maze/F_load_and_save";
-import { g_pid, g_url, g_url_check_JSON, g_url_get_maze, init_after_loaded_DOM } from "./mai_maze/global_for_maze";
+import { C_UrlOpt }              from "../common/C_UrlOpt";
+import { get_mai_maze }          from "./F_load_and_save";
+import { init_after_loaded_DOM } from "./global_for_maze";
+import { g_pid, g_url, g_url_check_JSON, g_url_get_maze } from "../common/global";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 

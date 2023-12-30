@@ -4,13 +4,12 @@ export const g_url: string[] = new Array(2);
 
 export var g_pid: number[] = new Array(1) as number[];
 
-import { C_DisplayMessage } from "./C_DisplayMessage";
-export var g_mes: C_DisplayMessage;
-
 export var g_debug_mode: boolean = false;
 
+import { init_after_loaded_DOM_in_common } from "../common/global";
+
 export function init_after_loaded_DOM(): void {
-    g_mes  = C_DisplayMessage.get();
+    init_after_loaded_DOM_in_common();
 //    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。
     stop_double_click();
 }
