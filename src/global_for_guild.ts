@@ -11,7 +11,7 @@ export var g_debug_mode: boolean = false;
 
 export function init_after_loaded_DOM(): void {
     g_mes  = C_DisplayMessage.get();
-    init_debug_mode();
+//    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。
     stop_double_click();
 }
 
@@ -46,6 +46,7 @@ function toggle_debug_mode(): void {
         btn.style.setProperty('background-color', '#ff0000');
         btn.style.setProperty('color', '#ffffff');
     }
+//    display_maze2D();
 }
 
 function stop_double_click(): void {

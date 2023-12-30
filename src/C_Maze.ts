@@ -2,7 +2,7 @@ import { T_MzKind, T_RvMzKind } from "./T_MzKind";
 import { C_Point }              from "./C_Point";
 import { C_Range }              from "./C_Range";
 import { I_Exist }              from "./I_EventMap";
-import { g_debug_mode, g_team } from "./global_for_maze";
+import { g_debug_mode, g_team } from "./mai_maze/global_for_maze";
 
 export type JSON_Maze = {
     id?:      number,

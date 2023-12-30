@@ -1,5 +1,5 @@
 import { C_UrlOpt } from "./C_UrlOpt";
-import { g_mes, g_mvm }    from "./global_for_maze";
+import { g_mes }    from "./mai_maze/global_for_maze";
 
 export async function POST_and_get_JSON(
     url: string, 
@@ -15,7 +15,7 @@ export async function POST_and_get_JSON(
         });
     }
     catch (err) {
-        g_mvm.warning_message('通信エラー: ' + err);
+        g_mes.warning_message('通信エラー: ' + err);
         return undefined;
     }
 

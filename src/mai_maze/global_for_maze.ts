@@ -4,10 +4,10 @@ export const g_url: string[] = new Array(2);
 
 export var g_pid: number[] = new Array(1) as number[];
 
-import { C_Maze } from "./C_Maze";
+import { C_Maze } from "../C_Maze";
 export const g_maze = new C_Maze({maze_id: -1});
 
-import { C_Team } from "./C_Team";
+import { C_Team } from "../C_Team";
 export const g_team = new C_Team();
 
 import { T_CtlsMode } from "./T_CtlsMode";
@@ -19,7 +19,7 @@ export var g_debug_mode: boolean = false;
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
-import { C_DisplayMessage } from "./C_DisplayMessage";
+import { C_DisplayMessage } from "../C_DisplayMessage";
 export var g_mes: C_DisplayMessage;
 
 import { C_MazeViewMessage } from "./C_MazeViewMessage";

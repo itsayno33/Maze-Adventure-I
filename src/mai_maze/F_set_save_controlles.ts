@@ -1,9 +1,9 @@
-import { _round }              from "./F_Math";
-import { C_UrlOpt }            from "./C_UrlOpt";
+import { _round }              from "../F_Math";
+import { C_UrlOpt }            from "../C_UrlOpt";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { general_load, general_save, get_save_info }        from "./F_load_and_save";
+import { general_load, general_save, get_save_info }        from "../F_load_and_save";
 import { g_ctls_mode, g_maze, g_mes, g_mvm, g_team, g_vsw } from "./global_for_maze";
 
 var   idx: number = 0;
