@@ -1,5 +1,5 @@
 import { C_UrlOpt }            from "./C_UrlOpt";
-import { decode_all }          from "./F_laod_and_save";
+import { decode_all }          from "./F_load_and_save";
 import { alert_maze_info }     from "./C_Maze"; // 通常時はコメントアウトされている関数
 import { alert_team_info }     from "./C_Team"; // 通常時はコメントアウトされている関数
 import { alert_heroes_info }   from "./C_Hero"; // 通常時はコメントアウトされている関数

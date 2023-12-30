@@ -1,7 +1,7 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_maze, g_mes, g_mvm, g_pid, g_team, g_vsw }     from "./global";
-import { general_load, general_save, get_save_info } from "./F_laod_and_save";
+import { g_ctls_mode, g_maze, g_mes, g_mvm, g_team, g_vsw }     from "./global";
+import { general_load, general_save, get_save_info } from "./F_load_and_save";
 import { set_camp_controlles } from "./F_set_camp_controlles";
 import { _round } from "./F_Math";
 import { C_UrlOpt } from "./C_UrlOpt";
