@@ -1,8 +1,8 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_mes, g_mvm, g_pid, g_vsw }     from "./global";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { set_save_controlles, display_save_list, set_load_controlles   } from "./F_set_save_controlles";
+import { g_ctls_mode, g_mes, g_mvm, g_pid, g_vsw }     from "./global_for_maze";
 
 var canUp: boolean  =  false;
 var canDn: boolean  =  false;

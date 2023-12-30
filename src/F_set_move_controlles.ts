@@ -7,7 +7,7 @@ import { display_maze2D, display_maze3D,
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global";
+import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;

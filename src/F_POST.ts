@@ -1,5 +1,5 @@
 import { C_UrlOpt } from "./C_UrlOpt";
-import { g_mes, g_mvm }    from "./global";
+import { g_mes, g_mvm }    from "./global_for_maze";
 
 export async function POST_and_get_JSON(
     url: string, 

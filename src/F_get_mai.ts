@@ -5,7 +5,7 @@ import { alert_team_info }     from "./C_Team"; // 通常時はコメントア�
 import { alert_heroes_info }   from "./C_Hero"; // 通常時はコメントアウトされている関数
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
-import { g_maze, g_team, init_debug_mode } from "./global";
+import { g_maze, g_team, init_debug_mode } from "./global_for_maze";
 
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
     getJSON_by_POST(url, opt.to_string(), 

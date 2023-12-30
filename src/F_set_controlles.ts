@@ -10,8 +10,8 @@ import { clr_move_controlles, set_move_controlles } from "./F_set_move_controlle
 import { clr_UD_controlles } from "./F_set_UD_controlles";
 import { clr_camp_controlles } from "./F_set_camp_controlles";
 import { clr_load_controlles, clr_save_controlles } from "./F_set_save_controlles";
-import { g_ctls_mode } from "./global";
 import { T_CtlsMode } from "./T_CtlsMode";
+import { g_ctls_mode } from "./global_for_maze";
 
 export function hide_controlles() {
     g_ctls_mode[0] = T_CtlsMode.Nop;

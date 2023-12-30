@@ -7,8 +7,8 @@ import { POST_and_get_JSON }   from "./F_POST";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { _round, _min, _max  } from "./F_Math";
-import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./global";
-import { T_save_list } from "./F_set_save_controlles";
+import { T_save_list }         from "./F_set_save_controlles";
+import { g_maze, g_team, g_mes, g_mvm, init_debug_mode, g_pid, g_url, g_url_get_maze } from "./global_for_maze";
 
 export function get_mai_maze(): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});

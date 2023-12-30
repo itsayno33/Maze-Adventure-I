@@ -3,13 +3,12 @@
 ///
 
 import { C_UrlOpt }     from "./C_UrlOpt";
-import { get_mai_maze } from "./F_load_and_save";
-import { g_pid, g_url, g_url_check_JSON, g_url_get_maze, init_after_loaded_DOM } from "./global_for_maze";
+import { g_pid, g_url, g_url_check_JSON, g_url_get_maze, init_after_loaded_DOM } from "./global_for_guild";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
-    get_mai_maze();
+//    get_mai_maze();
 });
 
 // 以下、HTML側から呼び出せる関数の定義
@@ -40,16 +39,3 @@ window.tsCall = tsCaller;
 // これでHTML側のscriptタグ内から <script>windows.tsCall.getplayer(1);</script>
 // みたいに呼び出せる。ただし、bundle.jsのscriptタグでtype属性をmoduleにしていると失敗する。
 
-
-
-/*
-function get_player_id(player_id: number) {
-    g_pid[0] = player_id;
-}
-declare global {
-    interface Window {
-        get_player_id: (id: number)=>void;
-    }
-}
-window.get_player_id = (id: number)=>{get_player_id(id);};
-*/

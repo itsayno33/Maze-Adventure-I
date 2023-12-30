@@ -1,9 +1,9 @@
-import { C_Point }  from "./C_Point"
-import { C_Range }  from "./C_Range";
-import { T_MzKind } from "./T_MzKind";
-import { C_Wall }   from "./C_Wall";
-import { g_maze, g_team, g_ds, g_mes } from "./global";
-import { T_Direction }          from "./T_Direction";
+import { C_Point }     from "./C_Point"
+import { C_Range }     from "./C_Range";
+import { T_MzKind }    from "./T_MzKind";
+import { C_Wall }      from "./C_Wall";
+import { T_Direction } from "./T_Direction";
+import { g_maze, g_team, g_ds, g_mes } from "./global_for_maze";
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
