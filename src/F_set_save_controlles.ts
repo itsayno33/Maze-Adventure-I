@@ -248,9 +248,27 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
     }
 }
 
+function form_clr():void {
+    const children = save_UL_list.children;
+    if (idx < 0 || idx > children.length - 1) return;
+    form_id   .value      = '-1';
+    form_time .innerText  = '';
+    form_point.innerText  = '';
+
+    if (form_detail.hasAttribute('readonly')) {
+        form_detail.removeAttribute('readonly');
+        form_detail.value = '';
+        form_detail.setAttribute('readonly', 'readonly');
+    }else {
+        form_detail.value = '';
+    }
+}
+
 function form_set():void {
     const children = save_UL_list.children;
     if (idx < 0 || idx > children.length - 1) return;
+
+    form_clr();
     form_id   .value      = link_list[idx].id.toString();
     form_time .innerText  = link_list[idx].save_time;
     form_point.innerText  = link_list[idx].point;
@@ -340,8 +358,9 @@ export function display_save_list(for_save: boolean) {
             form_detail = document.getElementById(data_detail) as HTMLTextAreaElement;
             form_point  = document.getElementById(data_point)  as HTMLParagraphElement; 
 
+            if (!for_save) display_load_fields();
             if (for_save) g_vsw.view_save(); else g_vsw.view_load();
-            idx = 0; high_light_on(); form_set()
+            idx = 0; high_light_on(); form_set();
         
             return;
         } catch (err) {
@@ -350,6 +369,28 @@ export function display_save_list(for_save: boolean) {
             return;
         }
     });
+}
+
+function display_load_fields(): void {
+    if (link_list.length > 0) {
+        // ロードできるデータ有り
+        // ロードデータリストと詳細パネルを表示
+        const ul = document.getElementById('load_data_list')   as HTMLUListElement;
+        const fs = document.getElementById('load_data_fields') as HTMLFieldSetElement;
+
+        ul.style.setProperty('display', 'block');
+        fs.style.setProperty('display', 'block');
+    } else {
+        // ロードできるデータ無し
+        // ロードデータリストと詳細パネルを非表示にして
+        // その旨を表示
+        const ul = document.getElementById('load_data_list')   as HTMLUListElement;
+        const fs = document.getElementById('load_data_fields') as HTMLFieldSetElement;
+
+        ul.style.setProperty('display', 'none');
+        fs.style.setProperty('display', 'none');
+        g_mvm.notice_message('ロードできる保存データが有りません。戻る: ✖');
+    }
 }
 
 function check_load(): void{ // 入力チェックと既存データ上書きの確認
