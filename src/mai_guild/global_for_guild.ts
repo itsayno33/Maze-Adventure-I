@@ -7,10 +7,16 @@ export var g_pid: number[] = new Array(1) as number[];
 export var g_debug_mode: boolean = false;
 
 import { init_after_loaded_DOM_in_common } from "../common/global";
+import { display_guild_menu } from "./F_guild_menu";
+
+import { C_GldViewMessage } from "./C_GldViewMessage";
+export var g_mvm: C_GldViewMessage;
 
 export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common();
-//    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。
+    g_mvm = C_GldViewMessage.get();
+    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。 */
+    display_guild_menu();
     stop_double_click();
 }
 
@@ -27,7 +33,7 @@ export function init_debug_mode(): void {
                 btn.click();
         }
     })
-}
+} 
 
 function toggle_debug_mode(): void {
     const btn = document.getElementById('debug_mode') as HTMLButtonElement;
