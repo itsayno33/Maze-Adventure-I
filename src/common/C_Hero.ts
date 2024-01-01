@@ -1,3 +1,5 @@
+import { C_HeroAbility, JSON_Hero_Ability, JSON_PM } from "./C_HeroAbility";
+
 export type JSON_Hero = {
     id?:        number, 
     save_id?:   number, 
@@ -8,34 +10,16 @@ export type JSON_Hero = {
     gold?:      number; 
     state?:     number; 
     lv?:        number; 
-    val?:       {bsc?: JSON_Hero_Value,   ttl?: JSON_Hero_Value,   now?: JSON_Hero_Value};
+    val?:       JSON_Hero_Value;
     abi?:       {bsc?: JSON_Hero_Ability, ttl?: JSON_Hero_Ability, now?: JSON_Hero_Ability};
     is_alive?:  string|boolean;
 }
 
 export type JSON_Hero_Value = {
-    hp?:  {bsc?: number, add?: number, dmg?: number},
-    mp?:  {bsc?: number, add?: number, dmg?: number},
-    skp?: {ttl: number, now: number}, 
-    exp?: {ttl: number, now: number},
+    skp?: {ttl: number,  now: number}, 
+    exp?: {ttl: number,  now: number},
     nxe?: number,                   // 次回のヒーローレベルアップに必要な経験値
-    /* 以下、/* 戦闘能力の基本値(才能部分)(p:物理、m:魔法)。ヒーローレベルやステータスアップで加算 */
-    atk?: {p: number, m: number},   // 攻撃値の基本値
-    def?: {p: number, m: number},   // 防御値の基本値
-    quc?: {p: number, m: number},   // 瞬発力の基本値
-    cnc?: {p: number, m: number},   // チャンスの基本値
 }
-
-export type JSON_Hero_Ability = {
-    str?: {p: number, m: number},   // 根性。攻撃/防御力にも影響。HP/MP回復やアイテムの最大所持重量にボーナス
-    pwr?: {p: number, m: number},   // 基本的強さ。攻撃力に影響
-    vit?: {p: number, m: number},   // 耐久力。HP/MPの最大値や防御力に影響を与える
-    dex?: {p: number, m: number},   // 器用さ。命中率に影響を与える。飛び道具や長距離魔法では特に影響。罠解除にも影響
-    agi?: {p: number, m: number},   // 素早さ。行動速度や回避率に影響を与える。命中率にも影響
-    tec?: {p: number, m: number},   // 技術力。経験で向上して能力値(quc/cnc)にボーナスを与える
-    luk?: {p: number, m: number},   // 幸運値。cncに大きく影響する
-}
-
 
 export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void { 
     if (a === undefined) return;
@@ -64,8 +48,8 @@ export class C_Hero {
     protected state:    number; 
     protected lv:       number; 
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
-    protected val:      {bsc: JSON_Hero_Value,   ttl: JSON_Hero_Value,   now: JSON_Hero_Value};
-    protected abi:      {bsc: JSON_Hero_Ability, ttl: JSON_Hero_Ability, now: JSON_Hero_Ability};
+    protected val:      JSON_Hero_Value;
+    protected abi:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
 
     protected is_alive: boolean;
 
@@ -79,8 +63,8 @@ export class C_Hero {
         this.gold       = 0; 
         this.state      = 0; 
         this.lv         = 0;
-        this.val        = {bsc: {}, ttl: {}, now: {}};
-        this.abi        = {bsc: {}, ttl: {}, now: {}};
+        this.val        = {};
+        this.abi        = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
         this.is_alive   = true;
         if (a !== undefined) this.decode(a);
     }
@@ -104,8 +88,8 @@ export class C_Hero {
             gold:      this.gold, 
             state:     this.state, 
             lv:        this.lv, 
-            val:      {bsc: this.val.bsc},
-            abi:      {bsc: this.abi.bsc},
+            val:       this.val,
+            abi:      {bsc: this.abi.bsc.encode()},
             is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
@@ -129,10 +113,7 @@ export class C_Hero {
             }
         }
         if (a.val     !== undefined) {
-            const v = a.val;
-            if (v.bsc !== undefined) this.__decode_val(this.val.bsc, v.bsc);
-            if (v.ttl !== undefined) this.__decode_val(this.val.ttl, v.ttl);
-            if (v.now !== undefined) this.__decode_val(this.val.now, v.now);
+            this.__decode_val(this.val, a.val);
         }
         if (a.abi     !== undefined) {
             const v = a.abi;
@@ -144,24 +125,25 @@ export class C_Hero {
     }
 
     protected __decode_val(d: JSON_Hero_Value, s: JSON_Hero_Value): void {
-        if (s.hp  !== undefined) d.hp  = this.__decode_hpmp(d.hp,  s.hp);
-        if (s.mp  !== undefined) d.mp  = this.__decode_hpmp(d.mp,  s.mp);
         if (s.skp !== undefined) d.skp = this.__decode_skex(d.skp, s.skp);
         if (s.exp !== undefined) d.exp = this.__decode_skex(d.exp, s.exp);
         if (s.nxe !== undefined) d.nxe = s.nxe;
-        if (s.atk !== undefined) d.atk = this.__decode_pm(d.atk, s.atk);
-        if (s.def !== undefined) d.def = this.__decode_pm(d.def, s.def);
-        if (s.quc !== undefined) d.quc = this.__decode_pm(d.quc, s?.quc);
-        if (s.cnc !== undefined) d.cnc = this.__decode_pm(d.cnc, s.cnc);
     }
-    protected __decode_abi(d: JSON_Hero_Ability, s: JSON_Hero_Ability): void {
-        if (s.str !== undefined) d.str = this.__decode_pm(d.str, s.str);
-        if (s.pwr !== undefined) d.pwr = this.__decode_pm(d.pwr, s.pwr);
-        if (s.vit !== undefined) d.vit = this.__decode_pm(d.vit, s.vit);
-        if (s.dex !== undefined) d.dex = this.__decode_pm(d.dex, s.dex);
-        if (s.agi !== undefined) d.agi = this.__decode_pm(d.agi, s.agi);
-        if (s.tec !== undefined) d.tec = this.__decode_pm(d.tec, s.tec);
-        if (s.luk !== undefined) d.luk = this.__decode_pm(d.luk, s.luk);
+    protected __decode_abi(d: C_HeroAbility, s: JSON_Hero_Ability): void {
+        if (s.xp  !== undefined) d.set_pm('xp' ,  s);
+
+        if (s.atk !== undefined) d.set_pm('atk',  s);
+        if (s.def !== undefined) d.set_pm('def',  s);
+        if (s.quc !== undefined) d.set_pm('quc',  s);
+        if (s.cnc !== undefined) d.set_pm('cnc',  s);
+
+        if (s.str !== undefined) d.set_pm('str',  s);
+        if (s.pwr !== undefined) d.set_pm('pwr',  s);
+        if (s.vit !== undefined) d.set_pm('vit',  s);
+        if (s.dex !== undefined) d.set_pm('dex',  s);
+        if (s.agi !== undefined) d.set_pm('agi',  s);
+        if (s.tec !== undefined) d.set_pm('tec',  s);
+        if (s.luk !== undefined) d.set_pm('luk',  s);
     }
     protected __decode_hpmp(a: {bsc?: number, add?: number, dmg?: number} | undefined, s: {bsc?: number, add?: number, dmg?: number}): {bsc: number, add: number, dmg: number} {
         var d: {bsc: number, add: number, dmg: number};
@@ -182,20 +164,6 @@ export class C_Hero {
         d.now = s.now ?? s.ttl ?? d.now;
         return d;
     }
-    protected __decode_pm(a: {p?: number, m?: number} | undefined, s: {p?: number, m?: number}): {p: number, m: number} {
-        var d: {p: number, m: number};
-
-        // thisメンバ変数がundefindedだったりpかｍがundefindedだったらそこだけ0で埋めたdを作る
-        if (a === undefined)  d = {p: 0, m: 0};
-        else d = {p: a?.p ?? 0, m: a?.m ?? 0};
-
-        // dにsを代入する(undefindedじゃない項目だけ)
-        d.p = s.p ?? d.p;
-        d.m = s.m ?? d.m;
-
-        return d;
-    }
-
 
     public static create_hero(): C_Hero {
         const new_hero = new C_Hero();
