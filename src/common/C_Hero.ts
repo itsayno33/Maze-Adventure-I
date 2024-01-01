@@ -1,4 +1,4 @@
-import { C_HeroAbility, JSON_Hero_Ability, JSON_PM } from "./C_HeroAbility";
+import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 
 export type JSON_Hero = {
     id?:        number, 
@@ -74,7 +74,7 @@ export class C_Hero {
     public id(): string {
         return 'Hero_' + this.my_id.toString(16).padStart(5, '0');
     }
-    public neme(): string {
+    public name(): string {
         return this.my_name;
     }
     public encode(): JSON_Hero {
@@ -117,9 +117,9 @@ export class C_Hero {
         }
         if (a.abi     !== undefined) {
             const v = a.abi;
-            if (v.bsc !== undefined) this.__decode_abi(this.abi.bsc, v.bsc);
-            if (v.ttl !== undefined) this.__decode_abi(this.abi.ttl, v.ttl);
-            if (v.now !== undefined) this.__decode_abi(this.abi.now, v.now);
+            if (v.bsc !== undefined) this.abi.bsc.decode(v.bsc);
+            if (v.ttl !== undefined) this.abi.ttl.decode(v.ttl);
+            if (v.now !== undefined) this.abi.now.decode(v.now);
         }
         return this;
     }
@@ -128,32 +128,6 @@ export class C_Hero {
         if (s.skp !== undefined) d.skp = this.__decode_skex(d.skp, s.skp);
         if (s.exp !== undefined) d.exp = this.__decode_skex(d.exp, s.exp);
         if (s.nxe !== undefined) d.nxe = s.nxe;
-    }
-    protected __decode_abi(d: C_HeroAbility, s: JSON_Hero_Ability): void {
-        if (s.xp  !== undefined) d.set_pm('xp' ,  s);
-
-        if (s.atk !== undefined) d.set_pm('atk',  s);
-        if (s.def !== undefined) d.set_pm('def',  s);
-        if (s.quc !== undefined) d.set_pm('quc',  s);
-        if (s.cnc !== undefined) d.set_pm('cnc',  s);
-
-        if (s.str !== undefined) d.set_pm('str',  s);
-        if (s.pwr !== undefined) d.set_pm('pwr',  s);
-        if (s.vit !== undefined) d.set_pm('vit',  s);
-        if (s.dex !== undefined) d.set_pm('dex',  s);
-        if (s.agi !== undefined) d.set_pm('agi',  s);
-        if (s.tec !== undefined) d.set_pm('tec',  s);
-        if (s.luk !== undefined) d.set_pm('luk',  s);
-    }
-    protected __decode_hpmp(a: {bsc?: number, add?: number, dmg?: number} | undefined, s: {bsc?: number, add?: number, dmg?: number}): {bsc: number, add: number, dmg: number} {
-        var d: {bsc: number, add: number, dmg: number};
-        if     (a === undefined) d = {bsc: 0, add: 0, dmg: 0};
-        else    d = {bsc: a?.bsc ?? 0, add: a?.add ?? 0, dmg: a?.dmg ?? 0};
-
-        d.bsc = s.bsc ?? d.bsc;
-        d.add = s.add ?? s.bsc ?? d.add;
-        d.dmg = s.dmg ?? d.dmg;
-        return d;
     }
     protected __decode_skex(a: {ttl?: number, now?: number} | undefined, s: {ttl?: number, now?: number}): {ttl: number, now: number} {
         var d: {ttl: number, now: number};

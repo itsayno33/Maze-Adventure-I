@@ -1,5 +1,5 @@
 import { hide_hres_menu, display_hres_menu } from "./F_hres_menu";
-import { high_light_on } from "./F_default_menu";
+import { hide_all_menu, high_light_on } from "./F_default_menu";
 import { g_mvm }         from "./global_for_guild";
 
 import { 
@@ -20,13 +20,14 @@ export function hide_guild_menu(): void {
         isNG: null,
         keyEvent: true,
     });
-
     const div = document.getElementById('gld_view_switch_guild') as HTMLDivElement;
     if (div === null) return;
-    div.style.setProperty('display', 'none');
+    div.style.setProperty('display', 'none'); 
 }
 
 export function display_guild_menu(): void {
+    hide_all_menu();
+
     const div = document.getElementById('gld_view_switch_guild') as HTMLDivElement;
     if (div === null) return;
     div.style.setProperty('display', 'block');
@@ -57,19 +58,18 @@ function do_D(): void {
     idx = (idx < menu.children.length - 1) ? ++idx : idx;
     high_light_on(menu, idx); 
 }
-function do_L(): void {}
-function do_R(): void {}
 
 function isOK(): void {
     if (menu === null) return;
     if (idx < 0 || idx > menu.children.length - 1) return;
 
     switch ((menu.children.item(idx) as HTMLLIElement).id) {
-        case 'guild_hres': break;
+        case 'guild_hres': 
+            display_hres_menu();
+            break;
         case 'guild_edit': break;
         case 'guild_load': break;
         case 'guild_save': break;
         case 'guild_to_maze': break;
     }
 }
-function isNG(): void {}

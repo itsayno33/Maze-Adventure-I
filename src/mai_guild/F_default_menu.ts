@@ -1,7 +1,9 @@
 import { hide_guild_menu, display_guild_menu } from "./F_guild_menu";
+import { hide_hres_menu } from "./F_hres_menu";
 
 export function hide_all_menu(): void {
     // hide関数が揃うまでの暫定処置(表示だけ消す。入力のイベント処理は無視)
+
     const div = document.getElementById('gld_view_switch');
     if (div === null) return;
 
@@ -11,10 +13,12 @@ export function hide_all_menu(): void {
     } 
     // 暫定処理ここまで
 
+
     hide_guild_menu();
+    hide_hres_menu();
 }
 
-export function init_guild_menu(): void {
+export function init_display_menu(): void {
     hide_all_menu();
     display_guild_menu();
 }
@@ -102,7 +106,7 @@ export function hide_default_contrlles(call: T_controlles):void {
 }
 
 export function display_default_controlles(call: T_controlles):void{
-    hide_all_menu();
+//    hide_all_menu();
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
@@ -126,10 +130,6 @@ export function display_default_controlles(call: T_controlles):void{
     r_arrow.style.setProperty('display', _c(call?.do_R) ? 'block' : 'none');
     y_btn  .style.setProperty('display', _c(call?.isOK) ? 'block' : 'none');
     n_btn  .style.setProperty('display', _c(call?.isNG) ? 'block' : 'none');
-
-    const menu = document.getElementById('gld_view_switch_guild') as HTMLDivElement|null;
-    if (menu === null) return;
-    menu.style.setProperty('display', 'block');
 }
 
 
