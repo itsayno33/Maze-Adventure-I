@@ -18,18 +18,31 @@ export function create_hero_info(form: HTMLUListElement): T_Detail {
     detail = create_info_li(form, detail, 'hp');
     detail = create_info_li(form, detail, 'mp');
 
-    detail = create_info_li(form, detail, 'atk');
-    detail = create_info_li(form, detail, 'def');
-    detail = create_info_li(form, detail, 'quc');
-    detail = create_info_li(form, detail, 'cnc');
+    detail = create_info_li(form, detail, 'atk_p');
+    detail = create_info_li(form, detail, 'def_p');
+    detail = create_info_li(form, detail, 'quc_p');
+    detail = create_info_li(form, detail, 'cnc_p');
 
-    detail = create_info_li(form, detail, 'str');
-    detail = create_info_li(form, detail, 'pwr');
-    detail = create_info_li(form, detail, 'vit');
-    detail = create_info_li(form, detail, 'dex');
-    detail = create_info_li(form, detail, 'agi');
-    detail = create_info_li(form, detail, 'tec');
-    detail = create_info_li(form, detail, 'luk');
+    detail = create_info_li(form, detail, 'atk_m');
+    detail = create_info_li(form, detail, 'def_m');
+    detail = create_info_li(form, detail, 'quc_m');
+    detail = create_info_li(form, detail, 'cnc_m');
+
+    detail = create_info_li(form, detail, 'str_p');
+    detail = create_info_li(form, detail, 'pwr_p');
+    detail = create_info_li(form, detail, 'vit_p');
+    detail = create_info_li(form, detail, 'dex_p');
+    detail = create_info_li(form, detail, 'agi_p');
+    detail = create_info_li(form, detail, 'tec_p');
+    detail = create_info_li(form, detail, 'luk_p');
+
+    detail = create_info_li(form, detail, 'str_m');
+    detail = create_info_li(form, detail, 'pwr_m');
+    detail = create_info_li(form, detail, 'vit_m');
+    detail = create_info_li(form, detail, 'dex_m');
+    detail = create_info_li(form, detail, 'agi_m');
+    detail = create_info_li(form, detail, 'tec_m');
+    detail = create_info_li(form, detail, 'luk_m');
 
     return detail;
 }
@@ -59,21 +72,34 @@ export function form_set(detail: T_Detail, idx: number):void {
     detail['exp']  .innerHTML = hero.val?.['exp']?.toString() ?? '???';
     detail['skp']  .innerHTML = hero.val?.['skp']?.toString() ?? '???';
 
-    detail['hp']   .innerHTML = hero.abi?.bsc?.['hp']?.toString() ?? '???';
-    detail['mp']   .innerHTML = hero.abi?.bsc?.['mp']?.toString() ?? '???';
+    detail['hp']   .innerHTML = hero.abi?.bsc?.p?.['xp']?.toString() ?? '???';
+    detail['mp']   .innerHTML = hero.abi?.bsc?.m?.['xp']?.toString() ?? '???';
 
-    detail['atk']  .innerHTML = hero.abi?.bsc?.['atk']?.toString() ?? '???';
-    detail['def']  .innerHTML = hero.abi?.bsc?.['def']?.toString() ?? '???';
-    detail['quc']  .innerHTML = hero.abi?.bsc?.['quc']?.toString() ?? '???';
-    detail['cnc']  .innerHTML = hero.abi?.bsc?.['cnc']?.toString() ?? '???';
+    detail['atk_p']  .innerHTML = hero.abi?.bsc?.p?.['atk']?.toString() ?? '???';
+    detail['def_p']  .innerHTML = hero.abi?.bsc?.p?.['def']?.toString() ?? '???';
+    detail['quc_p']  .innerHTML = hero.abi?.bsc?.p?.['quc']?.toString() ?? '???';
+    detail['cnc_p']  .innerHTML = hero.abi?.bsc?.p?.['cnc']?.toString() ?? '???';
 
-    detail['str']  .innerHTML = hero.abi?.bsc?.['str']?.toString() ?? '???';
-    detail['pwr']  .innerHTML = hero.abi?.bsc?.['pwr']?.toString() ?? '???';
-    detail['vit']  .innerHTML = hero.abi?.bsc?.['vit']?.toString() ?? '???';
-    detail['dex']  .innerHTML = hero.abi?.bsc?.['dex']?.toString() ?? '???';
-    detail['agi']  .innerHTML = hero.abi?.bsc?.['agi']?.toString() ?? '???';
-    detail['tec']  .innerHTML = hero.abi?.bsc?.['tec']?.toString() ?? '???';
-    detail['luk']  .innerHTML = hero.abi?.bsc?.['luk']?.toString() ?? '???';
+    detail['str_p']  .innerHTML = hero.abi?.bsc?.p?.['str']?.toString() ?? '???';
+    detail['pwr_p']  .innerHTML = hero.abi?.bsc?.p?.['pwr']?.toString() ?? '???';
+    detail['vit_p']  .innerHTML = hero.abi?.bsc?.p?.['vit']?.toString() ?? '???';
+    detail['dex_p']  .innerHTML = hero.abi?.bsc?.p?.['dex']?.toString() ?? '???';
+    detail['agi_p']  .innerHTML = hero.abi?.bsc?.p?.['agi']?.toString() ?? '???';
+    detail['tec_p']  .innerHTML = hero.abi?.bsc?.p?.['tec']?.toString() ?? '???';
+    detail['luk_p']  .innerHTML = hero.abi?.bsc?.p?.['luk']?.toString() ?? '???';
+
+    detail['atk_m']  .innerHTML = hero.abi?.bsc?.m?.['atk']?.toString() ?? '???';
+    detail['def_m']  .innerHTML = hero.abi?.bsc?.m?.['def']?.toString() ?? '???';
+    detail['quc_m']  .innerHTML = hero.abi?.bsc?.m?.['quc']?.toString() ?? '???';
+    detail['cnc_m']  .innerHTML = hero.abi?.bsc?.m?.['cnc']?.toString() ?? '???';
+
+    detail['str_m']  .innerHTML = hero.abi?.bsc?.m?.['str']?.toString() ?? '???';
+    detail['pwr_m']  .innerHTML = hero.abi?.bsc?.m?.['pwr']?.toString() ?? '???';
+    detail['vit_m']  .innerHTML = hero.abi?.bsc?.m?.['vit']?.toString() ?? '???';
+    detail['dex_m']  .innerHTML = hero.abi?.bsc?.m?.['dex']?.toString() ?? '???';
+    detail['agi_m']  .innerHTML = hero.abi?.bsc?.m?.['agi']?.toString() ?? '???';
+    detail['tec_m']  .innerHTML = hero.abi?.bsc?.m?.['tec']?.toString() ?? '???';
+    detail['luk_m']  .innerHTML = hero.abi?.bsc?.m?.['luk']?.toString() ?? '???';
 }
 /*******
 function __form_set_abi(hero: JSON_Hero, key: string): string {

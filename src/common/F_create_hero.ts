@@ -1,9 +1,9 @@
 import { C_Hero, JSON_Hero, JSON_Hero_Value  }      from "./C_Hero";
-import { JSON_Hero_Ability } from "./C_HeroAbility";
+import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
 import { _round } from "./F_Math";
 import { _irand, _inrand }   from "./F_Rand";
 
-const make_abi_max = {
+const make_abi_max: {[key: string]: number} = {
     xp:   50,
 
     atk:   5,
@@ -26,7 +26,7 @@ export function make_hero(): C_Hero {
 
     let   hh: JSON_Hero         = {};
     let   hv: JSON_Hero_Value   = {};
-    let   ha: JSON_Hero_Ability = {};
+    let   ha: JSON_Hero_Ability = {p:{}, m:{}};
 
     hh.name   = '冒険者 #' + _irand(0,1000).toString(16).padStart(3, 'x');
     hh.sex    = _irand(0,1);
@@ -41,11 +41,16 @@ export function make_hero(): C_Hero {
     hv.nxe    = 1000;
     hh.val    = hv;
 
-    for (let abi in ha) {
-        if (!(abi in make_abi_max)) ha[abi] = {p: -1, m: -1};
+    for (let abi in ha.p) {
+        if (!(abi in make_abi_max)) ha.p[abi] = -1;
         else {
-            ha[abi].p = _irand(0, make_abi_max[abi]);
-            ha[abi].m = _irand(0, make_abi_max[abi]);
+            ha.p[abi] = _irand(0, make_abi_max[abi]);
+        }
+    } 
+    for (let abi in ha.m) {
+        if (!(abi in make_abi_max)) ha.m[abi] = -1;
+        else {
+            ha.m[abi] = _irand(0, make_abi_max[abi]);
         }
     } 
     hh.abi = {bsc: ha, ttl: ha, now: ha};
@@ -66,26 +71,28 @@ function calc_abi_ttl_hero(hero: C_Hero): C_Hero {
     const abi = hero.encode().abi?.bsc;
     if (abi === undefined) return hero;
 
-    let ttl: JSON_Hero_Ability = {};
+    let ttl: JSON_Hero_Ability = {p:{}, m:{}};
     for (let idx in abi) { // 暫定版。本来は装備等の加減算を行う
-        ttl[idx] = abi[idx];
+        ttl.p[idx] = abi.p[idx];
+        ttl.m[idx] = abi.m[idx];
     }
 
+    const tab = new C_HeroAbility(ttl);
 
-    ttl.xp.p += _round((ttl.str.p + ttl.vit.p) * 10, 0);
-    ttl.xp.m += _round((ttl.str.m + ttl.vit.m) * 10, 0);
+    ttl.p.xp +=  tab.xp_ttladd_p();
+    ttl.m.xp +=  tab.xp_ttladd_m();
 
-    ttl.atk.p += _round((ttl.str.p + ttl.pwr.p + ttl.tec.p) / 10, 0);
-    ttl.atk.m += _round((ttl.str.m + ttl.pwr.m + ttl.tec.m) / 10, 0);
+    ttl.p.atk += tab.atk_ttladd_p();
+    ttl.m.atk += tab.atk_ttladd_m();
 
-    ttl.def.p += _round((ttl.str.p + ttl.vit.p + ttl.tec.p) / 10, 0);
-    ttl.def.m += _round((ttl.str.m + ttl.vit.m + ttl.tec.m) / 10, 0);
+    ttl.p.def += tab.def_ttladd_p();
+    ttl.m.def += tab.def_ttladd_m();
 
-    ttl.quc.p += _round((ttl.agi.p + ttl.luk.p + ttl.tec.p) / 10, 0);
-    ttl.quc.m += _round((ttl.agi.m + ttl.luk.m + ttl.tec.m) / 10, 0);
+    ttl.p.quc += tab.quc_ttladd_p();
+    ttl.m.quc += tab.quc_ttladd_m();
 
-    ttl.cnc.p += _round((2 * ttl.luk.p + ttl.tec.p) / 10, 0);
-    ttl.cnc.m += _round((2 * ttl.luk.m + ttl.tec.m) / 10, 0);
+    ttl.p.cnc += tab.cnc_ttladd_p();
+    ttl.m.cnc += tab.cnc_ttladd_m();
 
     hero.decode({abi: {ttl: ttl, now: ttl}});
 
