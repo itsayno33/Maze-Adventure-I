@@ -1,9 +1,9 @@
-import { C_Hero, JSON_Hero, JSON_Hero_Value  }      from "./C_Hero";
-import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
-import { _round } from "./F_Math";
+import { C_Hero, JSON_Hero, JSON_Hero_Value  } from "./C_Hero";
+import { C_HeroAbility, JSON_Hero_Ability }    from "./C_HeroAbility";
+import { _round }            from "./F_Math";
 import { _irand, _inrand }   from "./F_Rand";
 
-const make_abi_max: {[key: string]: number} = {
+const make_abi_ave: {[key: string]: number} = {
     xp:   50,
 
     atk:   5,
@@ -28,30 +28,24 @@ export function make_hero(): C_Hero {
     let   hv: JSON_Hero_Value   = {};
     let   ha: JSON_Hero_Ability = {p:{}, m:{}};
 
-    hh.name   = '冒険者 #' + _irand(0,1000).toString(16).padStart(3, 'x');
-    hh.sex    = _irand(0,1);
-    hh.age    = 20 + _inrand(-5,5);
-    hh.gold   = _inrand(5000, 10000);
+    hh.name   = '冒険者 #' + _irand(0,4093).toString(16).padStart(3, 'x');
+    hh.sex    = _irand(0,1);        
+    hh.age    = 20 + _irand(-5,5);  // _ig_rand
+    hh.gold   = _irand(5000, 10000);// _ig_rand
     hh.state  = 0;
     hh.lv     = 1;
 
-    const skp = _inrand(5, 5 + (hh.age - 15) * 10);
+    const skp = _irand(5, 5 + (hh.age - 15) * 10);
     hv.skp    = {ttl: skp,  now: skp};
     hv.exp    = {ttl:   0,  now:   0};
     hv.nxe    = 1000;
     hh.val    = hv;
 
-    for (let abi in ha.p) {
-        if (!(abi in make_abi_max)) ha.p[abi] = -1;
-        else {
-            ha.p[abi] = _irand(0, make_abi_max[abi]);
-        }
+    for (let abi in make_abi_ave) {
+            ha.p[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
     } 
-    for (let abi in ha.m) {
-        if (!(abi in make_abi_max)) ha.m[abi] = -1;
-        else {
-            ha.m[abi] = _irand(0, make_abi_max[abi]);
-        }
+    for (let abi in make_abi_ave) {
+            ha.m[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
     } 
     hh.abi = {bsc: ha, ttl: ha, now: ha};
 

@@ -67,13 +67,13 @@ export function display_hres_menu(): void {
         li.innerHTML = `${hero.name()}<p></p>`;
         info_list.appendChild(li);
     }
-    idx = 0;
-    high_light_on(info_list, idx); 
-
 
     const form = document.getElementById('hres_hero_info') as HTMLUListElement;
     if (form === null) return;
     info_detail = create_hero_info(form);
+
+    idx = 0;
+    high_light_on(info_list, idx);   form_set(g_hres, info_detail, idx);
 
     display_default_controlles({
         do_U: do_U,
@@ -84,6 +84,7 @@ export function display_hres_menu(): void {
         isNG: isNG,
         keyEvent: true,
     });
+    g_mvm.clear_message();
 }
 
 function do_U(): void {
@@ -91,14 +92,14 @@ function do_U(): void {
     g_mvm.clear_message();
 
     idx = (idx > 0) ? --idx : idx;
-    high_light_on(info_list, idx);  form_set(info_detail, idx); 
+    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx); 
 }
 function do_D(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
     idx = (idx < info_list.children.length - 1) ? ++idx : idx;
-    high_light_on(info_list, idx);  form_set(info_detail, idx);  
+    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);  
 }
 function do_L(): void {
     if (g_hres.length < 1) return;
@@ -110,7 +111,7 @@ function do_L(): void {
     } else {
         idx -= limit;
     } 
-    high_light_on(info_list, idx);  form_set(info_detail, idx);
+    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);
 }
 function do_R(): void {
     if (g_hres.length < 1) return;
@@ -122,7 +123,7 @@ function do_R(): void {
     } else {
         idx += limit;
     } 
-    high_light_on(info_list, idx);  form_set(info_detail, idx);
+    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);
 }
 
 function isOK(): void { 

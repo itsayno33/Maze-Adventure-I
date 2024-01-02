@@ -1,10 +1,11 @@
-import { C_Hero, JSON_Hero } from "../common/C_Hero";
+import { C_Hero } from '../common/C_Hero';
 import { g_hres } from "./global_for_guild";
 
 type T_Detail = {[key: string]: HTMLLIElement}
 
 export function create_hero_info(form: HTMLUListElement): T_Detail {
     var detail = {} as T_Detail;
+    clear_info(form);
 
     detail = create_info_li(form, detail, 'name');
     detail = create_info_li(form, detail, 'sex'); 
@@ -46,6 +47,9 @@ export function create_hero_info(form: HTMLUListElement): T_Detail {
 
     return detail;
 }
+function clear_info(form: HTMLUListElement) {
+    while (form.firstChild !== null) form.removeChild(form.firstChild);
+}
 function create_info_li(form: HTMLUListElement, detail: T_Detail, key:string): T_Detail {
     const id = 'hres_hero_' + key;
     const li = document.createElement('li') as HTMLLIElement;
@@ -59,18 +63,19 @@ function form_clr(detail: T_Detail):void {
     for (let key in detail) detail[key].innerText  = '';
 }
 
-export function form_set(detail: T_Detail, idx: number):void {
+export function form_set(hres: C_Hero[], detail: T_Detail, idx: number):void {
     form_clr(detail);
 
-    const hero = g_hres[idx].encode();
+    const hero = hres[idx].encode();
     detail['name'] .innerHTML = hero['name'] ?? '???';
     detail['sex']  .innerHTML = hero['sex']  ?.toString() ?? '???';
     detail['age']  .innerHTML = hero['age']  ?.toString() ?? '???';
     detail['gold'] .innerHTML = hero['gold'] ?.toString() ?? '???';
     detail['state'].innerHTML = hero['state']?.toString() ?? '???';
     detail['lv']   .innerHTML = hero['lv']   ?.toString() ?? '???';
-    detail['exp']  .innerHTML = hero.val?.['exp']?.toString() ?? '???';
-    detail['skp']  .innerHTML = hero.val?.['skp']?.toString() ?? '???';
+
+    detail['exp']  .innerHTML = hero.val?.['exp']?.now?.toString() ?? '???';
+    detail['skp']  .innerHTML = hero.val?.['skp']?.now?.toString() ?? '???';
 
     detail['hp']   .innerHTML = hero.abi?.bsc?.p?.['xp']?.toString() ?? '???';
     detail['mp']   .innerHTML = hero.abi?.bsc?.m?.['xp']?.toString() ?? '???';

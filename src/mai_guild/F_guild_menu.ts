@@ -1,6 +1,7 @@
-import { hide_hres_menu, display_hres_menu } from "./F_hres_menu";
 import { hide_all_menu, high_light_on } from "./F_default_menu";
-import { g_mvm }         from "./global_for_guild";
+import { display_hres_menu } from "./F_hres_menu";
+import { display_appd_menu } from "./F_appd_menu";
+import { g_mvm }             from "./global_for_guild";
 
 import { 
     hide_default_contrlles, 
@@ -68,6 +69,9 @@ function isOK(): void {
             display_hres_menu();
             break;
         case 'guild_edit': break;
+        case 'guild_appd': 
+            display_appd_menu();
+            break;
         case 'guild_load': break;
         case 'guild_save': break;
         case 'guild_to_maze': break;
