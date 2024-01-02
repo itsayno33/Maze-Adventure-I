@@ -1,11 +1,10 @@
 import { C_Hero } from '../common/C_Hero';
-import { g_hres } from "./global_for_guild";
 
 type T_Detail = {[key: string]: HTMLLIElement}
 
-export function create_hero_info(form: HTMLUListElement): T_Detail {
+export function hero_info_create(form: HTMLUListElement): T_Detail {
     var detail = {} as T_Detail;
-    clear_info(form);
+    hero_info_clear(form);
 
     detail = create_info_li(form, detail, 'name');
     detail = create_info_li(form, detail, 'sex'); 
@@ -47,11 +46,11 @@ export function create_hero_info(form: HTMLUListElement): T_Detail {
 
     return detail;
 }
-function clear_info(form: HTMLUListElement) {
+export function hero_info_clear(form: HTMLUListElement) {
     while (form.firstChild !== null) form.removeChild(form.firstChild);
 }
 function create_info_li(form: HTMLUListElement, detail: T_Detail, key:string): T_Detail {
-    const id = 'hres_hero_' + key;
+    const id = 'info_hero_' + key;
     const li = document.createElement('li') as HTMLLIElement;
     li.id    = id;
     if (li !== undefined) {form.appendChild(li); detail[key] = li;}
@@ -59,12 +58,12 @@ function create_info_li(form: HTMLUListElement, detail: T_Detail, key:string): T
 }
 
 
-function form_clr(detail: T_Detail):void {
+function hero_info_form_clr(detail: T_Detail):void {
     for (let key in detail) detail[key].innerText  = '';
 }
 
-export function form_set(hres: C_Hero[], detail: T_Detail, idx: number):void {
-    form_clr(detail);
+export function hero_info_form_set(hres: C_Hero[], detail: T_Detail, idx: number):void {
+    hero_info_form_clr(detail);
 
     const hero = hres[idx].encode();
     detail['name'] .innerHTML = '名　前: ' +  hero['name'] ?? '???';

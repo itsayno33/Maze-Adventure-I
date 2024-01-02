@@ -4,7 +4,7 @@ import {
     hide_all_menu
 } from "./F_default_menu";
 
-import { create_hero_info, form_set }   from "./F_hero_menu";
+import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { _round }             from "../common/F_Math";
 import { high_light_on }      from "./F_default_menu";
 import { g_mvm, g_hres }      from "./global_for_guild";
@@ -70,10 +70,10 @@ export function display_hres_menu(): void {
 
     const form = document.getElementById('hres_hero_info') as HTMLUListElement;
     if (form === null) return;
-    info_detail = create_hero_info(form);
+    info_detail = hero_info_create(form);
 
     idx = 0;
-    high_light_on(info_list, idx);   form_set(g_hres, info_detail, idx);
+    high_light_on(info_list, idx);   hero_info_form_set(g_hres, info_detail, idx);
 
     display_default_controlles({
         do_U: do_U,
@@ -92,14 +92,14 @@ function do_U(): void {
     g_mvm.clear_message();
 
     idx = (idx > 0) ? --idx : idx;
-    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx); 
+    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx); 
 }
 function do_D(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
     idx = (idx < info_list.children.length - 1) ? ++idx : idx;
-    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);  
+    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);  
 }
 function do_L(): void {
     if (g_hres.length < 1) return;
@@ -111,7 +111,7 @@ function do_L(): void {
     } else {
         idx -= limit;
     } 
-    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);
+    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 function do_R(): void {
     if (g_hres.length < 1) return;
@@ -123,7 +123,7 @@ function do_R(): void {
     } else {
         idx += limit;
     } 
-    high_light_on(info_list, idx);  form_set(g_hres, info_detail, idx);
+    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 
 function isOK(): void { 
@@ -132,6 +132,13 @@ function isOK(): void {
 }
 function isNG(): void {
     g_mvm.clear_message();
-    display_guild_menu();
+    go_back_guild_menu();
 }
 
+function go_back_guild_menu() {
+    const form = document.getElementById('hres_hero_info') as HTMLUListElement;
+    if (form === null) return;
+    hero_info_clear(form);
+
+    display_guild_menu();
+}

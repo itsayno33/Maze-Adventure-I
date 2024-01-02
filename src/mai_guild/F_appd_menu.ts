@@ -4,7 +4,7 @@ import {
     hide_all_menu
 } from "./F_default_menu";
 
-import { create_hero_info, form_set }   from "./F_hero_menu";
+import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { C_Hero }             from "../common/C_Hero";
 import { _round }             from "../common/F_Math";
 import { _inrand }            from "../common/F_Rand";
@@ -74,10 +74,10 @@ export function display_appd_menu(): void {
 
     const form = document.getElementById('appd_hero_info') as HTMLUListElement;
     if (form === null) {display_guild_menu();return;}
-    info_detail = create_hero_info(form);
+    info_detail = hero_info_create(form);
 
     idx = 0;
-    high_light_on(info_list, idx); form_set(new_hres, info_detail, idx); 
+    high_light_on(info_list, idx); hero_info_form_set(new_hres, info_detail, idx); 
 
     display_default_controlles({
         do_U: do_U,
@@ -114,7 +114,7 @@ function do_U(): void {
     display_default_message();
 
     idx = (idx > 0) ? --idx : idx;
-    high_light_on(info_list, idx);  form_set(new_hres, info_detail, idx); 
+    high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx); 
 }
 function do_D(): void {
     if (mode !== 'view')     return;
@@ -122,7 +122,7 @@ function do_D(): void {
     display_default_message()
 
     idx = (idx < info_list.children.length - 1) ? ++idx : idx;
-    high_light_on(info_list, idx);  form_set(new_hres, info_detail, idx);  
+    high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);  
 }
 function do_L(): void {
     if (mode !== 'view')     return;
@@ -135,7 +135,7 @@ function do_L(): void {
     } else {
         idx -= limit;
     } 
-    high_light_on(info_list, idx);  form_set(new_hres, info_detail, idx);
+    high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
 function do_R(): void {
     if (mode !== 'view')     return;
@@ -148,7 +148,7 @@ function do_R(): void {
     } else {
         idx += limit;
     } 
-    high_light_on(info_list, idx);  form_set(new_hres, info_detail, idx);
+    high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
 
 function isOK(): void { 
@@ -182,7 +182,7 @@ function isNG(): void {
     switch (mode) {
         case 'view':
             g_mvm.clear_message();
-            display_guild_menu();
+            go_back_guild_menu();
             break;
         case 'recruit':
             mode = 'check_NG';
@@ -211,4 +211,13 @@ function display_default_message(): void {
             g_mvm.notice_message('本当にこの冒険者を追い返しますか？ＯＫ＝＞〇　やめる＝＞✖');
             break;
     }
+}
+
+
+function go_back_guild_menu() {
+    const form = document.getElementById('appd_hero_info') as HTMLUListElement;
+    if (form === null) return;
+    hero_info_clear(form);
+
+    display_guild_menu();
 }
