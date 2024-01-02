@@ -1,3 +1,4 @@
+import { C_Hero, JSON_Hero } from "../common/C_Hero";
 import { g_hres } from "./global_for_guild";
 
 type T_Detail = {[key: string]: HTMLLIElement}
@@ -74,3 +75,12 @@ export function form_set(detail: T_Detail, idx: number):void {
     detail['tec']  .innerHTML = hero.abi?.bsc?.['tec']?.toString() ?? '???';
     detail['luk']  .innerHTML = hero.abi?.bsc?.['luk']?.toString() ?? '???';
 }
+/*******
+function __form_set_abi(hero: JSON_Hero, key: string): string {
+    const bsc_val = hero.abi?.bsc?.[key];
+    const ttl_val = hero.abi?.ttl?.[key];
+    if (bsc_val === undefined && ttl_val === undefined) return `??? (???)`;
+    if (ttl_val === undefined) return `${bsc_val?.p} (???)`;
+
+}
+********/
