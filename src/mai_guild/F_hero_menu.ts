@@ -50,7 +50,7 @@ export function hero_info_clear(form: HTMLUListElement) {
     while (form.firstChild !== null) form.removeChild(form.firstChild);
 }
 function create_info_li(form: HTMLUListElement, detail: T_Detail, key:string): T_Detail {
-    const id = 'info_hero_' + key;
+    const id = '_hr_' + key;
     const li = document.createElement('li') as HTMLLIElement;
     li.id    = id;
     if (li !== undefined) {form.appendChild(li); detail[key] = li;}

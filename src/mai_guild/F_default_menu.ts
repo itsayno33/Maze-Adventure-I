@@ -41,16 +41,24 @@ export function high_light_on(parent: HTMLElement|null, idx: number): void {
 
 function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
     if (elm === null) return;
-    const fw_color = elm.parentElement?.style.getPropertyValue('color')            ?? 'black';
-    const bg_color = elm.parentElement?.style.getPropertyValue('background-color') ?? 'white';
-    elm.style.setProperty('color',            isOn ? bg_color : fw_color);
-    elm.style.setProperty('background-color', isOn ? fw_color : bg_color);
+    const perentStyle = window.getComputedStyle(elm.parentElement ?? elm);
+    const fw_color = perentStyle.color           ?? 'black';
+    const bg_color = perentStyle.backgroundColor ?? 'white';
 
-    elm.style.setProperty('font-weight',      isOn ? 'bold' : 'normal');
+    elm.style.color           = isOn ? bg_color : fw_color;
+    elm.style.backgroundColor = isOn ? fw_color : bg_color;
+
+    elm.style.fontWeight =  isOn ? 'bold' : 'normal';
     for (var j = 0; j < elm.children.length; j++) {
         const p = elm.children.item(j) as HTMLElement;
-        p.style.setProperty('font-weight', 'normal');
-        p.style.setProperty('display', isOn ? 'block' : 'none');
+        if (isOn) {
+            p.style.fontWeight      = 'normal';
+            p.style.color           = fw_color;
+            p.style.backgroundColor = bg_color;
+            p.style.display         = 'block';
+        } else {
+            p.style.display    =  'none';
+        }
     }
 }
 

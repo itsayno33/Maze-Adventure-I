@@ -11,6 +11,7 @@ import { g_mvm, g_hres }      from "./global_for_guild";
 import { display_guild_menu } from "./F_guild_menu";
 
 var info_list: HTMLUListElement;
+var info_list_col: number;
 var idx:  number = 0;
 var info_detail: {[key: string]: HTMLLIElement};
 
@@ -67,6 +68,7 @@ export function display_hres_menu(): void {
         li.innerHTML = `${hero.name()}<p></p>`;
         info_list.appendChild(li);
     }
+    info_list_col = Number(info_list.style.getPropertyValue('column-count'));
 
     const form = document.getElementById('hres_hero_info') as HTMLUListElement;
     if (form === null) return;
@@ -105,11 +107,11 @@ function do_L(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const limit = _round((info_list.children.length - 1) / 2, 0);
-    if (idx < limit) {
-        idx += limit;
-    } else {
+    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
+    if (idx > limit - 1) {
         idx -= limit;
+    } else {
+        idx += info_list.children.length  - limit;
     } 
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
@@ -117,13 +119,12 @@ function do_R(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const limit = _round((info_list.children.length - 1) / 2, 0);
-    if (idx >= limit) {
-        idx -= limit;
-    } else {
+    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
+    if (idx < info_list.children.length - limit) {
         idx += limit;
+    } else {
+        idx -= info_list.children.length  - limit;
     } 
-    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 
 function isOK(): void { 

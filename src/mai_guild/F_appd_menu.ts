@@ -11,10 +11,11 @@ import { _inrand }            from "../common/F_Rand";
 import { high_light_on }      from "./F_default_menu";
 import { display_guild_menu } from "./F_guild_menu";
 import { g_mvm, g_hres }      from "./global_for_guild";
-import { make_hero } from "../common/F_create_hero";
+import { make_hero }          from "../common/F_create_hero";
 
 var new_hres: C_Hero[] = [];
 var info_list: HTMLUListElement;
+var info_list_col: number;
 var idx:  number = 0;
 var info_detail: {[key: string]: HTMLLIElement};
 
@@ -42,27 +43,6 @@ export function display_appd_menu(): void {
     const div = document.getElementById('gld_view_switch_appd') as HTMLDivElement;
     if (div === null) {display_guild_menu();return;}
     div.style.setProperty('display', 'block');
-/*
-    if (g_hres.length < 1) {
-        document.getElementById('appd_list')       ?.style.setProperty('display', 'none');
-        document.getElementById('appd_hero_fields')?.style.setProperty('display', 'none');
-
-        g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-        display_default_controlles({
-            do_U: do_U,
-            do_D: do_D,
-            do_L: do_L,
-            do_R: do_R,
-            isOK: isOK,
-            isNG: isNG,
-            keyEvent: true,
-        });
-        return;
-    } else {
-        document.getElementById('appd_list')       ?.style.setProperty('display', 'block');
-        document.getElementById('appd_hero_fields')?.style.setProperty('display', 'block');
-    }
-*/
 
     new_hres = [];
     for (let i = 0; i < 20; i++)  new_hres.push(make_hero());
@@ -70,10 +50,13 @@ export function display_appd_menu(): void {
     get_list_info();
     if (info_list === null) {display_guild_menu();return;}
 
+    info_list_col = Number(window.getComputedStyle(info_list).columnCount); 
+
+
     mode = 'view';
 
     const form = document.getElementById('appd_hero_info') as HTMLUListElement;
-    if (form === null) {display_guild_menu();return;}
+    if (form === null) {display_guild_menu();return;} 
     info_detail = hero_info_create(form);
 
     idx = 0;
@@ -129,11 +112,11 @@ function do_L(): void {
     if (new_hres.length < 1) return;
     display_default_message();
 
-    const limit = _round((info_list.children.length - 1) / 2, 0);
-    if (idx < limit) {
-        idx += limit;
-    } else {
+    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
+    if (idx > limit - 1) {
         idx -= limit;
+    } else {
+        idx += info_list.children.length  - limit;
     } 
     high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
@@ -142,11 +125,11 @@ function do_R(): void {
     if (new_hres.length < 1) return;
     display_default_message();
 
-    const limit = _round((info_list.children.length - 1) / 2, 0);
-    if (idx >= limit) {
-        idx -= limit;
-    } else {
+    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
+    if (idx < info_list.children.length - limit) {
         idx += limit;
+    } else {
+        idx -= info_list.children.length  - limit;
     } 
     high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
