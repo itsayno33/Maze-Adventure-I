@@ -6,7 +6,7 @@ import {
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { C_Hero }             from "../common/C_Hero";
-import { _round }             from "../common/F_Math";
+import { _ceil, _round }             from "../common/F_Math";
 import { _inrand }            from "../common/F_Rand";
 import { high_light_on }      from "./F_default_menu";
 import { display_guild_menu } from "./F_guild_menu";
@@ -112,11 +112,15 @@ function do_L(): void {
     if (new_hres.length < 1) return;
     display_default_message();
 
-    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
-    if (idx > limit - 1) {
-        idx -= limit;
+    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
+    if (idx  > info_list_row - 1) {
+        // 最前列(左端)以外
+        idx -= info_list_row;
     } else {
-        idx += info_list.children.length  - limit;
+        // 最前列(左端)
+        const  vurtual_list_length = info_list_col * info_list_row;
+        idx += vurtual_list_length - info_list_row;
+        if (idx > info_list.children.length - 1) idx -= info_list_row;
     } 
     high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
@@ -125,11 +129,15 @@ function do_R(): void {
     if (new_hres.length < 1) return;
     display_default_message();
 
-    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
-    if (idx < info_list.children.length - limit) {
-        idx += limit;
+    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
+    if (idx  < info_list.children.length - info_list_row) { 
+        // 最終列(右端)以外
+        idx += info_list_row;
     } else {
-        idx -= info_list.children.length  - limit;
+        // 最終列(右端)
+        const  vurtual_list_length = info_list_col * info_list_row;
+        idx -= vurtual_list_length  - info_list_row;
+        if (idx < 0) idx += info_list_row;
     } 
     high_light_on(info_list, idx);  hero_info_form_set(new_hres, info_detail, idx);
 }
@@ -150,17 +158,22 @@ function isOK(): void {
             mode = 'view';
             g_mvm.notice_message('採用しました!!');
             g_hres.push(new_hres[idx]);
-            new_hres.splice(idx, 1); idx = 0;
-            get_list_info();
+            _after_check();
             break;
         case 'check_NG':
             mode = 'view';
             g_mvm.normal_message('お帰りいただきました。。。');
-            new_hres.splice(idx, 1); idx = 0;
-            get_list_info();
+            _after_check();
             break;
     }
 }
+function _after_check(): void {
+    new_hres.splice(idx, 1); idx = 0;
+    get_list_info();
+    high_light_on(info_list, idx); 
+    hero_info_form_set(new_hres, info_detail, idx);
+}
+
 function isNG(): void {
     switch (mode) {
         case 'view':
