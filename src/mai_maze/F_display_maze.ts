@@ -1,13 +1,14 @@
-import { C_Point }  from "./C_Point"
-import { C_Range }  from "./C_Range";
-import { T_MzKind } from "./T_MzKind";
-import { C_Wall }   from "./C_Wall";
-import { g_maze, g_team, g_ds, g_mes } from "./global";
-import { T_Direction }          from "./T_Direction";
+import { C_Point }        from "../common/C_Point"
+import { C_Range }        from "../common/C_Range";
+import { T_MzKind }       from "../common/T_MzKind";
+import { T_Direction }    from "../common/T_Direction";
+import { C_Wall }         from "./C_Wall";
+import { g_ds,   g_debug_mode }  from "./global_for_maze";
+import { g_maze, g_team, g_mes } from "../common/global";
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z);
+    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z, g_debug_mode);
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
 export type T_DrowSet = {

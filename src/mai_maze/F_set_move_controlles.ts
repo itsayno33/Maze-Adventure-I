@@ -1,13 +1,15 @@
-import { hide_controlles }            from "./F_set_controlles";
-import { I_HopeAction }               from "./I_EventMap";
-import { T_MzKind }                   from "./T_MzKind";
+import { T_MzKind }                   from "../common/T_MzKind";
+import { I_HopeAction }               from "../common/I_EventMap";
+import { C_Point }                    from "../common/C_Point";
 import { T_CtlsMode }                 from "./T_CtlsMode";
+import { hide_controlles }            from "./F_set_controlles";
 import { instant_load, instant_save } from "./F_load_and_save";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { g_maze, g_team, g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global";
+import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw }                 from "./global_for_maze";
+import { g_maze, g_team }             from "../common/global";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -121,8 +123,8 @@ function clear_mask_around_the_team(): void {
     g_maze.clear_mask_around_the_team();
 }
 
-function change_unexp_to_floor(): void {
-    g_maze.change_unexp_to_floor();
+function change_unexp_to_floor(p: C_Point): void {
+    g_maze.change_unexp_to_floor(p);
 }
 
 function go_F() {
@@ -173,7 +175,7 @@ function move_check(r: I_HopeAction) {
 
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
-    change_unexp_to_floor();
+    change_unexp_to_floor(g_team.get_p());
     clear_mask_around_the_team();
     display_maze2D();
     display_maze3D();

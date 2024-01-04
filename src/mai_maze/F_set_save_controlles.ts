@@ -1,10 +1,11 @@
-import { T_CtlsMode }      from "./T_CtlsMode";
-import { hide_controlles } from "./F_set_controlles";
-import { g_ctls_mode, g_maze, g_mes, g_mvm, g_team, g_vsw }     from "./global";
-import { general_load, general_save, get_save_info } from "./F_load_and_save";
+import { _round }              from "../common/F_Math";
+import { C_UrlOpt }            from "../common/C_UrlOpt";
+import { T_CtlsMode }          from "./T_CtlsMode";
+import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { _round } from "./F_Math";
-import { C_UrlOpt } from "./C_UrlOpt";
+import { general_load, general_save, get_save_info }        from "./F_load_and_save";
+import { g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
+import { g_maze, g_team, g_mes }     from "../common/global";
 
 var   idx: number = 0;
 var   save_UL_list: HTMLUListElement;

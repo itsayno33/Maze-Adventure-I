@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "build": "webpack --mode=development",
-    "maze":  "webpack --mode=development --env entry=T:/vscode/ts/mai/src/mai_maze.ts --env outdir=T:/Apache24Root/mai/mai_maze/js",
+    "maze":  "webpack --mode=development --env entry=T:/vscode/ts/mai/src/mai_maze/mai_maze.ts  --env outdir=T:/Apache24Root/mai/mai_maze/js",
+    "guild": "webpack --mode=development --env entry=T:/vscode/ts/mai/src/mai_guild/mai_guild.ts --env outdir=T:/Apache24Root/mai/mai_guild/js",
     "start": "webpack serve --mode=development"
   },
   "keywords": [],

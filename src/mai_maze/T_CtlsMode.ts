@@ -1,4 +1,4 @@
-import {T_MakeEnumType} from "./T_MakeEnumType";
+import {T_MakeEnumType} from "../common/T_MakeEnumType";
 export const T_CtlsMode = {
     Nop:      0,
     Move:     1,

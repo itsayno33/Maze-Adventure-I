@@ -1,8 +1,8 @@
-import { C_Maze }     from "./C_Maze";
-import { T_MzKind }   from "./T_MzKind";
-import { C_Point }    from "./C_Point";
-import { T_EventMapResult, I_EventMap } from "./I_EventMap";
-import { C_Range }    from "./C_Range";
+import { C_Maze }     from "../common/C_Maze";
+import { T_MzKind }   from "../common/T_MzKind";
+import { C_Point }    from "../common/C_Point";
+import { C_Range }    from "../common/C_Range";
+import { T_EventMapResult, I_EventMap } from "../common/I_EventMap";
 
 export class C_MazeMap implements I_EventMap {
     protected my_layer:number = 1;

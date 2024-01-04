@@ -20,7 +20,12 @@ module.exports = (env) => {
 					test: /\.ts$/,
 					loader: 'ts-loader', //ts-loader使うよ
 					// use: 'ts-loader',
-					exclude: /node_modules/
+//					exclude: /node_modules/
+					exclude: [
+						/node_modules/,
+						/_old_src/,
+						/_ord_src/,
+					],
 				}
 			]
 		}
