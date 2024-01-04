@@ -1,4 +1,4 @@
-import { hide_all_menu, high_light_on } from "./F_default_menu";
+import { calc_cursor_pos_D, calc_cursor_pos_U, hide_all_menu, high_light_on } from "./F_default_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { display_appd_menu } from "./F_appd_menu";
 import { g_mvm }             from "./global_for_guild";
@@ -51,12 +51,12 @@ export function display_guild_menu(): void {
 
 function do_U(): void {
     g_mvm.clear_message();
-    idx = (idx > 0) ? --idx : idx;
+    idx = calc_cursor_pos_U(idx, menu.children.length, 1);
     high_light_on(menu, idx); 
 }
 function do_D(): void {
     g_mvm.clear_message();
-    idx = (idx < menu.children.length - 1) ? ++idx : idx;
+    idx = calc_cursor_pos_D(idx, menu.children.length, 1);
     high_light_on(menu, idx); 
 }
 
