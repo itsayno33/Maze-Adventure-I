@@ -1,7 +1,11 @@
 import { 
     hide_default_contrlles, 
     display_default_controlles, 
-    hide_all_menu
+    hide_all_menu,
+    calc_cursor_pos_L,
+    calc_cursor_pos_R,
+    calc_cursor_pos_U,
+    calc_cursor_pos_D
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
@@ -94,53 +98,28 @@ function do_U(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    idx = (idx > 0) ? --idx : idx;
+    idx = calc_cursor_pos_U(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx); 
 }
 function do_D(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    idx = (idx < info_list.children.length - 1) ? ++idx : idx;
+    idx = calc_cursor_pos_D(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);  
 }
 function do_L(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
-    if (idx  > info_list_row - 1) {
-        // 最前列(左端)以外
-        idx -= info_list_row;
-    } else {
-        // 最前列(左端)
-        const  vurtual_list_length = info_list_col * info_list_row;
-        idx += vurtual_list_length - info_list_row;
-        while (idx > info_list.children.length - 1) {
-            idx -= info_list_row;
-            if (idx < 0) {idx = 0; break;}
-        }
-    } 
+    idx = calc_cursor_pos_L(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 function do_R(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
-    if (idx  < info_list.children.length - info_list_row) { 
-        // 最終列(右端)以外
-        idx += info_list_row;
-    } else {
-        // 最終列(右端)
-        const  old_idx = idx;
-        const  vurtual_list_length = info_list_col * info_list_row;
-        idx -= vurtual_list_length  - info_list_row;
-        if (idx < 0) {
-            idx += info_list_row;
-            if (idx < 0 || idx > info_list.children.length - 1) idx = _floor((old_idx + 1) / info_list_col, 0);
-        }
-    } 
+    idx = calc_cursor_pos_R(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 

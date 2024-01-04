@@ -1,6 +1,7 @@
 import { hide_guild_menu, display_guild_menu } from "./F_guild_menu";
 import { hide_appd_menu } from "./F_appd_menu";
 import { hide_hres_menu } from "./F_hres_menu";
+import { _ceil, _floor } from "../common/F_Math";
 
 export function hide_all_menu(): void {
     // hide関数が揃うまでの暫定処置(表示だけ消す。入力のイベント処理は無視)
@@ -59,7 +60,7 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
             p.style.backgroundColor = bg_color;
             p.style.display         = 'block';
         } else {
-            p.style.display    =  'none';
+            p.style.display         = 'none';
         }
     }
 }
@@ -181,3 +182,69 @@ function key_press_function(e: KeyboardEvent):void  {
             return;
     }
 }
+
+
+export function calc_cursor_pos_U(idx: number, list_length: number, list_col_size: number): number {
+    const list_row_size = _ceil(list_length / list_col_size, 0);
+    const cur_row = idx % list_row_size;
+    if (cur_row !== 0) {
+        // 最上段(上端)以外
+        --idx;
+    } else {
+        // 最上段(上端)
+        idx += list_row_size - 1;
+        while (idx > list_length - 1) {
+            --idx;
+        }
+    } 
+    return idx;
+}
+export function calc_cursor_pos_D(idx: number, list_length: number, list_col_size: number): number {
+    const list_row_size = _ceil(list_length / list_col_size, 0);
+    const cur_row = idx % list_row_size;
+    if (cur_row !== list_row_size - 1 && idx !== list_length - 1) {
+        // 最下段(下端)以外
+        ++idx;
+    } else {
+        // 最下段(下端)
+        idx -= list_row_size - 1;
+        while (idx % list_row_size !== 0 && idx < list_length - 1) {
+            ++idx;
+        }
+    } 
+    return idx;
+}
+export function calc_cursor_pos_L(idx: number, list_length: number, list_col_size: number): number {
+    const list_row_size = _ceil(list_length / list_col_size, 0);
+    if (idx  > list_row_size - 1) {
+        // 最前列(左端)以外
+        idx -= list_row_size;
+    } else {
+        // 最前列(左端)
+        const  vurtual_list_length = list_col_size * list_row_size;
+        idx += vurtual_list_length - list_row_size;
+        while (idx > list_length - 1) {
+            idx -= list_row_size;
+            if (idx < 0) {idx = 0; break;}
+        }
+    } 
+    return idx;
+}
+export function calc_cursor_pos_R(idx: number, list_length: number, list_col_size: number): number {
+    const list_row_size = _ceil(list_length / list_col_size, 0);
+    if (idx  < list_length - list_row_size) { 
+        // 最終列(右端)以外
+        idx += list_row_size;
+    } else {
+        // 最終列(右端)
+        const  old_idx = idx;
+        const  vurtual_list_length = list_col_size * list_row_size;
+        idx -= vurtual_list_length  - list_row_size;
+        if (idx < 0) {
+            idx += list_row_size;
+            if (idx < 0 || idx > list_length - 1) idx = _floor((old_idx + 1) / list_col_size, 0);
+        }
+    } 
+    return idx;
+}
+
