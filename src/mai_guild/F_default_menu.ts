@@ -1,4 +1,5 @@
 import { hide_guild_menu, display_guild_menu } from "./F_guild_menu";
+import { hide_appd_menu } from "./F_appd_menu";
 import { hide_hres_menu } from "./F_hres_menu";
 
 export function hide_all_menu(): void {
@@ -16,6 +17,7 @@ export function hide_all_menu(): void {
 
     hide_guild_menu();
     hide_hres_menu();
+    hide_appd_menu();
 }
 
 export function init_display_menu(): void {

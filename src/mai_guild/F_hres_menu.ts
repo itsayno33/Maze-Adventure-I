@@ -5,10 +5,10 @@ import {
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { _round }             from "../common/F_Math";
-import { high_light_on }      from "./F_default_menu";
-import { g_mvm, g_hres }      from "./global_for_guild";
-import { display_guild_menu } from "./F_guild_menu";
+import { _ceil, _floor, _round } from "../common/F_Math";
+import { high_light_on }         from "./F_default_menu";
+import { g_mvm, g_hres }         from "./global_for_guild";
+import { display_guild_menu }    from "./F_guild_menu";
 
 var info_list: HTMLUListElement;
 var info_list_col: number;
@@ -68,7 +68,8 @@ export function display_hres_menu(): void {
         li.innerHTML = `${hero.name()}<p></p>`;
         info_list.appendChild(li);
     }
-    info_list_col = Number(info_list.style.getPropertyValue('column-count'));
+
+    info_list_col = Number(window.getComputedStyle(info_list).columnCount); 
 
     const form = document.getElementById('hres_hero_info') as HTMLUListElement;
     if (form === null) return;
@@ -107,11 +108,18 @@ function do_L(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
-    if (idx > limit - 1) {
-        idx -= limit;
+    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
+    if (idx  > info_list_row - 1) {
+        // 最前列(左端)以外
+        idx -= info_list_row;
     } else {
-        idx += info_list.children.length  - limit;
+        // 最前列(左端)
+        const  vurtual_list_length = info_list_col * info_list_row;
+        idx += vurtual_list_length - info_list_row;
+        while (idx > info_list.children.length - 1) {
+            idx -= info_list_row;
+            if (idx < 0) {idx = 0; break;}
+        }
     } 
     high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
@@ -119,12 +127,21 @@ function do_R(): void {
     if (g_hres.length < 1) return;
     g_mvm.clear_message();
 
-    const limit = _round((info_list.children.length - 1) / info_list_col, 0);
-    if (idx < info_list.children.length - limit) {
-        idx += limit;
+    const info_list_row = _ceil((info_list.children.length - 0) / info_list_col, 0);
+    if (idx  < info_list.children.length - info_list_row) { 
+        // 最終列(右端)以外
+        idx += info_list_row;
     } else {
-        idx -= info_list.children.length  - limit;
+        // 最終列(右端)
+        const  old_idx = idx;
+        const  vurtual_list_length = info_list_col * info_list_row;
+        idx -= vurtual_list_length  - info_list_row;
+        if (idx < 0) {
+            idx += info_list_row;
+            if (idx < 0 || idx > info_list.children.length - 1) idx = _floor((old_idx + 1) / info_list_col, 0);
+        }
     } 
+    high_light_on(info_list, idx);  hero_info_form_set(g_hres, info_detail, idx);
 }
 
 function isOK(): void { 
