@@ -26,7 +26,8 @@ export function make_hero(): C_Hero {
 
     let   hh: JSON_Hero         = {};
     let   hv: JSON_Hero_Value   = {};
-    let   ha: JSON_Hero_Ability = {p:{}, m:{}};
+    let   ha_p: JSON_Hero_Ability = {};
+    let   ha_m: JSON_Hero_Ability = {};
 
     hh.name   = '冒険者 #' + _irand(0,4093).toString(16).padStart(3, 'x');
     hh.sex    = _irand(0,1);        
@@ -42,12 +43,13 @@ export function make_hero(): C_Hero {
     hh.val    = hv;
 
     for (let abi in make_abi_ave) {
-            ha.p[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
+            ha_p[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
     } 
     for (let abi in make_abi_ave) {
-            ha.m[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
+            ha_m[abi] = make_abi_ave[abi] + _irand(-make_abi_ave[abi] /2, make_abi_ave[abi] /2);
     } 
-    hh.abi = {bsc: ha, ttl: ha, now: ha};
+    hh.abi_p = {bsc: ha_p, ttl: ha_p, now: ha_p};
+    hh.abi_m = {bsc: ha_m, ttl: ha_m, now: ha_m};
 
     return new C_Hero(hh);    
 }
@@ -62,33 +64,40 @@ function level_up_hero(hero: C_Hero): C_Hero {return hero;}
 // TTLのアビリティ(str,pwr,vit,dex,agi,tec,luk)を
 // 基に計算したボーナスを加算する
 function calc_abi_ttl_hero(hero: C_Hero): C_Hero {
-    const abi = hero.encode().abi?.bsc;
-    if (abi === undefined) return hero;
+    const abi_p = hero.encode().abi_p?.bsc;
+    if (abi_p === undefined) return hero;
 
-    let ttl: JSON_Hero_Ability = {p:{}, m:{}};
-    for (let idx in abi) { // 暫定版。本来は装備等の加減算を行う
-        ttl.p[idx] = abi.p[idx];
-        ttl.m[idx] = abi.m[idx];
+    let ttl_p: JSON_Hero_Ability = {};
+    for (let idx in abi_p) { // 暫定版。本来は装備等の加減算を行う
+        ttl_p[idx] = abi_p[idx];
     }
 
-    const tab = new C_HeroAbility(ttl);
+    const abi_m = hero.encode().abi_m?.bsc;
+    if (abi_m === undefined) return hero;
 
-    ttl.p.xp +=  tab.xp_ttladd_p();
-    ttl.m.xp +=  tab.xp_ttladd_m();
+    let ttl_m: JSON_Hero_Ability = {};
+    for (let idx in abi_m) { // 暫定版。本来は装備等の加減算を行う
+        ttl_m[idx] = abi_m[idx];
+    }
 
-    ttl.p.atk += tab.atk_ttladd_p();
-    ttl.m.atk += tab.atk_ttladd_m();
+    const tab_p = new C_HeroAbility(ttl_p);
+    ttl_p.xp  += tab_p.xp_ttladd();
+    ttl_p.atk += tab_p.atk_ttladd();
+    ttl_p.def += tab_p.def_ttladd();
+    ttl_p.quc += tab_p.quc_ttladd();
+    ttl_p.cnc += tab_p.cnc_ttladd();
 
-    ttl.p.def += tab.def_ttladd_p();
-    ttl.m.def += tab.def_ttladd_m();
+    const tab_m = new C_HeroAbility(ttl_m);
+    ttl_m.xp  += tab_m.xp_ttladd();
+    ttl_m.atk += tab_m.atk_ttladd();
+    ttl_m.def += tab_m.def_ttladd();
+    ttl_m.quc += tab_m.quc_ttladd();
+    ttl_m.cnc += tab_m.cnc_ttladd();
 
-    ttl.p.quc += tab.quc_ttladd_p();
-    ttl.m.quc += tab.quc_ttladd_m();
-
-    ttl.p.cnc += tab.cnc_ttladd_p();
-    ttl.m.cnc += tab.cnc_ttladd_m();
-
-    hero.decode({abi: {ttl: ttl, now: ttl}});
+    hero.decode({
+        abi_p: {ttl: ttl_p, now: ttl_p}, 
+        abi_m: {ttl: ttl_m, now: ttl_m},
+    });
 
     return hero;
 }

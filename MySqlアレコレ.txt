@@ -44,5 +44,136 @@ try {
 
 
 
+JSON型について
+
+https://qiita.com/4th/items/68aa9337929047efe7b7
+
+
+データのinsert
+INSERT INTO gadget (j) VALUES
+  ( JSON_OBJECT('name', 'keyboard',  'price', '30000')  )
+  , ( JSON_OBJECT('name', 'mouse',  'price', '10000')  )
+  , ( JSON_OBJECT('name', 'monitor',  'price', '25000')  )
+  , ( '{"name":"desk",  "price":"32000"}' )
+  , ( '{"name":"chair",  "price":"6000"}' );
+
+
+テーブル定義を確認する。
+DESC gadget;
++-------+------+------+-----+---------+----------------+
+| Field | Type | Null | Key | Default | Extra          |
++-------+------+------+-----+---------+----------------+
+| id    | int  | NO   | PRI | NULL    | auto_increment |
+| j     | json | YES  |     | NULL    |                |
++-------+------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+
+
+
+値の抽出
+キー部分のnameとpriceを取り出す。
+SELECT JSON_EXTRACT(j, '$.name', '$.price') FROM gadget;
++--------------------------------------+
+| JSON_EXTRACT(j, '$.name', '$.price') |
++--------------------------------------+
+| ["keyboard", "30000"]                |
+| ["mouse", "10000"]                   |
+| ["monitor", "25000"]                 |
+| ["desk", "32000"]                    |
+| ["chair", "6000"]                    |
++--------------------------------------+
+
+
+
+値の抽出2
+WHEREで取り出す。
+SELECT * FROM gadget WHERE j->>'$.name' = 'keyboard'; /* ->> を使うと全体を囲うコーテーションが付かない /*
++----+----------------------------------------+
+| id | j                                      |
++----+----------------------------------------+
+|  1 | {"name": "keyboard", "price": "30000"} |
++----+----------------------------------------+
+
+
+
+'$.name'	nameの値
+'$[0]'		配列の一番頭を指定
+'$.a[1]'	{"a":[]}となっているとき、a配列の2番目を指定
+'$.*'		名前のワイルドカード(全名前が対象。名前のないものは無視)
+'$[*]'		配列のワイルドカード、全配列の要素が対象
+'$**'		あらゆるパスの中から選び出す
+
+
+SELECT j->'$.name' FROM gadget;
++-------------+
+| j->'$.name' |
++-------------+
+| "keyboard"  |
+| "mouse"     |
+| "monitor"   |
+| "desk"      |
+| "chair"     |
++-------------+
+
+
+
+SELECT j->>'$.name' FROM gadget;
++--------------+
+| j->>'$.name' |
++--------------+
+| keyboard     |
+| mouse        |
+| monitor      |
+| desk         |
+| chair        |
++--------------+
+
+
+
+JSONにJSON配列を追加
+
+UPDATE gadget SET j = JSON_INSERT(j, '$.category', JSON_ARRAY("shop", "amazon") ) WHERE id IN (3,5);
+
+もしくは
+
+SELECT JSON_INSERT('{"a":"xxx"}', '$.c', CAST('["shop", "ヨドバシカメラ"]' AS JSON) ) AS j;
++-----------------------------------------------+
+| j                                             |
++-----------------------------------------------+
+| {"a": "xxx", "c": ["shop", "ヨドバシカメラ"]} |
++-----------------------------------------------+
+
+JSON_INSERT() は既存の値を置き換えずに値を挿入する。
+JSON_SET() は既存の値を置き換え、存在しない値を追加する。
+JSON_REPLACE() は既存の値のみを置き換える。
+
+
+
+
+
+
+JSON値削除
+
+UPDATE gadget SET j = JSON_INSERT(j, '$.place', JSON_ARRAY("akihabara", "kashiwa")) WHERE id=2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+SELECT j FROM gadget WHERE id=2;
++------------------------------------------------------------------------+
+| j                                                                      |
++------------------------------------------------------------------------+
+| {"name": "mouse", "place": ["akihabara", "kashiwa"], "price": "10000"} |
++------------------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+
+
+
+
+
+
+
 
 

@@ -11,7 +11,8 @@ export type JSON_Hero = {
     state?:     number; 
     lv?:        number; 
     val?:       JSON_Hero_Value;
-    abi?:       {bsc?: JSON_Hero_Ability, ttl?: JSON_Hero_Ability, now?: JSON_Hero_Ability};
+    abi_p?:       {bsc?: JSON_Hero_Ability, ttl?: JSON_Hero_Ability, now?: JSON_Hero_Ability};
+    abi_m?:       {bsc?: JSON_Hero_Ability, ttl?: JSON_Hero_Ability, now?: JSON_Hero_Ability};
     is_alive?:  string|boolean;
 }
 
@@ -49,7 +50,8 @@ export class C_Hero {
     protected lv:       number; 
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
     protected val:      JSON_Hero_Value;
-    protected abi:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
+    protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
+    protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
 
     protected is_alive: boolean;
 
@@ -64,7 +66,8 @@ export class C_Hero {
         this.state      = 0; 
         this.lv         = 0;
         this.val        = {};
-        this.abi        = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
+        this.abi_p      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
+        this.abi_m      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
         this.is_alive   = true;
         if (a !== undefined) this.decode(a);
     }
@@ -89,7 +92,8 @@ export class C_Hero {
             state:     this.state, 
             lv:        this.lv, 
             val:       this.val,
-            abi:      {bsc: this.abi.bsc.encode()},
+            abi_p:    {bsc: this.abi_p.bsc.encode()},
+            abi_m:    {bsc: this.abi_m.bsc.encode()},
             is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
@@ -115,11 +119,17 @@ export class C_Hero {
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }
-        if (a.abi     !== undefined) {
-            const v = a.abi;
-            if (v.bsc !== undefined) this.abi.bsc.decode(v.bsc);
-            if (v.ttl !== undefined) this.abi.ttl.decode(v.ttl);
-            if (v.now !== undefined) this.abi.now.decode(v.now);
+        if (a.abi_p   !== undefined) {
+            const v = a.abi_p;
+            if (v.bsc !== undefined) this.abi_p.bsc.decode(v.bsc);
+            if (v.ttl !== undefined) this.abi_p.ttl.decode(v.ttl);
+            if (v.now !== undefined) this.abi_p.now.decode(v.now);
+        }
+        if (a.abi_m   !== undefined) {
+            const v = a.abi_m;
+            if (v.bsc !== undefined) this.abi_m.bsc.decode(v.bsc);
+            if (v.ttl !== undefined) this.abi_m.ttl.decode(v.ttl);
+            if (v.now !== undefined) this.abi_m.now.decode(v.now);
         }
         return this;
     }
