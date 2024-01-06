@@ -1,5 +1,7 @@
-export const g_url_get_maze    = 0;
-export const g_url_check_JSON  = 1;
+export const g_url_get_save    = 0;
+export const g_url_get_maze    = 1;
+export const g_url_get_guld    = 2;
+export const g_url_check_JSON  = 3;
 export const g_url: string[] = new Array(2);
 
 export var g_pid: number[] = new Array(1) as number[];
