@@ -244,4 +244,18 @@ export class C_Team implements I_Exist {
     
         return this;
     }
+    public static encode_all(all_team: C_Team[]): JSON_Team[] {
+        const all_team_data: JSON_Team[] = [];
+        for (let team of all_team) {
+            all_team_data.push(team.encode());
+        }
+        return all_team_data;
+    }
+    public static decode_all(all_team_data: JSON_Team[]): C_Team[] {
+        const all_team: C_Team[] = [];
+        for (let team_data of all_team_data) {
+            all_team.push((new C_Team()).decode(team_data));
+        }
+        return all_team;
+    }
 }

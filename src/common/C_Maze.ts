@@ -394,8 +394,8 @@ export class C_Maze {
             mask:    mask_str,
         }
     }
-    public decode(a: JSON_Maze|undefined): void {
-        if (a === undefined) return;
+    public decode(a: JSON_Maze|undefined): C_Maze {
+        if (a === undefined) return this;
 
         if (a.id      !== undefined) this.maze_id = a.id;
         if (a.save_id !== undefined) this.save_id = a.save_id;
@@ -458,6 +458,21 @@ export class C_Maze {
                 }
             }      
         }
+        return this;
+    }
+    public static encode_all(all_maze: C_Maze[]): JSON_Maze[] {
+        const all_maze_data: JSON_Maze[] = [];
+        for (let maze of all_maze) {
+            all_maze_data.push(maze.encode());
+        }
+        return all_maze_data;
+    }
+    public static decode_all(all_maze_data: JSON_Maze[]): C_Maze[] {
+        const all_maze: C_Maze[] = [];
+        for (let maze_data of all_maze_data) {
+            all_maze.push((new C_Maze({})).decode(maze_data));
+        }
+        return all_maze;
     }
 }
 function  _min(a: number, b: number): number {
