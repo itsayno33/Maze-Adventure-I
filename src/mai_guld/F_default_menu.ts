@@ -1,7 +1,8 @@
 import { hide_guild_menu, display_guild_menu } from "./F_guild_menu";
 import { hide_appd_menu } from "./F_appd_menu";
 import { hide_hres_menu } from "./F_hres_menu";
-import { _ceil, _floor } from "../common/F_Math";
+import { hide_save_menu } from "./F_save_menu";
+import { _ceil, _floor }  from "../common/F_Math";
 
 export function hide_all_menu(): void {
     // hide関数が揃うまでの暫定処置(表示だけ消す。入力のイベント処理は無視)
@@ -19,6 +20,7 @@ export function hide_all_menu(): void {
     hide_guild_menu();
     hide_hres_menu();
     hide_appd_menu();
+    hide_save_menu();
 }
 
 export function init_display_menu(): void {

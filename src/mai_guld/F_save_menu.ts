@@ -49,7 +49,8 @@ export function display_save_menu(): void {
     if (div === null) return;
     div.style.display = 'block';
 
-    data_list = update_data_list();
+    data_list = []; //data_list = update_data_list();
+
     /*
     if (data_list.length < 1) {
         document.getElementById('save_list')       ?.style.setProperty('display', 'none');
@@ -169,10 +170,17 @@ function append_elm(form: HTMLUListElement, elm: {[key: string]: HTMLLIElement},
 }
 
 function update_info_detail(idx: number) {
-    info_detail['title']    .innerHTML = data_list[idx].title;
-    info_detail['detail']   .innerHTML = data_list[idx].detail;
-    info_detail['point']    .innerHTML = data_list[idx].point;
-    info_detail['save_time'].innerHTML = data_list[idx].save_time.toLocaleString();
+    if (idx < data_list.length) {
+        info_detail['title']    .innerHTML = data_list[idx].title;
+        info_detail['detail']   .innerHTML = data_list[idx].detail;
+        info_detail['point']    .innerHTML = data_list[idx].point;
+        info_detail['save_time'].innerHTML = data_list[idx].save_time.toLocaleString();
+    } else {
+        info_detail['title']    .innerHTML = '新規保存';
+        info_detail['detail']   .innerHTML = ' ';
+        info_detail['point']    .innerHTML = ' --- ';
+        info_detail['save_time'].innerHTML = ' --- ';
+    }
 }
 
 function do_U(): void {
@@ -230,7 +238,7 @@ function isOK(): void {
 function post_save_data(): boolean {
     const  opt = new C_UrlOpt();
     const  jsonObj = general_save(opt);
-    return jsonObj.ecode == 0;
+    return false; // return jsonObj.ecode == 0;
 }
 
 function isNG(): void {

@@ -42,7 +42,9 @@ export function init_debug_mode(): void {
     window.addEventListener("keydown",(event)=>{
         switch (event.key) {
             case "Escape":
+            case "Key@":
                 btn.click();
+                break;
         }
     })
 } 
