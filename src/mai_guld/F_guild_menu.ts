@@ -1,6 +1,7 @@
 import { calc_cursor_pos_D, calc_cursor_pos_U, hide_all_menu, high_light_on } from "./F_default_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { display_appd_menu } from "./F_appd_menu";
+import { display_save_menu } from "./F_save_menu";
 import { g_mvm }             from "./global_for_guild";
 
 import { 
@@ -73,7 +74,9 @@ function isOK(): void {
             display_appd_menu();
             break;
         case 'guild_load': break;
-        case 'guild_save': break;
+        case 'guild_save': 
+            display_save_menu();
+            break;
         case 'guild_to_maze': break;
     }
 }

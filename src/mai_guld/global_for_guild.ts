@@ -6,7 +6,7 @@ export var g_pid: number[] = new Array(1) as number[];
 
 export var g_debug_mode: boolean = false;
 
-import { init_after_loaded_DOM_in_common } from "../common/global";
+import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
 import { init_display_menu } from "./F_default_menu";
 
 import { C_GldViewMessage }  from "./C_GldViewMessage";
@@ -14,6 +14,15 @@ export var g_mvm: C_GldViewMessage;
 
 import { C_Hero }            from "../common/C_Hero";
 export const g_hres = [] as C_Hero[];
+
+export function init_before_new_games(player_id: number): void {
+    // 本来はここでNew Gameのデータをサーバーから読み込む感じ
+    // get_mai_guld();
+
+    g_save.all_maze = [g_maze];
+    g_save.all_team = [g_team];
+    g_save.all_guld = [g_guld];
+}
 
 export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common();

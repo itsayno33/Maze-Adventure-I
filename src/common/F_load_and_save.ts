@@ -5,9 +5,13 @@ import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメン
 import { _round, _min, _max  }    from "../common/F_Math";
 import { C_UrlOpt }               from "../common/C_UrlOpt";          
 import { POST_and_get_JSON, POST_and_move_page }      from "../common/F_POST";
-import { g_save, g_maze, g_team, g_guld, g_mes, g_pid, g_url, g_url_get_maze, g_url_check_JSON } from "../common/global";
+import { 
+    g_save, g_maze, g_team, g_guld, 
+    g_mes, g_pid, 
+    g_url, g_url_get_maze, g_url_get_save, g_url_check_JSON 
+} from "../common/global";
 
-type T_callback = (jsonObj:any)=>void;
+type T_callback = (jsonObj:any)=>(boolean|void);
 
 export function get_mai_maze(callback?: T_callback): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
@@ -34,7 +38,7 @@ export function get_save_info(callback?: T_callback): any {
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_pid[0]);
 
-    return POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -54,27 +58,27 @@ export function get_save_info(callback?: T_callback): any {
     });
 }
 
-export function instant_load(callback?: T_callback): void {
+export function instant_load(callback?: T_callback): any {
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_load'); 
-    __auto_load(opt, callback);
+    return __auto_load(opt, callback);
 }
 
-export function UD_load(callback?: T_callback): void {
+export function UD_load(callback?: T_callback): any {
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_load'); 
-    __auto_load(opt, callback);
+    return __auto_load(opt, callback);
 }
 
-export function general_load(opt: C_UrlOpt, callback?: T_callback): void {
+export function general_load(opt: C_UrlOpt, callback?: T_callback): any {
     opt.set('mode',        'load'); 
-    __auto_load(opt, callback);
+    return __auto_load(opt, callback);
 }
 
-function __auto_load(opt: C_UrlOpt, callback?: T_callback): void {
+function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
     opt.set('pid',         g_pid[0]); 
 
-    POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -86,28 +90,30 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): void {
             }
         
             if (callback !== undefined) callback(jsonObj);
+            return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            return undefined;
         }
     });
 }
 
 
-export function instant_save(callback?: T_callback): void { 
+export function instant_save(callback?: T_callback): any { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_save'); 
-    __auto_save(opt, callback);
+    return __auto_save(opt, callback);
 }
 
-export function UD_save(callback?: T_callback): void { 
+export function UD_save(callback?: T_callback): any { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_save'); 
-    __auto_save(opt, callback);
+    return  __auto_save(opt, callback);
 }
 
-export function general_save(opt: C_UrlOpt, callback?: T_callback): void {
+export function general_save(opt: C_UrlOpt, callback?: T_callback): any {
     opt.set('mode',        'save'); 
-    __auto_save(opt, callback);
+    return __auto_save(opt, callback);
 }
 
 function __auto_save(opt: C_UrlOpt, callback?: T_callback): any { 
@@ -119,27 +125,27 @@ function __auto_save(opt: C_UrlOpt, callback?: T_callback): any {
     opt.set('maze',        maze_data);
     opt.set('team',        team_data);
     opt.set('guld',        guld_data);
-
 /*
-    POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+    //            alert_maze_info(jsonObj?.maze);
+                alert_team_info(jsonObj?.team);
+                alert_heroes_info(jsonObj?.team?.heroes);
+            }
+            if (callback !== undefined) callback(jsonObj);
             g_mes.normal_message('正常にセーブされました');
+            return jsonObj;
         } else {
             g_mes.warning_message("セーブできませんでした\n" + jsonObj.emsg);
 //            alert(jsonObj.emsg);
+            return undefined;
         }
         
-        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
-        if (monitor) {
-//            alert_maze_info(jsonObj?.maze);
-            alert_team_info(jsonObj?.team);
-            alert_heroes_info(jsonObj?.team?.heroes);
-        }
-        if (callback !== undefined) callback(jsonObj);
-        return jsonObj;
     });
 */
-    POST_and_move_page(g_url[g_url_check_JSON], opt);
+    POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};
 }
 
 /*

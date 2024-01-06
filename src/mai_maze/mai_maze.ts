@@ -16,7 +16,8 @@ window.addEventListener('DOMContentLoaded', function() {
 // 以下、HTML側から呼び出せる関数の定義
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
-    get_init_data(url_baze: string, player_id: number): void;
+    get_init_data: (url_baze: string, player_id: number)=>void;
+    new_game:      (url_baze: string, player_id: number)=>void; // 暫定版開始処理
 }
 // windowオブジェクトにインターフェースの定義を追加
 declare global {
@@ -33,6 +34,11 @@ const tsCaller: I_TsCall = (() => {
             g_url[g_url_check_JSON] = url_baze + "/check_JSON.php";
             g_pid[0] = player_id;
         },
+        // 暫定版開始処理
+        new_game: (url_baze: string, player_id: number): void => {
+            tsCaller.get_init_data(url_baze, player_id);
+//            init_before_new_games(player_id);
+        } , 
     };
 })();
 // windowオブジェクトに追加したインターフェースに上記の実装を代入
