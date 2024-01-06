@@ -1,0 +1,1 @@
+export class C_Guild {public encode(){}}
