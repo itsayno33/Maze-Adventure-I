@@ -1,8 +1,8 @@
 import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
-import { C_Point }     from "./C_Point";
-import { C_Walker }    from "./C_Walker";
-import { T_Direction } from "./T_Direction";
-import { C_Hero, JSON_Hero }      from "./C_Hero";
+import { C_Point, JSON_Point } from "./C_Point";
+import { C_Walker }            from "./C_Walker";
+import { T_Direction }         from "./T_Direction";
+import { C_Hero, JSON_Hero }   from "./C_Hero";
 
 type __init_arg = {
     id?:      number, 
@@ -21,7 +21,7 @@ export type JSON_Team = {
     id?:      number, 
     save_id?: number, 
     name?:    string, 
-    point?:  {x: number, y: number, z: number}, 
+    point?:   JSON_Point, 
     x?:       number,
     y?:       number,
     z?:       number,

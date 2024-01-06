@@ -7,7 +7,9 @@ import { C_UrlOpt }               from "../common/C_UrlOpt";
 import { POST_and_get_JSON, POST_and_move_page }      from "../common/F_POST";
 import { g_save, g_maze, g_team, g_guld, g_mes, g_pid, g_url, g_url_get_maze, g_url_check_JSON } from "../common/global";
 
-export function get_mai_maze(callback?: (jsonObj:any)=>void): void {
+type T_callback = (jsonObj:any)=>void;
+
+export function get_mai_maze(callback?: T_callback): void {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
  
     POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
@@ -27,12 +29,12 @@ export function get_mai_maze(callback?: (jsonObj:any)=>void): void {
     });
 }
 
-export async function get_save_info() {
+export function get_save_info(callback?: T_callback): any {
     const opt = new C_UrlOpt();
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_pid[0]);
 
-    return await POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -42,6 +44,8 @@ export async function get_save_info() {
                 alert_team_info(jsonObj?.team);
                 alert_heroes_info(jsonObj?.team?.heroes);
             }
+
+            if (callback !== undefined) callback(jsonObj);
             return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
@@ -50,24 +54,24 @@ export async function get_save_info() {
     });
 }
 
-export function instant_load(callback?: (jsonObj:any)=>void): void {
+export function instant_load(callback?: T_callback): void {
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_load'); 
     __auto_load(opt, callback);
 }
 
-export function UD_load(callback?: (jsonObj:any)=>void): void {
+export function UD_load(callback?: T_callback): void {
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_load'); 
     __auto_load(opt, callback);
 }
 
-export function general_load(opt: C_UrlOpt, callback?: (jsonObj:any)=>void): void {
+export function general_load(opt: C_UrlOpt, callback?: T_callback): void {
     opt.set('mode',        'load'); 
     __auto_load(opt, callback);
 }
 
-function __auto_load(opt: C_UrlOpt, callback?: (jsonObj:any)=>void): void {
+function __auto_load(opt: C_UrlOpt, callback?: T_callback): void {
     opt.set('pid',         g_pid[0]); 
 
     POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
@@ -84,30 +88,29 @@ function __auto_load(opt: C_UrlOpt, callback?: (jsonObj:any)=>void): void {
             if (callback !== undefined) callback(jsonObj);
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
-            alert(jsonObj.emsg);
         }
     });
 }
 
 
-export function instant_save(callback?: (jsonObj:any)=>void): void { 
+export function instant_save(callback?: T_callback): void { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_save'); 
     __auto_save(opt, callback);
 }
 
-export function UD_save(callback?: (jsonObj:any)=>void): void { 
+export function UD_save(callback?: T_callback): void { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_save'); 
     __auto_save(opt, callback);
 }
 
-export function general_save(opt: C_UrlOpt, callback?: (jsonObj:any)=>void): void {
+export function general_save(opt: C_UrlOpt, callback?: T_callback): void {
     opt.set('mode',        'save'); 
     __auto_save(opt, callback);
 }
 
-function __auto_save(opt: C_UrlOpt, callback?: (jsonObj:any)=>void): any { 
+function __auto_save(opt: C_UrlOpt, callback?: T_callback): any { 
     const maze_data = JSON.stringify(g_maze.encode(), null, "\t");
     const team_data = JSON.stringify(g_team.encode(), null, "\t");
     const guld_data = JSON.stringify(g_guld.encode(), null, "\t");

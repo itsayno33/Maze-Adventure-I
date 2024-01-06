@@ -14,8 +14,9 @@ export type JSON_Maze = {
     size_z?:  number,
     maze?:    string, 
     mask?:    string, 
-    objs?:    object[],
+    objs?:    string[],
 }
+
 
 export function alert_maze_info(a: JSON_Maze|undefined): void {
     if (a === undefined) return;
@@ -401,7 +402,7 @@ export class C_Maze {
         if (a.save_id !== undefined) this.save_id = a.save_id;
         if (a.floor   !== undefined) this.floor   = a.floor;
         if (a.title   !== undefined) this.title   = a.title;
-        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
+//        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
 
         if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
             this.size  = new C_Range(

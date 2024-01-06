@@ -61,44 +61,36 @@ function readStream(stream: ReadableStream): any {
       // Read some more, and call this function again
       return reader.read().then(processText);
     });
-  }
-
-export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
-    const form = create_form(url, opt);
-    document.body.appendChild(form);
-    form.submit();
 }
 
 
+export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
+    create_form(url, opt).submit();
+}
+
 function create_form(url: string, opt: C_UrlOpt): HTMLFormElement {
-    const form = document.createElement('form') as HTMLFormElement;
-    form.setAttribute('id',     'dummy_form_' + new Date().valueOf().toString());
-    form.setAttribute('method', 'POST');
-    form.setAttribute('action',  url);
-    form.style.setProperty('display', 'none');
+    const form  = document.createElement('form') as HTMLFormElement;
+
+    form.id     = 'dummy_form_' + new Date().valueOf().toString();
+    form.method = 'POST';
+    form.action =  url;
+    form.style.display = 'none';
 
     for (var key of opt.get_keys()) {
-        create_input(form, key, opt.get(key));
+        create_input(form, form.id, key, opt.get(key));
     }
     document.body.appendChild(form);
     return form;
 }
 
-function create_input(form: HTMLFormElement, name: string, value: string): HTMLInputElement {
-    var fid: string;
+function create_input(form: HTMLFormElement, fid: string, name: string, value: string): HTMLInputElement {
     const i = document.createElement('input') as HTMLInputElement;
-    if (form.getAttribute('id') !== null) {
-        fid = form.getAttribute('id') as string;
-    } else {
-        fid = 'dummy_form';
-        form.setAttribute('id', fid);
-    }
 
-    i.setAttribute('type', 'hidden');
+    i.type  = 'hidden';
+    i.name  = name;
+    i.value = value;
+    i.style.display ='none';
     i.setAttribute('for',   fid);
-    i.setAttribute('name',  name);
-    i.setAttribute('value', value);
-    i.style.setProperty('display', 'none');
     form.appendChild(i);
 
     return i;
