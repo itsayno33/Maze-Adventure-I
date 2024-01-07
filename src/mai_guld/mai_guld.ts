@@ -41,7 +41,7 @@ const tsCaller: I_TsCall = (() => {
             g_url[g_url_get_maze]   = url_top + "/mai_maze.php";
             g_url[g_url_get_guld]   = url_top + "/mai_guld.php";
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
-            g_pid[0] = player_id;
+            g_pid[0] = player_id; 
         },
         // 暫定版開始処理
         new_game: (url_baze: string, player_id: number): void => {

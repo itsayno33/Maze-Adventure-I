@@ -11,11 +11,11 @@ import {
 
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_SaveData }            from "../common/C_SaveData";
-import { g_mvm, g_hres, g_pid }         from "./global_for_guild";
+import { g_mvm }                 from "./global_for_guild";
 import { display_guild_menu }    from "./F_guild_menu";
 import { general_save, get_save_info } from "../common/F_load_and_save";
-import { g_mes, g_save }    from "../common/global";
-import { C_UrlOpt } from "../common/C_UrlOpt";
+import { g_pid, g_mes, g_save }  from "../common/global";
+import { C_UrlOpt }              from "../common/C_UrlOpt";
 
 let data_list: C_SaveData[];
 
@@ -109,22 +109,26 @@ function update_all(): void {
 }
 
 function update_data_list(): C_SaveData[] {
-    const jsonObj = get_save_info();
-    try {
-        if (jsonObj.save !== undefined) {
-            const data_list = [];
-            for (let save of jsonObj.save) {
-                data_list.push((new C_SaveData()).decode(save));
+        let data_list: C_SaveData[] = [];
+
+        get_save_info().then((jsonObj:any) => {
+            try {
+                if (jsonObj.save !== undefined) {
+                    data_list = [];
+                    for (let save of jsonObj.save) {
+                        data_list.push((new C_SaveData()).decode(save));
+                    }
+                    return;
+                }
+                g_mes.warning_message('saveプロパティが返ってきませんでした');
+                return;
             }
-            return data_list;
-        }
-        g_mes.warning_message('saveプロパティが返ってきませんでした');
-        return [];
-    }
-    catch (err) {
-        g_mes.warning_message('不正なデータを受信しました');
-        return [];
-    }
+            catch (err) {
+                g_mes.warning_message('不正なデータを受信しました');
+                return;
+            }
+        });
+        return data_list;
 }
 
 function update_info_list(): HTMLUListElement|null {
@@ -239,9 +243,9 @@ function isOK(): void {
     }
 }
 
-function post_save_data(): boolean {
+function post_save_data(): boolean { 
     g_save.decode({
-        player_id: g_pid[0],  
+        player_id:  g_pid[0],  
         title:     `保存済: ${new Date().toDateString()}`, // data_list[idx].title, 
         detail:    '冒険者登録',                       // data_list[idx].detail, 
         point:     '最初のギルド', 
@@ -251,8 +255,7 @@ function post_save_data(): boolean {
     });
 
     const  opt = new C_UrlOpt();
-    const  jsonObj = general_save(opt);
-    return false; // return jsonObj.ecode == 0;
+    return general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
 
 function isNG(): void {

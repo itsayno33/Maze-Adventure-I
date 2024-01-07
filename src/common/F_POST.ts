@@ -19,7 +19,7 @@ export async function POST_and_get_JSON(
         return undefined;
     }
 
-    const monitor = false  // alertで受信したテキストを表示するときにtrueにする
+    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
 
     var txt:Promise<string>;
     if (monitor) {
@@ -37,6 +37,8 @@ export async function POST_and_get_JSON(
             return JSON.parse(txt);
         } catch(err) {
             g_mes.warning_message('JSON形式のデコードエラー');
+            for (var i = 0;i < (txt.length < 1000 ? txt.length : 1000); i += 250) 
+                alert(txt.substring(i, i+250));
             return undefined;
         }
     });

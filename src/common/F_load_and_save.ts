@@ -128,7 +128,6 @@ function __auto_save(opt: C_UrlOpt, callback?: T_callback): any {
 //    opt.set('team',        team_data);
 //    opt.set('guld',        guld_data);
 
-/*
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
@@ -147,8 +146,8 @@ function __auto_save(opt: C_UrlOpt, callback?: T_callback): any {
         }
         
     });
-*/
-    POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};
+
+//    POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};
 }
 
 /*
