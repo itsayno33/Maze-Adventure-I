@@ -19,6 +19,7 @@ export function init_before_new_games(player_id: number): void {
     // 本来はここでNew Gameのデータをサーバーから読み込む感じ
     // get_mai_guld();
 
+    g_guld.heroes   =  g_hres;
     g_save.all_maze = [g_maze];
     g_save.all_team = [g_team];
     g_save.all_guld = [g_guld];

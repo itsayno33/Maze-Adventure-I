@@ -11,10 +11,10 @@ import {
 
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_SaveData }            from "../common/C_SaveData";
-import { g_mvm, g_hres }         from "./global_for_guild";
+import { g_mvm, g_hres, g_pid }         from "./global_for_guild";
 import { display_guild_menu }    from "./F_guild_menu";
 import { general_save, get_save_info } from "../common/F_load_and_save";
-import { g_mes }    from "../common/global";
+import { g_mes, g_save }    from "../common/global";
 import { C_UrlOpt } from "../common/C_UrlOpt";
 
 let data_list: C_SaveData[];
@@ -164,8 +164,8 @@ function init_info_detail(form: HTMLUListElement): {[key: string]: HTMLLIElement
 
 function append_elm(form: HTMLUListElement, elm: {[key: string]: HTMLLIElement}, id: string): void {
     const li = document.createElement('li') as HTMLLIElement;
-    li.id = 'save_detail' + idx;
-    elm[idx] = li;
+    li.id = 'save_detail' + id;
+    elm[id] = li;
     form.appendChild(li);
 }
 
@@ -184,24 +184,28 @@ function update_info_detail(idx: number) {
 }
 
 function do_U(): void {
+    if (mode !== 'view') return;
     display_default_message();
 
     idx = calc_cursor_pos_U(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  update_info_detail(idx); 
 }
 function do_D(): void {
+    if (mode !== 'view') return;
     display_default_message();
 
     idx = calc_cursor_pos_D(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  update_info_detail(idx);  
 }
 function do_L(): void {
+    if (mode !== 'view') return;
     display_default_message();
 
     idx = calc_cursor_pos_L(idx, info_list.children.length, info_list_col);
     high_light_on(info_list, idx);  update_info_detail(idx);
 }
 function do_R(): void {
+    if (mode !== 'view') return;
     display_default_message();
 
     idx = calc_cursor_pos_R(idx, info_list.children.length, info_list_col);
@@ -236,6 +240,16 @@ function isOK(): void {
 }
 
 function post_save_data(): boolean {
+    g_save.decode({
+        player_id: g_pid[0],  
+        title:     `保存済: ${new Date().toDateString()}`, // data_list[idx].title, 
+        detail:    '冒険者登録',                       // data_list[idx].detail, 
+        point:     '最初のギルド', 
+        auto_mode: '0', 
+        is_active: '1', 
+        is_delete: '0', 
+    });
+
     const  opt = new C_UrlOpt();
     const  jsonObj = general_save(opt);
     return false; // return jsonObj.ecode == 0;

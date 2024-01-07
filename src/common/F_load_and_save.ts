@@ -117,14 +117,17 @@ export function general_save(opt: C_UrlOpt, callback?: T_callback): any {
 }
 
 function __auto_save(opt: C_UrlOpt, callback?: T_callback): any { 
-    const maze_data = JSON.stringify(g_maze.encode(), null, "\t");
-    const team_data = JSON.stringify(g_team.encode(), null, "\t");
-    const guld_data = JSON.stringify(g_guld.encode(), null, "\t");
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+//    const maze_data = JSON.stringify(g_maze.encode(), null, "\t");
+//    const team_data = JSON.stringify(g_team.encode(), null, "\t");
+//    const guld_data = JSON.stringify(g_guld.encode(), null, "\t");
 
     opt.set('pid',         g_pid[0]); 
-    opt.set('maze',        maze_data);
-    opt.set('team',        team_data);
-    opt.set('guld',        guld_data);
+    opt.set('save',        save_data);
+//    opt.set('maze',        maze_data);
+//    opt.set('team',        team_data);
+//    opt.set('guld',        guld_data);
+
 /*
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
