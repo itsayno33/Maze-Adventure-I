@@ -42,14 +42,14 @@ export function hide_save_menu(): void {
     div.style.display = 'none';
 }
 
-export function display_save_menu(): void {
+export async function display_save_menu(): Promise<void> {
     hide_all_menu();
 
     const div = document.getElementById('gld_view_switch_save') as HTMLDivElement;
     if (div === null) return;
     div.style.display = 'block';
 
-    data_list = []; //data_list = update_data_list();
+    await update_data_list();
 
     /*
     if (data_list.length < 1) {
@@ -98,8 +98,8 @@ export function display_save_menu(): void {
     display_default_message();
 }
 
-function update_all(): void {
-    data_list = update_data_list();
+async function update_all(): Promise<void> {
+    await update_data_list();
 
     info_list = update_info_list() as HTMLUListElement;
     if (info_list === null) return;
@@ -108,10 +108,9 @@ function update_all(): void {
     update_info_detail(idx);
 }
 
-function update_data_list(): C_SaveData[] {
-        let data_list: C_SaveData[] = [];
+async function update_data_list(): Promise<void> {
 
-        get_save_info().then((jsonObj:any) => {
+        await get_save_info().then((jsonObj:any) => {
             try {
                 if (jsonObj.save !== undefined) {
                     data_list = [];
@@ -128,7 +127,7 @@ function update_data_list(): C_SaveData[] {
                 return;
             }
         });
-        return data_list;
+        return;
 }
 
 function update_info_list(): HTMLUListElement|null {
@@ -246,7 +245,7 @@ function isOK(): void {
 function post_save_data(): boolean { 
     g_save.decode({
         player_id:  g_pid[0],  
-        title:     `保存済: ${new Date().toDateString()}`, // data_list[idx].title, 
+        title:     `保存済: #${idx.toString().padStart(5, '0')}`, // data_list[idx].title, 
         detail:    '冒険者登録',                       // data_list[idx].detail, 
         point:     '最初のギルド', 
         auto_mode: '0', 
