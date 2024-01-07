@@ -17,7 +17,7 @@ import { general_save, get_save_info } from "../common/F_load_and_save";
 import { g_pid, g_mes, g_save }  from "../common/global";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 
-let data_list: C_SaveData[];
+let data_list:  {[uniq_no: number]:C_SaveData};
 
 let info_list: HTMLUListElement;
 let info_list_col: number;
@@ -115,7 +115,9 @@ async function update_data_list(): Promise<void> {
                 if (jsonObj.save !== undefined) {
                     data_list = [];
                     for (let save of jsonObj.save) {
-                        data_list.push((new C_SaveData()).decode(save));
+                        const s = new C_SaveData();
+                        s.decode(save);
+                        data_list[s.uniq_no] = s;
                     }
                     return;
                 }
@@ -138,17 +140,12 @@ function update_info_list(): HTMLUListElement|null {
         info_list.removeChild(info_list.firstChild);
     }
 
-    for (let data of data_list) {
+    for (let i = 0; i < 20; i++) {
         const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `${data.title}<p></p>`;
+        li.innerHTML = (i in data_list) ? `${data_list[i].title}<p></p>` : `新規保存 #${i.toString().padStart(2,'0')}<p></p>`;
         info_list.appendChild(li);
     }
 
-    for (let i = data_list.length; i < 20; i++) {
-        const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `新規保存<p></p>`;
-        info_list.appendChild(li);
-    }
     idx = 0;
     high_light_on(info_list, idx); 
     return info_list;
@@ -173,7 +170,7 @@ function append_elm(form: HTMLUListElement, elm: {[key: string]: HTMLLIElement},
 }
 
 function update_info_detail(idx: number) {
-    if (idx < data_list.length) {
+    if (idx in data_list) {
         info_detail['title']    .innerHTML = data_list[idx].title;
         info_detail['detail']   .innerHTML = data_list[idx].detail;
         info_detail['point']    .innerHTML = data_list[idx].point;
@@ -218,34 +215,39 @@ function do_R(): void {
 function isOK(): void { 
     switch (mode) {
         case 'view':
-            mode = idx < data_list.length ? 'rewrite_OK' : 'write_OK';
+            mode = idx in data_list ? 'rewrite_OK' : 'write_OK';
             display_default_message();
             break;
         case 'write_OK':
-            if (post_save_data()) {
-                g_mvm.notice_message('新規保存しました!!');
-                update_all();
-            } else {
-                g_mvm.warning_message('新規保存に失敗しました');
-            }
-            mode = 'view';
+            post_save_data().then(result => {
+                if (result) {
+                    g_mvm.notice_message('新規保存しました!!');
+                    update_all();
+                } else {
+                    g_mvm.warning_message('新規保存に失敗しました');
+                }
+                mode = 'view';
+            });
             break;
         case 'rewrite_OK':
-            if (post_save_data()) {
-                g_mvm.normal_message('上書き保存しました！');
-                update_all();
-            } else {
-                g_mvm.warning_message('上書き保存に失敗しました');
-            }
-            mode = 'view';
+            post_save_data().then(result => {
+                if (result) {
+                    g_mvm.notice_message('上書き保存しました！');
+                    update_all();
+                } else {
+                    g_mvm.warning_message('上書き保存に失敗しました');
+                }
+                mode = 'view';
+            });
             break;
     }
 }
 
-function post_save_data(): boolean { 
+async function post_save_data(): Promise<boolean> { 
     g_save.decode({
         player_id:  g_pid[0],  
-        title:     `保存済: #${idx.toString().padStart(5, '0')}`, // data_list[idx].title, 
+        uniq_no:    idx, 
+        title:     `保存済: #${idx.toString().padStart(2, '0')}`, // data_list[idx].title, 
         detail:    '冒険者登録',                       // data_list[idx].detail, 
         point:     '最初のギルド', 
         auto_mode: '0', 
@@ -254,7 +256,7 @@ function post_save_data(): boolean {
     });
 
     const  opt = new C_UrlOpt();
-    return general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
+    return await general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
 
 function isNG(): void {
@@ -277,7 +279,7 @@ function display_default_message(): void {
             g_mvm.normal_message('どれに保存しますか？意思決定＝＞〇　メニューに戻る＝＞✖');
             break;
         case 'write_OK':
-            g_mvm.notice_message('これに新規保存しますか？ＯＫ＝＞〇　やめる＝＞✖');
+            g_mvm.normal_message('これに新規保存しますか？ＯＫ＝＞〇　やめる＝＞✖');
             break;
         case 'rewrite_OK':
             g_mvm.notice_message('過去のデータが消えます。上書きしますか？ＯＫ＝＞〇　やめる＝＞✖');
