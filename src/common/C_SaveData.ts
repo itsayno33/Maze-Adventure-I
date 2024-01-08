@@ -9,6 +9,7 @@ type JSON_SaveData = {
     title?:     string,
     detail?:    string,
     point?:     string,
+    team_name?: string,
     auto_mode?: string,
     is_active?: string,
     is_delete?: string
@@ -28,6 +29,7 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
         + "\ntitle:     " + (a.title     ?? '?')
         + "\ndetail:    " + (a.detail    ?? '?')
         + "\npoint:     " + (a.point     ?? '?')
+        + "\nteam_name: " + (a.team_name ?? '?')
         + "\nauto_mode: " + (a.auto_mode ?? '?')
         + "\nis_active: " + (a.is_active ?? '?')
         + "\nis_delete: " + (a.is_delete ?? '?')
@@ -43,6 +45,7 @@ export class C_SaveData {
     public title:     string;
     public detail:    string;
     public point:     string;
+    public team_name: string;
     public auto_mode: boolean;
     public is_active: boolean;
     public is_delete: boolean;
@@ -59,6 +62,7 @@ export class C_SaveData {
         this.title     = '';
         this.detail    = '';
         this.point     = '';
+        this.team_name = '';
         this.auto_mode = false;
         this.is_active = true;
         this.is_delete = false;
@@ -78,6 +82,7 @@ export class C_SaveData {
             title:     this.title, 
             detail:    this.detail, 
             point:     this.point, 
+            team_name: this.team_name, 
             auto_mode: this.auto_mode ? '1' : '0', 
             is_active: this.is_active ? '1' : '0', 
             is_delete: this.is_delete ? '1' : '0', 
@@ -88,12 +93,13 @@ export class C_SaveData {
         }
     }
     public decode(s: JSON_SaveData): C_SaveData {
-        this.save_id   = s.save_id ?? this.save_id;
+        this.save_id   = s.save_id   ?? this.save_id;
         this.player_id = s.player_id ?? this.player_id; 
-        this.uniq_no   = s.uniq_no ?? this.uniq_no;
-        this.title     = s.title ?? this.title;
-        this.detail    = s.detail ?? this.detail;
-        this.point     = s.point ?? this.point;
+        this.uniq_no   = s.uniq_no   ?? this.uniq_no;
+        this.title     = s.title     ?? this.title;
+        this.detail    = s.detail    ?? this.detail;
+        this.point     = s.point     ?? this.point;
+        this.team_name = s.team_name ?? this.team_name;
         this.auto_mode = s.auto_mode != '0' ?? this.auto_mode;
         this.is_active = s.is_active != '0' ?? this.is_active;
         this.is_delete = s.is_delete != '0' ?? this.is_delete;

@@ -5,29 +5,33 @@ import { T_Direction }         from "./T_Direction";
 import { C_Hero, JSON_Hero }   from "./C_Hero";
 
 type __init_arg = {
-    id?:      number, 
-    save_id?: number, 
-    name?:    string, 
-    heroes?:  C_Hero[], 
-    p?:       C_Point, 
-    x?:       number,
-    y?:       number,
-    z?:       number,
-    d?:       T_Direction,
-    motion?:  string,
+    id?:        number, 
+    save_id?:   number, 
+    name?:      string, 
+    maze_name?: string, 
+    guld_name?: string, 
+    heroes?:    C_Hero[], 
+    p?:         C_Point, 
+    x?:         number,
+    y?:         number,
+    z?:         number,
+    d?:         T_Direction,
+    motion?:    string,
 }
 
 export type JSON_Team = {
-    id?:      number, 
-    save_id?: number, 
-    name?:    string, 
-    point?:   JSON_Point, 
-    x?:       number,
-    y?:       number,
-    z?:       number,
-    direct?: {d: number},
-    heroes?:  JSON_Hero[], 
-    motion?:  string,
+    id?:        number, 
+    save_id?:   number, 
+    name?:      string, 
+    maze_name?: string, 
+    guld_name?: string, 
+    point?:     JSON_Point, 
+    x?:         number,
+    y?:         number,
+    z?:         number,
+    direct?:   {d: number},
+    heroes?:    JSON_Hero[], 
+    motion?:    string,
 }
 
 export function alert_team_info(a: JSON_Team|undefined): void {
@@ -35,6 +39,8 @@ export function alert_team_info(a: JSON_Team|undefined): void {
     alert("Team Info:" 
         + "\nid:    "     + (a.id        ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
+        + "\nmaze_name: " + (a.maze_name ?? '?')
+        + "\nguld_name: " + (a.guld_name ?? '?')
         + "\nsave_id: "   + (a.save_id   ?? '?')
         + "\ncur_x: "     + (a.point?.x  ?? '?')
         + "\ncur_y: "     + (a.point?.y  ?? '?')
@@ -48,29 +54,35 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 
 
 export class C_Team implements I_Exist {
-    protected my_id:    number;
-    protected my_name:  string;
-    protected save_id:  number;
-    protected walker:   C_Walker;
-    protected my_layer: number = 99;
-    protected heroes:   C_Hero[];
+    protected my_id:     number;
+    protected my_name:   string;
+    protected maze_name: string;
+    protected guld_name: string;
+    protected save_id:   number;
+    protected walker:    C_Walker;
+    protected my_layer:  number = 99;
+    protected heroes:    C_Hero[];
 
     protected hope_motion: string;
 
     public constructor(a?: __init_arg) {
 
-        this.my_id   = a?.id ?? 0;
-        this.my_name = a?.name ?? 'Neo Team?';
-        this.save_id = a?.save_id ?? 0;
+        this.my_id     = a?.id ?? 0;
+        this.my_name   = a?.name ?? 'Neo Team?';
+        this.maze_name = a?.maze_name ?? 'Neo Team?';
+        this.guld_name = a?.guld_name ?? 'Neo Team?';
+        this.save_id   = a?.save_id ?? 0;
         this.walker = new C_Walker();
         this.heroes = [];
         this.hope_motion = a?.motion ?? 'NOP';    
         if (a !== undefined) this.__init(a);
     }
     protected __init(a: __init_arg): void {
-        this.my_id   = a.id      ?? this.my_id
-        this.my_name = a.name    ?? this.my_name;
-        this.save_id = a.save_id ?? this.save_id;
+        this.my_id     = a.id        ?? this.my_id
+        this.my_name   = a.name      ?? this.my_name;
+        this.maze_name = a.maze_name ?? this.maze_name;
+        this.guld_name = a.guld_name ?? this.guld_name;
+        this.save_id   = a.save_id   ?? this.save_id;
         if (a.p !== undefined) this.walker.set_p(a.p);
         if (a.x !== undefined) this.walker.set_x(a.x);
         if (a.y !== undefined) this.walker.set_x(a.y);
@@ -210,22 +222,26 @@ export class C_Team implements I_Exist {
         const d = this.walker.get_dir();
 
         return {
-            id:      this.my_id,
-            name:    this.my_name,
-            save_id: this.save_id,
-            point:   {x: x, y: y, z: z},
-            direct:  {d: d},
-            heroes:  C_Hero.encode_heroes(this.heroes),
-            motion:  this.hope_motion,
+            id:        this.my_id,
+            name:      this.my_name,
+            maze_name: this.maze_name,
+            guld_name: this.guld_name,
+            save_id:   this.save_id,
+            point:     {x: x, y: y, z: z},
+            direct:    {d: d},
+            heroes:    C_Hero.encode_heroes(this.heroes),
+            motion:    this.hope_motion,
         };
     }
     public decode(a: JSON_Team|undefined): C_Team {
         if (a === undefined) return this;
 
-        if (a.id   !== undefined)    this.my_id       = a.id;
-        if (a.name !== undefined)    this.my_name     = a.name;
-        if (a.save_id !== undefined) this.save_id     = a.save_id;
-        if (a.motion !== undefined)  this.hope_motion = a.motion;
+        if (a.id   !== undefined)      this.my_id       = a.id;
+        if (a.name !== undefined)      this.my_name     = a.name;
+        if (a.maze_name !== undefined) this.maze_name   = a.maze_name;
+        if (a.guld_name !== undefined) this.guld_name   = a.guld_name;
+        if (a.save_id !== undefined)   this.save_id     = a.save_id;
+        if (a.motion !== undefined)    this.hope_motion = a.motion;
 
         if (a.point !== undefined && typeof a.point == 'object') {
             this.walker.decode(a.point);
