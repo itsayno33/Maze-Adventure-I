@@ -16,10 +16,7 @@ const guld_ctls = {
     name: 'guld', 
     do_U:  do_U,
     do_D:  do_D,
-    do_L:  null,
-    do_R:  null,
     isOK:  isOK,
-    isNG:  null,
     keyEvent: true,
 }
 

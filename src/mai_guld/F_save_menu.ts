@@ -84,7 +84,6 @@ async function _display_SL_menu(): Promise<void> {
         dom_SL_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
-
         _add_svld_rtn_ctls();
     } else {
         info_list.style.display = 'block';
@@ -392,11 +391,6 @@ function _add_svld_nor_ctls(): void {
 
 const _svld_rtn_ctls = {
     name: 'svld_rtn', 
-    do_U:  null,
-    do_D:  null,
-    do_L:  null,
-    do_R:  null,
-    isOK:  null,
     isNG:  go_back_guld_menu_for_first,
     keyEvent: true,
 }
@@ -410,10 +404,6 @@ function _add_svld_rtn_ctls(): void {
 
 const _svld_chk_ctls = {
     name: 'svld_chk', 
-    do_U:  null,
-    do_D:  null,
-    do_L:  null,
-    do_R:  null,
     isOK:  _do_kakunin,
     isNG:  _do_kakunin,
     keyEvent: true,
