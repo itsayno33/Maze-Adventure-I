@@ -39,9 +39,10 @@ export function init_debug_mode(): void {
     toggle_debug_mode();
     btn.addEventListener("click", (event)=>{toggle_debug_mode();}, false);
     window.addEventListener("keydown",(event)=>{
-        switch (event.key) {
+        switch (event.code) {
             case "Escape":
-            case "Key@":
+            case "NumpadMultiply":
+            case "F12":
                 btn.click();
                 break;
         }

@@ -1,6 +1,6 @@
 import { 
-    hide_default_contrlles, 
-    display_default_controlles, 
+    rmv_default_ctls, 
+    add_default_ctls, 
     hide_all_menu,
     calc_cursor_pos_L,
     calc_cursor_pos_R,
@@ -12,27 +12,24 @@ import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_her
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { high_light_on }         from "./F_default_menu";
 import { g_mvm, g_hres }         from "./global_for_guild";
-import { display_guild_menu }    from "./F_guild_menu";
+import { display_guld_menu }     from "./F_guild_menu";
 
 var info_list: HTMLUListElement;
 var info_list_col: number;
 var idx:  number = 0;
 var info_detail: {[key: string]: HTMLLIElement};
 
-export function hide_hres_menu(): void {
-    hide_default_contrlles({
-        do_U: do_U,
-        do_D: do_D,
-        do_L: do_L,
-        do_R: do_R,
-        isOK: isOK,
-        isNG: isNG,
+export function rmv_hres_ctls(): void {
+    rmv_default_ctls({
+        name: 'hres', 
+        do_U:  do_U,
+        do_D:  do_D,
+        do_L:  do_L,
+        do_R:  do_R,
+        isOK:  isOK,
+        isNG:  isNG,
         keyEvent: true,
     });
-
-    const div = document.getElementById('gld_view_switch_hres') as HTMLDivElement;
-    if (div === null) return;
-    div.style.setProperty('display', 'none');
 }
 
 export function display_hres_menu(): void {
@@ -47,13 +44,14 @@ export function display_hres_menu(): void {
         document.getElementById('hres_hero_fields')?.style.setProperty('display', 'none');
 
         g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-        display_default_controlles({
-            do_U: do_U,
-            do_D: do_D,
-            do_L: do_L,
-            do_R: do_R,
-            isOK: isOK,
-            isNG: isNG,
+        add_default_ctls({
+            name: 'hres', 
+            do_U:  do_U,
+            do_D:  do_D,
+            do_L:  do_L,
+            do_R:  do_R,
+            isOK:  isOK,
+            isNG:  isNG,
             keyEvent: true,
         });
         return;
@@ -82,13 +80,14 @@ export function display_hres_menu(): void {
     idx = 0;
     high_light_on(info_list, idx);   hero_info_form_set(g_hres, info_detail, idx);
 
-    display_default_controlles({
-        do_U: do_U,
-        do_D: do_D,
-        do_L: do_L,
-        do_R: do_R,
-        isOK: isOK,
-        isNG: isNG,
+    add_default_ctls({
+        name: 'hres', 
+        do_U:  do_U,
+        do_D:  do_D,
+        do_L:  do_L,
+        do_R:  do_R,
+        isOK:  isOK,
+        isNG:  isNG,
         keyEvent: true,
     });
     g_mvm.clear_message();
@@ -137,5 +136,6 @@ function go_back_guild_menu() {
     if (form === null) return;
     hero_info_clear(form);
 
-    display_guild_menu();
+    rmv_hres_ctls();
+    display_guld_menu();
 }

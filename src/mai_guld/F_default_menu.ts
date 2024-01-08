@@ -1,32 +1,39 @@
-import { hide_guild_menu, display_guild_menu } from "./F_guild_menu";
-import { hide_appd_menu } from "./F_appd_menu";
-import { hide_hres_menu } from "./F_hres_menu";
-import { hide_save_menu } from "./F_save_menu";
-import { _ceil, _floor }  from "../common/F_Math";
+import { _ceil, _floor }     from "../common/F_Math";
+import { display_guld_menu } from "./F_guild_menu";
+
 
 export function hide_all_menu(): void {
-    // hide関数が揃うまでの暫定処置(表示だけ消す。入力のイベント処理は無視)
+    // 各ペインの表示だけ消す
+    // 入力のイベント処理は 
+    // 設定されていないリスナーをリムーブした時の
+    // removeEventLisner()の暴走が怖いので 
+    // ペイン切替の際にその都度切り替える
 
     const div = document.getElementById('gld_view_switch');
     if (div === null) return;
 
     const menues = div.children;
     for (var i = 0; i < menues.length; i++) {
-        (menues.item(i) as HTMLElement).style.setProperty('display', 'none');
+        (menues.item(i) as HTMLElement).style.display = 'none';
     } 
-    // 暫定処理ここまで
+}
 
-
-    hide_guild_menu();
-    hide_hres_menu();
-    hide_appd_menu();
-    hide_save_menu();
+function rmv_all_ctls(): void {
+/*
+    try {
+        rmv_guld_ctls();
+        rmv_hres_ctls();
+        rmv_appd_ctls();
+        rmv_svld_ctls();
+    } catch (err) {};
+*/
 }
 
 export function init_display_menu(): void {
     hide_all_menu();
-    display_guild_menu();
+    display_guld_menu();
 }
+
 
 // メニューのデフォルト操作(ハイライトと詳細表示制御)
 
@@ -74,10 +81,13 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
 // 以下、矢印キーと〇✖ボタン処理のデフォルト処理。
 // イベントリスナー以外の処理を定型化した。
 
+const _all_ctls_name: {[name: string]: boolean} = {};
+
 type T_fnc = (e?: MouseEvent)=>void;
 type T_arg = T_fnc | null;
 
 export type T_controlles = {
+    name:  string,
     do_U?: T_arg, 
     do_D?: T_arg, 
     do_L?: T_arg, 
@@ -93,7 +103,14 @@ function _c(c: T_arg | undefined): boolean {
     return true;
 }
 
-export function hide_default_contrlles(call: T_controlles):void {
+export function rmv_default_ctls(call: T_controlles):void {
+    // _all_ctls_name[call.name]が定義されていない
+    // つまりadd_default_ctlsがまだ呼ばれてない(ctlsがaddされてない)か、
+    // _all_ctls_name[call.name]がfalse(既にctllsがremoveされている)なら、
+    // 何もしない。
+    if (!(call.name in _all_ctls_name) || !_all_ctls_name[call.name]) return;
+    _all_ctls_name[call.name] = false;
+
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
@@ -108,7 +125,7 @@ export function hide_default_contrlles(call: T_controlles):void {
     if (_c(call?.isOK)) y_btn  .removeEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
 
-    if (call?.keyEvent) window.removeEventListener('keypress', key_press_function);
+    if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
 
     u_arrow.style.setProperty('display', 'none');
     d_arrow.style.setProperty('display', 'none');
@@ -118,8 +135,9 @@ export function hide_default_contrlles(call: T_controlles):void {
     n_btn  .style.setProperty('display', 'none');
 }
 
-export function display_default_controlles(call: T_controlles):void{
-//    hide_all_menu();
+export function add_default_ctls(call: T_controlles):void{
+    if (call.name in _all_ctls_name && _all_ctls_name[call.name]) return;
+    _all_ctls_name[call.name] = true;
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
     const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
@@ -135,7 +153,7 @@ export function display_default_controlles(call: T_controlles):void{
     if (_c(call?.do_U)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.do_U)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
 
-    if (call?.keyEvent) window.addEventListener('keypress', key_press_function);
+    if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
 
     u_arrow.style.setProperty('display', _c(call?.do_U) ? 'block' : 'none');
     d_arrow.style.setProperty('display', _c(call?.do_D) ? 'block' : 'none');

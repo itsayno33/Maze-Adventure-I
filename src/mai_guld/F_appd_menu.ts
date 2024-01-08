@@ -1,6 +1,6 @@
 import { 
-    hide_default_contrlles, 
-    display_default_controlles, 
+    rmv_default_ctls, 
+    add_default_ctls, 
     hide_all_menu,
     calc_cursor_pos_L,
     calc_cursor_pos_R,
@@ -12,7 +12,7 @@ import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_her
 import { C_Hero }                from "../common/C_Hero";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { high_light_on }         from "./F_default_menu";
-import { display_guild_menu }    from "./F_guild_menu";
+import { display_guld_menu }     from "./F_guild_menu";
 import { g_mvm, g_hres }         from "./global_for_guild";
 import { make_hero }             from "../common/F_create_hero";
 
@@ -24,34 +24,31 @@ var info_detail: {[key: string]: HTMLLIElement};
 
 var mode = 'view';
 
-export function hide_appd_menu(): void {
-    hide_default_contrlles({
-        do_U: do_U,
-        do_D: do_D,
-        do_L: do_L,
-        do_R: do_R,
-        isOK: isOK,
-        isNG: isNG,
+export function rmv_appd_ctls(): void {
+    rmv_default_ctls({
+        name: 'appd', 
+        do_U:  do_U,
+        do_D:  do_D,
+        do_L:  do_L,
+        do_R:  do_R,
+        isOK:  isOK,
+        isNG:  isNG,
         keyEvent: true,
     });
-
-    const div = document.getElementById('gld_view_switch_appd') as HTMLDivElement;
-    if (div === null) return;
-    div.style.setProperty('display', 'none');
 }
 
 export function display_appd_menu(): void {
     hide_all_menu();
 
     const div = document.getElementById('gld_view_switch_appd') as HTMLDivElement;
-    if (div === null) {display_guild_menu();return;}
+    if (div === null) {display_guld_menu();return;}
     div.style.setProperty('display', 'block');
 
     new_hres = [];
     for (let i = 0; i < 20; i++)  new_hres.push(make_hero());
 
     get_list_info();
-    if (info_list === null) {display_guild_menu();return;}
+    if (info_list === null) {display_guld_menu();return;}
 
     info_list_col = Number(window.getComputedStyle(info_list).columnCount); 
 
@@ -59,19 +56,20 @@ export function display_appd_menu(): void {
     mode = 'view';
 
     const form = document.getElementById('appd_hero_info') as HTMLUListElement;
-    if (form === null) {display_guild_menu();return;} 
+    if (form === null) {display_guld_menu();return;} 
     info_detail = hero_info_create(form);
 
     idx = 0;
     high_light_on(info_list, idx); hero_info_form_set(new_hres, info_detail, idx); 
 
-    display_default_controlles({
-        do_U: do_U,
-        do_D: do_D,
-        do_L: do_L,
-        do_R: do_R,
-        isOK: isOK,
-        isNG: isNG,
+    add_default_ctls({
+        name: 'appd', 
+        do_U:  do_U,
+        do_D:  do_D,
+        do_L:  do_L,
+        do_R:  do_R,
+        isOK:  isOK,
+        isNG:  isNG,
         keyEvent: true,
     });
     display_default_message();
@@ -200,5 +198,6 @@ function go_back_guild_menu() {
     if (form === null) return;
     hero_info_clear(form);
 
-    display_guild_menu();
+    rmv_appd_ctls();
+    display_guld_menu();
 }
