@@ -438,7 +438,7 @@ function save(): void{
     opt.set('save_title',  `保存データ`);
     opt.set('save_detail', form_detail.value);
     opt.set('save_point',  
-        `『${g_maze.get_title()}』 ` 
+        `『${g_maze.get_name()}』 ` 
         + `地下 ${g_team.get_p().z + 1}階層 ` 
         + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
     );

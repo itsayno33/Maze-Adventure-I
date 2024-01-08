@@ -285,6 +285,7 @@ async function post_load_data(): Promise<boolean> {
     g_save.decode({
         player_id:  g_pid[0],  
         uniq_no:    idx, 
+        save_id:    data_list[idx].save_id, 
         title:      data_list[idx].title, 
         detail:     data_list[idx].detail, 
         point:      data_list[idx].point, 
@@ -301,9 +302,11 @@ async function post_save_data(): Promise<boolean> {
     g_save.decode({
         player_id:  g_pid[0],  
         uniq_no:    idx, 
+//        save_id:    data_list[idx].save_id, 
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
         detail:    '冒険者情報',                    // data_list[idx].detail, 
         point:     '最初のギルド', 
+        team_name: '最初のギルド',
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 

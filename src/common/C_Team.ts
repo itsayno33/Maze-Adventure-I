@@ -67,14 +67,14 @@ export class C_Team implements I_Exist {
 
     public constructor(a?: __init_arg) {
 
-        this.my_id     = a?.id ?? 0;
-        this.my_name   = a?.name ?? 'Neo Team?';
-        this.maze_name = a?.maze_name ?? 'Neo Team?';
-        this.guld_name = a?.guld_name ?? 'Neo Team?';
-        this.save_id   = a?.save_id ?? 0;
+        this.my_id     =  0;
+        this.my_name   = 'Neo Team?';
+        this.maze_name = 'Neo Maze?';
+        this.guld_name = 'Neo Guild?';
+        this.save_id   =  0;
         this.walker = new C_Walker();
         this.heroes = [];
-        this.hope_motion = a?.motion ?? 'NOP';    
+        this.hope_motion = 'NOP';    
         if (a !== undefined) this.__init(a);
     }
     protected __init(a: __init_arg): void {
