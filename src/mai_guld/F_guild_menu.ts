@@ -12,17 +12,19 @@ import {
 var menu: HTMLUListElement;
 var idx: number = 0;
 
+const guld_ctls = {
+    name: 'guld', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  null,
+    do_R:  null,
+    isOK:  isOK,
+    isNG:  null,
+    keyEvent: true,
+}
+
 export function rmv_guld_ctls(): void {
-    rmv_default_ctls({
-        name: 'guld', 
-        do_U:  do_U,
-        do_D:  do_D,
-        do_L:  null,
-        do_R:  null,
-        isOK:  isOK,
-        isNG:  null,
-        keyEvent: true,
-    });
+    rmv_default_ctls(guld_ctls);
 }
 
 export function display_guld_menu(): void {
@@ -37,16 +39,7 @@ export function display_guld_menu(): void {
     idx = 0;
     high_light_on(menu, idx); 
 
-    add_default_ctls({
-        name: 'guld', 
-        do_U: do_U,
-        do_D: do_D,
-        do_L: null,
-        do_R: null,
-        isOK: isOK,
-        isNG: null,
-        keyEvent: true,
-    });
+    add_default_ctls(guld_ctls);
 }
 
 function do_U(): void {

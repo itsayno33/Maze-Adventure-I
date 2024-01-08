@@ -34,18 +34,10 @@ let dom_SL_info_fields : HTMLFieldSetElement;
 let dom_SL_info_detail : HTMLUListElement;
 
 export function rmv_svld_ctls(): void {
-    rmv_default_ctls({
-        name: 'svld', 
-        do_U:  do_U,
-        do_D:  do_D,
-        do_L:  do_L,
-        do_R:  do_R,
-        isOK:  isOK,
-        isNG:  isNG,
-        keyEvent: true,
-    });
+    _rmv_svld_nor_ctls();
+    _rmv_svld_rtn_ctls();
+    _rmv_svld_chk_ctls();
 }
-
 
 export function display_load_menu(): void {
     is_save = false;
@@ -85,44 +77,21 @@ async function _display_SL_menu(): Promise<void> {
 
     get_info_list_cols();
     init_info_detail();
-    update_all();
+    await update_all();
 
-    /*
     if (!is_save && Object.keys(data_list).length < 1) {
         info_list.style.display = 'none';
         dom_SL_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
-        display_default_controlles({
-            name: 'svld', 
-            do_U:  do_U,
-            do_D:  do_D,
-            do_L:  do_L,
-            do_R:  do_R,
-            isOK:  isOK,
-            isNG:  isNG,
-            keyEvent: true,
-        });
-        var mode = 'view';
-        return;
+
+        _add_svld_rtn_ctls();
     } else {
         info_list.style.display = 'block';
         dom_SL_info_fields.style.display = 'block';
+        _add_svld_nor_ctls();
     }
-*/
-
-    add_default_ctls({
-        name: 'svld', 
-        do_U:  do_U,
-        do_D:  do_D,
-        do_L:  do_L,
-        do_R:  do_R,
-        isOK:  isOK,
-        isNG:  isNG,
-        keyEvent: true,
-    });
-
-    var mode = 'view';
+    mode = 'view';
     display_default_message();
 }
 
@@ -266,6 +235,7 @@ function _isOK_for_load(): void {
                 display_default_message();
             } else {
                 g_mvm.notice_message('保存されていない項目です。戻る＝＞✖');
+                _add_svld_chk_ctls();
             }
             break;
         case 'read_OK':
@@ -400,10 +370,75 @@ function _display_default_message_for_save(): void {
     }
 }
 
-function go_back_guld_menu() {
+
+
+const _svld_nor_ctls = {
+    name: 'svld', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK,
+    isNG:  isNG,
+    keyEvent: true,
+}
+function _rmv_svld_nor_ctls(): void {
+    rmv_default_ctls(_svld_nor_ctls);
+}
+function _add_svld_nor_ctls(): void {
+    rmv_svld_ctls();
+    add_default_ctls(_svld_nor_ctls);
+}
+
+const _svld_rtn_ctls = {
+    name: 'svld_rtn', 
+    do_U:  null,
+    do_D:  null,
+    do_L:  null,
+    do_R:  null,
+    isOK:  null,
+    isNG:  go_back_guld_menu_for_first,
+    keyEvent: true,
+}
+function _rmv_svld_rtn_ctls(): void {
+    rmv_default_ctls(_svld_rtn_ctls);
+}
+function _add_svld_rtn_ctls(): void {
+    rmv_svld_ctls();
+    add_default_ctls(_svld_rtn_ctls);
+}
+
+const _svld_chk_ctls = {
+    name: 'svld_chk', 
+    do_U:  null,
+    do_D:  null,
+    do_L:  null,
+    do_R:  null,
+    isOK:  _do_kakunin,
+    isNG:  _do_kakunin,
+    keyEvent: true,
+}
+function _rmv_svld_chk_ctls(): void {
+    rmv_default_ctls(_svld_chk_ctls);
+}
+function _add_svld_chk_ctls(): void {
+    rmv_svld_ctls();
+    add_default_ctls(_svld_chk_ctls);
+}
+function _do_kakunin(): void {
+    g_mvm.clear_message();
+    _add_svld_nor_ctls();
+}
+
+
+function go_back_guld_menu_for_first(): void {
+    rmv_svld_ctls();
+    display_guld_menu();
+}
+
+function go_back_guld_menu(): void {
     clear_info_list();
     clear_info_detail();
 
-    rmv_svld_ctls();
-    display_guld_menu();
+    go_back_guld_menu_for_first();
 }

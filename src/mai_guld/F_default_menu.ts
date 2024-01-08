@@ -1,9 +1,13 @@
-import { _ceil, _floor }     from "../common/F_Math";
-import { display_guld_menu } from "./F_guild_menu";
+import { _ceil, _floor } from "../common/F_Math";
+import { rmv_guld_ctls, display_guld_menu } from "./F_guild_menu";
+import { rmv_appd_ctls } from "./F_appd_menu";
+import { rmv_hres_ctls } from "./F_hres_menu";
+import { rmv_svld_ctls } from "./F_save_menu";
 
 
 export function hide_all_menu(): void {
-    // 各ペインの表示だけ消す
+    // 各ペインの表示をすべて非表示にする
+    // 
     // 入力のイベント処理は 
     // 設定されていないリスナーをリムーブした時の
     // removeEventLisner()の暴走が怖いので 
@@ -16,21 +20,19 @@ export function hide_all_menu(): void {
     for (var i = 0; i < menues.length; i++) {
         (menues.item(i) as HTMLElement).style.display = 'none';
     } 
+    rmv_all_ctls(); // 正常に動いてるのか不安だ。。。
 }
 
-function rmv_all_ctls(): void {
-/*
+export function rmv_all_ctls(): void {
     try {
         rmv_guld_ctls();
         rmv_hres_ctls();
         rmv_appd_ctls();
         rmv_svld_ctls();
     } catch (err) {};
-*/
 }
 
 export function init_display_menu(): void {
-    hide_all_menu();
     display_guld_menu();
 }
 
@@ -108,7 +110,9 @@ export function rmv_default_ctls(call: T_controlles):void {
     // つまりadd_default_ctlsがまだ呼ばれてない(ctlsがaddされてない)か、
     // _all_ctls_name[call.name]がfalse(既にctllsがremoveされている)なら、
     // 何もしない。
-    if (!(call.name in _all_ctls_name) || !_all_ctls_name[call.name]) return;
+    _all_ctls_name[call.name] ??= false; 
+
+    if (!_all_ctls_name[call.name]) return;
     _all_ctls_name[call.name] = false;
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -136,7 +140,9 @@ export function rmv_default_ctls(call: T_controlles):void {
 }
 
 export function add_default_ctls(call: T_controlles):void{
-    if (call.name in _all_ctls_name && _all_ctls_name[call.name]) return;
+    _all_ctls_name[call.name] ??= false; 
+
+    if (_all_ctls_name[call.name]) return;
     _all_ctls_name[call.name] = true;
 
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -150,8 +156,8 @@ export function add_default_ctls(call: T_controlles):void{
     if (_c(call?.do_D)) d_arrow.addEventListener("click", call.do_D as T_fnc, false);
     if (_c(call?.do_L)) l_arrow.addEventListener("click", call.do_L as T_fnc, false);
     if (_c(call?.do_R)) r_arrow.addEventListener("click", call.do_R as T_fnc, false);
-    if (_c(call?.do_U)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
-    if (_c(call?.do_U)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
+    if (_c(call?.isOK)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
+    if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
 
     if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
 
