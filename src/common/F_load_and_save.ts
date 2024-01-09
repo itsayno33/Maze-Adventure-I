@@ -2,11 +2,10 @@ import { alert_maze_info }     from "../common/C_Maze"; // 通常時はコメン
 import { alert_team_info }     from "../common/C_Team"; // 通常時はコメントアウトされている関数
 import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメントアウトされている関数
 
-import { _round, _min, _max  }    from "../common/F_Math";
-import { C_UrlOpt }               from "../common/C_UrlOpt";          
-import { POST_and_get_JSON, POST_and_move_page }      from "../common/F_POST";
+import { _round, _min, _max  } from "../common/F_Math";
+import { C_UrlOpt }            from "../common/C_UrlOpt";          
+import { POST_and_get_JSON, POST_and_move_page } from "../common/F_POST";
 import { 
-    g_save, g_maze, g_team, g_guld, 
     g_mes, g_pid, 
     g_url, g_url_get_maze, g_url_get_save, g_url_check_JSON 
 } from "../common/global";
@@ -76,11 +75,10 @@ export function general_load(opt: C_UrlOpt, callback?: T_callback): any {
 }
 
 function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
+/*
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
-
+*/
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
@@ -120,11 +118,10 @@ export function general_save(opt: C_UrlOpt, callback?: T_callback): any {
 }
 
 function __auto_save(opt: C_UrlOpt, callback?: T_callback): any { 
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
+/*
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
-
+*/
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする

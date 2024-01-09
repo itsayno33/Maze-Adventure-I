@@ -3,8 +3,8 @@ import { C_Range }        from "../common/C_Range";
 import { T_MzKind }       from "../common/T_MzKind";
 import { T_Direction }    from "../common/T_Direction";
 import { C_Wall }         from "./C_Wall";
-import { g_ds,   g_debug_mode }  from "./global_for_maze";
-import { g_maze, g_team, g_mes } from "../common/global";
+import { g_maze, g_team, g_ds,   g_debug_mode }  from "./global_for_maze";
+import { g_mes }          from "../common/global";
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');

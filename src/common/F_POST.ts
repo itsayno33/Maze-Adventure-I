@@ -1,10 +1,11 @@
 import { C_UrlOpt } from "./C_UrlOpt";
+import { _min } from "./F_Math";
 import { g_mes }    from "./global";
 
 export async function POST_and_get_JSON(
     url: string, 
     opt: C_UrlOpt, 
-): Promise<any> {
+): Promise<any|undefined> {
     const form_data = opt.to_FormData();
     if (form_data === null) return '';
     var res: Response;
@@ -19,52 +20,28 @@ export async function POST_and_get_JSON(
         return undefined;
     }
 
-    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+    const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
 
-    var txt:Promise<string>;
-    if (monitor) {
-        txt = res.text().then(tx=>{
-            for (var i = 0;i < (tx.length < 1000?tx.length:1000); i += 250) 
-                alert(tx.substring(i, i+250));
-            return tx;
-        })
-    } else {
-        txt = res.text();
-    }
+    return res.text()
+        .then(txt=>{
+            const tx = txt.slice();
 
-    return txt.then(txt=>{
-        try {
-            return JSON.parse(txt);
-        } catch(err) {
-            g_mes.warning_message('JSON形式のデコードエラー');
-            for (var i = 0;i < (txt.length < 1000 ? txt.length : 1000); i += 250) 
-                alert(txt.substring(i, i+250));
-            return undefined;
-        }
-    });
+            const page_size = 300;
+            if (monitor) {
+                for (let i = 0;i < tx.length; i += page_size) 
+                    if (!window.confirm(tx.substring(i, i+page_size))) break;
+            }
+
+            try {
+                return JSON.parse(txt);
+            } catch(err) {
+                g_mes.warning_message('JSON形式のデコードエラー');
+                for (let i = 0;i < tx.length; i += page_size) 
+                    if (!window.confirm(tx.substring(i, i+page_size))) break;
+                return undefined;
+            }
+        });
 }
-
-function readStream(stream: ReadableStream): any {
-    const reader = stream.getReader();
-    let chunk = '';
-
-    // read() returns a promise that resolves
-    // when a value has been received
-    reader.read().then(function processText({ done, value }): Promise<ReadableStreamReadResult<string> | ReadableStreamReadDoneResult<string>> {
-      // Result objects contain two properties:
-      // done  - true if the stream has already given you all its data.
-      // value - some data. Always undefined when done is true.
-      if (done) {
-        return value;
-      }
-
-      chunk += value;
-
-      // Read some more, and call this function again
-      return reader.read().then(processText);
-    });
-}
-
 
 export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
     create_form(url, opt).submit();

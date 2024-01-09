@@ -3,7 +3,7 @@ import { hide_controlles }  from "./F_set_controlles";
 import { UD_save }          from "./F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
-import { g_maze, g_team,  } from "../common/global";
+import { g_maze, g_team,  } from "./global_for_maze";
 
 
 export function clr_UD_controlles(): void {

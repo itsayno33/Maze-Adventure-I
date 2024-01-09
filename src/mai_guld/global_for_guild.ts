@@ -4,7 +4,21 @@ export const g_url: string[] = new Array(2);
 
 export var g_debug_mode: boolean = false;
 
-import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
+//import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
+import { init_after_loaded_DOM_in_common } from "../common/global";
+
+import { C_Maze } from "../common/C_Maze";
+export const g_maze = [new C_Maze({maze_id: -1})];
+
+import { C_Team } from "../common/C_Team";
+export const g_team = [new C_Team()];
+
+import { C_Guild } from "../common/C_Guild";
+export const g_guld = [new C_Guild()];
+
+import { C_SaveData } from "../common/C_SaveData";
+export const g_save = new C_SaveData();
+
 import { init_display_menu } from "./F_default_menu";
 
 import { C_GldViewMessage }  from "./C_GldViewMessage";
@@ -17,10 +31,10 @@ export function init_before_new_games(player_id: number): void {
     // 本来はここでNew Gameのデータをサーバーから読み込む感じ
     // get_mai_guld();
 
-    g_guld.heroes   =  g_hres;
-    g_save.all_maze = [g_maze];
-    g_save.all_team = [g_team];
-    g_save.all_guld = [g_guld];
+    g_guld[0].heroes   = g_hres;
+    g_save.all_maze    = g_maze;
+    g_save.all_team    = g_team;
+    g_save.all_guld    = g_guld;
 }
 
 export function init_after_loaded_DOM(): void {

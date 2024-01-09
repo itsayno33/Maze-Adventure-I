@@ -1,3 +1,4 @@
+import { C_Hero } from './../common/C_Hero';
 import { 
     rmv_default_ctls, 
     add_default_ctls, 
@@ -9,13 +10,13 @@ import {
     calc_cursor_pos_D
 } from "./F_default_menu";
 
+import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData }            from "../common/C_SaveData";
-import { general_load, general_save, get_save_info } from "../common/F_load_and_save";
-import { g_mvm }                 from "./global_for_guild";
-import { display_guld_menu }     from "./F_guild_menu";
-import { g_pid, g_mes, g_save }  from "../common/global";
+import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
+import { general_load, general_save, get_save_info }     from "../common/F_load_and_save";
+import { g_hres, g_mvm, g_save, g_maze, g_team, g_guld } from "./global_for_guild";
+import { g_pid, g_mes }  from "../common/global";
 
 let data_list:  {[uniq_no: number]:C_SaveData};
 
@@ -113,11 +114,11 @@ async function update_all(): Promise<void> {
 async function update_data_list(): Promise<void> {
         await get_save_info().then((jsonObj:any) => {
             try {
-                if (jsonObj.save !== undefined) {
+                if (jsonObj.save_info !== undefined) {
                     data_list = [];
-                    for (let save of jsonObj.save) {
+                    for (let save_info of jsonObj.save_info) {
                         const s = new C_SaveData();
-                        s.decode(save);
+                        s.decode(save_info);
                         data_list[s.uniq_no] = s;
                     }
                     return;
@@ -226,7 +227,7 @@ function do_R(): void {
 function isOK(): void { 
     is_save ? _isOK_for_save() : _isOK_for_load()
 }
-function _isOK_for_load(): void { 
+async function _isOK_for_load(): Promise<void> { 
     switch (mode) {
         case 'view':
             if (idx in data_list) {
@@ -238,10 +239,9 @@ function _isOK_for_load(): void {
             }
             break;
         case 'read_OK':
-            post_load_data().then(result => {
+            await post_load_data().then(result => {
                 if (result) {
                     g_mvm.notice_message('読み込みました!!');
-                    update_all();
                 } else {
                     g_mvm.warning_message('読み込みに失敗しました');
                 }
@@ -250,14 +250,14 @@ function _isOK_for_load(): void {
             break;
     }
 }
-function _isOK_for_save(): void { 
+async function _isOK_for_save(): Promise<void> { 
     switch (mode) {
         case 'view':
             mode = idx in data_list ? 'rewrite_OK' : 'write_OK';
             display_default_message();
             break;
         case 'write_OK':
-            post_save_data().then(result => {
+            await post_save_data().then(result => {
                 if (result) {
                     g_mvm.notice_message('新規保存しました!!');
                     update_all();
@@ -268,7 +268,7 @@ function _isOK_for_save(): void {
             });
             break;
         case 'rewrite_OK':
-            post_save_data().then(result => {
+            await post_save_data().then(result => {
                 if (result) {
                     g_mvm.notice_message('上書き保存しました！');
                     update_all();
@@ -293,9 +293,27 @@ async function post_load_data(): Promise<boolean> {
         is_active:  data_list[idx].is_active ? '1' : '0', 
         is_delete:  data_list[idx].is_delete ? '1' : '0', 
     });
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
 
     const  opt = new C_UrlOpt();
-    return await general_load(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
+    opt.set('pid',         g_pid[0]); 
+    opt.set('save',        save_data);
+    return general_load(opt, jsonObj=>{
+    })
+    .then(async(jsonObj:any)=>{
+        g_save.decode(jsonObj.save);
+        g_team[0] = g_save.all_team[0];
+        g_maze[0] = g_save.all_maze[0];
+        g_guld[0] = g_save.all_guld[0];
+
+        g_hres.length = 0;
+        for (let hero of g_save.all_guld[0].heroes) g_hres.push(hero);
+        return jsonObj.ecode == 0;
+    })
+    .then(async (YN:boolean)=>{
+        await update_all();
+        return YN;
+    }); 
 }
 
 async function post_save_data(): Promise<boolean> { 
@@ -311,8 +329,11 @@ async function post_save_data(): Promise<boolean> {
         is_active: '1', 
         is_delete: '0', 
     });
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
 
     const  opt = new C_UrlOpt();
+    opt.set('pid',         g_pid[0]); 
+    opt.set('save',        save_data);
     return await general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
 

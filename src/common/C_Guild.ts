@@ -44,11 +44,11 @@ export class C_Guild {
         }
     }
     public decode(a: JSON_Guild): C_Guild {
-        this.id      = a.id ??this.id;
+        this.id      = a.id ?? this.id;
         this.save_id = a.save_id ?? this.save_id;
         this.team_id = a.team_id ?? this.team_id;
         this.name    = a.name ?? this.name;
-        this.heroes  = C_Hero.decode_heroes(a.heroes);
+        if (a.heroes !== undefined) this.heroes  = C_Hero.decode_heroes(a.heroes);
         return this;
     }
     public static encode_all(all_guld: C_Guild[]): JSON_Guild[] {

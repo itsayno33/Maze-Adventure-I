@@ -166,7 +166,7 @@ export class C_Hero {
         const heroes = [] as C_Hero[];
         if (heroes_data !== undefined) {
             for (var hero_data of heroes_data) {
-                heroes.push(new C_Hero().decode(hero_data));
+                if (hero_data !== undefined) heroes.push(new C_Hero().decode(hero_data));
             }
         }
         return heroes;

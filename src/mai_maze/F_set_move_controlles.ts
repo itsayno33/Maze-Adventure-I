@@ -9,7 +9,7 @@ import { display_maze2D, display_maze3D,
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw }                 from "./global_for_maze";
-import { g_maze, g_team }             from "../common/global";
+import { g_maze, g_team }             from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -120,7 +120,7 @@ function key_press_function1(e: KeyboardEvent):void  {
     /************ *************************** **************/
 
 function clear_mask_around_the_team(): void {
-    g_maze.clear_mask_around_the_team();
+    g_maze.clear_mask_around_the_team(g_team);
 }
 
 function change_unexp_to_floor(p: C_Point): void {

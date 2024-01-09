@@ -15,6 +15,18 @@ export var g_vsw: C_SwitchView;
 
 import { init_after_loaded_DOM_in_common } from "../common/global";
 
+import { C_Maze } from "../common/C_Maze";
+export const g_maze = new C_Maze({maze_id: -1});
+
+import { C_Team } from "../common/C_Team";
+export const g_team = new C_Team();
+
+import { C_Guild } from "../common/C_Guild";
+export const g_guld = new C_Guild();
+
+import { C_SaveData } from "../common/C_SaveData";
+export const g_save = new C_SaveData();
+
 export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common();
 
