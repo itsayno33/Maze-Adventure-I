@@ -140,12 +140,27 @@ function update_info_list(): void {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = (i in data_list) ? `${data_list[i].title}<p></p>` : `新規保存 #${i.toString().padStart(2,'0')}<p></p>`;
 
+        li.id = i.toString();
+        li.addEventListener("click",_OK_Fnc, false);
         info_list.appendChild(li);
     }
 
-    idx = 0;
+    idx = 0; old_idx=999; 
     high_light_on(info_list, idx); 
     return;
+}
+let old_idx:number;
+function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    idx = Number(this.id); 
+    high_light_on(info_list, idx); 
+    update_info_detail(idx);
+
+    if (idx === old_idx) isOK();
+    else {
+        if (mode !== 'view') mode = 'view';
+        old_idx = idx;
+    }
+    display_default_message();
 }
 
 function clear_info_list() {

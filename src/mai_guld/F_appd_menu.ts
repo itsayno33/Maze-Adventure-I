@@ -59,7 +59,7 @@ export function display_appd_menu(): void {
     if (form === null) {display_guld_menu();return;} 
     info_detail = hero_info_create(form);
 
-    idx = 0;
+    idx = 0; old_idx = 999;
     high_light_on(info_list, idx); hero_info_form_set(new_hres, info_detail, idx); 
 
     add_default_ctls({
@@ -84,12 +84,29 @@ function get_list_info(): boolean {
     while (info_list.firstChild !== null) {
         info_list.removeChild(info_list.firstChild);
     }
-    for (let hero of new_hres) {
+    for (let ii in new_hres) {
         const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `${hero.name()}<p></p>`;
+        li.innerHTML = `${new_hres[ii].name()}<p></p>`;
+
+        li.id = ii.toString();
+        li.addEventListener("click",_OK_Fnc, false);
         info_list.appendChild(li);
     }
     return true;
+}
+let old_idx:number;
+function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    idx = Number(this.id); 
+    high_light_on(info_list, idx); 
+    hero_info_form_set(new_hres, info_detail, idx); 
+
+    if (idx === old_idx) isOK();
+    if (idx === old_idx) isOK();
+    else {
+        if (mode !== 'view') mode = 'view';
+        old_idx = idx;
+    }
+    display_default_message();
 }
 
 function do_U(): void {

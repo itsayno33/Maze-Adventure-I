@@ -65,9 +65,12 @@ export function display_hres_menu(): void {
     while (info_list.firstChild !== null) {
         info_list.removeChild(info_list.firstChild);
     }
-    for (let hero of g_hres) {
+    for (let ii in g_hres) {
         const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `${hero.name()}<p></p>`;
+        li.innerHTML = `${g_hres[ii].name()}<p></p>`;
+
+        li.id = ii.toString();
+        li.addEventListener("click",_OK_Fnc, false);
         info_list.appendChild(li);
     }
 
@@ -91,6 +94,17 @@ export function display_hres_menu(): void {
         keyEvent: true,
     });
     g_mvm.clear_message();
+}
+
+let old_idx:number;
+function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    idx = Number(this.id); 
+    g_mvm.clear_message();
+    high_light_on(info_list, idx); 
+    hero_info_form_set(g_hres, info_detail, idx);
+
+    if (idx === old_idx) isOK();
+    else old_idx = idx;
 }
 
 function do_U(): void {
