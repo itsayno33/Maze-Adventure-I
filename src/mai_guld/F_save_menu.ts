@@ -7,7 +7,8 @@ import {
     calc_cursor_pos_L,
     calc_cursor_pos_R,
     calc_cursor_pos_U,
-    calc_cursor_pos_D
+    calc_cursor_pos_D,
+    rmv_all_ctls
 } from "./F_default_menu";
 
 import { display_guld_menu }     from "./F_guild_menu";
@@ -106,15 +107,13 @@ function get_info_list_cols(): number {
 async function init_all() {
     mode = 'view';
     await init_data_list();
-    init_info_list();
-    init_info_detail();
+    init_view();
 }
 
 async function update_all(): Promise<void> {
     idx = 0;
     await update_data_list();
-    update_info_list();
-    update_info_detail(idx);
+    update_view(idx);
 }
 
 async function init_data_list() {}
@@ -140,6 +139,20 @@ async function update_data_list(): Promise<void> {
             }
         });
         return;
+}
+
+
+function init_view() {
+    init_info_list();
+    init_info_detail();
+}
+function update_view(idx: number) {
+    update_info_list();
+    update_info_detail(idx);
+}
+function clear_view() {
+    clear_info_list();
+    clear_info_detail();
 }
 
 function init_info_list() {
@@ -421,6 +434,17 @@ function _display_default_message_for_save(): void {
 }
 
 
+function go_back_guld_menu_for_first(): void {
+    rmv_all_ctls();
+    display_guld_menu();
+}
+
+function go_back_guld_menu(): void {
+    clear_view();
+    go_back_guld_menu_for_first();
+}
+
+
 
 const _svld_nor_ctls = {
     name: 'svld', 
@@ -436,7 +460,7 @@ function _rmv_svld_nor_ctls(): void {
     rmv_default_ctls(_svld_nor_ctls);
 }
 function _add_svld_nor_ctls(): void {
-    rmv_svld_ctls();
+    rmv_all_ctls();
     add_default_ctls(_svld_nor_ctls);
 }
 
@@ -449,37 +473,24 @@ function _rmv_svld_rtn_ctls(): void {
     rmv_default_ctls(_svld_rtn_ctls);
 }
 function _add_svld_rtn_ctls(): void {
-    rmv_svld_ctls();
+    rmv_all_ctls();
     add_default_ctls(_svld_rtn_ctls);
 }
 
 const _svld_chk_ctls = {
     name: 'svld_chk', 
-    isOK:  _do_kakunin,
-    isNG:  _do_kakunin,
+    isOK:  _do_check,
+    isNG:  _do_check,
     keyEvent: true,
 }
 function _rmv_svld_chk_ctls(): void {
     rmv_default_ctls(_svld_chk_ctls);
 }
 function _add_svld_chk_ctls(): void {
-    rmv_svld_ctls();
+    rmv_all_ctls();
     add_default_ctls(_svld_chk_ctls);
 }
-function _do_kakunin(): void {
+function _do_check(): void {
     g_mvm.clear_message();
     _add_svld_nor_ctls();
-}
-
-
-function go_back_guld_menu_for_first(): void {
-    rmv_svld_ctls();
-    display_guld_menu();
-}
-
-function go_back_guld_menu(): void {
-    clear_info_list();
-    clear_info_detail();
-
-    go_back_guld_menu_for_first();
 }

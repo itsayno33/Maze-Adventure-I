@@ -5,7 +5,8 @@ import {
     calc_cursor_pos_L,
     calc_cursor_pos_R,
     calc_cursor_pos_U,
-    calc_cursor_pos_D
+    calc_cursor_pos_D,
+    rmv_all_ctls
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
@@ -28,23 +29,6 @@ var info_detail: {[key: string]: HTMLLIElement};
 
 var mode = 'view';
 
-const appd_ctls = {
-    name: 'appd', 
-    do_U:  do_U,
-    do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
-    isOK:  isOK,
-    isNG:  isNG,
-    keyEvent: true,
-};
-export function rmv_appd_ctls(): void {
-    rmv_default_ctls(appd_ctls);
-}
-function add_appd_ctls(): void {
-    add_default_ctls(appd_ctls);
-}
-
 export function display_appd_menu(): void {
     hide_all_menu();
 
@@ -63,7 +47,7 @@ export function display_appd_menu(): void {
     get_info_list_cols();
     /* await */ init_all();
     /* await */ update_all();
-    add_appd_ctls();
+    _add_appd_nor_ctls();
     display_default_message();
 }
 
@@ -79,26 +63,40 @@ function get_info_list_cols(): number {
 async function init_all() {
     mode = 'view';
     await init_data_list();
-    init_info_list();
-    init_info_detail();
+    init_view();
 }
 
 async function update_all() {
     await update_data_list();
-    update_info_list();
-    update_info_detail(idx);
+    update_view(idx);
 }
 
 async function init_data_list() {
     new_hres = [];
 }
-
 async function update_data_list() {
     if (new_hres.length < 1) {
         for (let i = 0; i < 20; i++)  new_hres.push(make_hero());
     } else {
         new_hres.splice(idx, 1); idx = 0; 
     }
+}
+function exist_data(): boolean {
+    return new_hres.length > 0;
+}
+
+
+function init_view() {
+    init_info_list();
+    init_info_detail();
+}
+function update_view(idx: number) {
+    update_info_list();
+    update_info_detail(idx);
+}
+function clear_view() {
+    clear_info_list();
+    clear_info_detail();
 }
 
 function init_info_list() {
@@ -153,32 +151,24 @@ function clear_info_detail() {
 }
 
 function do_U(): void {
-    if (mode !== 'view')     return;
-    if (new_hres.length < 1) return;
     display_default_message();
 
     idx = calc_cursor_pos_U(idx, info_list.children.length, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx); 
 }
 function do_D(): void {
-    if (mode !== 'view')     return;
-    if (new_hres.length < 1) return;
     display_default_message()
 
     idx = calc_cursor_pos_D(idx, info_list.children.length, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx);  
 }
 function do_L(): void {
-    if (mode !== 'view')     return;
-    if (new_hres.length < 1) return;
     display_default_message();
 
     idx = calc_cursor_pos_L(idx, info_list.children.length, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx);
 }
 function do_R(): void {
-    if (mode !== 'view')     return;
-    if (new_hres.length < 1) return;
     display_default_message();
 
     idx = calc_cursor_pos_R(idx, info_list.children.length, info_list_cols);
@@ -186,25 +176,29 @@ function do_R(): void {
 }
 
 function isOK(): void { 
-    if (new_hres.length < 1) {isNG(); return;}
+    if (!exist_data()) {isNG(); return;}
 
     switch (mode) {
         case 'view':
             mode = 'recruit';
+            _add_appd_chk_ctls();
             display_default_message();
             break;
         case 'recruit':
             mode = 'check_OK';
+            _add_appd_chk_ctls();
             display_default_message();
             break;
         case 'check_OK':
             mode = 'view';
+            _add_appd_nor_ctls();
             g_mvm.notice_message('採用しました!!');
             g_hres.push(new_hres[idx]);
             _after_check();
             break;
         case 'check_NG':
             mode = 'view';
+            _add_appd_nor_ctls();
             g_mvm.normal_message('お帰りいただきました。。。');
             _after_check();
             break;
@@ -252,8 +246,43 @@ function display_default_message(): void {
 
 
 function go_back_guild_menu() {
-    clear_info_detail();
-
+    clear_view();
     rmv_appd_ctls();
     display_guld_menu();
+}
+
+
+export function rmv_appd_ctls(): void {
+    _rmv_appd_nor_ctls();
+    _rmv_appd_chk_ctls();
+}
+const appd_nor_ctls = {
+    name: 'appd_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK,
+    isNG:  isNG,
+    keyEvent: true,
+};
+function _rmv_appd_nor_ctls(): void {
+    rmv_default_ctls(appd_nor_ctls);
+}
+function _add_appd_nor_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(appd_nor_ctls);
+}
+const appd_chk_ctls = {
+    name: 'appd_chk', 
+    isOK:  isOK,
+    isNG:  isNG,
+    keyEvent: true,
+};
+function _rmv_appd_chk_ctls(): void {
+    rmv_default_ctls(appd_chk_ctls);
+}
+function _add_appd_chk_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(appd_chk_ctls);
 }
