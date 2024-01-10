@@ -117,6 +117,10 @@ export class C_Team implements I_Exist {
             default: return '🌀';
         }
     }
+
+    public hres():  C_Hero[] {
+        return [...this.heroes];
+    } 
     public get_p(): C_Point {
         return this.walker.get_p();
     }

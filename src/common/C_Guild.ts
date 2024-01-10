@@ -34,6 +34,12 @@ export class C_Guild {
         this.heroes  = [];
         if (a !== undefined) this.decode(a);
     }
+
+    public hres(): C_Hero[] {
+        return [...this.heroes];
+    }
+
+    
     public encode(): JSON_Guild {
         return {
             id:      this.id,
