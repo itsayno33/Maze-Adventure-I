@@ -1,7 +1,9 @@
 import { C_Hero, JSON_Hero } from "./C_Hero";
+import { _get_uuid } from "./F_Rand";
 
 export type JSON_Guild = {
     id?:      number,
+    uniq_id?: string,
     save_id?: number,
     team_id?: number,
     name?:    string,
@@ -12,6 +14,7 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
     if (a === undefined) return;
     alert("Team Info:" 
         + "\nid:      " + (a.id      ?? '?')
+        + "\nuniq_id: " + (a.uniq_id ?? '?')
         + "\nsave_id: " + (a.save_id ?? '?')
         + "\nteam_id: " + (a.team_id ?? '?')
         + "\nname:    " + (a.name    ?? '?')
@@ -21,6 +24,7 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
 
 export class C_Guild {
     public id:      number;
+    public uniq_id: string;
     public save_id: number;
     public team_id: number;
     public name:    string;
@@ -28,6 +32,7 @@ export class C_Guild {
 
     public constructor(a?: JSON_Guild) {
         this.id      = -1;
+        this.uniq_id = 'mai_guld#' + _get_uuid();
         this.save_id = -1;
         this.team_id = -1;
         this.name    = '';
@@ -43,6 +48,7 @@ export class C_Guild {
     public encode(): JSON_Guild {
         return {
             id:      this.id,
+            uniq_id: this.uniq_id,
             save_id: this.save_id,
             team_id: this.team_id,
             name:    this.name,
@@ -51,6 +57,7 @@ export class C_Guild {
     }
     public decode(a: JSON_Guild): C_Guild {
         this.id      = a.id ?? this.id;
+        this.uniq_id = a.uniq_id ?? this.uniq_id;
         this.save_id = a.save_id ?? this.save_id;
         this.team_id = a.team_id ?? this.team_id;
         this.name    = a.name ?? this.name;

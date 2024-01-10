@@ -3,9 +3,11 @@ import { C_Point, JSON_Point } from "./C_Point";
 import { C_Walker }            from "./C_Walker";
 import { T_Direction }         from "./T_Direction";
 import { C_Hero, JSON_Hero }   from "./C_Hero";
+import { _get_uuid } from "./F_Rand";
 
 type __init_arg = {
     id?:        number, 
+    uniq_id?:   string, 
     save_id?:   number, 
     name?:      string, 
     maze_name?: string, 
@@ -21,6 +23,7 @@ type __init_arg = {
 
 export type JSON_Team = {
     id?:        number, 
+    uniq_id?:   string, 
     save_id?:   number, 
     name?:      string, 
     maze_name?: string, 
@@ -38,6 +41,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
     if (a === undefined) return;
     alert("Team Info:" 
         + "\nid:    "     + (a.id        ?? '?')
+        + "\nuniq_id:  "  + (a.uniq_id   ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
         + "\nmaze_name: " + (a.maze_name ?? '?')
         + "\nguld_name: " + (a.guld_name ?? '?')
@@ -56,6 +60,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 export class C_Team implements I_Exist {
     protected my_id:     number;
     protected my_name:   string;
+    protected uniq_id:   string;
     protected maze_name: string;
     protected guld_name: string;
     protected save_id:   number;
@@ -69,6 +74,7 @@ export class C_Team implements I_Exist {
 
         this.my_id     =  0;
         this.my_name   = 'Neo Team?';
+        this.uniq_id   = 'mai_team#' + _get_uuid();
         this.maze_name = 'Neo Maze?';
         this.guld_name = 'Neo Guild?';
         this.save_id   =  0;
@@ -80,6 +86,7 @@ export class C_Team implements I_Exist {
     protected __init(a: __init_arg): void {
         this.my_id     = a.id        ?? this.my_id
         this.my_name   = a.name      ?? this.my_name;
+        this.uniq_id   = a.uniq_id   ?? this.uniq_id;
         this.maze_name = a.maze_name ?? this.maze_name;
         this.guld_name = a.guld_name ?? this.guld_name;
         this.save_id   = a.save_id   ?? this.save_id;
@@ -228,6 +235,7 @@ export class C_Team implements I_Exist {
         return {
             id:        this.my_id,
             name:      this.my_name,
+            uniq_id:   this.uniq_id,
             maze_name: this.maze_name,
             guld_name: this.guld_name,
             save_id:   this.save_id,
@@ -242,6 +250,7 @@ export class C_Team implements I_Exist {
 
         if (a.id   !== undefined)      this.my_id       = a.id;
         if (a.name !== undefined)      this.my_name     = a.name;
+        if (a.uniq_id !== undefined)   this.uniq_id     = a.uniq_id;
         if (a.maze_name !== undefined) this.maze_name   = a.maze_name;
         if (a.guld_name !== undefined) this.guld_name   = a.guld_name;
         if (a.save_id !== undefined)   this.save_id     = a.save_id;

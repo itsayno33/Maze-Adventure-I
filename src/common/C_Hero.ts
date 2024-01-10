@@ -1,7 +1,9 @@
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
+import { _get_uuid } from "./F_Rand";
 
 export type JSON_Hero = {
     id?:        number, 
+    uniq_id?:   string, 
     save_id?:   number, 
     team_id?:   number, 
     name?:      string, 
@@ -29,6 +31,7 @@ export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void {
         if (a[i] === undefined) continue;
         alert("Hero[" + i.toString() + "] Info:\n" 
             + "\nid:       "     + (a[i]?.id        ?? '?')
+            + "\nuniq_id   "     + (a[i]?.uniq_id   ?? '?')
             + "\nname:     "     + (a[i]?.name      ?? '?')
             + "\nsave_id:  "     + (a[i]?.save_id   ?? '?')
             + "\nteam_id:  "     + (a[i]?.team_id   ?? '?')
@@ -41,6 +44,7 @@ export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void {
 export class C_Hero {
     protected my_id:    number;
     protected my_name:  string;
+    protected uniq_id:  string; 
     protected save_id:  number; 
     protected team_id:  number; 
     protected sex:      number; 
@@ -58,6 +62,7 @@ export class C_Hero {
     public constructor(a?: JSON_Hero) {
         this.my_id      = 0;
         this.my_name    = 'No Name Hero';
+        this.uniq_id    = 'mai_hero#' + _get_uuid();
         this.save_id    = 0;
         this.team_id    = 0;
         this.sex        = 0; 
@@ -83,6 +88,7 @@ export class C_Hero {
     public encode(): JSON_Hero {
         const ret: JSON_Hero = {
             id:        this.my_id,
+            uniq_id:   this.uniq_id,
             name:      this.my_name,
             save_id:   this.save_id,
             team_id:   this.team_id,
@@ -102,6 +108,7 @@ export class C_Hero {
         if (a === undefined) return this;
         if (a.id       !== undefined) this.my_id   = a.id;
         if (a.name     !== undefined) this.my_name = a.name;
+        if (a.uniq_id  !== undefined) this.uniq_id = a.uniq_id;
         if (a.save_id  !== undefined) this.save_id = a.save_id;
         if (a.team_id  !== undefined) this.team_id = a.team_id;
         if (a.sex      !== undefined) this.sex     = a.sex;

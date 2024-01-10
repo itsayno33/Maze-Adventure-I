@@ -28,8 +28,8 @@ function ___gaussianRand(rand: T_frand = frand) {
 }
 
 // 少し真面目な正規分布乱数(整数)
-export function _inrand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    return Math.floor(_nrand(min, max));
+export function _inrand(min: number = 0, max: number = 1, dd: number = 3.0, rand: T_frand = frand): number {
+    return Math.floor(_nrand(min, max, dd, rand));
 }
 
 // 少し真面目な正規分布乱数(実数)
@@ -72,6 +72,15 @@ export class C_SeededRand {
         this.seed = (this.seed * 9301 + 49297) % 233280;
         return this.seed / 233280.0;
     }
+}
+
+//ユニークID(uuid)の生成
+export function _get_uuid(len: number = 20, rand: T_frand = frand): string {
+    const lft = (new Date()).getTime().toString(16); // たぶん13桁
+    const rgt_len = _max([len - lft.length, 1]);
+
+    const rgt = Math.floor(Math.pow(10, rgt_len) * rand()).toString(16);
+    return lft + rgt;
 }
 
 // 確率に基づく要素選択
