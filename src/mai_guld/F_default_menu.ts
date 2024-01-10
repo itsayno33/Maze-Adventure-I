@@ -131,12 +131,12 @@ export function rmv_default_ctls(call: T_controlles):void {
 
     if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
 
-    u_arrow.style.setProperty('display', 'none');
-    d_arrow.style.setProperty('display', 'none');
-    l_arrow.style.setProperty('display', 'none');
-    r_arrow.style.setProperty('display', 'none');
-    y_btn  .style.setProperty('display', 'none');
-    n_btn  .style.setProperty('display', 'none');
+    u_arrow.style.display = 'none';
+    d_arrow.style.display = 'none';
+    l_arrow.style.display = 'none';
+    r_arrow.style.display = 'none';
+    y_btn  .style.display = 'none';
+    n_btn  .style.display = 'none';
 }
 
 export function add_default_ctls(call: T_controlles):void{
@@ -161,12 +161,12 @@ export function add_default_ctls(call: T_controlles):void{
 
     if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
 
-    u_arrow.style.setProperty('display', _c(call?.do_U) ? 'block' : 'none');
-    d_arrow.style.setProperty('display', _c(call?.do_D) ? 'block' : 'none');
-    l_arrow.style.setProperty('display', _c(call?.do_L) ? 'block' : 'none');
-    r_arrow.style.setProperty('display', _c(call?.do_R) ? 'block' : 'none');
-    y_btn  .style.setProperty('display', _c(call?.isOK) ? 'block' : 'none');
-    n_btn  .style.setProperty('display', _c(call?.isNG) ? 'block' : 'none');
+    u_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
+    d_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
+    l_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
+    r_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
+    y_btn  .style.display = _c(call?.do_U) ? 'block' : 'none';
+    n_btn  .style.display = _c(call?.do_U) ? 'block' : 'none';
 }
 
 

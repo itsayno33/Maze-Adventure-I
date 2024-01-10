@@ -14,7 +14,7 @@ import {
 import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
+import { C_SaveData }            from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }     from "../common/F_load_and_save";
 import { g_hres, g_mvm, g_save, g_maze, g_team, g_guld } from "./global_for_guild";
 import { g_pid, g_mes }  from "../common/global";
@@ -49,11 +49,6 @@ export function display_load_menu(): void {
     dom_info_fields = document.getElementById('load_info_fields') as HTMLFieldSetElement;
     info_list       = document.getElementById('load_list')        as HTMLUListElement;
 
-    if (dom_view_switch === null) return;
-    if (dom_info_detail === null) return;
-    if (dom_info_fields === null) return;
-    if (info_list       === null) return;
-
     _display_SL_menu();
 }
 export function display_save_menu(): void {
@@ -64,15 +59,15 @@ export function display_save_menu(): void {
     dom_info_fields = document.getElementById('save_info_fields') as HTMLFieldSetElement;
     info_list       = document.getElementById('save_list')        as HTMLUListElement;
 
-    if (dom_view_switch === null) return;
-    if (dom_info_detail === null) return;
-    if (dom_info_fields === null) return;
-    if (info_list          === null) return;
-
     _display_SL_menu();
 }
 async function _display_SL_menu(): Promise<void> {
     hide_all_menu();
+
+    if (dom_view_switch === null) {display_guld_menu();return;}
+    if (dom_info_detail === null) {display_guld_menu();return;}
+    if (dom_info_fields === null) {display_guld_menu();return;}
+    if (info_list       === null) {display_guld_menu();return;}
 
     dom_view_switch.style.display = 'block';
 

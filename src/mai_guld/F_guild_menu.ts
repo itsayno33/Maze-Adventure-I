@@ -42,7 +42,7 @@ export function display_guld_menu(): void {
     if (dom_view_switch === null) return;
     if (menu_list === null) return;
 
-    dom_view_switch.style.setProperty('display', 'block');
+    dom_view_switch.style.display = 'block';
 
     init_all();
     update_all();
@@ -76,6 +76,7 @@ function init_view() {
         menu_fnc[menu_item.id] = ii;
         menu_item.addEventListener("click",_OK_Fnc, false);
     }
+    idx_guld = 0;
     high_light_on(menu_list, 0); 
 }
 function _OK_Fnc(this: HTMLElement, e: MouseEvent): void {

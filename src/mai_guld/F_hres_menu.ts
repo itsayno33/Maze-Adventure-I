@@ -40,27 +40,25 @@ export function display_hres_menu(): void {
     if (dom_info_fields === null) {display_guld_menu();return;}
     if (info_list       === null) {display_guld_menu();return;}
 
-    dom_view_switch.style.setProperty('display', 'block');
+    dom_view_switch.style.display = 'block';
 
     get_info_list_cols();
     init_all();
     update_all();
 
     if (!exist_data()) {
-        info_list      .style.setProperty('display', 'none');
-        dom_info_fields.style.setProperty('display', 'none');
+        info_list      .style.display = 'none';
+        dom_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
         _add_hres_rtn_ctls();
         return;
     } else {
-        info_list      .style.setProperty('display', 'block');
-        dom_info_fields.style.setProperty('display', 'block');
+        info_list      .style.display = 'block';
+        dom_info_fields.style.display = 'block';
     }
 
-
     idx = 0;
-    //update_info_detail()    
 
     _add_hres_nor_ctls();
     display_default_message();

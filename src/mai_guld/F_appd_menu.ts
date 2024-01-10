@@ -42,7 +42,7 @@ export function display_appd_menu(): void {
     if (dom_info_fields === null) {display_guld_menu();return;}
     if (info_list       === null) {display_guld_menu();return;}
 
-    dom_view_switch.style.setProperty('display', 'block');
+    dom_view_switch.style.display = 'block';
 
     get_info_list_cols();
     /* await */ init_all();
