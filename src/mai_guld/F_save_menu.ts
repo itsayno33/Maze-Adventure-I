@@ -30,9 +30,9 @@ let mode = 'view';
 let is_save:boolean;
 
 
-let dom_view_switch_SL : HTMLDivElement;
-let dom_SL_info_fields : HTMLFieldSetElement;
-let dom_SL_info_detail : HTMLUListElement;
+let dom_view_switch : HTMLDivElement;
+let dom_info_fields : HTMLFieldSetElement;
+let dom_info_detail : HTMLUListElement;
 
 export function rmv_svld_ctls(): void {
     _rmv_svld_nor_ctls();
@@ -43,30 +43,29 @@ export function rmv_svld_ctls(): void {
 export function display_load_menu(): void {
     is_save = false;
 
+    dom_view_switch = document.getElementById('gld_view_switch_load') as HTMLDivElement;
+    dom_info_detail = document.getElementById('load_info_detail') as HTMLUListElement;
+    dom_info_fields = document.getElementById('load_info_fields') as HTMLFieldSetElement;
+    info_list       = document.getElementById('load_list')        as HTMLUListElement;
 
-    dom_view_switch_SL = document.getElementById('gld_view_switch_load') as HTMLDivElement;
-    dom_SL_info_detail = document.getElementById('load_info_detail') as HTMLUListElement;
-    dom_SL_info_fields = document.getElementById('load_info_fields') as HTMLFieldSetElement;
-    info_list          = document.getElementById('load_list')        as HTMLUListElement;
-
-    if (dom_view_switch_SL === null) return;
-    if (dom_SL_info_detail === null) return;
-    if (dom_SL_info_fields === null) return;
-    if (info_list          === null) return;
+    if (dom_view_switch === null) return;
+    if (dom_info_detail === null) return;
+    if (dom_info_fields === null) return;
+    if (info_list       === null) return;
 
     _display_SL_menu();
 }
 export function display_save_menu(): void {
     is_save = true;
 
-    dom_view_switch_SL = document.getElementById('gld_view_switch_save') as HTMLDivElement;
-    dom_SL_info_detail = document.getElementById('save_info_detail') as HTMLUListElement;
-    dom_SL_info_fields = document.getElementById('save_info_fields') as HTMLFieldSetElement;
-    info_list          = document.getElementById('save_list')        as HTMLUListElement;
+    dom_view_switch = document.getElementById('gld_view_switch_save') as HTMLDivElement;
+    dom_info_detail = document.getElementById('save_info_detail') as HTMLUListElement;
+    dom_info_fields = document.getElementById('save_info_fields') as HTMLFieldSetElement;
+    info_list       = document.getElementById('save_list')        as HTMLUListElement;
 
-    if (dom_view_switch_SL === null) return;
-    if (dom_SL_info_detail === null) return;
-    if (dom_SL_info_fields === null) return;
+    if (dom_view_switch === null) return;
+    if (dom_info_detail === null) return;
+    if (dom_info_fields === null) return;
     if (info_list          === null) return;
 
     _display_SL_menu();
@@ -74,24 +73,24 @@ export function display_save_menu(): void {
 async function _display_SL_menu(): Promise<void> {
     hide_all_menu();
 
-    dom_view_switch_SL.style.display = 'block';
+    dom_view_switch.style.display = 'block';
 
     get_info_list_cols();
-    init_info_detail();
+
+    await init_all();
     await update_all();
 
     if (!is_save && Object.keys(data_list).length < 1) {
         info_list.style.display = 'none';
-        dom_SL_info_fields.style.display = 'none';
+        dom_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
         _add_svld_rtn_ctls();
     } else {
         info_list.style.display = 'block';
-        dom_SL_info_fields.style.display = 'block';
+        dom_info_fields.style.display = 'block';
         _add_svld_nor_ctls();
     }
-    mode = 'view';
     display_default_message();
 }
 
@@ -104,12 +103,21 @@ function get_info_list_cols(): number {
     return info_list_cols;
 }
 
+async function init_all() {
+    mode = 'view';
+    await init_data_list();
+    init_info_list();
+    init_info_detail();
+}
+
 async function update_all(): Promise<void> {
     idx = 0;
     await update_data_list();
     update_info_list();
     update_info_detail(idx);
 }
+
+async function init_data_list() {}
 
 async function update_data_list(): Promise<void> {
         await get_save_info().then((jsonObj:any) => {
@@ -134,6 +142,10 @@ async function update_data_list(): Promise<void> {
         return;
 }
 
+function init_info_list() {
+    clear_info_list();
+}
+
 function update_info_list(): void {
     clear_info_list();
     for (let i = 0; i < 20; i++) {
@@ -145,7 +157,6 @@ function update_info_list(): void {
         info_list.appendChild(li);
     }
 
-    idx = 0; old_idx=999; 
     high_light_on(info_list, idx); 
     return;
 }
@@ -167,15 +178,7 @@ function clear_info_list() {
     while (info_list.firstChild !== null) {
         info_list.removeChild(info_list.firstChild);
     }
-}
-
-function clear_info_detail() {
-    for (let elm in info_detail) {
-        delete info_detail[elm];
-    }
-    while (dom_SL_info_detail.firstChild !== null) {
-        dom_SL_info_detail.removeChild(dom_SL_info_detail.firstChild);
-    }
+    idx = 0; old_idx=999; 
 }
 
 function init_info_detail(): void {
@@ -193,7 +196,7 @@ function _append_elm(id: string): void {
     li.id = 'SL_detail' + id;
 
     info_detail[id] = li;
-    dom_SL_info_detail.appendChild(li);
+    dom_info_detail.appendChild(li);
 }
 
 function update_info_detail(idx: number) {
@@ -207,6 +210,15 @@ function update_info_detail(idx: number) {
         info_detail['detail']   .innerHTML = ' ';
         info_detail['point']    .innerHTML = ' --- ';
         info_detail['save_time'].innerHTML = ' --- ';
+    }
+}
+
+function clear_info_detail() {
+    for (let elm in info_detail) {
+        delete info_detail[elm];
+    }
+    while (dom_info_detail.firstChild !== null) {
+        dom_info_detail.removeChild(dom_info_detail.firstChild);
     }
 }
 
