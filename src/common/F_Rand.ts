@@ -1,4 +1,4 @@
-import { _round } from "./F_Math";
+import { _max, _min, _round } from "./F_Math";
 
 // 乱数関数呼び出し用の型宣言
 type T_frand = (()=>number)
@@ -29,19 +29,23 @@ function ___gaussianRand(rand: T_frand = frand) {
 
 // 少し真面目な正規分布乱数(整数)
 export function _inrand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    return _irand(min, max, ()=>{return _nrand(0, 1, rand)[0]})
+    return Math.floor(_nrand(min, max));
 }
 
-// 少し真面目な正規分布乱数(実数 × 2)
+// 少し真面目な正規分布乱数(実数)
 // 一様確率変数a,bを変数関数を用いて x=f(a,b), y=g(a,b)として2つの正規分布乱数x,yを得る
 // x = f(a,b) = sqrt(-2*log(a)) * sin(2*π*b) 
 // y = g(a,b) = sqrt(-2*log(a)) * cos(2*π*b) 
-export function _nrand(min: number = 0, max: number = 1, rand: T_frand = frand): [number, number] {
+export function _nrand(min: number = 0.0, max: number = 1.0, dd: number = 3.0, rand: T_frand = frand): number {
+    const ave = 0.5;
     const a = rand();
     const b = rand();
-    const x = Math.floor(_fab(a, b) * (max - min +1) + min);
-    const y = Math.floor(_gab(a, b) * (max - min +1) + min);
-    return [x, y];
+    let x = ave + _fab(a, b) / (2.0 * dd); // ここまで、N(0,1)の正規分布乱数の作成
+
+    x = min + x * (max - min);
+    x = _max([min, x]);
+    x = _min([max, x]);
+    return x;
 }
 function _fab(a: number, b: number): number {
     return Math.sqrt(-2.0 * Math.log(a)) * Math.sin(2.0 * Math.PI * b);

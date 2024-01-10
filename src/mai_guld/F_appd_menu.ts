@@ -16,6 +16,8 @@ import { high_light_on }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_mvm, g_hres }         from "./global_for_guild";
 import { make_hero }             from "../common/F_create_hero";
+import { get_new_hero } from "../common/F_load_and_save";
+import { _alert, g_mes } from "../common/global";
 
 let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
@@ -60,23 +62,33 @@ function get_info_list_cols(): number {
     return info_list_cols;
 }
 
-async function init_all() {
+function init_all() {
     mode = 'view';
-    await init_data_list();
+    init_data_list();
     init_view();
 }
 
-async function update_all() {
-    await update_data_list();
-    update_view(idx);
+function update_all() {
+    update_data_list().then(()=>{
+        update_view(0);
+    })
 }
 
-async function init_data_list() {
+function init_data_list() {
     new_hres = [];
 }
 async function update_data_list() {
     if (new_hres.length < 1) {
-        for (let i = 0; i < 20; i++)  new_hres.push(make_hero());
+        return await get_new_hero(20)?.then((jsonObj:any)=>{
+            if (jsonObj.hres === undefined) {
+                g_mes.warning_message('不正なデータを受信しました' + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return;
+            }
+            for (let hero_data of jsonObj.hres) {
+                new_hres.push((new C_Hero()).decode(hero_data));
+            }
+        })
     } else {
         new_hres.splice(idx, 1); idx = 0; 
     }

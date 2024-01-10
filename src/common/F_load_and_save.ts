@@ -3,11 +3,12 @@ import { alert_team_info }     from "../common/C_Team"; // 通常時はコメン
 import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメントアウトされている関数
 
 import { _round, _min, _max  } from "../common/F_Math";
-import { C_UrlOpt }            from "../common/C_UrlOpt";          
+import { C_UrlOpt }            from "../common/C_UrlOpt";  
 import { POST_and_get_JSON, POST_and_move_page } from "../common/F_POST";
 import { 
     g_mes, g_pid, 
-    g_url, g_url_get_maze, g_url_get_save, g_url_check_JSON 
+    g_url, g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
+    _alert 
 } from "../common/global";
 
 type T_callback = (jsonObj:any)=>(boolean|void);
@@ -18,7 +19,7 @@ export function get_mai_maze(callback?: T_callback): void {
     POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
             g_mes.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
-            alert(jsonObj.emsg);
+            _alert(jsonObj.emsg);
             return;
         }
 
@@ -52,10 +53,35 @@ export function get_save_info(callback?: T_callback): any {
             return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
             return undefined;
         }
     });
 }
+
+export async function get_new_hero(num: number = 20, callback?: T_callback): Promise<any|undefined> {
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'new_hero'); 
+    opt.set('number',      num.toString()); 
+    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
+        if (jsonObj.ecode == 0) {
+            g_mes.normal_message('正常にロードされました');
+        
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+                alert_heroes_info(jsonObj?.team?.heroes);
+            }
+        
+            if (callback !== undefined) callback(jsonObj);
+            return jsonObj;
+        } else {
+            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+    });
+}
+
 
 export function instant_load(callback?: T_callback): any {
     const opt = new C_UrlOpt();
@@ -94,6 +120,7 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
             return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
             return undefined;
         }
     });
@@ -135,7 +162,7 @@ function __auto_save(opt: C_UrlOpt, callback?: T_callback): any {
             return jsonObj;
         } else {
             g_mes.warning_message("セーブできませんでした\n" + jsonObj.emsg);
-//            alert(jsonObj.emsg);
+            _alert(jsonObj.emsg);
             return undefined;
         }
         

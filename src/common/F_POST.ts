@@ -1,6 +1,7 @@
-import { C_UrlOpt } from "./C_UrlOpt";
-import { _min } from "./F_Math";
-import { g_mes }    from "./global";
+import { C_UrlOpt }      from "./C_UrlOpt";
+import { _min }          from "./F_Math";
+import { g_mes, _alert } from "./global";
+
 
 export async function POST_and_get_JSON(
     url: string, 
@@ -26,18 +27,13 @@ export async function POST_and_get_JSON(
         .then(txt=>{
             const tx = txt.slice();
 
-            const page_size = 300;
-            if (monitor) {
-                for (let i = 0;i < tx.length; i += page_size) 
-                    if (!window.confirm(tx.substring(i, i+page_size))) break;
-            }
+            if (monitor) _alert(tx);
 
             try {
                 return JSON.parse(txt);
             } catch(err) {
                 g_mes.warning_message('JSON形式のデコードエラー');
-                for (let i = 0;i < tx.length; i += page_size) 
-                    if (!window.confirm(tx.substring(i, i+page_size))) break;
+                _alert(tx);
                 return undefined;
             }
         });

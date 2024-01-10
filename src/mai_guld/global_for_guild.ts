@@ -1,7 +1,3 @@
-export const g_url_get_maze    = 0;
-export const g_url_check_JSON  = 1;
-export const g_url: string[] = new Array(2);
-
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
