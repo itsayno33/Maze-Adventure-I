@@ -11,7 +11,7 @@ import { g_maze, g_team, init_debug_mode }     from "./global_for_maze";
 import { g_mes, g_pid, g_url, g_url_get_maze } from "../common/global";
 
 export function get_mai_maze(): void {
-    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
+    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_maze", num: 333});
  
     POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {

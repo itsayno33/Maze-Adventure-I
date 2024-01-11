@@ -59,6 +59,28 @@ export function get_save_info(callback?: T_callback): any {
     });
 }
 
+export async function get_mai_guld(callback?: T_callback): Promise<any|undefined> {
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'new_game'); 
+    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
+        if (jsonObj.ecode == 0) {
+            g_mes.normal_message('正常にロードされました');
+        
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+                alert_heroes_info(jsonObj?.team?.heroes);
+            }
+        
+            if (callback !== undefined) callback(jsonObj);
+            return jsonObj;
+        } else {
+            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+    });
+}
+
 export async function get_new_hero(num: number = 20, callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'new_hero'); 

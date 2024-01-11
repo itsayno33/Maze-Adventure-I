@@ -1,16 +1,16 @@
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
-import { init_after_loaded_DOM_in_common } from "../common/global";
+import { _alert, g_mes, init_after_loaded_DOM_in_common } from "../common/global";
 
 import { C_Maze } from "../common/C_Maze";
-export const g_maze = [new C_Maze({maze_id: -1})];
+export const g_maze: {[uniq_id: string]: C_Maze} = {};
 
 import { C_Team } from "../common/C_Team";
-export const g_team = [new C_Team()];
+export const g_team: {[uniq_id: string]: C_Team} = {};
 
 import { C_Guild } from "../common/C_Guild";
-export const g_guld = [new C_Guild()];
+export const g_guld: {[uniq_id: string]: C_Guild} = {};
 
 import { C_SaveData } from "../common/C_SaveData";
 export const g_save = new C_SaveData();
@@ -21,17 +21,31 @@ import { C_GldViewMessage }  from "./C_GldViewMessage";
 export var g_mvm: C_GldViewMessage;
 
 import { C_Hero }            from "../common/C_Hero";
-export const g_hres = [] as C_Hero[];
+import { get_mai_guld } from "../common/F_load_and_save";
+//export const g_hres = [] as C_Hero[];
 
 export function init_before_new_games(player_id: number): void {
-    // 本来はここでNew Gameのデータをサーバーから読み込む感じ
-    // get_mai_guld();
 
-    g_guld[0].heroes   = g_hres;
-    g_save.all_maze    = g_maze;
-    g_save.all_team    = g_team;
-    g_save.all_guld    = g_guld;
+    get_mai_guld().then((jsonObj:any)=>{ 
+        if (jsonObj.save === undefined) {
+            _alert('不正なデータを受信しました(New Game)' + jsonObj.emsg);
+            return;
+        }
+
+        g_save.decode(jsonObj.save);
+
+        for (let ii in g_maze) delete g_maze[ii];
+        for (let maze of g_save.all_maze) g_maze[maze.get_uniq_id()] = maze;
+    
+        for (let ii in g_team) delete g_team[ii];
+        for (let team of g_save.all_team) g_team[team.get_uniq_id()] = team;
+    
+        for (let ii in g_guld) delete g_guld[ii];
+        for (let guld of g_save.all_guld) g_guld[guld.get_uniq_id()] = guld;
+    });
+    return;
 }
+
 
 export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common();

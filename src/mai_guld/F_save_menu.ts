@@ -15,8 +15,8 @@ import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 import { C_SaveData }            from "../common/C_SaveData";
-import { general_load, general_save, get_save_info }     from "../common/F_load_and_save";
-import { g_hres, g_mvm, g_save, g_maze, g_team, g_guld } from "./global_for_guild";
+import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
+import { g_mvm, g_save, g_maze, g_team, g_guld }      from "./global_for_guild";
 import { g_pid, g_mes }  from "../common/global";
 
 let data_list:  {[uniq_no: number]:C_SaveData};
@@ -322,8 +322,6 @@ async function post_load_data(): Promise<boolean> {
         uniq_no:    idx, 
         save_id:    data_list[idx].save_id, 
         title:      data_list[idx].title, 
-        detail:     data_list[idx].detail, 
-        point:      data_list[idx].point, 
         auto_mode:  data_list[idx].auto_mode ? '1' : '0', 
         is_active:  data_list[idx].is_active ? '1' : '0', 
         is_delete:  data_list[idx].is_delete ? '1' : '0', 
@@ -333,16 +331,19 @@ async function post_load_data(): Promise<boolean> {
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
-    return general_load(opt, jsonObj=>{
-    })
+    return general_load(opt)
     .then(async(jsonObj:any)=>{
         g_save.decode(jsonObj.save);
-        g_team[0] = g_save.all_team[0];
-        g_maze[0] = g_save.all_maze[0];
-        g_guld[0] = g_save.all_guld[0];
 
-        g_hres.length = 0;
-        for (let hero of g_save.all_guld[0].heroes) g_hres.push(hero);
+        for (let ii in g_maze) delete g_maze[ii];
+        for (let maze of g_save.all_maze) g_maze[maze.get_uniq_id()] = maze;
+
+        for (let ii in g_team) delete g_team[ii];
+        for (let team of g_save.all_team) g_team[team.get_uniq_id()] = team;
+
+        for (let ii in g_guld) delete g_guld[ii];
+        for (let guld of g_save.all_guld) g_guld[guld.get_uniq_id()] = guld;
+
         return jsonObj.ecode == 0;
     })
     .then(async (YN:boolean)=>{
@@ -358,8 +359,6 @@ async function post_save_data(): Promise<boolean> {
 //        save_id:    data_list[idx].save_id, 
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
         detail:    '冒険者情報',                    // data_list[idx].detail, 
-        point:     '最初のギルド', 
-        team_name: '最初のギルド',
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 

@@ -226,6 +226,8 @@ export class C_Maze {
         }
         return masks;
     }
+    public get_uniq_id(): string { return this.uniq_id}
+
 
     public get_name(): string {
         return this.name;

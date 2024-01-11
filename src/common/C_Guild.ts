@@ -43,7 +43,17 @@ export class C_Guild {
     public hres(): C_Hero[] {
         return [...this.heroes];
     }
+    public clear_hres(): void {
+        this.heroes = [];
+    }
+    public add_hero(hero: C_Hero): void {
+        this.heroes.push(hero);
+    }
+    public rmv_hero(hero: C_Hero): void {
+        for (let ii in this.heroes) if (hero == this.heroes[ii]) delete this.heroes[ii];
+    }
 
+    public get_uniq_id(): string { return this.uniq_id}
     
     public encode(): JSON_Guild {
         return {

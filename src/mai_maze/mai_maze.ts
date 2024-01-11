@@ -5,7 +5,7 @@
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 import { get_mai_maze }          from "./F_load_and_save";
 import { init_after_loaded_DOM } from "./global_for_maze";
-import { g_pid, g_url, g_url_check_JSON, g_url_get_maze } from "../common/global";
+import { g_pid, g_url, g_url_check_JSON, g_url_get_guld, g_url_get_maze, g_url_get_save } from "../common/global";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
@@ -29,9 +29,13 @@ declare global {
 //（どうやらインターフェースはプロパティ定義のオブジェクトになってるらしい）
 const tsCaller: I_TsCall = (() => {
     return {
-        get_init_data: (url_baze: string, player_id: number): void => {
-            g_url[g_url_get_maze]   = url_baze + "/mai_maze.php";
-            g_url[g_url_check_JSON] = url_baze + "/check_JSON.php";
+        get_init_data: (url_base: string, player_id: number): void => {
+//            const url_top = parent_url(url_base);
+            const url_top = url_base;
+            g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
+            g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
+            g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
+            g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
             g_pid[0] = player_id;
         },
         // 暫定版開始処理
@@ -41,6 +45,12 @@ const tsCaller: I_TsCall = (() => {
         } , 
     };
 })();
+
+function parent_url(url: string): string {
+    let re = /\/[^\/]+$/;
+    return url.replace(re, '');
+}
+
 // windowオブジェクトに追加したインターフェースに上記の実装を代入
 window.tsCall = tsCaller;
 

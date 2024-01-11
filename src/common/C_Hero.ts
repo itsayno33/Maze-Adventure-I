@@ -79,6 +79,8 @@ export class C_Hero {
     public set_prp(arg : JSON_Hero) {
         this.decode(arg);
     }
+    public get_uniq_id(): string { return this.uniq_id}
+
     public id(): string {
         return 'Hero_' + this.my_id.toString(16).padStart(5, '0');
     }

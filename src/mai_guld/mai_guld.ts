@@ -12,7 +12,7 @@ import {
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
-//    get_mai_maze();
+//    get_mai_guld();
 });
 
 
@@ -39,10 +39,11 @@ declare global {
 const tsCaller: I_TsCall = (() => {
     return {
         get_init_data: (url_base: string, player_id: number): void => {
-            const url_top = parent_url(url_base);
-            g_url[g_url_get_save]   = url_top + "/mai_save.php";
-            g_url[g_url_get_maze]   = url_top + "/mai_maze.php";
-            g_url[g_url_get_guld]   = url_top + "/mai_guld.php";
+//            const url_top = parent_url(url_base);
+            const url_top = url_base;
+            g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
+            g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
+            g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
             g_pid[0] = player_id; 
         },

@@ -14,7 +14,7 @@ import { display_guld_menu }     from "./F_guild_menu";
 
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_Hero }                from "../common/C_Hero";
-import { g_mvm, g_hres, g_team, g_guld } from "./global_for_guild";
+import { g_mvm, g_team, g_guld, g_save } from "./global_for_guild";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -135,7 +135,7 @@ function update_data_list() {
 
 function update_team_list(){
     team_list.length = 0;
-    for (let hero of g_team[0].hres()) team_list.push(hero);
+    for (let hero of g_team[g_save.cur_team].hres()) team_list.push(hero);
 }
 function exist_team(): boolean {
     return team_list.length > 0;
@@ -143,7 +143,7 @@ function exist_team(): boolean {
 
 function update_hres_list(){
     hres_list.length = 0;
-    for (let hero of g_guld[0].hres()) hres_list.push(hero);
+    for (let hero of g_guld[g_save.cur_guld].hres()) hres_list.push(hero);
 }
 function exist_hres(): boolean {
     return hres_list.length > 0;
@@ -211,7 +211,7 @@ function list_high_light_on(cursor: T_cursor) {
 function init_dom_team_list(){}
 function update_dom_team_list() {
     clear_dom_team_list();
-    for (let ii in g_hres) {
+    for (let ii in team_list) {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = `${team_list[ii].name()}<p></p>`;
 
@@ -246,7 +246,7 @@ function clear_dom_team_list() {
 function init_dom_hres_list(){}
 function update_dom_hres_list() {
     clear_dom_hres_list();
-    for (let ii in g_hres) {
+    for (let ii in hres_list) {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = `${hres_list[ii].name()}<p></p>`;
 

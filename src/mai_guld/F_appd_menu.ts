@@ -14,10 +14,9 @@ import { C_Hero }                from "../common/C_Hero";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { high_light_on }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
-import { g_mvm, g_hres }         from "./global_for_guild";
-import { make_hero }             from "../common/F_create_hero";
-import { get_new_hero } from "../common/F_load_and_save";
-import { _alert, g_mes } from "../common/global";
+import { g_mvm, g_guld, g_save } from "./global_for_guild";
+import { get_new_hero }          from "../common/F_load_and_save";
+import { _alert, g_mes }         from "../common/global";
 
 let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
@@ -205,7 +204,7 @@ function isOK(): void {
             mode = 'view';
             _add_appd_nor_ctls();
             g_mvm.notice_message('採用しました!!');
-            g_hres.push(new_hres[idx]);
+            g_guld[g_save.cur_guld].add_hero(new_hres[idx]);
             _after_check();
             break;
         case 'check_NG':
