@@ -1,0 +1,8 @@
+SaveDataのall_maze,all_team,all_guldを連想配列にすること
+mai_mazeのnewゲーム(_JSON_mai_maze.php)でチームとヒーローズを返すこと(暫定)
+Maze側セーブ機能でチームが保存できない？バグを取ること。たぶん、上記の問題のせい。
+
+
+
+
+

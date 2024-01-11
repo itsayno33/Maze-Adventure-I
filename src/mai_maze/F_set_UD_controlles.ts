@@ -2,8 +2,10 @@ import { T_CtlsMode }       from "./T_CtlsMode";
 import { hide_controlles }  from "./F_set_controlles";
 import { UD_save }          from "./F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
+import { g_debug_mode, g_ctls_mode, g_mvm, g_save }         from "./global_for_maze";
 import { g_maze, g_team,  } from "./global_for_maze";
+import { C_UrlOpt } from "../common/C_UrlOpt";
+import { set_g_save } from "./F_set_save_controlles";
 
 
 export function clr_UD_controlles(): void {
@@ -162,7 +164,7 @@ function do_up(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {
-        UD_save();
+        do_UD_save();
         rslt.doOK();
     }
     g_mvm.clear_message();
@@ -175,7 +177,7 @@ function do_down(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
     } else {
-        UD_save();
+        do_UD_save();
         rslt.doOK();
     }
     g_mvm.clear_message();
@@ -203,5 +205,24 @@ function hope_Down(): void {
     document.getElementById('u_arrow')?.style.setProperty('visibility', 'hidden');
     document.getElementById('d_arrow')?.style.setProperty('visibility', 'visible');
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
+}
+
+function do_UD_save() {
+    set_g_save(
+        /* save_id: */   -1,
+        /* uniq_no: */   -1,
+        /* title: */     '自動保存データ', 
+        /* detail: */    '',
+        /* point: */     
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_p().z + 1}階層 ` 
+                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+        /* auto_mode: */ true,
+    );
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+
+    const opt = new C_UrlOpt();
+    opt.set('save', save_data); 
+    UD_save(opt);
 }
 

@@ -1,6 +1,8 @@
-import { alert_maze_info }     from "../common/C_Maze"; // 通常時はコメントアウトされている関数
-import { alert_team_info }     from "../common/C_Team"; // 通常時はコメントアウトされている関数
-import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメントアウトされている関数
+import { alert_maze_info }     from "../common/C_Maze";     // 通常時はコメントアウトされている関数
+import { alert_team_info }     from "../common/C_Team";     // 通常時はコメントアウトされている関数
+import { alert_heroes_info }   from "../common/C_Hero";     // 通常時はコメントアウトされている関数
+import { alert_save_info }     from "../common/C_SaveData"; // 通常時はコメントアウトされている関数
+import { alert_guld_info }     from "../common/C_Guild";    // 通常時はコメントアウトされている関数
 
 import { _round, _min, _max  } from "../common/F_Math";
 import { C_UrlOpt }            from "../common/C_UrlOpt";  
@@ -13,27 +15,43 @@ import {
 
 type T_callback = (jsonObj:any)=>(boolean|void);
 
-export function get_mai_maze(callback?: T_callback): void {
+export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
     const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new", num: 333});
  
-    POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
             g_mes.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
             _alert(jsonObj.emsg);
-            return;
+            return undefined;
+        }
+        if (jsonObj?.data  === undefined) {
+            g_mes.warning_message("受信データが不正な形式でした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+        if (jsonObj?.data?.maze  === undefined) {
+            g_mes.warning_message("迷宮データが不正な形式でした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+        if (jsonObj?.data?.pos   === undefined) {
+            g_mes.warning_message("位置データが不正な形式でした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
         }
 
         const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
         if (monitor) {
-//            alert_maze_info(jsonObj?.maze);
-            alert_team_info(jsonObj?.team);
-            alert_heroes_info(jsonObj?.team?.heroes);
+            if (jsonObj?.data?.maze  !== undefined) alert_maze_info(jsonObj.maze);
+            if (jsonObj?.data?.team  !== undefined) alert_team_info(jsonObj.team);
         }
         if (callback !== undefined) callback(jsonObj);
+
+        return jsonObj;
     });
 }
 
-export function get_save_info(callback?: T_callback): any {
+export async function get_save_info(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_pid[0]);
@@ -41,10 +59,17 @@ export function get_save_info(callback?: T_callback): any {
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
-        
+
+            if (jsonObj.save  === undefined) {
+                g_mes.warning_message("保存データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return undefined;
+            }
+            
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-    //            alert_maze_info(jsonObj?.maze);
+                if (jsonObj?.save  !== undefined) alert_save_info(jsonObj?.C_SaveData);
+//            alert_maze_info(jsonObj?.maze);
                 alert_team_info(jsonObj?.team);
                 alert_heroes_info(jsonObj?.team?.heroes);
             }
@@ -66,9 +91,17 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
         
+            if (jsonObj.save  === undefined) {
+                g_mes.warning_message("保存データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return undefined;
+            }
+
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                alert_heroes_info(jsonObj?.team?.heroes);
+                if (jsonObj?.save  !== undefined) alert_save_info(jsonObj.C_SaveData);
+                if (jsonObj?.all_guld[0]  !== undefined) alert_guld_info(jsonObj.all_guld[0]);
+                if (jsonObj?.all_team[0]  !== undefined) alert_team_info(jsonObj.all_team[0]);
             }
         
             if (callback !== undefined) callback(jsonObj);
@@ -88,10 +121,15 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
     return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
+            if (jsonObj?.heroes  === undefined) {
+                g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return;
+            }
         
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                alert_heroes_info(jsonObj?.team?.heroes);
+                if (jsonObj?.heroes  !== undefined) alert_heroes_info(jsonObj.heroes);
             }
         
             if (callback !== undefined) callback(jsonObj);
@@ -105,24 +143,24 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 }
 
 
-export function instant_load(callback?: T_callback): any {
+export async function instant_load(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_load'); 
     return __auto_load(opt, callback);
 }
 
-export function UD_load(callback?: T_callback): any {
+export async function UD_load(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_load'); 
     return __auto_load(opt, callback);
 }
 
-export function general_load(opt: C_UrlOpt, callback?: T_callback): any {
+export async function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'load'); 
     return __auto_load(opt, callback);
 }
 
-function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
+async function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
 /*
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
@@ -130,12 +168,19 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
-        
+ 
+            if (jsonObj?.save  === undefined) {
+                g_mes.warning_message("受信した保存データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return undefined;
+            }
+    
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-    //            alert_maze_info(jsonObj?.maze);
-                alert_team_info(jsonObj?.team);
-                alert_heroes_info(jsonObj?.team?.heroes);
+                if (jsonObj?.save                !== undefined) alert_save_info(jsonObj.save);
+//                if (jsonObj?.save?.all_maze?.[0] !== undefined) alert_maze_info(jsonObj.save.all_maze[0]);
+//                if (jsonObj?.save?.all_guld?.[0] !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
+//                if (jsonObj?.save?.all_team?.[0] !== undefined) alert_team_info(jsonObj.save.all_team[0]);
             }
         
             if (callback !== undefined) callback(jsonObj);
@@ -149,35 +194,49 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): any {
 }
 
 
-export function instant_save(callback?: T_callback): any { 
+export async function instant_save(callback?: T_callback): Promise<any|undefined> { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'instant_save'); 
     return __auto_save(opt, callback);
 }
 
-export function UD_save(callback?: T_callback): any { 
+export async function UD_save(callback?: T_callback): Promise<any|undefined> { 
     const opt = new C_UrlOpt();
     opt.set('mode',        'UD_save'); 
     return  __auto_save(opt, callback);
 }
 
-export function general_save(opt: C_UrlOpt, callback?: T_callback): any {
+export async function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'save'); 
     return __auto_save(opt, callback);
 }
 
-function __auto_save(opt: C_UrlOpt, callback?: T_callback): any { 
+async function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
 /*
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
 */
-    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
+    const move_page = false;
+
+    if (move_page) {
+        POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};
+    }
+
+    return await POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
+ 
+            if (jsonObj?.save  === undefined) {
+                g_mes.warning_message("受信した保存データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return undefined;
+            }
+    
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-    //            alert_maze_info(jsonObj?.maze);
-                alert_team_info(jsonObj?.team);
-                alert_heroes_info(jsonObj?.team?.heroes);
+                if (jsonObj?.save                !== undefined) alert_save_info(jsonObj.save);
+//                if (jsonObj?.save?.all_maze?.[0] !== undefined) alert_maze_info(jsonObj.save.all_maze[0]);
+//                if (jsonObj?.save?.all_guld?.[0] !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
+//                if (jsonObj?.save?.all_team?.[0] !== undefined) alert_team_info(jsonObj.save.all_team[0]);
             }
             if (callback !== undefined) callback(jsonObj);
             g_mes.normal_message('正常にセーブされました');

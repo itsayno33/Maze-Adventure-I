@@ -4,8 +4,8 @@ import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
 import { general_load, general_save, get_save_info } from "./F_load_and_save";
-import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team } from "./global_for_maze";
-import {  g_mes }     from "../common/global";
+import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_save, g_guld } from "./global_for_maze";
+import { g_mes, g_pid }        from "../common/global";
 
 var   idx: number = 0;
 var   save_UL_list: HTMLUListElement;
@@ -17,7 +17,7 @@ var   form_point:   HTMLParagraphElement;
 var   is_kakunin = false;
 
 export type T_save_list = {
-    id:        number,
+    save_id:   number,
     title:     string,
     detail:    string,
     point:     string,
@@ -277,7 +277,7 @@ function form_set():void {
     if (idx < 0 || idx > children.length - 1) return;
 
     form_clr();
-    form_id   .value      = link_list[idx].id.toString();
+    form_id   .value      = link_list[idx].save_id.toString();
     form_time .innerText  = link_list[idx].save_time;
     form_point.innerText  = link_list[idx].point;
 
@@ -311,21 +311,21 @@ export function display_save_list(for_save: boolean) {
         }
         try {
             save_list = [] as T_save_list[];
-            for (var save_item of jsonObj.save) {
+            for (var save_data of jsonObj.save_info) {
                 save_list.push({
-                    id:        (save_item?.save_id    ?? 0),
-                    title:     (save_item?.title      ?? '??? Unknown Title'),
-                    detail:    (save_item?.detail     ?? '???'),
-                    point:     (save_item?.point      ?? '???'),
-                    save_time: (save_item?.save_time  ?? '????-??-?? ??:??:??'),
-                    auto_mode: (save_item?.auto_mode  ?? 'N'),
+                    save_id:   (save_data?.save_id    ?? 0),
+                    title:     (save_data?.title      ?? '??? Unknown Title'),
+                    detail:    (save_data?.detail     ?? '???'),
+                    point:     (save_data?.point      ?? '???'),
+                    save_time: (save_data?.save_time  ?? '????-??-?? ??:??:??'),
+                    auto_mode: (save_data?.auto_mode  ?? '0'),
                     __is_new:   false,
                 } as T_save_list)
             }
             if (for_save) {
                 for (var j = save_list.length; j < 10; j++) { 
                     save_list.push({
-                        id:         -1,
+                        save_id:    -1,
                         title:      `保存データ`,
                         detail:    '',
                         point:     '',
@@ -405,7 +405,7 @@ function display_load_fields(): void {
 
 function check_load(): void{ // 入力チェックと既存データ上書きの確認
     if (idx < 0 || idx > link_list.length - 1) {
-        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(save_id: ${link_list[idx].save_id})`);
     }
     is_kakunin = true;
     g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
@@ -413,18 +413,31 @@ function check_load(): void{ // 入力チェックと既存データ上書きの
 
 function check_save(): void{ // 入力チェックと既存データ上書きの確認
     if (idx < 0 || idx > link_list.length - 1) {
-        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(save_id: ${link_list[idx].save_id})`);
     }
     if (link_list[idx].auto_mode == 'Y') {
-        g_mes.warning_message(`check!! This is Auto Mode!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+        g_mes.warning_message(`check!! This is Auto Mode!『${link_list[idx].title}』(save_id: ${link_list[idx].save_id})`);
     }
     is_kakunin = true;
     g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
 function load(): void {
+    set_g_save(
+        /* save_id: */   Number(form_id.value),
+        /* uniq_no: */   -1,
+        /* title: */     '保存データ', 
+        /* detail: */    form_detail.value,
+        /* point: */     
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_p().z + 1}階層 ` 
+                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+        /* auto_mode: */ false,
+    );
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+
     const opt = new C_UrlOpt();
-    opt.set('save_id',     Number(form_id.value)); 
+    opt.set('save', save_data); 
     general_load(opt);
 
     is_kakunin = false;
@@ -433,19 +446,55 @@ function load(): void {
 }
 
 function save(): void{
-    const opt = new C_UrlOpt();
-    opt.set('save_id',     Number(form_id.value)); 
-    opt.set('save_title',  `保存データ`);
-    opt.set('save_detail', form_detail.value);
-    opt.set('save_point',  
-        `『${g_maze.get_name()}』 ` 
-        + `地下 ${g_team.get_p().z + 1}階層 ` 
-        + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
+    set_g_save(
+        /* save_id: */   Number(form_id.value),
+        /* uniq_no: */   -1,
+        /* title: */     '保存データ', 
+        /* detail: */    form_detail.value,
+        /* point: */     
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_p().z + 1}階層 ` 
+                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+        /* auto_mode: */ false,
     );
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+
+    const opt = new C_UrlOpt();
+    opt.set('save', save_data); 
     general_save(opt);
 
     is_kakunin = false;
     g_mvm.notice_message('保存しました');
     set_camp_controlles();
     g_vsw.view_camp();
+}
+
+export function set_g_save (
+        save_id:   number,
+        uniq_no:   number, 
+        title:     string, 
+        detail:    string, 
+        point:     string,
+        auto_mode: boolean,
+    ) {
+    g_save.decode({
+        save_id:   save_id, 
+        player_id: g_pid[0],
+        uniq_no:   uniq_no, 
+        title:     title, 
+        detail:    detail,
+        auto_mode: auto_mode ? '1' : '0',
+        is_active: '1',
+        is_delete: '0',
+
+        scene:     'Maze', 
+        point:      point, 
+        all_maze: [g_maze.encode()],
+        all_team: [g_team.encode()],
+        all_guld: [g_guld.encode()],
+
+        cur_maze:  g_maze.get_uniq_id(),
+        cur_team:  g_team.get_uniq_id(),
+        cur_guld:  g_guld.get_uniq_id(),
+    });
 }

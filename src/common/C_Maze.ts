@@ -4,6 +4,7 @@ import { C_Range }              from "./C_Range";
 import { I_Exist }              from "./I_EventMap";
 import { C_Team }               from "./C_Team";
 import { _get_uuid } from "./F_Rand";
+import { _alert } from "./global";
 
 export type JSON_Maze = {
     id?:      number,
@@ -23,7 +24,7 @@ export type JSON_Maze = {
 export function alert_maze_info(a: JSON_Maze|undefined): void {
     if (a === undefined) return;
 
-    alert("Maze Info:"
+    _alert("Maze Info:"
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
         + "\nuniq id :" + (a.uniq_id ?? '?')
@@ -32,16 +33,8 @@ export function alert_maze_info(a: JSON_Maze|undefined): void {
         + "\nsize_x: "  + (a.size_x  ?? '?')
         + "\nsize_y: "  + (a.size_y  ?? '?')
         + "\nsize_z: "  + (a.size_z  ?? '?')
-        + "\n"
-    );
-
-    alert(
-        "maze:\n"    + (a.maze ?? '?')
-        + "\n"
-    );
-
-    alert(
-        "mask:\n"    + (a.mask ?? '?')
+        + "maze:\n"     + (a.maze    ?? '?')
+        + "mask:\n"     + (a.mask    ?? '?')
         + "\n"
     );
 }

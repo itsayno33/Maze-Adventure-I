@@ -15,6 +15,9 @@ export var g_vsw: C_SwitchView;
 
 import { init_after_loaded_DOM_in_common } from "../common/global";
 
+import { C_Hero } from "../common/C_Hero";
+export const g_hres: C_Hero[] = [];
+
 import { C_Maze } from "../common/C_Maze";
 export const g_maze = new C_Maze({maze_id: -1});
 
