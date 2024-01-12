@@ -21,7 +21,7 @@ export async function POST_and_get_JSON(
         return undefined;
     }
 
-    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+    const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
 
     return res.text()
         .then(txt=>{

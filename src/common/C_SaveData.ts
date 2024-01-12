@@ -29,7 +29,7 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
     alert("Save Info:" 
         + "\nsave_id:   " + (a.save_id   ?? '?')
         + "\nplayer_id: " + (a.player_id ?? '?')
-        + "\nuniq_no    " + (a.uniq_no   ?? '?')
+        + "\nuniq_no:   " + (a.uniq_no   ?? '?')
         + "\ntitle:     " + (a.title     ?? '?')
         + "\ndetail:    " + (a.detail    ?? '?')
         + "\nscene:     " + (a.scene     ?? '?')

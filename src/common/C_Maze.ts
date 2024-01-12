@@ -139,7 +139,7 @@ export class C_Maze {
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
-    protected objs:     I_Exist[];
+    protected objs:     {[id: string]: I_Exist};
     public constructor(
         {maze_id = -1, save_id = -1, floor = 0, name = '', size_x = 3, size_y = 3, size_z = 1}: {
             maze_id?: number,
@@ -161,7 +161,7 @@ export class C_Maze {
             new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.masks   = this.__init_mask(true);
-        this.objs    = [] as I_Exist[];
+        this.objs    = {};
     }
     public init(
         {maze_id, save_id, floor, name, size_x, size_y, size_z}: {
@@ -183,7 +183,7 @@ export class C_Maze {
             new C_Point(size_x - 1, size_y - 1, size_z - 1));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.masks   = this.__init_mask(true);
-        this.objs    = [] as I_Exist[];
+        this.objs    = {};
     }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
         const size_x = this.size.size_x();
@@ -232,10 +232,10 @@ export class C_Maze {
     
     // メイズ内のオブジェクトやモンスター等の配置
     public add_obj(obj: I_Exist): void {
-        this.objs.push(obj);
+        this.objs[obj.id()] = obj;
     }
     public remove_obj(obj: I_Exist): void {
-        this.objs = this.objs.filter(item => item.id() !== obj.id());
+        delete this.objs[obj.id()];
     }
     public get_obj_xyz(x: number, y: number, z: number): I_Exist|null {
         return this.get_obj(new C_Point(x, y, z));
@@ -243,11 +243,14 @@ export class C_Maze {
     public get_obj(p: C_Point): I_Exist|null {
         var layer = -1;
         var obj: I_Exist|null   = null;
-        for (const item of this.objs) {
-            if (item.within(p)) {
-                if (item.layer() > layer) {
-                    layer = item.layer();
-                    obj = item;
+
+        for (const id in this.objs) {
+            const exist = this.objs[id];
+
+            if (exist.within(p)) {
+                if (exist.layer() > layer) {
+                    layer = exist.layer();
+                    obj   = exist;
                 }
             }
         } 

@@ -3,14 +3,14 @@ import { I_HopeAction }               from "../common/I_EventMap";
 import { C_Point }                    from "../common/C_Point";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
-import { instant_load, instant_save } from "./F_load_and_save";
+import { instant_load, instant_save } from "../common/F_load_and_save";
 import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
+         maze3D_blink_on_direction, maze3D_blink_off_direction }      from "./F_display_maze";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }    from "./F_set_UD_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw, g_save }                 from "./global_for_maze";
+import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw, g_save }            from "./global_for_maze";
 import { g_maze, g_team }             from "./global_for_maze";
-import { C_UrlOpt } from "../common/C_UrlOpt";
+import { C_UrlOpt }   from "../common/C_UrlOpt";
 import { set_g_save } from "./F_set_save_controlles";
 
 export function clr_move_controlles(): void {
@@ -88,7 +88,7 @@ function key_press_function1(e: KeyboardEvent):void  {
                 break;
         case 'KeyL':
             if (g_debug_mode) {
-                instant_load();
+                do_instant_load();
             } else {
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
             }
@@ -121,6 +121,24 @@ function key_press_function1(e: KeyboardEvent):void  {
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
+function do_instant_load(): void {
+    set_g_save(
+        /* save_id: */   -1,
+        /* uniq_no: */   -1,
+        /* title: */     '簡易保存データ', 
+        /* detail: */    '', 
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_p().z + 1}階層 ` 
+                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+        /* auto_mode: */ true,
+    );
+    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+
+    const opt = new C_UrlOpt();
+    opt.set('save', save_data); 
+    instant_load(opt);
+}
+
 function do_instant_save(): void {
     set_g_save(
         /* save_id: */   -1,
@@ -137,7 +155,6 @@ function do_instant_save(): void {
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
     instant_save(opt);
-
 }
 
 

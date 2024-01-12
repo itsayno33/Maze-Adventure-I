@@ -4,7 +4,7 @@ import { alert_team_info }     from "../common/C_Team"; // 通常時はコメン
 import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメントアウトされている関数
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
-import { decode_all }          from "./F_load_and_save";
+import { decode_all }          from "./F_set_save_controlles";
 import { g_maze, g_team, init_debug_mode } from "./global_for_maze";
 
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
