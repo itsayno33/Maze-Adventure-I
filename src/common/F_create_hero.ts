@@ -32,7 +32,6 @@ export function make_hero(): C_Hero {
     hh.name   = '冒険者 #' + _irand(0,4093).toString(16).padStart(3, 'x');
     hh.sex    = _irand(0,1);        
     hh.age    = 20 + _irand(-5,5);  // _ig_rand
-    hh.gold   = _irand(5000, 10000);// _ig_rand
     hh.state  = 0;
     hh.lv     = 1;
 

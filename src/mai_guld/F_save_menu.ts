@@ -336,13 +336,13 @@ async function post_load_data(): Promise<boolean> {
         g_save.decode(jsonObj.save);
 
         for (let ii in g_maze) delete g_maze[ii];
-        for (let maze of g_save.all_maze) g_maze[maze.get_uniq_id()] = maze;
+        for (let ii in g_save.all_maze) g_maze[g_save.all_maze[ii].uid()] = g_save.all_maze[ii];
 
         for (let ii in g_team) delete g_team[ii];
-        for (let team of g_save.all_team) g_team[team.get_uniq_id()] = team;
+        for (let ii in g_save.all_team) g_team[g_save.all_team[ii].uid()] = g_save.all_team[ii];
 
         for (let ii in g_guld) delete g_guld[ii];
-        for (let guld of g_save.all_guld) g_guld[guld.get_uniq_id()] = guld;
+        for (let ii in g_save.all_guld) g_guld[g_save.all_guld[ii].uid()] = g_save.all_guld[ii];
 
         return jsonObj.ecode == 0;
     })

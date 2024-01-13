@@ -69,7 +69,6 @@ export function hero_info_form_set(hres: C_Hero[], detail: T_Detail, idx: number
     detail['name'] .innerHTML = '名　前: ' +  hero['name'] ?? '???';
     detail['sex']  .innerHTML = '性　別: ' + ((hero['sex'] != 0) ? '♂' : '♀') ?? '???';
     detail['age']  .innerHTML = '年　齢: ' + (hero['age']?.toString() ?? '???') + ' 歳';
-    detail['gold'] .innerHTML = '所持金: ' + (hero['gold']?.toString() ?? '???') + ' GOLD';
     detail['state'].innerHTML = '状　態: ' + ((hero['state'] == 0)? '正常' : '異常') ?? '???';
     detail['lv']   .innerHTML = 'レベル: ' +  hero['lv']?.toString() ?? '???';
 

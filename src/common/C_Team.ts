@@ -67,8 +67,6 @@ export class C_Team implements I_Exist {
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
-    protected maze_name: string;
-    protected guld_name: string;
     protected save_id:   number;
     protected walker:    C_Walker;
     protected loc:       C_Location;
@@ -83,8 +81,6 @@ export class C_Team implements I_Exist {
         this.my_id     =  0;
         this.my_name   = 'Neo Team?';
         this.uniq_id   = 'mai_team#' + _get_uuid();
-        this.maze_name = 'Neo Maze?';
-        this.guld_name = 'Neo Guild?';
         this.save_id   =  0;
         this.walker = new C_Walker();
         this.loc    = new C_Location();
@@ -97,8 +93,6 @@ export class C_Team implements I_Exist {
         this.my_id     = a.id        ?? this.my_id
         this.my_name   = a.name      ?? this.my_name;
         this.uniq_id   = a.uniq_id   ?? this.uniq_id;
-        this.maze_name = a.maze_name ?? this.maze_name;
-        this.guld_name = a.guld_name ?? this.guld_name;
         this.save_id   = a.save_id   ?? this.save_id;
         if (a.p !== undefined) this.walker.set_p(a.p);
         if (a.x !== undefined) this.walker.set_x(a.x);
@@ -126,7 +120,8 @@ export class C_Team implements I_Exist {
     public set_prp(arg : __init_arg) {
         this.__init(arg);
     }
-    public get_uniq_id(): string { return this.uniq_id}
+
+    public uid(): string { return this.uniq_id}
 
     public id(): string {
         return 'Team_' + this.my_id.toString(16).padStart(5, '0');
@@ -285,12 +280,11 @@ export class C_Team implements I_Exist {
     }
 
     public encode(): JSON_Team {
+        this.get_loc(); // Location情報を最新に更新
         return {
             id:        this.my_id,
             name:      this.my_name,
             uniq_id:   this.uniq_id,
-            maze_name: this.maze_name,
-            guld_name: this.guld_name,
             save_id:   this.save_id,
             point:     this.walker.get_p().encode(),
             direct:    {d: this.walker.get_dir()},
@@ -306,8 +300,6 @@ export class C_Team implements I_Exist {
         if (a.id   !== undefined)      this.my_id       = a.id;
         if (a.name !== undefined)      this.my_name     = a.name;
         if (a.uniq_id !== undefined)   this.uniq_id     = a.uniq_id;
-        if (a.maze_name !== undefined) this.maze_name   = a.maze_name;
-        if (a.guld_name !== undefined) this.guld_name   = a.guld_name;
         if (a.save_id !== undefined)   this.save_id     = a.save_id;
         if (a.motion !== undefined)    this.hope_motion = a.motion;
 

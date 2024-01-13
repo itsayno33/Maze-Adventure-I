@@ -135,7 +135,7 @@ function update_data_list() {
 
 function update_team_list(){
     team_list.length = 0;
-    for (let hero of g_team[g_save.cur_team].hres()) team_list.push(hero);
+    for (let hero of g_team[0].hres()) team_list.push(hero);
 }
 function exist_team(): boolean {
     return team_list.length > 0;
@@ -143,7 +143,7 @@ function exist_team(): boolean {
 
 function update_hres_list(){
     hres_list.length = 0;
-    for (let hero of g_guld[g_save.cur_guld].hres()) hres_list.push(hero);
+    for (let hero of g_guld[0].myteam.hres()) hres_list.push(hero);
 }
 function exist_hres(): boolean {
     return hres_list.length > 0;
