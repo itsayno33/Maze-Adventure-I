@@ -5,6 +5,7 @@ import { I_Exist }              from "./I_EventMap";
 import { C_Team }               from "./C_Team";
 import { _get_uuid } from "./F_Rand";
 import { _alert } from "./global";
+import { I_Locate, T_Lckd } from "./C_Location";
 
 export type JSON_Maze = {
     id?:      number,
@@ -129,7 +130,7 @@ class C_MazeCell  {
     }
 }
 
-export class C_Maze {
+export class C_Maze implements I_Locate {
     protected maze_id:  number;
     protected uniq_id:  string;
     protected save_id:  number;
@@ -219,12 +220,9 @@ export class C_Maze {
         }
         return masks;
     }
-    public get_uniq_id(): string { return this.uniq_id}
-
-
-    public get_name(): string {
-        return this.name;
-    }
+    public uid(): string      {return this.uniq_id}
+    public get_lckd(): T_Lckd {return T_Lckd.Maze}
+    public get_name(): string {return this.name}
 
     public within(p: C_Point): boolean {
         return this.size.within(p);

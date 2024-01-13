@@ -1,9 +1,11 @@
+import { C_Goods, JSON_Goods } from './C_Goods';
 import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
 import { C_Point, JSON_Point } from "./C_Point";
 import { C_Walker }            from "./C_Walker";
 import { T_Direction }         from "./T_Direction";
 import { C_Hero, JSON_Hero }   from "./C_Hero";
 import { _get_uuid } from "./F_Rand";
+import { C_Location, I_Locate, JSON_Location } from './C_Location';
 
 type __init_arg = {
     id?:        number, 
@@ -12,7 +14,9 @@ type __init_arg = {
     name?:      string, 
     maze_name?: string, 
     guld_name?: string, 
-    heroes?:    C_Hero[], 
+    goods?:     C_Goods,
+    heroes?:    C_Hero[],
+    locate?:    C_Location, 
     p?:         C_Point, 
     x?:         number,
     y?:         number,
@@ -28,11 +32,13 @@ export type JSON_Team = {
     name?:      string, 
     maze_name?: string, 
     guld_name?: string, 
+    locate?:    JSON_Location,
     point?:     JSON_Point, 
     x?:         number,
     y?:         number,
     z?:         number,
     direct?:   {d: number},
+    goods?:     JSON_Goods,
     heroes?:    JSON_Hero[], 
     motion?:    string,
 }
@@ -65,7 +71,9 @@ export class C_Team implements I_Exist {
     protected guld_name: string;
     protected save_id:   number;
     protected walker:    C_Walker;
+    protected loc:       C_Location;
     protected my_layer:  number = 99;
+    protected goods:     C_Goods;
     protected heroes:    C_Hero[];
 
     protected hope_motion: string;
@@ -79,6 +87,8 @@ export class C_Team implements I_Exist {
         this.guld_name = 'Neo Guild?';
         this.save_id   =  0;
         this.walker = new C_Walker();
+        this.loc    = new C_Location();
+        this.goods  = new C_Goods();
         this.heroes = [];
         this.hope_motion = 'NOP';    
         if (a !== undefined) this.__init(a);
@@ -97,6 +107,16 @@ export class C_Team implements I_Exist {
         if (a.d !== undefined) this.walker.set_dir(a.d);
         this.hope_motion = a.motion ?? this.hope_motion; 
 
+        if (a.locate !== undefined) {
+            if (typeof a.locate === "object" &&  a.locate instanceof C_Location) {
+                this.loc = a.locate;
+            }
+        }
+        if (a.goods !== undefined) {
+            if (typeof a.goods === "object" &&  a.goods instanceof C_Goods) {
+                this.goods = a.goods;
+            }
+        }
         if (a.heroes !== undefined) {
             for (const hero of a.heroes) {
                 this.append_hero(hero);
@@ -138,6 +158,31 @@ export class C_Team implements I_Exist {
     }
     public rmv_hero(hero: C_Hero): void {
         for (let ii in this.heroes) if (hero == this.heroes[ii]) delete this.heroes[ii];
+    }
+
+    public set_place(
+        place: I_Locate, 
+        pos:   C_Point|undefined = undefined, 
+        dir:   T_Direction|undefined = undefined) {
+
+        this.loc.set_uid (place.uid());
+        this.loc.set_lckd(place.get_lckd());
+        this.loc.set_name(place.get_name());
+
+        if (pos !== undefined && dir !== undefined) {
+            this.loc.set_p(pos, dir);
+            this.set_p(pos, dir);
+        }
+    }
+    public get_loc(): C_Location {
+        this.loc.set_p(this.walker.get_p());
+        this.loc.set_d(this.walker.get_dir());
+        return this.loc;
+    }
+    public set_loc(loc: C_Location): void {
+        this.walker.set_p(loc.get_p() ?? this.walker.get_p());
+        this.walker.set_dir(loc.get_d() ?? this.walker.get_dir());
+        this.loc = loc;
     }
 
 
@@ -240,11 +285,6 @@ export class C_Team implements I_Exist {
     }
 
     public encode(): JSON_Team {
-        const x = this.walker.get_x();
-        const y = this.walker.get_y();
-        const z = this.walker.get_z();
-        const d = this.walker.get_dir();
-
         return {
             id:        this.my_id,
             name:      this.my_name,
@@ -252,8 +292,10 @@ export class C_Team implements I_Exist {
             maze_name: this.maze_name,
             guld_name: this.guld_name,
             save_id:   this.save_id,
-            point:     {x: x, y: y, z: z},
-            direct:    {d: d},
+            point:     this.walker.get_p().encode(),
+            direct:    {d: this.walker.get_dir()},
+            locate:    this.loc.encode(),
+            goods:     this.goods.encode(),
             heroes:    C_Hero.encode_heroes(this.heroes),
             motion:    this.hope_motion,
         };
@@ -269,8 +311,8 @@ export class C_Team implements I_Exist {
         if (a.save_id !== undefined)   this.save_id     = a.save_id;
         if (a.motion !== undefined)    this.hope_motion = a.motion;
 
-        if (a.point !== undefined && typeof a.point == 'object') {
-            this.walker.decode(a.point);
+        if (a.point !== undefined) {
+            this.walker.decode((new C_Point()).decode(a.point));
         } 
         if (a.x !== undefined && a.y !== undefined && a.z !== undefined) {
             this.walker.decode({x: a.x, y: a.y, z: a.z});
@@ -280,9 +322,9 @@ export class C_Team implements I_Exist {
             this.walker.decode(a.direct);
         }
 
-        if (a.heroes !== undefined) {
-            this.heroes = C_Hero.decode_heroes(a.heroes);
-        }
+        if (a.locate !== undefined) this.loc.decode(a.locate);
+        if (a.goods  !== undefined) this.goods.decode(a.goods);
+        if (a.heroes !== undefined) this.heroes = C_Hero.decode_heroes(a.heroes);
     
         return this;
     }

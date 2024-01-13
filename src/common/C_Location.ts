@@ -25,6 +25,12 @@ export type JSON_Location = {
     },
 }
 
+export interface I_Locate {
+    uid:      ()=>string;
+    get_lckd: ()=>T_Lckd;
+    get_name: ()=>string;
+}
+
 export class C_Location {
     protected loc_kind: T_Lckd = T_Lckd.Unkn;
     protected loc_name: string = '';
@@ -62,9 +68,10 @@ export class C_Location {
     }
     public set_name(name: string):   void {this.loc_name = name;}
     public set_uid (uid: string):    void {this.loc_uid  = uid;}
-    public set_p   (p: C_Point):     boolean {
+    public set_p   (p: C_Point, d?: T_Direction): boolean {
         if (this.loc_kind !== T_Lckd.Maze) return false;
         this.loc_pos  = p;
+        if (d !== undefined) this.loc_dir = d;
         return true;
     }
     public set_d   (d: T_Direction): boolean {

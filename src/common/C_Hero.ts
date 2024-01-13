@@ -1,3 +1,4 @@
+import { C_Goods, JSON_Goods } from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { _get_uuid } from "./F_Rand";
 
@@ -9,7 +10,7 @@ export type JSON_Hero = {
     name?:      string, 
     sex?:       number; 
     age?:       number; 
-    gold?:      number; 
+    goods?:     JSON_Goods; 
     state?:     number; 
     lv?:        number; 
     val?:       JSON_Hero_Value;
@@ -49,10 +50,10 @@ export class C_Hero {
     protected team_id:  number; 
     protected sex:      number; 
     protected age:      number; 
-    protected gold:     number; 
     protected state:    number; 
     protected lv:       number; 
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
+    protected goods:    C_Goods; 
     protected val:      JSON_Hero_Value;
     protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
     protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
@@ -67,7 +68,7 @@ export class C_Hero {
         this.team_id    = 0;
         this.sex        = 0; 
         this.age        = 0; 
-        this.gold       = 0; 
+        this.goods      = new C_Goods(); 
         this.state      = 0; 
         this.lv         = 0;
         this.val        = {};
@@ -96,9 +97,9 @@ export class C_Hero {
             team_id:   this.team_id,
             sex:       this.sex, 
             age:       this.age, 
-            gold:      this.gold, 
             state:     this.state, 
             lv:        this.lv, 
+            goods:     this.goods.encode(), 
             val:       this.val,
             abi_p:    {bsc: this.abi_p.bsc.encode()},
             abi_m:    {bsc: this.abi_m.bsc.encode()},
@@ -115,7 +116,6 @@ export class C_Hero {
         if (a.team_id  !== undefined) this.team_id = a.team_id;
         if (a.sex      !== undefined) this.sex     = a.sex;
         if (a.age      !== undefined) this.age     = a.age;
-        if (a.gold     !== undefined) this.gold    = a.gold;
         if (a.state    !== undefined) this.state   = a.state;
         if (a.lv       !== undefined) this.lv      = a.lv;
         if (a.is_alive !== undefined) {
@@ -125,6 +125,7 @@ export class C_Hero {
                 this.is_alive = (a.is_alive != 'N') ? true: false;
             }
         }
+        if (a.goods   !== undefined) this.goods.decode(a.goods);
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }

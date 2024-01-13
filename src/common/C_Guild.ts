@@ -1,12 +1,14 @@
 import { C_Hero, JSON_Hero } from "./C_Hero";
+import { I_Locate, T_Lckd } from "./C_Location";
+import { C_Team, JSON_Team } from "./C_Team";
 import { _get_uuid } from "./F_Rand";
 
 export type JSON_Guild = {
     id?:      number,
     uniq_id?: string,
     save_id?: number,
-    team_id?: number,
     name?:    string,
+    team?:    JSON_Team,
     heroes?:  JSON_Hero[],
 }
 
@@ -16,62 +18,46 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
         + "\nid:      " + (a.id      ?? '?')
         + "\nuniq_id: " + (a.uniq_id ?? '?')
         + "\nsave_id: " + (a.save_id ?? '?')
-        + "\nteam_id: " + (a.team_id ?? '?')
         + "\nname:    " + (a.name    ?? '?')
         + "\n"
     );
 }
 
-export class C_Guild {
-    public id:      number;
-    public uniq_id: string;
-    public save_id: number;
-    public team_id: number;
-    public name:    string;
-    public heroes:  C_Hero[];
+export class C_Guild implements I_Locate {
+    protected id:      number;
+    protected uniq_id: string;
+    protected save_id: number;
+    protected name:    string;
+    public    myteam:  C_Team;
 
     public constructor(a?: JSON_Guild) {
         this.id      = -1;
         this.uniq_id = 'mai_guld#' + _get_uuid();
         this.save_id = -1;
-        this.team_id = -1;
         this.name    = '';
-        this.heroes  = [];
+        this.myteam  = new C_Team();
         if (a !== undefined) this.decode(a);
     }
 
-    public hres(): C_Hero[] {
-        return [...this.heroes];
-    }
-    public clear_hres(): void {
-        this.heroes = [];
-    }
-    public add_hero(hero: C_Hero): void {
-        this.heroes.push(hero);
-    }
-    public rmv_hero(hero: C_Hero): void {
-        for (let ii in this.heroes) if (hero == this.heroes[ii]) delete this.heroes[ii];
-    }
-
-    public get_uniq_id(): string { return this.uniq_id}
+    public uid(): string { return this.uniq_id}
+    public get_lckd(): T_Lckd {return T_Lckd.Maze}
+    public get_name(): string {return this.name}
     
     public encode(): JSON_Guild {
         return {
             id:      this.id,
             uniq_id: this.uniq_id,
             save_id: this.save_id,
-            team_id: this.team_id,
+            team:    this.myteam.encode(),
             name:    this.name,
-            heroes:  C_Hero.encode_heroes(this.heroes),
         }
     }
     public decode(a: JSON_Guild): C_Guild {
         this.id      = a.id ?? this.id;
         this.uniq_id = a.uniq_id ?? this.uniq_id;
         this.save_id = a.save_id ?? this.save_id;
-        this.team_id = a.team_id ?? this.team_id;
         this.name    = a.name ?? this.name;
-        if (a.heroes !== undefined) this.heroes  = C_Hero.decode_heroes(a.heroes);
+        if (a.team   !== undefined) this.myteam.decode(a.team);
         return this;
     }
     public static encode_all(all_guld: C_Guild[]): JSON_Guild[] {
