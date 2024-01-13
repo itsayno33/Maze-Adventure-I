@@ -2,23 +2,24 @@
 ///   主処理
 ///
 
-import { C_UrlOpt }            from "../common/C_UrlOpt";
-import { _min, _round }        from "../common/F_Math";
-import { get_mai_maze }        from "../common/F_load_and_save";
-import { g_maze, g_team, init_after_loaded_DOM, init_debug_mode } from "./global_for_maze";
+import { init_after_loaded_DOM, init_debug_mode } from "./global_for_maze";
 import { 
     g_pid, 
     g_url, g_url_check_JSON, g_url_get_guld, g_url_get_maze, g_url_get_save 
 } from "../common/global";
+
+import { get_mai_maze }        from "../common/F_load_and_save";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
-import { decode_maze }         from "./F_set_save_controlles";
+import { decode_all }          from "./F_set_save_controlles";
+import { calc_view2D_width }   from "./F_display_maze";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
 
     get_mai_maze().then((jsonObj:any)=>{
-        decode_maze(jsonObj);
+//        decode_maze(jsonObj);
+        decode_all(jsonObj);
         calc_view2D_width();
 
         init_debug_mode();
@@ -27,29 +28,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
-// 【初期設定】View2Dの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
-function calc_view2D_width(): void {
-    const pre = document.getElementById('Maze_view2D_pre') as HTMLPreElement;
-    if (pre === null) return;
-
-    const view2D_width  = pre.clientWidth;
-    const view2D_height = pre.clientHeight;
-
-    const col    = g_maze.get_x_max() + 1;
-    const col_px = view2D_width  / col;
-
-    const row    = g_maze.get_y_max() + 1;
-    const row_px = view2D_height / row;
-
-    const font_size   = _round(0.95 *  _min([col_px, row_px]), 2);
-    const line_height = _round(1.00 *  _min([col_px, row_px]), 2);
-
-    pre.setAttribute('width',  view2D_width .toString());
-    pre.setAttribute('height', view2D_height.toString());
-    pre.style.setProperty('font-size',  `${font_size}px`);
-    pre.style.setProperty('line-height',`${line_height}px`);
-}
 
 // 以下、HTML側から呼び出せる関数の定義
 // windowオブジェクトに渡すインターフェースを定義
