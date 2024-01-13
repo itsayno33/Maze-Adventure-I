@@ -53,7 +53,7 @@ export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
     }); 
 }
 
-export async function get_save_info(callback?: T_callback): Promise<any|undefined> {
+export function get_save_info(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_pid[0]);
@@ -147,22 +147,22 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 }
 
 
-export async function instant_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function instant_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'instant_load'); 
     return __auto_load(opt, callback);
 }
 
-export async function UD_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function UD_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'UD_load'); 
     return __auto_load(opt, callback);
 }
 
-export async function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'load'); 
     return __auto_load(opt, callback);
 }
 
-async function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
 /*
     opt.set('pid',         g_pid[0]); 
     opt.set('save',        save_data);
@@ -196,34 +196,34 @@ async function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|un
 }
 
 
-export async function instant_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function instant_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     opt.set('mode',        'instant_save'); 
     opt.set('pid',         g_pid[0]); 
     return __auto_save(opt, callback);
 }
 
-export async function UD_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function UD_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     opt.set('mode',        'UD_save'); 
     opt.set('pid',         g_pid[0]); 
     return  __auto_save(opt, callback);
 }
 
-export async function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'save'); 
     opt.set('pid',         g_pid[0]); 
     return __auto_save(opt, callback);
 }
 
-async function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
 
     // 送信データをcheck_JSON.phpに送ってチェックするときにtrueにする。
     const move_page = false;
 
     if (move_page) {
-        POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};
+        POST_and_move_page(g_url[g_url_check_JSON], opt);
     }
 
-    return await POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
  
             if (jsonObj?.save  === undefined) {

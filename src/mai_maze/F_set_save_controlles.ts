@@ -465,7 +465,7 @@ function load(): void {
     });
 }
 
-function save(): void{
+async function save(): Promise<void> {
     const data_idx = UL_to_Data[UL_idx];
     set_g_save(
         /* save_id: */   save_list[data_idx].save_id, //Number(form_id.value),
@@ -482,14 +482,16 @@ function save(): void{
 
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
-    general_save(opt).then((jsonObj:any)=>{
+/*
+    await general_save(opt).then((jsonObj:any)=>{
         decode_all(jsonObj);
-
-        is_kakunin = false;
-        g_mvm.notice_message('保存しました');
-        set_camp_controlles();
-        g_vsw.view_camp();
     });
+*/
+    await general_save(opt, decode_all);
+    is_kakunin = false;
+    g_mvm.notice_message('保存しました');
+    set_camp_controlles();
+    g_vsw.view_camp();
 }
 
 export function decode_all(jsonObj: any):void {
@@ -512,7 +514,7 @@ export function decode_all(jsonObj: any):void {
     g_maze.add_obj(g_team);
 }
 
-
+// 新規ゲームの初期データの読み込み(暫定)
 export function decode_maze(jsonObj: any):void {
     // MAZE関連のデコード
     if (jsonObj.data.maze !== undefined) g_maze.decode(jsonObj.data.maze);
@@ -527,6 +529,11 @@ export function decode_maze(jsonObj: any):void {
         let dir = jsonObj.data.pos?.d as T_Direction;
         g_team.set_place(g_maze, pos, dir);
     }
+
+    // SaveDataのベースの作成
+    g_save.team_uid = g_team.uid();
+    g_save.all_maze[g_maze.uid()] = g_maze;
+    g_save.all_team[g_team.uid()] = g_team;
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team);

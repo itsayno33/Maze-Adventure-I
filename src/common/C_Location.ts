@@ -10,7 +10,15 @@ export const T_Lckd:{[lckd: string]: number}  = {
 export type T_Lckd   = T_MakeEnumType<typeof T_Lckd>;
 
 function lckd_key(lckd: T_Lckd): string {
-    return Object.keys(T_Lckd).find(key => T_Lckd[key] === lckd) ?? "Unkn";
+/*
+    switch (lckd) {
+        case T_Lckd.Unkn: return "Unkn";
+        case T_Lckd.Maze: return "Maze";
+        case T_Lckd.Guld: return "Guld";
+        default:          return "????";
+    }
+*/
+    return Object.keys(T_Lckd).find(key => T_Lckd[key] === lckd) ?? "????";
 }
 
 export type JSON_Location = {
@@ -39,7 +47,8 @@ export class C_Location {
     protected loc_dir:  T_Direction|undefined = undefined;
 
     public constructor(json?: JSON_Location) {
-        this.loc_kind = T_Lckd.Unkn;
+        this.loc_kind = T_Lckd.Unkn; 
+
         this.loc_name = '';
         this.loc_uid  = '';
         this.loc_pos = undefined;
@@ -62,7 +71,6 @@ export class C_Location {
 
     
     public set_lckd(lckd: T_Lckd): boolean {
-        if (!(lckd in T_Lckd)) return false;
         this.loc_kind = lckd;
         return true;
     }
