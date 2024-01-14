@@ -12,7 +12,8 @@ import { set_camp_controlles }  from "./F_set_camp_controlles";
 import { general_load, general_save, get_save_info } from "../common/F_load_and_save";
 import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_save, g_hres } from "./global_for_maze";
 import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
-import { C_PointDir } from "../common/C_PointDir";
+import { C_PointDir, JSON_PointDir } from "../common/C_PointDir";
+import { alert_team_info } from "../common/C_Team";
 
 var   UL_idx: number = 0;
 var   save_UL_list_len: number;
@@ -536,7 +537,7 @@ export function decode_maze(jsonObj: any):void {
             y: jsonObj.data.pos?.y, 
             z: jsonObj.data.pos?.z, 
             d: jsonObj.data.pos?.d, 
-        });
+        }); 
         g_team.set_place(g_maze, pos);
     }
 

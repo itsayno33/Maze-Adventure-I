@@ -1,7 +1,7 @@
 import { C_Point, JSON_Point } from './C_Point';
 import {T_MakeEnumType} from "./T_MakeEnumType";
 
-export const T_Direction = {
+export const T_Direction:{[dir: string]: number} = {
     N: 0,
     E: 1,
     S: 2,
@@ -9,6 +9,11 @@ export const T_Direction = {
     X: 99
 } as const;
 export type T_Direction = T_MakeEnumType<typeof T_Direction>;
+
+function _dir_key(dir: T_Direction): string {
+    return Object.keys(T_Direction).find(key => T_Direction[key] === dir) ?? "????";
+}
+
 
 export interface JSON_PointDir extends JSON_Point {
     d: number;
@@ -38,7 +43,7 @@ export class  C_PointDir extends C_Point {
         this.d = T_Direction.X;
         return;
     }
-    public get_mb_name(): string {
+    public get_d_mb_name(): string {
         switch (this.d) {
             case 0:  return '北';
             case 1:  return '東';
@@ -52,7 +57,7 @@ export class  C_PointDir extends C_Point {
         return this.d;
     }
     public set_d(d: T_Direction): C_PointDir|undefined {
-        if (!(d in T_Direction)) return undefined;
+        if (!(_dir_key(d) in T_Direction)) return undefined;
         this.d = d;
         return this;
     }
@@ -61,14 +66,13 @@ export class  C_PointDir extends C_Point {
     }
     public set_pd(d: C_PointDir|JSON_PointDir): C_PointDir|undefined {
         if (d instanceof C_PointDir) {
-            if (!(d.d in T_Direction)) return undefined;
+            if (!(_dir_key(d.d) in T_Direction)) return undefined;
             super.set_p(d);
             this.d = d.d;
             return this;
         }
-        if (!(d.d in T_Direction)) return undefined;
+        if (!(_dir_key(d.d) in T_Direction)) return undefined;
         this.decode(d);
-        this.d = d.d as T_Direction;
         return this;
     }
 
@@ -79,7 +83,7 @@ export class  C_PointDir extends C_Point {
     }
     public decode(j: JSON_PointDir): C_PointDir {
         if (j === undefined) return this;
-        if (!(j.d in T_Direction)) return this;
+        if (!(_dir_key(j.d) in T_Direction)) return this;
 
         super.decode(j);
         this.d = j.d as T_Direction;

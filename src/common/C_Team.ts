@@ -47,10 +47,13 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\nmaze_name: " + (a.maze_name ?? '?')
         + "\nguld_name: " + (a.guld_name ?? '?')
         + "\nsave_id: "   + (a.save_id   ?? '?')
-        + "\ncur_x: "     + (a.locate?.x ?? '?')
-        + "\ncur_y: "     + (a.locate?.y ?? '?')
-        + "\ncur_z: "     + (a.locate?.z ?? '?')
-        + "\ncur_d: "     + (a.locate?.d ?? '?')
+        + "\nlckd: "      + (a.locate?.kind   ?? '?')
+        + "\nlcnm: "      + (a.locate?.name   ?? '?')
+        + "\nlcid: "      + (a.locate?.uid    ?? '?')
+        + "\ncur_x: "     + (a.locate?.loc?.x ?? '?')
+        + "\ncur_y: "     + (a.locate?.loc?.y ?? '?')
+        + "\ncur_z: "     + (a.locate?.loc?.z ?? '?')
+        + "\ncur_d: "     + (a.locate?.loc?.d ?? '?')
         + "\n"
     );
 
@@ -161,7 +164,6 @@ export class C_Team implements I_Exist {
 
         if (pos !== undefined) {
             this.walker.set_pd(pos);
-            this.set_pd(pos);
         }
     }
     public get_loc(): C_Location {
@@ -287,17 +289,17 @@ export class C_Team implements I_Exist {
         };
     }
     public decode(a: JSON_Team|undefined): C_Team {
-        if (a === undefined) return this;
+        if (a === undefined)  return this;
 
-        if (a.id   !== undefined)      this.my_id       = a.id;
-        if (a.name !== undefined)      this.my_name     = a.name;
-        if (a.uniq_id !== undefined)   this.uniq_id     = a.uniq_id;
-        if (a.save_id !== undefined)   this.save_id     = a.save_id;
-        if (a.motion !== undefined)    this.hope_motion = a.motion;
+        if (a.id   !== undefined)    this.my_id       = a.id;
+        if (a.name !== undefined)    this.my_name     = a.name;
+        if (a.uniq_id !== undefined) this.uniq_id     = a.uniq_id;
+        if (a.save_id !== undefined) this.save_id     = a.save_id;
+        if (a.motion !== undefined)  this.hope_motion = a.motion;
 
-        if (a.locate !== undefined) this.walker.decode(a.locate);
-        if (a.goods  !== undefined) this.goods .decode(a.goods);
-        if (a.heroes !== undefined) this.heroes = C_Hero.decode_heroes(a.heroes);
+        if (a.locate !== undefined)  this.walker.decode(a.locate);
+        if (a.goods  !== undefined)  this.goods .decode(a.goods);
+        if (a.heroes !== undefined)  this.heroes = C_Hero.decode_heroes(a.heroes);
     
         return this;
     }
