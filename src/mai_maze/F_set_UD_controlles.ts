@@ -215,8 +215,8 @@ function do_UD_save() {
         /* detail: */    '',
         /* point: */     
                     `『${g_maze.get_name()}』 ` 
-                    + `地下 ${g_team.get_p().z + 1}階層 ` 
-                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
     const save_data = JSON.stringify(g_save.encode(), null, "\t");

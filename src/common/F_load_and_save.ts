@@ -18,7 +18,8 @@ import {
 type T_callback = (jsonObj:any)=>(boolean|void);
 
 export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
-    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_maze"});
+//    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_maze"});
+    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_game"});
  
     return POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
@@ -41,6 +42,13 @@ export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
             _alert(jsonObj.emsg);
             return undefined;
         }
+        /*
+        if (jsonObj?.data?.hres  === undefined) {
+            g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+        */
 
         const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
         if (monitor) {

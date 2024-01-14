@@ -32,7 +32,7 @@ export function calc_view2D_width(): void {
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z, g_debug_mode);
+    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_pd().z, g_debug_mode);
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
 export type T_DrowSet = {
@@ -379,7 +379,7 @@ export function displey_mase3D_direction(): void {
             break;
     }
 
-    const p = g_team.get_p();
+    const p = g_team.get_pd();
     const mes = '地下 ' + (p.z + 1) + '階　' + direction + '　(x = <span id="direction_X">' + p.x + '</span>, y = <span id="direction_Y">' + p.y + '</span>)';
     p_dir.innerHTML = mes;
 }

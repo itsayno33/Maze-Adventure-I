@@ -1,68 +1,51 @@
-import { T_Direction } from "./T_Direction";
-import { C_Point }     from "./C_Point";
+import { C_PointDir, T_Direction }   from "./C_PointDir";
+import { C_Location, JSON_Location } from "./C_Location";
 
-type __JSON_arg = {
-    x?: number,
-    y?: number,
-    z?: number,
-    d?: number,
+export interface JSON_Walker extends JSON_Location {
 }
-export class C_Walker {
-    protected p: C_Point;
-    protected d: T_Direction;
-    constructor() {
-        this.p  = new C_Point();
-        this.d = T_Direction.N;
-    }
-    public get_dir(): T_Direction {return this.d}
-    public set_dir(d: T_Direction): void {
-        this.d = d;
-    }
-    public get_p(): C_Point {
-        return new C_Point(this.p);
-    }
-    public set_p(p: C_Point, d?: T_Direction): void {
-        this.p = p;
-        this.d = d ?? this.d;
-    }
-    public get_x(): number {return this.p.x}
-    public get_y(): number {return this.p.y}
-    public get_z(): number {return this.p.z}
 
-    public set_x(x: number): void {this.p.x = x}
-    public set_y(y: number): void {this.p.y = y}
-    public set_z(z: number): void {this.p.z = z}
+export class C_Walker extends C_Location {
+    constructor(j?: JSON_Walker|JSON_Location) {
+        super(j);
+    }
+    public get_x(): number {return this.x}
+    public get_y(): number {return this.y}
+    public get_z(): number {return this.z}
 
-    public get_p_fwd(): C_Point {
+    public set_x(x: number): void {this.x = x}
+    public set_y(y: number): void {this.y = y}
+    public set_z(z: number): void {this.z = z}
+
+    public get_p_fwd(): C_PointDir {
         return this.__get_p_move(1);
     }
     public set_p_fwd(): void {
         this.set_p(this.get_p_fwd());
     }
-    public get_p_bak(): C_Point {
+    public get_p_bak(): C_PointDir {
         return this.__get_p_move(-1);
     }
     public set_p_bak(): void {
         this.set_p(this.get_p_bak());
     }
-    public get_p_up(): C_Point {
-        const p = new C_Point(this.p);
+    public get_p_up(): C_PointDir {
+        const p = new C_PointDir(this);
         p.z--;
         return p;
     }
     public set_p_up() {
         this.set_p(this.get_p_up());
     }
-    public get_p_down(): C_Point {
-        const p = new C_Point(this.p);
+    public get_p_down(): C_PointDir {
+        const p = new C_PointDir(this);
         p.z++;
         return p;
     }
     public set_p_down() {
         this.set_p(this.get_p_down());
     }
-    protected __get_p_move(offset: number):C_Point {
-        const p = new C_Point(this.p);
+    protected __get_p_move(offset: number): C_PointDir {
+        const p = new C_PointDir(this);
         switch (this.d) {
             case T_Direction.N: p.y -= offset;break;
             case T_Direction.E: p.x += offset;break;
@@ -71,12 +54,10 @@ export class C_Walker {
         }
         return p;
     }
-    public get_around(front: number, right:number, up: number): C_Point {
-        const cur_pos = this.p;
-        const cur_dir = this.d;
-        var target_x  = this.p.x;
-        var target_y  = this.p.y;
-        var target_z  = this.p.z - up;
+    public get_around(front: number, right:number, up: number): C_PointDir {
+        var target_x  = this.x;
+        var target_y  = this.y;
+        var target_z  = this.z - up;
         switch (this.d) {
             case T_Direction.N:
                 target_x += right;
@@ -95,7 +76,7 @@ export class C_Walker {
                 target_y -= right;
                 break;
         }
-        return new C_Point(target_x, target_y, target_z);
+        return new C_PointDir({x: target_x, y: target_y, z: target_z, d: this.d});
     }
     public turn_r(): void {
         switch (this.d) {
@@ -121,21 +102,13 @@ export class C_Walker {
             case T_Direction.W: this.d = T_Direction.W;break;
         }
     }
-    public encode(): __JSON_arg {
-        return {
-            x: this.p.x,
-            y: this.p.y,
-            z: this.p.z,
-            d: this.d as number,
-        }
+    public encode(): JSON_Walker {
+        const j = super.encode() as JSON_Walker;
+        return j;
     }
-    public decode(a: __JSON_arg): C_Walker {
-        if (a.x !== undefined && a.y !== undefined && a.z !== undefined) {
-            this.p.x = a.x;
-            this.p.y = a.y;
-            this.p.z = a.z;
-        }
-        if (a.d !== undefined) this.d   = a.d as T_Direction;
+    public decode(a: JSON_Walker): C_Walker {
+        if (a === undefined) return this;
+        super.decode(a);
         return this;
     }
 }

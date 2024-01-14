@@ -1,17 +1,17 @@
+import { C_UrlOpt }                   from "../common/C_UrlOpt";
 import { T_MzKind }                   from "../common/T_MzKind";
 import { I_HopeAction }               from "../common/I_EventMap";
 import { C_Point }                    from "../common/C_Point";
+import { instant_load, instant_save } from "../common/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
-import { instant_load, instant_save } from "../common/F_load_and_save";
 import { display_maze2D, display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }      from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }    from "./F_set_UD_controlles";
-import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw, g_save }            from "./global_for_maze";
-import { g_maze, g_team }             from "./global_for_maze";
-import { C_UrlOpt }   from "../common/C_UrlOpt";
-import { set_g_save } from "./F_set_save_controlles";
+import { set_camp_controlles }                     from "./F_set_camp_controlles";
+import { set_g_save }                              from "./F_set_save_controlles";
+import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
+import { g_save , g_maze, g_team }                 from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -128,8 +128,8 @@ function do_instant_load(): void {
         /* title: */     '簡易保存データ', 
         /* detail: */    '', 
                     `『${g_maze.get_name()}』 ` 
-                    + `地下 ${g_team.get_p().z + 1}階層 ` 
-                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
     const save_data = JSON.stringify(g_save.encode(), null, "\t");
@@ -146,8 +146,8 @@ function do_instant_save(): void {
         /* title: */     '簡易保存データ', 
         /* detail: */    '', 
                     `『${g_maze.get_name()}』 ` 
-                    + `地下 ${g_team.get_p().z + 1}階層 ` 
-                    + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`,
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
     const save_data = JSON.stringify(g_save.encode(), null, "\t");
@@ -216,7 +216,7 @@ function move_check(r: I_HopeAction) {
 
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
-    change_unexp_to_floor(g_team.get_p());
+    change_unexp_to_floor(g_team.get_pd());
     clear_mask_around_the_team();
     display_maze2D();
     display_maze3D();

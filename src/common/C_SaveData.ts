@@ -32,6 +32,10 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
         + "\nauto_mode: " + (a.auto_mode ?? '?')
         + "\nis_active: " + (a.is_active ?? '?')
         + "\nis_delete: " + (a.is_delete ?? '?')
+        + "\nteam_uid   " + (a.team_uid  ?? '?')
+        + "\nmaze_count " + (a.all_maze?.length ?? '?')
+        + "\nguld_count " + (a.all_guld?.length ?? '?')
+        + "\nteam_count " + (a.all_team?.length ?? '?')
         + "\n"
     );
 }

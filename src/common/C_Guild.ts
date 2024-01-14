@@ -52,7 +52,9 @@ export class C_Guild implements I_Locate {
             name:    this.name,
         }
     }
-    public decode(a: JSON_Guild): C_Guild {
+    public decode(a: JSON_Guild|undefined): C_Guild {
+        if (a === undefined) return this;
+        
         this.id      = a.id ?? this.id;
         this.uniq_id = a.uniq_id ?? this.uniq_id;
         this.save_id = a.save_id ?? this.save_id;
