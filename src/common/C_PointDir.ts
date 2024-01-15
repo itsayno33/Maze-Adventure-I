@@ -10,13 +10,13 @@ export const T_Direction:{[dir: string]: number} = {
 } as const;
 export type T_Direction = T_MakeEnumType<typeof T_Direction>;
 
-function _dir_key(dir: T_Direction): string {
+function _dir_key(dir: T_Direction | undefined): string {
     return Object.keys(T_Direction).find(key => T_Direction[key] === dir) ?? "????";
 }
 
 
 export interface JSON_PointDir extends JSON_Point {
-    d: number;
+    d?: number;
 }
 
 export class  C_PointDir extends C_Point {

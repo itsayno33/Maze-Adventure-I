@@ -19,7 +19,7 @@ import { C_Hero } from "../common/C_Hero";
 export const g_hres: C_Hero[] = [];
 
 import { C_Maze } from "../common/C_Maze";
-export const g_maze = new C_Maze({maze_id: -1});
+export const g_maze = new C_Maze();
 
 import { C_Team } from "../common/C_Team";
 export const g_team = new C_Team();

@@ -361,7 +361,8 @@ export function displey_mase3D_direction(): void {
         return;
     }
     var direction: string;
-    switch (g_team.get_dir()) {
+    const p = g_team.get_pd();
+    switch (p.d) {
         case T_Direction.N:
             direction = '<span class="direction_N">《北》</span>';
             break;
@@ -379,7 +380,6 @@ export function displey_mase3D_direction(): void {
             break;
     }
 
-    const p = g_team.get_pd();
     const mes = '地下 ' + (p.z + 1) + '階　' + direction + '　(x = <span id="direction_X">' + p.x + '</span>, y = <span id="direction_Y">' + p.y + '</span>)';
     p_dir.innerHTML = mes;
 }

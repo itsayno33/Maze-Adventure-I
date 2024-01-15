@@ -171,10 +171,7 @@ export function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|
 }
 
 function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-/*
-    opt.set('pid',         g_pid[0]); 
-    opt.set('save',        save_data);
-*/
+
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');

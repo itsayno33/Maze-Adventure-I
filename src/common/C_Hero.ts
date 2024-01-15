@@ -1,8 +1,9 @@
 import { C_Goods, JSON_Goods } from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
+import { I_JSON, JSON_Any } from "./C_SaveData";
 import { _get_uuid } from "./F_Rand";
 
-export type JSON_Hero = {
+export interface JSON_Hero extends JSON_Any {
     id?:        number, 
     uniq_id?:   string, 
     save_id?:   number, 
@@ -19,7 +20,7 @@ export type JSON_Hero = {
     is_alive?:  string|boolean;
 }
 
-export type JSON_Hero_Value = {
+export interface JSON_Hero_Value extends JSON_Any {
     skp?: {ttl: number,  now: number}, 
     exp?: {ttl: number,  now: number},
     nxe?: number,                   // 次回のヒーローレベルアップに必要な経験値
@@ -42,7 +43,7 @@ export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void {
     }
 }
 
-export class C_Hero {
+export class C_Hero implements I_JSON {
     protected my_id:    number;
     protected my_name:  string;
     protected uniq_id:  string; 
@@ -101,8 +102,8 @@ export class C_Hero {
             lv:        this.lv, 
             goods:     this.goods.encode(), 
             val:       this.val,
-            abi_p:    {bsc: this.abi_p.bsc.encode()},
-            abi_m:    {bsc: this.abi_m.bsc.encode()},
+            abi_p_bsc: this.abi_p.bsc.encode(),
+            abi_m_bsc: this.abi_m.bsc.encode(),
             is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
@@ -129,17 +130,15 @@ export class C_Hero {
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }
-        if (a.abi_p   !== undefined) {
-            const v = a.abi_p;
-            if (v.bsc !== undefined) this.abi_p.bsc.decode(v.bsc);
-            if (v.ttl !== undefined) this.abi_p.ttl.decode(v.ttl);
-            if (v.now !== undefined) this.abi_p.now.decode(v.now);
+        if (a.abi_p_bsc !== undefined) {
+            this.abi_p.bsc.decode(a.abi_p_bsc);
+            // 暫定
+            this.abi_p.ttl = this.abi_p.now = this.abi_p.bsc;
         }
-        if (a.abi_m   !== undefined) {
-            const v = a.abi_m;
-            if (v.bsc !== undefined) this.abi_m.bsc.decode(v.bsc);
-            if (v.ttl !== undefined) this.abi_m.ttl.decode(v.ttl);
-            if (v.now !== undefined) this.abi_m.now.decode(v.now);
+        if (a.abi_m_bsc !== undefined) {
+            this.abi_m.bsc.decode(a.abi_m_bsc);
+            // 暫定
+            this.abi_m.ttl = this.abi_m.now = this.abi_m.bsc;
         }
         return this;
     }

@@ -1,3 +1,4 @@
+import { I_JSON, JSON_Any } from "./C_SaveData";
 import { T_MakeEnumType } from "./T_MakeEnumType";
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
@@ -23,17 +24,17 @@ const GoodsKind_mb_name: {[gdkd: number]: string} = {
 
 
 
-export type JSON_GoodsItem = {
-    uniq_id:        string,
-    gdkd:           string,
-    name:           string,
-    ambiguous_name: string,
-    confirmed_name: string,
-    own_name:       string,
-    is_confirmed:   string,
+export interface JSON_GoodsItem extends JSON_Any {
+    uniq_id?:        string,
+    gdkd?:           string,
+    name?:           string,
+    ambiguous_name?: string,
+    confirmed_name?: string,
+    own_name?:       string,
+    is_confirmed?:   string,
 }
 
-export class C_GoodsItem {
+export class C_GoodsItem implements I_JSON {
     protected uniq_id:        string;
     protected gdkd:           T_GoodsKind;
     protected name:           string;   // 下記の名前のうち、最新のもの

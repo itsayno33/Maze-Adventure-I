@@ -490,23 +490,30 @@ async function save(): Promise<void> {
         decode_all(jsonObj);
     });
 */
-    await general_save(opt, decode_all);
-    is_kakunin = false;
-    g_mvm.notice_message('保存しました');
-    set_camp_controlles();
-    g_vsw.view_camp();
+    general_save(opt).then((jsonObj)=>{
+        decode_all(jsonObj);
+
+        is_kakunin = false;
+        g_mvm.notice_message('保存しました');
+        set_camp_controlles();
+        g_vsw.view_camp();
+        
+    });
 }
 
-export function decode_all(jsonObj: any):void { 
+export function decode_all(jsonObj: any):void {                    _alert('alert (a)');
     // SaveData関連のデコード
-    if (jsonObj.save !== undefined)  g_save.decode(jsonObj.save); 
- 
+    if (jsonObj.save !== undefined)  {g_save.decode(jsonObj.save); _alert('alert (b)');}
+                                                                   _alert('alert (c)');
     //Team関連のデコード
-    g_team.decode(g_save.all_team[g_save.team_uid].encode()); 
+    _alert(`team_uid = ${g_save.team_uid}`);
+    for (let ii in g_save.all_team) _alert(`team_uid[${ii}] = ${g_save.all_team[ii].uid()}`);
+
+    g_team.decode(g_save.all_team[g_save.team_uid].encode());      _alert('alert (d)');
 
     // Maze関連のデコード
-    const loc = g_team.get_loc(); 
-    if (loc.get_lckd() != T_Lckd.Maze) {
+    const loc = g_team.get_loc();                                  _alert('alert (e)');
+    if (loc.get_lckd() != T_Lckd.Maze) {                           _alert('alert (f)');
         g_mes.warning_message('不正なデータを受信しました(迷宮探索以外)');
         _alert(
             '不正なデータを受信しました(迷宮探索以外) => ' 
@@ -515,14 +522,14 @@ export function decode_all(jsonObj: any):void {
             );
         return;
     }
-    g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
+    g_maze.decode(g_save.all_maze[loc.get_uid()].encode());          _alert('alert (g)');
 
     //Hero関連のデコード
-    for (let i in g_hres) delete g_hres[i]; 
-    for (let hero of g_team.hres())  g_hres.push(hero); 
+    for (let i in g_hres) delete g_hres[i];                           _alert('alert (h)');
+    for (let hero of g_team.hres())  g_hres.push(hero);                _alert('alert (i)');
 
     // MazeにTeamを追加
-    g_maze.add_obj(g_team); 
+    g_maze.add_obj(g_team);                                           _alert('alert (j)');
 }
 
 // 新規ゲームの初期データの読み込み(暫定)
@@ -566,6 +573,10 @@ export function set_g_save (
         point:     string,
         auto_mode: boolean,
     ) {
+        g_save.team_uid = g_team.uid();
+        g_save.all_team[g_team.uid()] = g_team;
+//        g_save.all_maze[g_maze.uid()] = g_maze;
+
         g_save.decode({
             save_id:   save_id, 
             player_id: g_pid[0],

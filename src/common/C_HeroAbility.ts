@@ -1,40 +1,22 @@
 // 一般に使えるユーティリティな呪文
 // オブジェクトを列挙型として型化するのに利用
+import { I_JSON, JSON_Any } from "./C_SaveData";
 import { _round } from "./F_Math";
-import {T_MakeEnumType} from "./T_MakeEnumType";
 
-export type JSON_Hero_Ability = {[key: string]: number}
+type T_HeroAbility = {[key: string]: number};
+export interface JSON_Hero_Ability extends JSON_Any {[key: string]: number}
 
-const T_HAK = { // HeroAbilityKeys
-    xp:   1,   // p:HP、m:MP
-
-    // 以下、戦闘能力の基本値(p:物理、m:魔法)。ヒーローレベルやステータスアップで加算 
-    atk:  2,   // 攻撃値
-    def:  3,   // 防御値
-    quc:  4,   // 瞬発力
-    cnc:  5,   // 機運値(チャンス)
-
-    // 以下、いわゆるステータス。上記の計算に影響。ヒーローレベルやステータスアップで加算
-    str: 11,   // 根性。攻撃/防御力にも影響。HP/MP回復やアイテムの最大所持重量にボーナス
-    pwr: 12,   // 基本的強さ。攻撃力に影響
-    vit: 13,   // 耐久力。HP/MPの最大値や防御力に影響を与える
-    dex: 14,   // 器用さ。命中率に影響を与える。飛び道具や長距離魔法では特に影響。罠解除にも影響
-    agi: 15,   // 素早さ。行動速度や回避率に影響を与える。命中率にも影響
-    tec: 16,   // 技術力。経験で向上して能力値(quc/cnc)にボーナスを与える
-    luk: 17,   // 幸運値。cncに大きく影響する
-    max: 17
-}  as const;
-export type T_HAK   = T_MakeEnumType<typeof T_HAK>;
-
-export class C_HeroAbility {
-    protected v: JSON_Hero_Ability = {
+export class C_HeroAbility implements I_JSON{
+    protected v: T_HeroAbility = {
         xp:  0,  // p:HP、m:MP
 
+        // 以下、戦闘能力の基本値(p:物理、m:魔法)。ヒーローレベルやステータスアップで加算 
         atk: 0,  // 攻撃値
         def: 0,  // 防御値
         quc: 0,  // 瞬発力
         cnc: 0,  // 機運値(チャンス)
     
+        // 以下、いわゆるステータス。上記の計算に影響。ヒーローレベルやステータスアップで加算
         str: 0,  // 根性。攻撃/防御力にも影響。HP/MP回復やアイテムの最大所持重量にボーナス
         pwr: 0,  // 基本的強さ。攻撃力に影響
         vit: 0,  // 耐久力。HP/MPの最大値や防御力に影響を与える
@@ -83,15 +65,6 @@ export class C_HeroAbility {
         return _round(Math.floor(this.v[key] / 10.0), 0);
     }
 
-    protected __clone_all(): JSON_Hero_Ability {
-        const a: JSON_Hero_Ability = {};
-        
-        for (let key in this.v) {
-            a[key] = this.v[key];
-        }
-        return a;
-    }
-
     public add(a: JSON_Hero_Ability): void {
         for (let key in a) {
             this.v[key] += a[key];
@@ -99,12 +72,15 @@ export class C_HeroAbility {
     } 
 
     public encode(): JSON_Hero_Ability {
-            return this.__clone_all();
+        const a: JSON_Hero_Ability = {};
+        for (let key in this.v) a[key] = this.v[key];
+        return a;
     }
-    public decode(a: JSON_Hero_Ability): void {
+    public decode(a: JSON_Hero_Ability): C_HeroAbility {
         for (let key in a) {
-            this.v[key] = a[key];
+            if (key in this.v && a[key] !== undefined) this.v[key] = a[key];
         }
+        return this;
     }
 
     public static clone(s: C_HeroAbility): C_HeroAbility {

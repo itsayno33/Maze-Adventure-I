@@ -2,7 +2,24 @@ import { C_Maze, JSON_Maze  }  from "./C_Maze";
 import { C_Team, JSON_Team  }  from "./C_Team";
 import { C_Guild, JSON_Guild } from "./C_Guild";
 
-type JSON_SaveData = {
+// サーバー側とやりとりするJSON形式データのテンプレート
+export interface JSON_Any {
+    [key: string]: any
+}
+
+// サーバー側とやりとりするクラスに必要なメソッド
+export interface I_JSON {
+    encode: ()=>JSON_Any,
+    decode: (j:JSON_Any)=>I_JSON,
+}
+
+// サーバー側とやり取りする際に自身を文字列化するクラスのメソッド
+export interface I_JSONValue extends I_JSON{
+    fromJSON: ()=>void,
+    toJSON:   ()=>void,
+}
+
+export interface JSON_SaveData extends JSON_Any {
     save_id?:   number,
     player_id?: number, 
     uniq_no?:   number,
@@ -41,7 +58,7 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
 }
 
 
-export class C_SaveData {
+export class C_SaveData implements I_JSON{
     public save_id:   number;
     public player_id: number; 
     public uniq_no:   number;
@@ -78,14 +95,14 @@ export class C_SaveData {
         if (a !== undefined) this.decode(a);
     }
     public encode(): JSON_SaveData {
-        const all_maze: C_Maze[] = [];
-        for (let i in this.all_maze) all_maze.push(this.all_maze[i]);
+        const all_maze: JSON_Maze[] = [];
+        for (let i in this.all_maze) all_maze.push(this.all_maze[i].encode());
 
-        const all_team: C_Team[] = [];
-        for (let i in this.all_team) all_team.push(this.all_team[i]);
+        const all_team: JSON_Team[] = [];
+        for (let i in this.all_team) all_team.push(this.all_team[i].encode());
         
-        const all_guld: C_Guild[] = [];
-        for (let i in this.all_guld) all_guld.push(this.all_guld[i]);
+        const all_guld: JSON_Guild[] = [];
+        for (let i in this.all_guld) all_guld.push(this.all_guld[i].encode());
         
         return {
             save_id:   this.save_id, 
@@ -99,9 +116,9 @@ export class C_SaveData {
             is_delete: this.is_delete ? '1' : '0', 
             save_time: this.save_time.toISOString(), 
             team_uid:  this.team_uid,
-            all_maze:  C_Maze.encode_all(all_maze), 
-            all_team:  C_Team.encode_all(all_team), 
-            all_guld:  C_Guild.encode_all(all_guld),
+            all_maze:  all_maze, 
+            all_team:  all_team, 
+            all_guld:  all_guld,
         }
     }
     public decode(s: JSON_SaveData): C_SaveData {
@@ -117,20 +134,23 @@ export class C_SaveData {
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time);
 
         if (s.all_maze  !== undefined) {
-            this.all_maze = {};
-            const all_maze = C_Maze.decode_all(s.all_maze);
-            for (const maze of all_maze) this.all_maze[maze.uid()] = maze;
+            for (const json_maze of s.all_maze) {
+                 const maze = (new C_Maze()).decode(json_maze); 
+                 this.all_maze[maze.uid()] = maze;
+            }
         } 
         if (s.all_team  !== undefined) {
-            this.all_team = {};
-            const all_team = C_Team.decode_all(s.all_team);
-            for (const team of all_team) this.all_team[team.uid()] = team;
+            for (const json_team of s.all_team) {
+                 const team = (new C_Team()).decode(json_team); 
+                 this.all_team[team.uid()] = team;
+            }
         } 
         if (s.all_guld  !== undefined) {
-            this.all_guld = {};
-            const all_guld = C_Guild.decode_all(s.all_guld);
-            for (const guld of all_guld) this.all_guld[guld.uid()] = guld;
-        } 
+            for (const json_guld of s.all_guld) {
+                const guld = (new C_Guild()).decode(json_guld); 
+                this.all_guld[guld.uid()] = guld;
+           }
+       } 
         this.team_uid = s.team_uid   ?? this.team_uid;
         return this;
     }

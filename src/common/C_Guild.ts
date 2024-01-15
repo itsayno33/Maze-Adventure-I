@@ -1,9 +1,10 @@
 import { C_Hero, JSON_Hero } from "./C_Hero";
 import { I_Locate, T_Lckd } from "./C_Location";
+import { I_JSON, JSON_Any } from "./C_SaveData";
 import { C_Team, JSON_Team } from "./C_Team";
 import { _get_uuid } from "./F_Rand";
 
-export type JSON_Guild = {
+export interface JSON_Guild extends JSON_Any {
     id?:      number,
     uniq_id?: string,
     save_id?: number,
@@ -23,7 +24,7 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
     );
 }
 
-export class C_Guild implements I_Locate {
+export class C_Guild implements I_Locate, I_JSON {
     protected id:      number;
     protected uniq_id: string;
     protected save_id: number;

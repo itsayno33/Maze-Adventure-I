@@ -1,10 +1,12 @@
-export interface JSON_Point {
-    x: number,
-    y: number,
-    z: number,
+import { I_JSON, JSON_Any } from "./C_SaveData";
+
+export interface JSON_Point extends JSON_Any {
+    x?: number,
+    y?: number,
+    z?: number,
 }
 
-export class C_Point {
+export class C_Point implements I_JSON{
     public x: number;
     public y: number;
     public z: number;
@@ -45,6 +47,7 @@ export class C_Point {
         return {x: this.x, y: this.y, z: this.z};
     }
     public decode(a: JSON_Point): C_Point {
+        if (a.x === undefined || a.y === undefined || a.z === undefined) return this;
         this.x = a.x; this.y = a.y; this.z = a.z;
         return this;
     }

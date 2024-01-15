@@ -20,13 +20,13 @@ export class C_Walker extends C_Location {
         return this.__get_p_move(1);
     }
     public set_p_fwd(): void {
-        this.set_p(this.get_p_fwd());
+        this.set_pd(this.get_p_fwd());
     }
     public get_p_bak(): C_PointDir {
         return this.__get_p_move(-1);
     }
     public set_p_bak(): void {
-        this.set_p(this.get_p_bak());
+        this.set_pd(this.get_p_bak());
     }
     public get_p_up(): C_PointDir {
         const p = new C_PointDir(this.pd);
@@ -34,7 +34,7 @@ export class C_Walker extends C_Location {
         return p;
     }
     public set_p_up() {
-        this.set_p(this.get_p_up());
+        this.set_pd(this.get_p_up());
     }
     public get_p_down(): C_PointDir {
         const p = new C_PointDir(this.pd);
@@ -42,7 +42,7 @@ export class C_Walker extends C_Location {
         return p;
     }
     public set_p_down() {
-        this.set_p(this.get_p_down());
+        this.set_pd(this.get_p_down());
     }
     protected __get_p_move(offset: number): C_PointDir {
         const p = new C_PointDir(this.pd);

@@ -1,6 +1,7 @@
 import { C_GoodsItem, JSON_GoodsItem } from "./C_GoodsItem";
+import { I_JSON, JSON_Any } from "./C_SaveData";
 
-export type JSON_Goods = {
+export interface JSON_Goods extends JSON_Any {
     gold?: number,
     arms?: JSON_GoodsItem[],    
     shld?: JSON_GoodsItem[],    
@@ -10,7 +11,7 @@ export type JSON_Goods = {
 
 type T_GoodsList = {[uid: string]: C_GoodsItem}
 
-export class C_Goods {
+export class C_Goods implements I_JSON{
     protected gold: number;
     protected arms: T_GoodsList;
     protected shld: T_GoodsList;

@@ -1,6 +1,7 @@
 import { C_Point }                   from './C_Point';
 import { C_PointDir, JSON_PointDir } from './C_PointDir';
 import { T_Direction }               from './C_PointDir';
+import { I_JSON, JSON_Any } from './C_SaveData';
 import { T_MakeEnumType }            from "./T_MakeEnumType";
 
 export const T_Lckd:{[lckd: string]: number}  = {
@@ -15,7 +16,7 @@ function _lckd_key(lckd: T_Lckd): string {
 }
 
 
-export interface JSON_Location {
+export interface JSON_Location extends JSON_Any {
     kind?: string,
     name?: string,
     uid?:  string,
@@ -28,7 +29,7 @@ export interface I_Locate {
     get_name: ()=>string;
 }
 
-export class C_Location {
+export class C_Location implements I_JSON {
     protected loc_kind: T_Lckd = T_Lckd.Unkn;
     protected loc_name: string = '';
     protected loc_uid:  string = '';

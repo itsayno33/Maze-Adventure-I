@@ -6,6 +6,7 @@ import { C_Walker, JSON_Walker }   from "./C_Walker";
 import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
 import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
+import { I_JSON, JSON_Any } from "./C_SaveData";
 
 type __init_arg = {
     id?:        number, 
@@ -25,7 +26,7 @@ type __init_arg = {
     motion?:    string,
 }
 
-export type JSON_Team = {
+export interface JSON_Team extends JSON_Any {
     id?:        number, 
     uniq_id?:   string, 
     save_id?:   number, 
@@ -61,7 +62,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 }
 
 
-export class C_Team implements I_Exist {
+export class C_Team implements I_Exist, I_JSON {
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;

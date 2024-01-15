@@ -6,8 +6,9 @@ import { I_Exist }              from "./I_EventMap";
 import { C_Team }               from "./C_Team";
 import { _get_uuid }            from "./F_Rand";
 import { _alert }               from "./global";
+import { I_JSON, JSON_Any } from "./C_SaveData";
 
-export type JSON_Maze = {
+export interface JSON_Maze extends JSON_Any {
     id?:      number,
     uniq_id?: string,
     save_id?: number,
@@ -130,7 +131,17 @@ class C_MazeCell  {
     }
 }
 
-export class C_Maze implements I_Locate {
+type _init_arg = {
+    maze_id?: number,
+    save_id?: number,
+    floor?:   number,
+    name?:    string,
+    size_x?:  number,
+    size_y?:  number,
+    size_z?:  number,
+}
+
+export class C_Maze implements I_Locate, I_JSON {
     protected maze_id:  number;
     protected uniq_id:  string;
     protected save_id:  number;
@@ -141,50 +152,35 @@ export class C_Maze implements I_Locate {
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
     protected objs:     {[id: string]: I_Exist};
-    public constructor(
-        {maze_id = -1, save_id = -1, floor = 0, name = '', size_x = 3, size_y = 3, size_z = 1}: {
-            maze_id?: number,
-            save_id?: number,
-            floor?:   number,
-            name?:    string,
-            size_x?:  number,
-            size_y?:  number,
-            size_z?:  number,
-        }
-    ) {
-        this.maze_id = maze_id;
+    public constructor(a?: _init_arg) {
+        this.maze_id = -1;
+        this.save_id = -1;
         this.uniq_id = 'mai_maze#' + _get_uuid();
-        this.save_id = save_id;
-        this.floor   = floor;
-        this.name    = name;
+        this.floor   = 0;
+        this.name    = '';
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z - 1));
+            new C_Point(2, 2, 2));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.masks   = this.__init_mask(true);
         this.objs    = {};
+        if (a !== undefined) this.init(a);
     }
-    public init(
-        {maze_id, save_id, floor, name, size_x, size_y, size_z}: {
-            maze_id: number,
-            save_id: number,
-            floor:   number,
-            name:    string,
-            size_x:  number,
-            size_y:  number,
-            size_z:  number,
+
+    public init(a: _init_arg) {
+        if (a.maze_id !== undefined) this.maze_id = a.maze_id;
+        if (a.save_id !== undefined) this.save_id = a.save_id;
+        if (a.floor   !== undefined) this.floor   = a.floor;
+        if (a.name    !== undefined) this.name    = a.name;
+        if (a.size_x  !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
+            this.size    = new C_Range(
+                new C_Point(0, 0, 0), 
+                new C_Point(a.size_x - 1, a.size_y - 1, a.size_z - 1)
+            );
+            this.cells   = this.__init_maze(T_MzKind.Stone);
+            this.masks   = this.__init_mask(true);
+            this.objs    = {};
         }
-    ) {
-        this.maze_id = maze_id;
-        this.save_id = save_id;
-        this.floor   = floor;
-        this.name    = name;
-        this.size    = new C_Range(
-            new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z - 1));
-        this.cells   = this.__init_maze(T_MzKind.Stone);
-        this.masks   = this.__init_mask(true);
-        this.objs    = {};
     }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
         const size_x = this.size.size_x();
