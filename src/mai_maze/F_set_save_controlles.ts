@@ -501,19 +501,16 @@ async function save(): Promise<void> {
     });
 }
 
-export function decode_all(jsonObj: any):void {                    _alert('alert (a)');
+export function decode_all(jsonObj: any):void { 
     // SaveData関連のデコード
-    if (jsonObj.save !== undefined)  {g_save.decode(jsonObj.save); _alert('alert (b)');}
-                                                                   _alert('alert (c)');
-    //Team関連のデコード
-    _alert(`team_uid = ${g_save.team_uid}`);
-    for (let ii in g_save.all_team) _alert(`team_uid[${ii}] = ${g_save.all_team[ii].uid()}`);
+    if (jsonObj.save !== undefined) g_save.decode(jsonObj.save); 
 
-    g_team.decode(g_save.all_team[g_save.team_uid].encode());      _alert('alert (d)');
+    //Team関連のデコード
+    g_team.decode(g_save.all_team[g_save.team_uid].encode()); 
 
     // Maze関連のデコード
-    const loc = g_team.get_loc();                                  _alert('alert (e)');
-    if (loc.get_lckd() != T_Lckd.Maze) {                           _alert('alert (f)');
+    const loc = g_team.get_loc(); 
+    if (loc.get_lckd() != T_Lckd.Maze) { 
         g_mes.warning_message('不正なデータを受信しました(迷宮探索以外)');
         _alert(
             '不正なデータを受信しました(迷宮探索以外) => ' 
@@ -522,14 +519,14 @@ export function decode_all(jsonObj: any):void {                    _alert('alert
             );
         return;
     }
-    g_maze.decode(g_save.all_maze[loc.get_uid()].encode());          _alert('alert (g)');
+    g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
 
     //Hero関連のデコード
-    for (let i in g_hres) delete g_hres[i];                           _alert('alert (h)');
-    for (let hero of g_team.hres())  g_hres.push(hero);                _alert('alert (i)');
+    for (let i in g_hres) delete g_hres[i]; 
+    for (let hero of g_team.hres())  g_hres.push(hero); 
 
     // MazeにTeamを追加
-    g_maze.add_obj(g_team);                                           _alert('alert (j)');
+    g_maze.add_obj(g_team); 
 }
 
 // 新規ゲームの初期データの読み込み(暫定)

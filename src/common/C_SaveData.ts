@@ -12,6 +12,9 @@ export interface I_JSON {
     encode: ()=>JSON_Any,
     decode: (j:JSON_Any)=>I_JSON,
 }
+export interface I_JSON_Class {
+    new: (j?: JSON_Any)=>I_JSON,
+}
 
 // サーバー側とやり取りする際に自身を文字列化するクラスのメソッド
 export interface I_JSONValue extends I_JSON{
@@ -58,7 +61,7 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
 }
 
 
-export class C_SaveData implements I_JSON{
+export class C_SaveData implements I_JSON {
     public save_id:   number;
     public player_id: number; 
     public uniq_no:   number;
@@ -94,16 +97,12 @@ export class C_SaveData implements I_JSON{
 
         if (a !== undefined) this.decode(a);
     }
-    public encode(): JSON_SaveData {
-        const all_maze: JSON_Maze[] = [];
-        for (let i in this.all_maze) all_maze.push(this.all_maze[i].encode());
 
-        const all_team: JSON_Team[] = [];
-        for (let i in this.all_team) all_team.push(this.all_team[i].encode());
-        
-        const all_guld: JSON_Guild[] = [];
-        for (let i in this.all_guld) all_guld.push(this.all_guld[i].encode());
-        
+    public static new(a?: JSON_SaveData): C_SaveData {
+        return new C_SaveData(a);
+    }
+
+    public encode(): JSON_SaveData {
         return {
             save_id:   this.save_id, 
             player_id: this.player_id,  
@@ -116,11 +115,17 @@ export class C_SaveData implements I_JSON{
             is_delete: this.is_delete ? '1' : '0', 
             save_time: this.save_time.toISOString(), 
             team_uid:  this.team_uid,
-            all_maze:  all_maze, 
-            all_team:  all_team, 
-            all_guld:  all_guld,
+            all_maze:  this._encode_all_data(this.all_maze), 
+            all_team:  this._encode_all_data(this.all_team), 
+            all_guld:  this._encode_all_data(this.all_guld),
         }
     }
+    protected _encode_all_data(all_data: {[uid:string]:I_JSON}): JSON_Any[] {
+        const all_JSON: JSON_Any[] = [];
+        for (let i in all_data) all_JSON.push(all_data[i].encode());
+        return all_JSON;
+    }
+
     public decode(s: JSON_SaveData): C_SaveData {
         this.save_id   = s.save_id   ?? this.save_id;
         this.player_id = s.player_id ?? this.player_id; 
@@ -134,18 +139,21 @@ export class C_SaveData implements I_JSON{
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time);
 
         if (s.all_maze  !== undefined) {
+            this.all_maze = {};
             for (const json_maze of s.all_maze) {
                  const maze = (new C_Maze()).decode(json_maze); 
                  this.all_maze[maze.uid()] = maze;
             }
         } 
         if (s.all_team  !== undefined) {
+            this.all_team = {};
             for (const json_team of s.all_team) {
                  const team = (new C_Team()).decode(json_team); 
                  this.all_team[team.uid()] = team;
             }
         } 
         if (s.all_guld  !== undefined) {
+            this.all_guld = {};
             for (const json_guld of s.all_guld) {
                 const guld = (new C_Guild()).decode(json_guld); 
                 this.all_guld[guld.uid()] = guld;

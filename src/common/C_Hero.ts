@@ -78,6 +78,7 @@ export class C_Hero implements I_JSON {
         this.is_alive   = true;
         if (a !== undefined) this.decode(a);
     }
+
     public set_prp(arg : JSON_Hero) {
         this.decode(arg);
     }

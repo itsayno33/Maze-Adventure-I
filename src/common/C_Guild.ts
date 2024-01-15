@@ -1,7 +1,7 @@
-import { C_Hero, JSON_Hero } from "./C_Hero";
 import { I_Locate, T_Lckd } from "./C_Location";
 import { I_JSON, JSON_Any } from "./C_SaveData";
 import { C_Team, JSON_Team } from "./C_Team";
+import { JSON_Hero } from "./C_Hero";
 import { _get_uuid } from "./F_Rand";
 
 export interface JSON_Guild extends JSON_Any {

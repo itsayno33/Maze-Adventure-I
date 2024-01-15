@@ -5,7 +5,7 @@ import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlle
 import { g_debug_mode, g_ctls_mode, g_mvm, g_save }         from "./global_for_maze";
 import { g_maze, g_team,  } from "./global_for_maze";
 import { C_UrlOpt } from "../common/C_UrlOpt";
-import { set_g_save } from "./F_set_save_controlles";
+import { decode_all, set_g_save } from "./F_set_save_controlles";
 
 
 export function clr_UD_controlles(): void {
@@ -223,6 +223,8 @@ function do_UD_save() {
 
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
-    UD_save(opt);
+    UD_save(opt).then((jsonObj)=>{
+        decode_all(jsonObj);
+    });
 }
 
