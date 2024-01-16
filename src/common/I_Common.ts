@@ -27,7 +27,7 @@ export interface I_Battle  extends I_HasHope {
 
 export interface I_Exist {
     // 表示関係
-    id:    ()=>string;
+    uid:   ()=>string;
     layer: ()=>number;
     set_layer: (layer: number)=>void;
     within:    (p: C_Point)=>boolean;

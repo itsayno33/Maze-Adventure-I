@@ -507,6 +507,7 @@ export function decode_all(jsonObj: any):void {
 
     //Team関連のデコード
     g_team.decode(g_save.all_team[g_save.team_uid].encode()); 
+    g_team.set_loc(g_save.location);
 
     // Maze関連のデコード
     const loc = g_team.get_loc(); 
@@ -543,6 +544,7 @@ export function decode_maze(jsonObj: any):void {
             d: jsonObj.data.pos?.d, 
         }); 
         g_team.set_place(g_maze, pos);
+        g_save.location = g_team.get_loc();
     }
 
     // Hero関連のデコード
@@ -571,6 +573,8 @@ export function set_g_save (
         auto_mode: boolean,
     ) {
         g_save.team_uid = g_team.uid();
+        g_save.location = g_team.get_loc();
+
         g_save.all_team[g_team.uid()] = g_team;
 //        g_save.all_maze[g_maze.uid()] = g_maze;
 

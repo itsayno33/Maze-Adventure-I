@@ -1,5 +1,5 @@
 import { I_Locate, T_Lckd } from "./C_Location";
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { C_Team, JSON_Team } from "./C_Team";
 import { JSON_Hero } from "./C_Hero";
 import { _get_uuid } from "./F_Rand";
@@ -15,16 +15,17 @@ export interface JSON_Guild extends JSON_Any {
 
 export function alert_guld_info(a: JSON_Guild|undefined): void {
     if (a === undefined) return;
-    alert("Team Info:" 
-        + "\nid:      " + (a.id      ?? '?')
-        + "\nuniq_id: " + (a.uniq_id ?? '?')
-        + "\nsave_id: " + (a.save_id ?? '?')
-        + "\nname:    " + (a.name    ?? '?')
+    alert("Guild Info:" 
+        + "\nid:       " + (a.id       ?? '?')
+        + "\nuniq_id:  " + (a.uniq_id  ?? '?')
+        + "\nsave_id:  " + (a.save_id  ?? '?')
+        + "\nname:     " + (a.name     ?? '?')
+        + "\nteam_uid: " + (a.myteam?.uniq_id  ?? '?')
         + "\n"
     );
 }
 
-export class C_Guild implements I_Locate, I_JSON {
+export class C_Guild implements I_Locate, I_JSON_Uniq {
     protected id:      number;
     protected uniq_id: string;
     protected save_id: number;
@@ -49,7 +50,7 @@ export class C_Guild implements I_Locate, I_JSON {
             id:      this.id,
             uniq_id: this.uniq_id,
             save_id: this.save_id,
-            team:    this.myteam.encode(),
+            myteam:  this.myteam.encode(),
             name:    this.name,
         }
     }
@@ -60,7 +61,7 @@ export class C_Guild implements I_Locate, I_JSON {
         this.uniq_id = a.uniq_id ?? this.uniq_id;
         this.save_id = a.save_id ?? this.save_id;
         this.name    = a.name ?? this.name;
-        if (a.team   !== undefined) this.myteam.decode(a.team);
+        if (a.myteam !== undefined) this.myteam.decode(a.myteam);
         return this;
     }
     public static encode_all(all_guld: C_Guild[]): JSON_Guild[] {

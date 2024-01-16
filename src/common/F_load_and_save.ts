@@ -109,11 +109,11 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
                 return undefined;
             }
 
-            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.save  !== undefined) alert_save_info(jsonObj.C_SaveData);
-                if (jsonObj?.all_guld[0]  !== undefined) alert_guld_info(jsonObj.all_guld[0]);
-                if (jsonObj?.all_team[0]  !== undefined) alert_team_info(jsonObj.all_team[0]);
+                if (jsonObj?.save  !== undefined) alert_save_info(jsonObj.save);
+                if (jsonObj?.save?.all_guld[0]  !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
+                if (jsonObj?.save?.all_team[0]  !== undefined) alert_team_info(jsonObj.save.all_team[0]);
             }
         
             if (callback !== undefined) callback(jsonObj);

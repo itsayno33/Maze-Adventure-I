@@ -5,34 +5,14 @@ import { C_Location, I_Locate }    from './C_Location';
 import { C_Walker, JSON_Walker }   from "./C_Walker";
 import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
-import { I_Exist, I_HasHope, I_HopeAction } from "./I_EventMap";
-import { I_JSON, JSON_Any } from "./C_SaveData";
-
-type __init_arg = {
-    id?:        number, 
-    uniq_id?:   string, 
-    save_id?:   number, 
-    name?:      string, 
-    maze_name?: string, 
-    guld_name?: string, 
-    goods?:     C_Goods,
-    heroes?:    C_Hero[],
-    locate?:    C_Walker, 
-    p?:         C_PointDir, 
-    x?:         number,
-    y?:         number,
-    z?:         number,
-    d?:         T_Direction,
-    motion?:    string,
-}
+import { I_Exist, I_HasHope, I_HopeAction } from "./I_Common"
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
     uniq_id?:   string, 
     save_id?:   number, 
     name?:      string, 
-    maze_name?: string, 
-    guld_name?: string, 
     locate?:    JSON_Walker,
     goods?:     JSON_Goods,
     heroes?:    JSON_Hero[], 
@@ -45,8 +25,6 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\nid:    "     + (a.id        ?? '?')
         + "\nuniq_id:  "  + (a.uniq_id   ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
-        + "\nmaze_name: " + (a.maze_name ?? '?')
-        + "\nguld_name: " + (a.guld_name ?? '?')
         + "\nsave_id: "   + (a.save_id   ?? '?')
         + "\nlckd: "      + (a.locate?.kind   ?? '?')
         + "\nlcnm: "      + (a.locate?.name   ?? '?')
@@ -62,7 +40,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 }
 
 
-export class C_Team implements I_Exist, I_JSON {
+export class C_Team implements I_Exist, I_JSON_Uniq {
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
@@ -74,7 +52,7 @@ export class C_Team implements I_Exist, I_JSON {
 
     protected hope_motion: string;
 
-    public constructor(a?: __init_arg) {
+    public constructor(j?: JSON_Team) {
 
         this.my_id     =  0;
         this.my_name   = 'Neo Team?';
@@ -84,48 +62,14 @@ export class C_Team implements I_Exist, I_JSON {
         this.goods  = new C_Goods();
         this.heroes = [];
         this.hope_motion = 'NOP';    
-        if (a !== undefined) this.__init(a);
+        if (j !== undefined) this.decode(j);
     }
-    protected __init(a: __init_arg): void {
-        this.my_id     = a.id        ?? this.my_id
-        this.my_name   = a.name      ?? this.my_name;
-        this.uniq_id   = a.uniq_id   ?? this.uniq_id;
-        this.save_id   = a.save_id   ?? this.save_id;
-        if (a.p !== undefined) this.walker.set_p(a.p);
-        if (a.x !== undefined) this.walker.set_x(a.x);
-        if (a.y !== undefined) this.walker.set_x(a.y);
-        if (a.z !== undefined) this.walker.set_x(a.z);
-        if (a.d !== undefined) this.walker.set_d(a.d);
-        this.hope_motion = a.motion ?? this.hope_motion; 
-
-        if (a.locate !== undefined) {
-            if (typeof a.locate === "object" &&  a.locate instanceof C_Location) {
-                this.walker.set_lckd(a.locate.get_lckd());
-                this.walker.set_name(a.locate.get_name());
-                this.walker.set_uid (a.locate.get_uid());
-                this.walker.set_pd  (a.locate.get_pd());
-            }
-        }
-        if (a.goods !== undefined) {
-            if (typeof a.goods === "object" &&  a.goods instanceof C_Goods) {
-                this.goods = a.goods;
-            }
-        }
-        if (a.heroes !== undefined) {
-            for (const hero of a.heroes) {
-                this.append_hero(hero);
-            }
-        }
-    }
-    public set_prp(arg : __init_arg) {
-        this.__init(arg);
+    public set_prp(arg : JSON_Team) {
+        this.decode(arg);
     }
 
     public uid(): string { return this.uniq_id}
 
-    public id(): string {
-        return this.uid();
-    }
     public within(p: C_Point): boolean {
         const here = this.walker.get_p();
         return here.within(p); 

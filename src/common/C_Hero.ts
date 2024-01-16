@@ -1,6 +1,6 @@
 import { C_Goods, JSON_Goods } from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON_Uniq,   JSON_Any } from "./C_SaveData";
 import { _get_uuid } from "./F_Rand";
 
 export interface JSON_Hero extends JSON_Any {
@@ -43,7 +43,7 @@ export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void {
     }
 }
 
-export class C_Hero implements I_JSON {
+export class C_Hero implements I_JSON_Uniq {
     protected my_id:    number;
     protected my_name:  string;
     protected uniq_id:  string; 
@@ -87,6 +87,7 @@ export class C_Hero implements I_JSON {
     public id(): string {
         return 'Hero_' + this.my_id.toString(16).padStart(5, '0');
     }
+    public uid(): string { return this.uniq_id;}
     public name(): string {
         return this.my_name;
     }

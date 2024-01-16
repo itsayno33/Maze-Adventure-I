@@ -16,7 +16,13 @@ import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 import { C_SaveData }            from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
-import { g_mvm, g_save, g_maze, g_team, g_guld }      from "./global_for_guild";
+
+import { 
+    g_mvm, set_from_save_to_all_data, 
+    g_save, g_all_maze, g_all_team, g_all_guld 
+} 
+from "./global_for_guild";
+
 import { g_pid, g_mes }  from "../common/global";
 
 let data_list:  {[uniq_no: number]:C_SaveData};
@@ -335,14 +341,9 @@ async function post_load_data(): Promise<boolean> {
     .then(async(jsonObj:any)=>{
         g_save.decode(jsonObj.save);
 
-        for (let ii in g_maze) delete g_maze[ii];
-        for (let ii in g_save.all_maze) g_maze[g_save.all_maze[ii].uid()] = g_save.all_maze[ii];
-
-        for (let ii in g_team) delete g_team[ii];
-        for (let ii in g_save.all_team) g_team[g_save.all_team[ii].uid()] = g_save.all_team[ii];
-
-        for (let ii in g_guld) delete g_guld[ii];
-        for (let ii in g_save.all_guld) g_guld[g_save.all_guld[ii].uid()] = g_save.all_guld[ii];
+        set_from_save_to_all_data(g_all_maze, g_save.all_maze);
+        set_from_save_to_all_data(g_all_team, g_save.all_team);
+        set_from_save_to_all_data(g_all_guld, g_save.all_guld);
 
         return jsonObj.ecode == 0;
     })

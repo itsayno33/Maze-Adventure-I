@@ -1,16 +1,19 @@
+import { I_JSON, I_JSON_Uniq, JSON_Any } from './../common/C_SaveData';
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
 import { _alert, g_mes, init_after_loaded_DOM_in_common } from "../common/global";
 
 import { C_Maze } from "../common/C_Maze";
-export const g_maze: {[uniq_id: string]: C_Maze} = {};
+export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
 
-import { C_Team } from "../common/C_Team";
-export const g_team: {[uniq_id: string]: C_Team} = {};
+import { C_Team, alert_team_info } from "../common/C_Team";
+export const g_all_team: {[uniq_id: string]: C_Team} = {};
+export let   g_team: C_Team;
 
-import { C_Guild } from "../common/C_Guild";
-export const g_guld: {[uniq_id: string]: C_Guild} = {};
+import { C_Guild, alert_guld_info } from "../common/C_Guild";
+export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
+export let   g_guld: C_Guild;
 
 import { C_SaveData } from "../common/C_SaveData";
 export const g_save = new C_SaveData();
@@ -34,16 +37,18 @@ export function init_before_new_games(player_id: number): void {
 
         g_save.decode(jsonObj.save);
 
-        for (let ii in g_maze) delete g_maze[ii];
-        for (let ii in g_save.all_maze) g_maze[g_save.all_maze[ii].uid()] = g_save.all_maze[ii];
-    
-        for (let ii in g_team) delete g_team[ii];
-        for (let ii in g_save.all_team) g_team[g_save.all_team[ii].uid()] = g_save.all_team[ii];
-    
-        for (let ii in g_guld) delete g_guld[ii];
-        for (let ii in g_save.all_guld) g_guld[g_save.all_guld[ii].uid()] = g_save.all_guld[ii];
+        g_team = g_save.all_team[g_save.team_uid]; 
+        g_guld = g_save.all_guld[g_team.get_loc().get_uid()]; 
+
+        set_from_save_to_all_data(g_all_maze, g_save.all_maze);
+        set_from_save_to_all_data(g_all_team, g_save.all_team);
+        set_from_save_to_all_data(g_all_guld, g_save.all_guld);
     });
     return;
+}
+export function set_from_save_to_all_data(glob: {[uid: string]: I_JSON_Uniq}, save: {[uid: string]: I_JSON_Uniq}): void {
+    for (let ii in glob) delete glob[ii];
+    for (let ii in save) glob[save[ii].uid()] = save[ii];
 }
 
 

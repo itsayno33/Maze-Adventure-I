@@ -21,8 +21,8 @@ let dom_view_switch : HTMLDivElement;
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
 
-let dom_hres_fields : HTMLFieldSetElement;
-let dom_hres_list:    HTMLUListElement;
+let dom_guld_fields : HTMLFieldSetElement;
+let dom_guld_list:    HTMLUListElement;
 
 let dom_menu_fields : HTMLFieldSetElement;
 let dom_menu_list:    HTMLUListElement;
@@ -32,7 +32,7 @@ let dom_hero_detail : HTMLUListElement;
 let info_list_cols: number;
 
 let team_list: C_Hero[];
-let hres_list: C_Hero[];
+let guld_list: C_Hero[];
 let menu_list:   {id: string, title: string}[];
 let hero_detail: {[key: string]: HTMLLIElement};
 
@@ -56,10 +56,10 @@ export function display_hres_menu(): void {
     if (dom_team_list   === null) {display_guld_menu();return;}
 
     // 冒険者情報
-    dom_hres_fields = document.getElementById('hres_hero_fields') as HTMLFieldSetElement;
-    dom_hres_list   = document.getElementById('hres_list')        as HTMLUListElement;
-    if (dom_hres_fields === null) {display_guld_menu();return;}
-    if (dom_hres_list   === null) {display_guld_menu();return;}
+    dom_guld_fields = document.getElementById('hres_guld_fields') as HTMLFieldSetElement;
+    dom_guld_list   = document.getElementById('guld_list')        as HTMLUListElement;
+    if (dom_guld_fields === null) {display_guld_menu();return;}
+    if (dom_guld_list   === null) {display_guld_menu();return;}
 
     // コマンド情報
     dom_menu_fields = document.getElementById('hres_menu_fields') as HTMLFieldSetElement;
@@ -73,7 +73,7 @@ export function display_hres_menu(): void {
 
     dom_view_switch.style.display = 'none';
     dom_team_fields.style.display = 'none';
-    dom_hres_fields.style.display = 'none';
+    dom_guld_fields.style.display = 'none';
     dom_menu_fields.style.display = 'none';
 
     if (!exist_data()) {
@@ -113,12 +113,12 @@ function update_all() {
 
 function init_data_list() {
     init_team_list();
-    init_hres_list();
+    init_guld_list();
     init_menu_list();
 }
 
 function init_team_list() {}
-function init_hres_list() {}
+function init_guld_list() {}
 function init_menu_list() {
     menu_list = [
         {id: 'join',  title: 'チームに入れる'},
@@ -129,24 +129,24 @@ function init_menu_list() {
 
 function update_data_list() {
     update_team_list();
-    update_hres_list();
+    update_guld_list();
     update_menu_list();
 }
 
 function update_team_list(){
     team_list.length = 0;
-    for (let hero of g_team[0].hres()) team_list.push(hero);
+    for (let hero of g_team.hres()) team_list.push(hero);
 }
 function exist_team(): boolean {
     return team_list.length > 0;
 }
 
-function update_hres_list(){
-    hres_list.length = 0;
-    for (let hero of g_guld[0].myteam.hres()) hres_list.push(hero);
+function update_guld_list(){
+    guld_list.length = 0;
+    for (let hero of g_guld.myteam.hres()) guld_list.push(hero);
 }
 function exist_hres(): boolean {
-    return hres_list.length > 0;
+    return guld_list.length > 0;
 }
 
 function update_menu_list(){}
@@ -159,29 +159,29 @@ function update_menu_list(){}
 
 function init_view() {
     init_dom_team_list();
-    init_dom_hres_list();
+    init_dom_guld_list();
     init_dom_menu_list();
     init_dom_hero_detail();
 }
 
 function update_view(cursor: T_cursor) {
     update_dom_team_list();
-    update_dom_hres_list();
+    update_dom_guld_list();
     update_dom_menu_list();
     update_dom_hero_detail(cursor);
 }
 
 function clear_view() {
     clear_dom_team_list();
-    clear_dom_hres_list();
+    clear_dom_guld_list();
     clear_dom_menu_list();
     clear_dom_hero_detail();
 }
 
 // チーム一覧と冒険者一覧の列数(CSSから取得)
 function get_dom_info_list_cols(): number {
-    let __col   = window.getComputedStyle(dom_hres_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_hres_list).columnCount
+    let __col   = window.getComputedStyle(dom_guld_list).columnCount !== '' 
+                ? window.getComputedStyle(dom_guld_list).columnCount
                 : '1';
  
     info_list_cols = Number(__col); 
@@ -196,7 +196,7 @@ function list_high_light_on(cursor: T_cursor) {
             high_light_on(dom_team_list, cursor.idx);
             break; 
         case 'hres':
-            high_light_on(dom_hres_list, cursor.idx);
+            high_light_on(dom_guld_list, cursor.idx);
             break; 
         case 'menu':
             high_light_on(dom_menu_list, cursor.idx);
@@ -243,16 +243,16 @@ function clear_dom_team_list() {
 // 冒険者リスト表示　関係
 // ******************************
 
-function init_dom_hres_list(){}
-function update_dom_hres_list() {
-    clear_dom_hres_list();
-    for (let ii in hres_list) {
+function init_dom_guld_list(){}
+function update_dom_guld_list() {
+    clear_dom_guld_list();
+    for (let ii in guld_list) {
         const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `${hres_list[ii].name()}<p></p>`;
+        li.innerHTML = `${guld_list[ii].name()}<p></p>`;
 
         li.id = ii.toString();
         li.addEventListener("click", _OK_hres_Fnc, false);
-        dom_hres_list.appendChild(li);
+        dom_guld_list.appendChild(li);
     }
     list_high_light_on(cursor);
 }
@@ -264,9 +264,9 @@ function _OK_hres_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     update_dom_hero_detail(cursor);
 }
 
-function clear_dom_hres_list() {
-    while (dom_hres_list.firstChild !== null) {
-        dom_hres_list.removeChild(dom_hres_list.firstChild);
+function clear_dom_guld_list() {
+    while (dom_guld_list.firstChild !== null) {
+        dom_guld_list.removeChild(dom_guld_list.firstChild);
     }
     if (cursor.mode === 'hres') {
         cursor.idx = 0; old_cursor = {mode: 'hres', idx: 999}; 
@@ -323,7 +323,7 @@ function update_dom_hero_detail(cursor: T_cursor) {
             hero_info_form_set(team_list, hero_detail, cursor.idx);
             break;
         case 'hres':
-            hero_info_form_set(hres_list, hero_detail, cursor.idx);
+            hero_info_form_set(guld_list, hero_detail, cursor.idx);
             break;
     }
 }
@@ -337,7 +337,7 @@ function list_calc_cursor_pos_U(cursor: T_cursor, list_cols: number): number {
         case 'team':
             return calc_cursor_pos_U(cursor.idx, dom_team_list.children.length, list_cols);
         case 'hres':
-            return calc_cursor_pos_U(cursor.idx, dom_hres_list.children.length, list_cols);
+            return calc_cursor_pos_U(cursor.idx, dom_guld_list.children.length, list_cols);
         case 'menu':
             return calc_cursor_pos_U(cursor.idx, dom_menu_list.children.length, 1);
     }

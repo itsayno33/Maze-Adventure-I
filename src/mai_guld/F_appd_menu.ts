@@ -204,7 +204,7 @@ function isOK(): void {
             mode = 'view';
             _add_appd_nor_ctls();
             g_mvm.notice_message('採用しました!!');
-            g_guld[0].myteam.add_hero(new_hres[idx]);
+            g_guld.myteam.add_hero(new_hres[idx]);
             _after_check();
             break;
         case 'check_NG':

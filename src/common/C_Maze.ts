@@ -1,12 +1,12 @@
-import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { C_Point }              from "./C_Point";
-import { I_Locate, T_Lckd }     from "./C_Location";
-import { C_Range }              from "./C_Range";
-import { I_Exist }              from "./I_EventMap";
-import { C_Team }               from "./C_Team";
-import { _get_uuid }            from "./F_Rand";
-import { _alert }               from "./global";
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { T_MzKind, T_RvMzKind }  from "./T_MzKind";
+import { C_Point }               from "./C_Point";
+import { I_Locate, T_Lckd }      from "./C_Location";
+import { C_Range }               from "./C_Range";
+import { I_Exist }               from "./I_Common";
+import { C_Team, JSON_Team }     from "./C_Team";
+import { _get_uuid }             from "./F_Rand";
+import { _alert }                from "./global";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -19,6 +19,7 @@ export interface JSON_Maze extends JSON_Any {
     size_z?:  number,
     maze?:    string, 
     mask?:    string, 
+    myteam?:  JSON_Team, 
     objs?:    string[],
 }
 
@@ -141,7 +142,7 @@ type _init_arg = {
     size_z?:  number,
 }
 
-export class C_Maze implements I_Locate, I_JSON {
+export class C_Maze implements I_Locate, I_JSON_Uniq {
     protected maze_id:  number;
     protected uniq_id:  string;
     protected save_id:  number;
@@ -151,7 +152,8 @@ export class C_Maze implements I_Locate, I_JSON {
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
-    protected objs:     {[id: string]: I_Exist};
+    protected objs:     {[uid: string]: I_Exist};
+
     public constructor(a?: _init_arg) {
         this.maze_id = -1;
         this.save_id = -1;
@@ -164,24 +166,10 @@ export class C_Maze implements I_Locate, I_JSON {
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.masks   = this.__init_mask(true);
         this.objs    = {};
-        if (a !== undefined) this.init(a);
+        
+        if (a !== undefined) this.decode(a);
     }
 
-    public init(a: _init_arg) {
-        if (a.maze_id !== undefined) this.maze_id = a.maze_id;
-        if (a.save_id !== undefined) this.save_id = a.save_id;
-        if (a.floor   !== undefined) this.floor   = a.floor;
-        if (a.name    !== undefined) this.name    = a.name;
-        if (a.size_x  !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
-            this.size    = new C_Range(
-                new C_Point(0, 0, 0), 
-                new C_Point(a.size_x - 1, a.size_y - 1, a.size_z - 1)
-            );
-            this.cells   = this.__init_maze(T_MzKind.Stone);
-            this.masks   = this.__init_mask(true);
-            this.objs    = {};
-        }
-    }
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
@@ -226,10 +214,10 @@ export class C_Maze implements I_Locate, I_JSON {
     
     // メイズ内のオブジェクトやモンスター等の配置
     public add_obj(obj: I_Exist): void {
-        this.objs[obj.id()] = obj;
+        this.objs[obj.uid()] = obj;
     }
     public remove_obj(obj: I_Exist): void {
-        delete this.objs[obj.id()];
+        delete this.objs[obj.uid()];
     }
     public get_obj_xyz(x: number, y: number, z: number): I_Exist|null {
         return this.get_obj(new C_Point(x, y, z));
@@ -386,6 +374,7 @@ export class C_Maze implements I_Locate, I_JSON {
             save_id: this.save_id,
             floor:   this.floor,
             name:    this.name,
+//            objs:    this.objs.encode(),
             size_x:  this.size.size_x(),
             size_y:  this.size.size_y(),
             size_z:  this.size.size_z(),
@@ -401,6 +390,7 @@ export class C_Maze implements I_Locate, I_JSON {
         if (a.save_id !== undefined) this.save_id = a.save_id;
         if (a.floor   !== undefined) this.floor   = a.floor;
         if (a.name    !== undefined) this.name    = a.name;
+
 //        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
 
         if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {

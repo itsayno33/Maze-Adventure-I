@@ -1,6 +1,6 @@
 import { C_UrlOpt }                   from "../common/C_UrlOpt";
 import { T_MzKind }                   from "../common/T_MzKind";
-import { I_HopeAction }               from "../common/I_EventMap";
+import { I_HopeAction }               from "../common/I_Common";
 import { C_Point }                    from "../common/C_Point";
 import { instant_load, instant_save } from "../common/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";

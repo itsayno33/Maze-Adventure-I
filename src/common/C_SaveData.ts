@@ -1,6 +1,7 @@
 import { C_Maze, JSON_Maze  }  from "./C_Maze";
 import { C_Team, JSON_Team  }  from "./C_Team";
 import { C_Guild, JSON_Guild } from "./C_Guild";
+import { C_Location, JSON_Location } from "./C_Location";
 
 // サーバー側とやりとりするJSON形式データのテンプレート
 export interface JSON_Any {
@@ -12,6 +13,11 @@ export interface I_JSON {
     encode: ()=>JSON_Any,
     decode: (j:JSON_Any)=>I_JSON,
 }
+
+export interface I_JSON_Uniq extends I_JSON {
+    uid: ()=>string,
+}
+
 export interface I_JSON_Class {
     new: (j?: JSON_Any)=>I_JSON,
 }
@@ -34,7 +40,9 @@ export interface JSON_SaveData extends JSON_Any {
     is_delete?: string,
     save_time?: string,
 
+    location?:  JSON_Location,
     team_uid?:  string,
+
     all_maze?:  JSON_Maze[],
     all_team?:  JSON_Team[],
     all_guld?:  JSON_Guild[],
@@ -43,19 +51,22 @@ export interface JSON_SaveData extends JSON_Any {
 export function alert_save_info(a: JSON_SaveData|undefined): void {
     if (a === undefined) return;
     alert("Save Info:" 
-        + "\nsave_id:   " + (a.save_id   ?? '?')
-        + "\nplayer_id: " + (a.player_id ?? '?')
-        + "\nuniq_no:   " + (a.uniq_no   ?? '?')
-        + "\ntitle:     " + (a.title     ?? '?')
-        + "\ndetail:    " + (a.detail    ?? '?')
-        + "\npoint:     " + (a.point     ?? '?')
-        + "\nauto_mode: " + (a.auto_mode ?? '?')
-        + "\nis_active: " + (a.is_active ?? '?')
-        + "\nis_delete: " + (a.is_delete ?? '?')
-        + "\nteam_uid   " + (a.team_uid  ?? '?')
-        + "\nmaze_count " + (a.all_maze?.length ?? '?')
-        + "\nguld_count " + (a.all_guld?.length ?? '?')
-        + "\nteam_count " + (a.all_team?.length ?? '?')
+        + "\nsave_id:    " + (a.save_id   ?? '?')
+        + "\nplayer_id:  " + (a.player_id ?? '?')
+        + "\nuniq_no:    " + (a.uniq_no   ?? '?')
+        + "\ntitle:      " + (a.title     ?? '?')
+        + "\ndetail:     " + (a.detail    ?? '?')
+        + "\npoint:      " + (a.point     ?? '?')
+        + "\nauto_mode:  " + (a.auto_mode ?? '?')
+        + "\nis_active:  " + (a.is_active ?? '?')
+        + "\nis_delete:  " + (a.is_delete ?? '?')
+        + "\nteam_uid    " + (a.team_uid  ?? '?')
+        + "\nloc_kind:   " + (a.location?.kind   ?? '?')
+        + "\nloc_name:   " + (a.location?.name   ?? '?')
+        + "\nloc_uid:    " + (a.location?.uid    ?? '?')
+        + "\nmaze_count: " + (a.all_maze?.length ?? '?')
+        + "\nguld_count: " + (a.all_guld?.length ?? '?')
+        + "\nteam_count: " + (a.all_team?.length ?? '?')
         + "\n"
     );
 }
@@ -74,6 +85,8 @@ export class C_SaveData implements I_JSON {
     public save_time: Date;
 
     public team_uid:  string;
+    public location:  C_Location;
+
     public all_maze:  {[uid: string]: C_Maze};
     public all_team:  {[uid: string]: C_Team};
     public all_guld:  {[uid: string]: C_Guild};
@@ -91,6 +104,8 @@ export class C_SaveData implements I_JSON {
         this.save_time = new Date();
 
         this.team_uid  = '';
+        this.location  = new C_Location();
+
         this.all_maze  = {};
         this.all_team  = {}
         this.all_guld  = {};
@@ -114,7 +129,10 @@ export class C_SaveData implements I_JSON {
             is_active: this.is_active ? '1' : '0', 
             is_delete: this.is_delete ? '1' : '0', 
             save_time: this.save_time.toISOString(), 
+
             team_uid:  this.team_uid,
+            location:  this.location.encode(),
+
             all_maze:  this._encode_all_data(this.all_maze), 
             all_team:  this._encode_all_data(this.all_team), 
             all_guld:  this._encode_all_data(this.all_guld),
@@ -138,6 +156,9 @@ export class C_SaveData implements I_JSON {
         this.is_delete = s.is_delete != '0' ?? this.is_delete;
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time);
 
+        if (s.team_uid !== undefined) this.team_uid = s.team_uid;
+        if (s.location !== undefined) this.location = new C_Location(s.location);
+
         if (s.all_maze  !== undefined) {
             this.all_maze = {};
             for (const json_maze of s.all_maze) {
@@ -158,8 +179,7 @@ export class C_SaveData implements I_JSON {
                 const guld = (new C_Guild()).decode(json_guld); 
                 this.all_guld[guld.uid()] = guld;
            }
-       } 
-        this.team_uid = s.team_uid   ?? this.team_uid;
+        } 
         return this;
     }
 }
