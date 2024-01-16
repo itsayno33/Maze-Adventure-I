@@ -19,7 +19,7 @@ import { general_load, general_save, get_save_info }  from "../common/F_load_and
 
 import { 
     g_mvm, set_from_save_to_all_data, 
-    g_save, g_all_maze, g_all_team, g_all_guld 
+    g_save, g_all_maze, g_all_team, g_all_guld, g_team 
 } 
 from "./global_for_guild";
 
@@ -344,6 +344,9 @@ async function post_load_data(): Promise<boolean> {
         set_from_save_to_all_data(g_all_maze, g_save.all_maze);
         set_from_save_to_all_data(g_all_team, g_save.all_team);
         set_from_save_to_all_data(g_all_guld, g_save.all_guld);
+
+        g_team.decode (g_save.all_team[g_save.team_uid].encode());
+        g_team.set_loc(g_save.location);
 
         return jsonObj.ecode == 0;
     })

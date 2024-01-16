@@ -96,6 +96,8 @@ export type T_controlles = {
     do_R?: T_arg, 
     isOK?: T_arg, 
     isNG?: T_arg, 
+    isSL?: T_arg, 
+    isRT?: T_arg, 
     keyEvent?: boolean,
 }
 
@@ -121,6 +123,8 @@ export function rmv_default_ctls(call: T_controlles):void {
     const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
     const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
     const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
+    const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
+    const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
 
     if (_c(call?.do_U)) u_arrow.removeEventListener("click", call.do_U as T_fnc, false);
     if (_c(call?.do_D)) d_arrow.removeEventListener("click", call.do_D as T_fnc, false);
@@ -128,6 +132,8 @@ export function rmv_default_ctls(call: T_controlles):void {
     if (_c(call?.do_R)) r_arrow.removeEventListener("click", call.do_R as T_fnc, false);
     if (_c(call?.isOK)) y_btn  .removeEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
+    if (_c(call?.isSL)) y_btn  .removeEventListener("click", call.isSL as T_fnc, false);
+    if (_c(call?.isRT)) n_btn  .removeEventListener("click", call.isRT as T_fnc, false);
 
     if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
 
@@ -137,6 +143,8 @@ export function rmv_default_ctls(call: T_controlles):void {
     r_arrow.style.display = 'none';
     y_btn  .style.display = 'none';
     n_btn  .style.display = 'none';
+    s_btn  .style.display = 'none';
+    r_btn  .style.display = 'none';
 }
 
 export function add_default_ctls(call: T_controlles):void{
@@ -151,6 +159,8 @@ export function add_default_ctls(call: T_controlles):void{
     const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
     const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
     const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
+    const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
+    const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
 
     if (_c(call?.do_U)) u_arrow.addEventListener("click", call.do_U as T_fnc, false);
     if (_c(call?.do_D)) d_arrow.addEventListener("click", call.do_D as T_fnc, false);
@@ -158,15 +168,19 @@ export function add_default_ctls(call: T_controlles):void{
     if (_c(call?.do_R)) r_arrow.addEventListener("click", call.do_R as T_fnc, false);
     if (_c(call?.isOK)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
+    if (_c(call?.isSL)) y_btn  .addEventListener("click", call.isSL as T_fnc, false);
+    if (_c(call?.isRT)) n_btn  .addEventListener("click", call.isRT as T_fnc, false);
 
     if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
 
     u_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
-    d_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
-    l_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
-    r_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
-    y_btn  .style.display = _c(call?.do_U) ? 'block' : 'none';
-    n_btn  .style.display = _c(call?.do_U) ? 'block' : 'none';
+    d_arrow.style.display = _c(call?.do_D) ? 'block' : 'none';
+    l_arrow.style.display = _c(call?.do_L) ? 'block' : 'none';
+    r_arrow.style.display = _c(call?.do_R) ? 'block' : 'none';
+    y_btn  .style.display = _c(call?.isOK) ? 'block' : 'none';
+    n_btn  .style.display = _c(call?.isNG) ? 'block' : 'none';
+    s_btn  .style.display = _c(call?.isSL) ? 'block' : 'none';
+    r_btn  .style.display = _c(call?.isRT) ? 'block' : 'none';
 }
 
 
@@ -192,8 +206,8 @@ function key_press_function(e: KeyboardEvent):void  {
         case  'Numpad3': 
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyO':
         case 'KeyY':
+        case 'KeyZ':
         case 'Digit0':
         case 'Enter':
         case 'NumpadEnter':
@@ -206,6 +220,13 @@ function key_press_function(e: KeyboardEvent):void  {
 //        case 'NumpadSubtract':
             (document.getElementById('n_btn') as HTMLButtonElement)?.click();
             return;
+        case 'KeyS':
+        case 'Digit7':
+        case 'Space':
+            (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+        case 'KeyQ':
+        case 'Digit9':
+            (document.getElementById('r_btn') as HTMLButtonElement)?.click();
     }
 }
 
