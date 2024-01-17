@@ -1,7 +1,6 @@
-import { T_save_list } from './../mai_maze/F_set_save_controlles';
 import { alert_maze_info }     from "../common/C_Maze";     // 通常時はコメントアウトされている関数
 import { alert_team_info }     from "../common/C_Team";     // 通常時はコメントアウトされている関数
-import { alert_heroes_info }   from "../common/C_Hero";     // 通常時はコメントアウトされている関数
+import { alert_hres_info }     from "../common/C_Hero";     // 通常時はコメントアウトされている関数
 import { alert_save_info }     from "../common/C_SaveData"; // 通常時はコメントアウトされている関数
 import { alert_guld_info }     from "../common/C_Guild";    // 通常時はコメントアウトされている関数
 
@@ -109,7 +108,7 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
                 return undefined;
             }
 
-            const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
                 if (jsonObj?.save  !== undefined) alert_save_info(jsonObj.save);
                 if (jsonObj?.save?.all_guld[0]  !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
@@ -133,7 +132,7 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
     return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
-            if (jsonObj?.heroes  === undefined) {
+            if (jsonObj?.hres  === undefined) {
                 g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
                 _alert(jsonObj.emsg);
                 return;
@@ -141,7 +140,7 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
         
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.heroes  !== undefined) alert_heroes_info(jsonObj.heroes);
+                if (jsonObj?.hres  !== undefined) alert_hres_info(jsonObj.hres);
             }
         
             if (callback !== undefined) callback(jsonObj);

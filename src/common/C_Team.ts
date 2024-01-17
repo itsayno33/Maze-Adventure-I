@@ -33,6 +33,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\ncur_y: "     + (a.locate?.loc?.y ?? '?')
         + "\ncur_z: "     + (a.locate?.loc?.z ?? '?')
         + "\ncur_d: "     + (a.locate?.loc?.d ?? '?')
+        + "\nheroes: "    + (a.heroes?.length ?? '?')
         + "\n"
     );
 

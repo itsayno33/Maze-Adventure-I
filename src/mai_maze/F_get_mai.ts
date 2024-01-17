@@ -1,11 +1,11 @@
 import { C_UrlOpt }            from "../common/C_UrlOpt";
 import { alert_maze_info }     from "../common/C_Maze"; // 通常時はコメントアウトされている関数
 import { alert_team_info }     from "../common/C_Team"; // 通常時はコメントアウトされている関数
-import { alert_heroes_info }   from "../common/C_Hero"; // 通常時はコメントアウトされている関数
+import { alert_hres_info }     from "../common/C_Hero"; // 通常時はコメントアウトされている関数
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 import { decode_all }          from "./F_set_save_controlles";
-import { g_maze, g_team, init_debug_mode } from "./global_for_maze";
+import { init_debug_mode }     from "./global_for_maze";
 
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
     getJSON_by_POST(url, opt.to_string(), 
@@ -14,7 +14,7 @@ export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
             const jsonObj = JSON.parse(xhr.responseText);
 //            alert_maze_info(jsonObj?.maze);
 //            alert_team_info(jsonObj?.team);
-//            alert_heroes_info(jsonObj?.team?.heroes);
+//            alert_hres_info(jsonObj?.team?.heroes);
 
             decode_all(jsonObj);
             init_debug_mode();

@@ -57,11 +57,11 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     public decode(a: JSON_Guild|undefined): C_Guild {
         if (a === undefined) return this;
         
-        this.id      = a.id ?? this.id;
-        this.uniq_id = a.uniq_id ?? this.uniq_id;
-        this.save_id = a.save_id ?? this.save_id;
-        this.name    = a.name ?? this.name;
-        if (a.myteam !== undefined) this.myteam.decode(a.myteam);
+        if (a.id      !== undefined) this.id      = a.id;
+        if (a.uniq_id !== undefined) this.uniq_id = a.uniq_id;
+        if (a.save_id !== undefined) this.save_id = a.save_id;
+        if (a.name    !== undefined) this.name    = a.name;
+        if (a.myteam  !== undefined) this.myteam.decode(a.myteam);
         return this;
     }
     public static encode_all(all_guld: C_Guild[]): JSON_Guild[] {

@@ -23,7 +23,6 @@ import { init_display_menu } from "./F_default_menu";
 import { C_GldViewMessage }  from "./C_GldViewMessage";
 export var g_mvm: C_GldViewMessage;
 
-import { C_Hero }            from "../common/C_Hero";
 import { get_mai_guld } from "../common/F_load_and_save";
 //export const g_hres = [] as C_Hero[];
 

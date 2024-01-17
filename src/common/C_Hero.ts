@@ -26,21 +26,26 @@ export interface JSON_Hero_Value extends JSON_Any {
     nxe?: number,                   // 次回のヒーローレベルアップに必要な経験値
 }
 
-export function alert_heroes_info(a: (JSON_Hero|undefined)[]|undefined): void { 
+export function alert_hres_info(a: (JSON_Hero|undefined)[]|undefined): void { 
     if (a === undefined) return;
     alert('Number of Hero = ' + a.length.toString());
     for (var i in a) {
         if (a[i] === undefined) continue;
-        alert("Hero[" + i.toString() + "] Info:\n" 
-            + "\nid:       "     + (a[i]?.id        ?? '?')
-            + "\nuniq_id   "     + (a[i]?.uniq_id   ?? '?')
-            + "\nname:     "     + (a[i]?.name      ?? '?')
-            + "\nsave_id:  "     + (a[i]?.save_id   ?? '?')
-            + "\nteam_id:  "     + (a[i]?.team_id   ?? '?')
-            + "\nis_alive: "     + (a[i]?.is_alive  ?? '?')
-            + "\n"
-        );
+        alert_hero_info(a[i]);
     }
+}
+
+export function alert_hero_info(a: JSON_Hero|undefined): void { 
+    if (a === undefined) return;
+    alert("Hero Info:\n" 
+    + "\nid:       "     + (a?.id        ?? '?')
+    + "\nuniq_id   "     + (a?.uniq_id   ?? '?')
+    + "\nname:     "     + (a?.name      ?? '?')
+    + "\nsave_id:  "     + (a?.save_id   ?? '?')
+    + "\nteam_id:  "     + (a?.team_id   ?? '?')
+    + "\nis_alive: "     + (a?.is_alive  ?? '?')
+    + "\n"
+);
 }
 
 export class C_Hero implements I_JSON_Uniq {

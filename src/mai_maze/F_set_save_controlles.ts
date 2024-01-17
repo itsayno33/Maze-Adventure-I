@@ -576,7 +576,7 @@ export function set_g_save (
         g_save.location = g_team.get_loc();
 
         g_save.all_team[g_team.uid()] = g_team;
-//        g_save.all_maze[g_maze.uid()] = g_maze;
+        g_save.all_maze[g_maze.uid()] = g_maze; //
 
         g_save.decode({
             save_id:   save_id, 

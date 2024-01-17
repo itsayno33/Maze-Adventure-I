@@ -132,8 +132,8 @@ export function rmv_default_ctls(call: T_controlles):void {
     if (_c(call?.do_R)) r_arrow.removeEventListener("click", call.do_R as T_fnc, false);
     if (_c(call?.isOK)) y_btn  .removeEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
-    if (_c(call?.isSL)) y_btn  .removeEventListener("click", call.isSL as T_fnc, false);
-    if (_c(call?.isRT)) n_btn  .removeEventListener("click", call.isRT as T_fnc, false);
+    if (_c(call?.isSL)) s_btn  .removeEventListener("click", call.isSL as T_fnc, false);
+    if (_c(call?.isRT)) r_btn  .removeEventListener("click", call.isRT as T_fnc, false);
 
     if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
 
@@ -168,8 +168,8 @@ export function add_default_ctls(call: T_controlles):void{
     if (_c(call?.do_R)) r_arrow.addEventListener("click", call.do_R as T_fnc, false);
     if (_c(call?.isOK)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
     if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
-    if (_c(call?.isSL)) y_btn  .addEventListener("click", call.isSL as T_fnc, false);
-    if (_c(call?.isRT)) n_btn  .addEventListener("click", call.isRT as T_fnc, false);
+    if (_c(call?.isSL)) s_btn  .addEventListener("click", call.isSL as T_fnc, false);
+    if (_c(call?.isRT)) r_btn  .addEventListener("click", call.isRT as T_fnc, false);
 
     if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
 
