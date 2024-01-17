@@ -223,8 +223,7 @@ function _after_check(): void {
 function isNG(): void {
     switch (mode) {
         case 'view':
-            g_mvm.clear_message();
-            go_back_guild_menu();
+            isRT();
             break;
         case 'recruit':
             mode = 'check_NG';
@@ -236,6 +235,11 @@ function isNG(): void {
             display_default_message();
             break;
     }
+}
+
+function isRT(): void {
+    g_mvm.clear_message();
+    go_back_guild_menu();
 }
 
 function display_default_message(): void {
@@ -275,6 +279,7 @@ const appd_nor_ctls = {
     do_R:  do_R,
     isOK:  isOK,
     isNG:  isNG,
+    isRT:  isRT,
     keyEvent: true,
 };
 function _rmv_appd_nor_ctls(): void {

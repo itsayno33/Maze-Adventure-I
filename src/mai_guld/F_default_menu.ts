@@ -3,6 +3,7 @@ import { rmv_guld_ctls, display_guld_menu } from "./F_guild_menu";
 import { rmv_appd_ctls } from "./F_appd_menu";
 import { rmv_hres_ctls } from "./F_hres_menu";
 import { rmv_svld_ctls } from "./F_save_menu";
+import { _alert } from "../common/global";
 
 
 export function hide_all_menu(): void {
@@ -107,80 +108,94 @@ function _c(c: T_arg | undefined): boolean {
     return true;
 }
 
-export function rmv_default_ctls(call: T_controlles):void {
+export function rmv_default_ctls(call: T_controlles): boolean {
     // _all_ctls_name[call.name]が定義されていない
     // つまりadd_default_ctlsがまだ呼ばれてない(ctlsがaddされてない)か、
     // _all_ctls_name[call.name]がfalse(既にctllsがremoveされている)なら、
     // 何もしない。
     _all_ctls_name[call.name] ??= false; 
 
-    if (!_all_ctls_name[call.name]) return;
+    if (!_all_ctls_name[call.name]) return true;
     _all_ctls_name[call.name] = false;
 
-    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-    const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
-    const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
-
-    if (_c(call?.do_U)) u_arrow.removeEventListener("click", call.do_U as T_fnc, false);
-    if (_c(call?.do_D)) d_arrow.removeEventListener("click", call.do_D as T_fnc, false);
-    if (_c(call?.do_L)) l_arrow.removeEventListener("click", call.do_L as T_fnc, false);
-    if (_c(call?.do_R)) r_arrow.removeEventListener("click", call.do_R as T_fnc, false);
-    if (_c(call?.isOK)) y_btn  .removeEventListener("click", call.isOK as T_fnc, false);
-    if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
-    if (_c(call?.isSL)) s_btn  .removeEventListener("click", call.isSL as T_fnc, false);
-    if (_c(call?.isRT)) r_btn  .removeEventListener("click", call.isRT as T_fnc, false);
-
-    if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
-
-    u_arrow.style.display = 'none';
-    d_arrow.style.display = 'none';
-    l_arrow.style.display = 'none';
-    r_arrow.style.display = 'none';
-    y_btn  .style.display = 'none';
-    n_btn  .style.display = 'none';
-    s_btn  .style.display = 'none';
-    r_btn  .style.display = 'none';
+    try {
+        const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
+        const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
+        const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+        const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
+        const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
+        const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
+        const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
+        const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
+    
+        if (_c(call?.do_U)) u_arrow.removeEventListener("click", call.do_U as T_fnc, false);
+        if (_c(call?.do_D)) d_arrow.removeEventListener("click", call.do_D as T_fnc, false);
+        if (_c(call?.do_L)) l_arrow.removeEventListener("click", call.do_L as T_fnc, false);
+        if (_c(call?.do_R)) r_arrow.removeEventListener("click", call.do_R as T_fnc, false);
+        if (_c(call?.isOK)) y_btn  .removeEventListener("click", call.isOK as T_fnc, false);
+        if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
+        if (_c(call?.isSL)) s_btn  .removeEventListener("click", call.isSL as T_fnc, false);
+        if (_c(call?.isRT)) r_btn  .removeEventListener("click", call.isRT as T_fnc, false);
+    
+        if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
+    
+        u_arrow.style.display = 'none';
+        d_arrow.style.display = 'none';
+        l_arrow.style.display = 'none';
+        r_arrow.style.display = 'none';
+        y_btn  .style.display = 'none';
+        n_btn  .style.display = 'none';
+        s_btn  .style.display = 'none';
+        r_btn  .style.display = 'none';
+    } catch (err) {
+        _alert('Error Occuerd at Remove Default Ctls.');
+        _alert('' + err);
+        return false;
+    }
+    return true;
 }
 
-export function add_default_ctls(call: T_controlles):void{
+export function add_default_ctls(call: T_controlles): boolean {
     _all_ctls_name[call.name] ??= false; 
 
-    if (_all_ctls_name[call.name]) return;
+    if (_all_ctls_name[call.name]) return true;
     _all_ctls_name[call.name] = true;
 
-    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-    const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
-    const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
-
-    if (_c(call?.do_U)) u_arrow.addEventListener("click", call.do_U as T_fnc, false);
-    if (_c(call?.do_D)) d_arrow.addEventListener("click", call.do_D as T_fnc, false);
-    if (_c(call?.do_L)) l_arrow.addEventListener("click", call.do_L as T_fnc, false);
-    if (_c(call?.do_R)) r_arrow.addEventListener("click", call.do_R as T_fnc, false);
-    if (_c(call?.isOK)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
-    if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
-    if (_c(call?.isSL)) s_btn  .addEventListener("click", call.isSL as T_fnc, false);
-    if (_c(call?.isRT)) r_btn  .addEventListener("click", call.isRT as T_fnc, false);
-
-    if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
-
-    u_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
-    d_arrow.style.display = _c(call?.do_D) ? 'block' : 'none';
-    l_arrow.style.display = _c(call?.do_L) ? 'block' : 'none';
-    r_arrow.style.display = _c(call?.do_R) ? 'block' : 'none';
-    y_btn  .style.display = _c(call?.isOK) ? 'block' : 'none';
-    n_btn  .style.display = _c(call?.isNG) ? 'block' : 'none';
-    s_btn  .style.display = _c(call?.isSL) ? 'block' : 'none';
-    r_btn  .style.display = _c(call?.isRT) ? 'block' : 'none';
+    try {
+        const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
+        const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
+        const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
+        const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
+        const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
+        const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
+        const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
+        const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
+    
+        if (_c(call?.do_U)) u_arrow.addEventListener("click", call.do_U as T_fnc, false);
+        if (_c(call?.do_D)) d_arrow.addEventListener("click", call.do_D as T_fnc, false);
+        if (_c(call?.do_L)) l_arrow.addEventListener("click", call.do_L as T_fnc, false);
+        if (_c(call?.do_R)) r_arrow.addEventListener("click", call.do_R as T_fnc, false);
+        if (_c(call?.isOK)) y_btn  .addEventListener("click", call.isOK as T_fnc, false);
+        if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
+        if (_c(call?.isSL)) s_btn  .addEventListener("click", call.isSL as T_fnc, false);
+        if (_c(call?.isRT)) r_btn  .addEventListener("click", call.isRT as T_fnc, false);
+    
+        if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
+    
+        u_arrow.style.display = _c(call?.do_U) ? 'block' : 'none';
+        d_arrow.style.display = _c(call?.do_D) ? 'block' : 'none';
+        l_arrow.style.display = _c(call?.do_L) ? 'block' : 'none';
+        r_arrow.style.display = _c(call?.do_R) ? 'block' : 'none';
+        y_btn  .style.display = _c(call?.isOK) ? 'block' : 'none';
+        n_btn  .style.display = _c(call?.isNG) ? 'block' : 'none';
+        s_btn  .style.display = _c(call?.isSL) ? 'block' : 'none';
+        r_btn  .style.display = _c(call?.isRT) ? 'block' : 'none';
+    } catch (err) {
+        _alert('Error Occuerd at Append Default Ctls.');
+        _alert('' + err);
+        return false;
+    }
+    return true;
 }
 
 
@@ -211,22 +226,24 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'Digit0':
         case 'Enter':
         case 'NumpadEnter':
-            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
-            return;
+                (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                break;
         case 'KeyN':
         case 'KeyX':
         case 'Numpad0':
         case 'NumpadAdd':
 //        case 'NumpadSubtract':
-            (document.getElementById('n_btn') as HTMLButtonElement)?.click();
-            return;
+                (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                break;
         case 'KeyS':
-        case 'Digit7':
+        case 'Numpad7':
         case 'Space':
-            (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                break;
         case 'KeyQ':
-        case 'Digit9':
-            (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+        case 'Numpad9':
+                (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+                break;
     }
 }
 

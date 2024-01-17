@@ -6,7 +6,13 @@ export class C_GldViewMessage {
 
     protected constructor() {
         C_GldViewMessage.me = this;
-        this.p = document.getElementById('gld_view_message') as HTMLParagraphElement;
+        try {
+            this.p = document.getElementById('gld_view_message') as HTMLParagraphElement;
+        } catch (err) {
+            this.p = document.createElement('p') as HTMLParagraphElement;
+            this.p.id = 'gld_view_message';
+            document.body.appendChild(this.p);
+        }
         C_GldViewMessage.me.clear_message();
     }
     public static get(): C_GldViewMessage  {

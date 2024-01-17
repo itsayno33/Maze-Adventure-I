@@ -58,10 +58,12 @@ let sview_mode: T_SubViewKind;
 
 
 type T_cursor = {kind: T_SubViewKind, idx: number}
-let cursor: T_cursor = {kind: T_SubView.Hide, idx: 0}; 
-let cursor_team_idx: number = 0;
-let cursor_guld_idx: number = 0;
-let cursor_menu_idx: number = 0;
+let cursor: T_cursor; 
+let cursor_Team: T_cursor;
+let cursor_Guld: T_cursor;
+let cursor_MnuT: T_cursor;
+let cursor_MnuG: T_cursor;
+let cursor_Hide: T_cursor;
 
 
 let mode    = 'view';
@@ -343,8 +345,8 @@ function update_dom_menu_list(): void {
 }
 function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     switch (cursor.kind) {
-        case T_SubView.Team: cursor.kind = T_SubView.MnuT;break;
-        case T_SubView.Guld: cursor.kind = T_SubView.MnuG;break;
+        case T_SubView.Team: cursor = cursor_MnuT;break;
+        case T_SubView.Guld: cursor = cursor_MnuG;break;
         default: return;
     }
     sview_act(cursor.kind);
@@ -382,10 +384,10 @@ function init_dom_hero_detail(): boolean {
 
 function update_dom_hero_detail() {
     switch (cursor.kind) {
-        case 'Team':
+        case T_SubView.Team:
             hero_info_form_set(team_list, hero_detail, cursor.idx);
             break;
-        case 'Guld':
+        case T_SubView.Guld:
             hero_info_form_set(guld_list, hero_detail, cursor.idx);
             break;
     }
@@ -412,19 +414,20 @@ function init_ctls(): boolean {
 function update_ctls(): void {}
 
 function init_cursor(): boolean {
-    cursor_team_idx = 0; 
-    cursor_guld_idx = 0; 
-    cursor_menu_idx = 0; 
+    cursor_Team = {kind: T_SubView.Team, idx: 0}; 
+    cursor_Guld = {kind: T_SubView.Guld, idx: 0}; 
+    cursor_MnuT = {kind: T_SubView.MnuT, idx: 0}; 
+    cursor_MnuG = {kind: T_SubView.MnuG, idx: 0}; 
+    cursor_Hide = {kind: T_SubView.Hide, idx: 0}; 
 
-    cursor = {kind: T_SubView.Hide, idx: 0}; 
     if (exist_team()) { 
-        cursor.kind = T_SubView.Team; 
+        cursor = cursor_Team; 
     }
     else if (exist_guld()) { 
-        cursor.kind = T_SubView.Guld; 
+        cursor = cursor_Guld; 
     }
     else { 
-        cursor.kind = T_SubView.Hide; 
+        cursor = cursor_Hide; 
     } 
     return true;
 }
@@ -433,16 +436,6 @@ function init_cursor(): boolean {
 // サブ・リスト表示の切り替え関係
 // **********************************
 function sview_hide_all(): boolean {
-    switch (cursor.kind) {
-        case "Team":
-            cursor_team_idx = cursor.idx;break;
-        case "Guld":
-            cursor_guld_idx = cursor.idx;break;
-        case "MnuT":
-        case "MnuG":
-            cursor_menu_idx = cursor.idx;break;
-        default:              return false;
-    }
     dom_team_fields.style.display = 'none';
     dom_guld_fields.style.display = 'none';
     dom_menu_fields.style.display = 'none';
@@ -451,39 +444,40 @@ function sview_hide_all(): boolean {
 
 function sview_act(sview: T_SubView): boolean {
     if (!(sview in T_SubView)) return false;
-    cursor.kind = sview;
 
     switch (sview) {
-        case "Team": sview_act_team();return true;
-        case "Guld": sview_act_guld();return true;
-        case "MnuT": sview_act_mnuT();return true;
-        case "MnuG": sview_act_mnuG();return true;
-        case "Hide": sview_hide_all();return true;
-        default:     sview_hide_all();return false;
+        case T_SubView.Team: sview_act_team();return true;
+        case T_SubView.Guld: sview_act_guld();return true;
+        case T_SubView.MnuT: sview_act_mnuT();return true;
+        case T_SubView.MnuG: sview_act_mnuG();return true;
+        case T_SubView.Hide: sview_hide_all();return true;
+        default:             sview_hide_all();return false;
     }
-}
+} 
 
 function sview_act_team() {
     sview_hide_all();
     dom_team_fields.style.display = 'block';
-    cursor.idx  = cursor_team_idx;
+    cursor  = cursor_Team;
 }
 
 function sview_act_guld() {
     sview_hide_all();
     dom_guld_fields.style.display = 'block';
-    cursor.idx  = cursor_guld_idx;
+    cursor  = cursor_Guld;
 }
 
 function sview_act_mnuT() {
 //    sview_hide_all();
     dom_menu_fields.style.display = 'block';
-    cursor.idx  = 0 // cursor_menu_idx;
+    cursor  = cursor_MnuT; 
+    cursor.idx = 0;
 }
 function sview_act_mnuG() {
     //    sview_hide_all();
     dom_menu_fields.style.display = 'block';
-    cursor.idx  = 0 // cursor_menu_idx;
+    cursor  = cursor_MnuG; 
+    cursor.idx = 0;
 }
     
 
@@ -533,13 +527,14 @@ function get_dom_menu_list_cols(): number {
 // cursorが切り替わったときにバグる状態
 function list_high_light_on() {
     switch (cursor.kind) {
-        case 'Team':
+        case T_SubView.Team:
             high_light_on(dom_team_list, cursor.idx);
             break; 
-        case 'Guld':
+        case T_SubView.Guld:
             high_light_on(dom_guld_list, cursor.idx);
             break; 
-        case 'Menu':
+        case T_SubView.MnuT:
+        case T_SubView.MnuG:
             high_light_on(dom_menu_list, cursor.idx);
             break; 
     }
@@ -599,11 +594,12 @@ function calc_list_cursor_pos_R(): number {
 
 function _calc_list_length(): number {
     switch (cursor.kind) {
-        case 'Team':
+        case T_SubView.Team:
             return dom_team_list.children.length;
-        case 'Guld':
+        case T_SubView.Guld:
             return dom_guld_list.children.length;
-        case 'Menu':
+        case T_SubView.MnuT:
+        case T_SubView.MnuG:
             return dom_menu_list.children.length;
     }
     return 0;
@@ -611,11 +607,12 @@ function _calc_list_length(): number {
 
 function _calc_list_cols(): number {
     switch (cursor.kind) {
-        case 'Team':
+        case T_SubView.Team:
             return team_list_cols;
-        case 'Guld':
+        case T_SubView.Guld:
             return guld_list_cols;
-        case 'Menu':
+        case T_SubView.MnuT:
+        case T_SubView.MnuG:
             return menu_list_cols;
     }
     return 0;
@@ -635,15 +632,22 @@ function isNG(): void {
     go_back_guild_menu();
 }
 function isSL(): void {
-    g_mvm.clear_message();
     switch (cursor.kind) {
         case T_SubView.Team:
             sview_act(T_SubView.Guld);
             break;
         case T_SubView.Guld:
-            sview_act(T_SubView.C_Team);
+            sview_act(T_SubView.Team);
+            break;
+        case T_SubView.MnuT:
+            sview_act(T_SubView.Guld);
+            break;
+        case T_SubView.MnuG:
+            sview_act(T_SubView.Team);
             break;
     }
+    g_mvm.clear_message();
+    list_high_light_on();  update_dom_hero_detail();
 }
 function isRT(): void {
     g_mvm.clear_message();

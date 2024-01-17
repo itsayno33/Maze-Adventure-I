@@ -381,8 +381,7 @@ function isNG(): void {
 function _isNG_for_load(): void {
     switch (mode) {
         case 'view':
-            g_mvm.clear_message();
-            go_back_guld_menu();
+            isRT();
             break;
         case 'read_OK':
             mode = 'view';
@@ -393,8 +392,7 @@ function _isNG_for_load(): void {
 function _isNG_for_save(): void {
     switch (mode) {
         case 'view':
-            g_mvm.clear_message();
-            go_back_guld_menu();
+            isRT();
             break;
         case 'write_OK':
         case 'rewrite_OK':
@@ -402,6 +400,11 @@ function _isNG_for_save(): void {
             display_default_message();
             break;
     }
+}
+
+function isRT(): void {
+    g_mvm.clear_message();
+    go_back_guld_menu();
 }
 
 function display_default_message(): void {
@@ -452,6 +455,7 @@ const _svld_nor_ctls = {
     do_R:  do_R,
     isOK:  isOK,
     isNG:  isNG,
+    isRT:  isRT,
     keyEvent: true,
 }
 function _rmv_svld_nor_ctls(): void {
@@ -465,6 +469,7 @@ function _add_svld_nor_ctls(): void {
 const _svld_rtn_ctls = {
     name: 'svld_rtn', 
     isNG:  go_back_guld_menu_for_first,
+    isRT:  go_back_guld_menu_for_first,
     keyEvent: true,
 }
 function _rmv_svld_rtn_ctls(): void {
