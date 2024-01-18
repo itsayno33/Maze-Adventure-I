@@ -96,6 +96,10 @@ export class C_Hero implements I_JSON_Uniq {
     public name(): string {
         return this.my_name;
     }
+    public set_name(name: string): void {
+        this.my_name = name;
+    }
+    
     public encode(): JSON_Hero {
         const ret: JSON_Hero = {
             id:        this.my_id,

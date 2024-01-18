@@ -3,7 +3,7 @@ import { rmv_guld_ctls, display_guld_menu } from "./F_guild_menu";
 import { rmv_appd_ctls } from "./F_appd_menu";
 import { rmv_hres_ctls } from "./F_hres_menu";
 import { rmv_svld_ctls } from "./F_save_menu";
-import { _alert } from "../common/global";
+import { _alert }        from "../common/global";
 
 
 export function hide_all_menu(): void {
@@ -14,7 +14,12 @@ export function hide_all_menu(): void {
     // removeEventLisner()の暴走が怖いので 
     // ペイン切替の際にその都度切り替える
 
-    const div = document.getElementById('gld_view_switch');
+    let div: HTMLDivElement;
+    try {
+        div = document.getElementById('gld_view_switch')  as HTMLDivElement;
+    } catch (err) {
+        return;
+    }
     if (div === null) return;
 
     const menues = div.children;
