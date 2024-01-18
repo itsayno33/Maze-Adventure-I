@@ -49,7 +49,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
     protected walker:    C_Walker;
     protected my_layer:  number = 99;
     protected goods:     C_Goods;
-    protected heroes:    C_Hero[];
+    protected heroes:    {[uid: string]: C_Hero};
 
     protected hope_motion: string;
 
@@ -61,7 +61,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         this.save_id   =  0;
         this.walker = new C_Walker();
         this.goods  = new C_Goods();
-        this.heroes = [];
+        this.heroes = {};
         this.hope_motion = 'NOP';    
         if (j !== undefined) this.decode(j);
     }
@@ -88,16 +88,18 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
     }
 
     public hres():  C_Hero[] {
-        return [...this.heroes];
+        const hres: C_Hero[] = [];
+        for (let ii in this.heroes) hres.push(this.heroes[ii]);
+        return hres;
     } 
     public clear_hres(): void {
-        this.heroes = [];
+        this.heroes = {};
     }
     public add_hero(hero: C_Hero): void {
-        this.heroes.push(hero);
+        this.heroes[hero.uid()] = hero;
     }
     public rmv_hero(hero: C_Hero): void {
-        for (let ii in this.heroes) if (hero == this.heroes[ii]) delete this.heroes[ii];
+        delete this.heroes[hero.uid()];
     }
 
     public set_place(
@@ -214,15 +216,12 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         return;
     }
 
-    public append_hero(hero: C_Hero): void {
-        this.heroes.push(hero);
-    }
-    public remove_hero(hero: C_Hero): void {
-        this.heroes = this.heroes.filter((item) => item !== hero);
-    }
-
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新
+
+        const json_heroes: JSON_Hero[] = [];
+        for (let ii in this.heroes) json_heroes.push(this.heroes[ii].encode());  
+
         return {
             id:        this.my_id,
             name:      this.my_name,
@@ -230,7 +229,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
             save_id:   this.save_id,
             locate:    this.walker.encode(),
             goods:     this.goods.encode(),
-            heroes:    C_Hero.encode_heroes(this.heroes),
+            heroes:    json_heroes,
             motion:    this.hope_motion,
         };
     }
@@ -245,7 +244,13 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
 
         if (a.locate !== undefined)  this.walker.decode(a.locate);
         if (a.goods  !== undefined)  this.goods .decode(a.goods);
-        if (a.heroes !== undefined)  this.heroes = C_Hero.decode_heroes(a.heroes);
+
+        if (a.heroes !== undefined)  {
+            for (const json_hero of a.heroes) {
+                const hero = new C_Hero(json_hero);
+                this.heroes[hero.uid()] = hero;
+            }
+        }
     
         return this;
     }

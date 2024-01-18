@@ -49,30 +49,31 @@ let team_list_cols: number;
 let guld_list_cols: number;
 let menu_list_cols: number;
 
-const T_TG_mode: {[kind: string]: string}  = {
-    Hide: "Hide",
-    Team: "Team",
-    Guld: "Guld",
+const T_TG_mode: {[kind: string]: number}  = {
+    Hide: 0,
+    Team: 1,
+    Guld: 2,
 } as const;
 type T_TG_mode = T_MakeEnumType<typeof T_TG_mode>;
 let TG_mode: T_TG_mode;
 
-const T_SubView: {[kind: string]: string}  = {
-    Hide: "Hide",
-    Team: "Team",
-    Guld: "Guld",
-    Menu: "Menu",
-    IpNm: "IpNm",
+const T_SubView: {[kind: string]: number}  = {
+    Hide: 0,
+    Team: 1,
+    Guld: 2,
+    Menu: 3,
+    IpNm: 5,
 } as const;
 type T_SubView = T_MakeEnumType<typeof T_SubView>;
 
 
 type T_cursor = {kind: T_SubView, idx: number}
 let cursor: T_cursor; 
+let cursor_Hide: T_cursor;
 let cursor_Team: T_cursor;
 let cursor_Guld: T_cursor;
 let cursor_Menu: T_cursor;
-let cursor_Hide: T_cursor;
+let cursor_IpNm: T_cursor;
 
 
 let mode    = 'view';
@@ -134,16 +135,52 @@ function init_guld_list(): boolean {
 }
 function init_menu_list():boolean { 
     menu_list_for_team = [
-        {id: 'name',  fnc: ()=>{}, title: '名前を変える'},
-        {id: 'leave', fnc: ()=>{}, title: 'チームから外す'},
+        {id: 'name',  fnc: _go_ipnm, title: '名前を変える'},
+        {id: 'leav',  fnc: _go_leav, title: 'チームから外す'},
     ];
     menu_list_for_guld = [
-        {id: 'name',  fnc: ()=>{}, title: '名前を変える'},
-        {id: 'join',  fnc: ()=>{}, title: 'チームに入れる'},
-        {id: 'fire',  fnc: ()=>{}, title: 'ギルドをクビにする'},
+        {id: 'name',  fnc: _go_ipnm, title: '名前を変える'},
+        {id: 'join',  fnc: _go_join, title: 'チームに入れる'},
+        {id: 'fire',  fnc: _go_fire, title: 'ギルドをクビにする'},
     ]; 
     return true;
 }
+function _go_ipnm(): void {
+    subview_act(T_SubView.IpNm);
+    mode = 'ipnm';
+    display_default_message();
+    add_hres_ipnm_ctls();
+
+    inpt_name_list['hres_name_li'].input.focus({preventScroll: false});
+}
+function _go_leav(): void {
+    if (!exist_team()) return;
+    if (max_of_guld()) {
+        g_mvm.notice_message('ギルドが満員です。誰かクビにしてください');
+        return;
+    }
+    mode = 'leav';
+    display_default_message();
+    add_hres_leav_ctls();
+}
+function _go_join(): void {
+    if (!exist_guld()) return;
+    if (max_of_team()) {
+        g_mvm.notice_message('チームが満員です。誰か外してください');
+        return;
+    }
+    mode = 'join';
+    display_default_message();
+    add_hres_join_ctls();
+}
+function _go_fire(): void {
+    if (!exist_guld()) return;
+
+    mode = 'fire';
+    display_default_message();
+    add_hres_fire_ctls();
+}
+
 
 function update_data_list() { 
     update_team_list(); 
@@ -158,6 +195,9 @@ function update_team_list(){
 function exist_team(): boolean {
     return team_list.length > 0;
 }
+function max_of_team(): boolean {
+    return team_list.length > 3;
+}
 
 function update_guld_list(){
     guld_list = []; 
@@ -165,6 +205,9 @@ function update_guld_list(){
 }
 function exist_guld(): boolean {
     return guld_list.length > 0;
+}
+function max_of_guld(): boolean {
+    return guld_list.length > 99;
 }
 
 function update_menu_list(){}
@@ -193,7 +236,7 @@ function update_view() {
     update_dom_team_list();
     update_dom_guld_list();
     update_dom_menu_list();
-    update_dom_inpt_list();
+//    update_dom_inpt_list();
     update_dom_hero_detail();
 }
 
@@ -388,12 +431,12 @@ function init_dom_inpt_list(): boolean {
     if (dom_inpt_fields === null) return false;
     if (dom_inpt_list   === null) return false;
 
-    if (!_init_dom_inpt_name())   return false;
+    if (!_init_dom_ipnm())   return false;
 
     dom_inpt_fields.style.display = 'none';
     return true;
 }
-function _init_dom_inpt_name(): boolean {
+function _init_dom_ipnm(): boolean {
     inpt_name_list = {};
     
     const name_input     = document.createElement('input') as HTMLInputElement;
@@ -420,11 +463,11 @@ function update_dom_inpt_list(): void {
     clear_dom_inpt_list();
     switch (cursor.kind) {
         case T_SubView.IpNm:
-            _update_dom_inpt_name();
+            update_dom_ipnm();
             break;
     }
 }
-function _update_dom_inpt_name(): void {
+function update_dom_ipnm(): void {
     const name_label = inpt_name_list['hres_name_li'].label;
     const name_input = inpt_name_list['hres_name_li'].input;
 
@@ -442,6 +485,8 @@ function _update_dom_inpt_name(): void {
     li.appendChild(name_label);
     li.appendChild(name_input);
     dom_inpt_list.appendChild(li);
+
+    name_input.focus({preventScroll: false});
 }
 
 function clear_dom_inpt_list(): void {
@@ -492,8 +537,8 @@ function clear_dom_hero_detail() {
 
 // カーソルやイベントの初期化
 function init_ctls(): boolean { 
-    if (!init_cursor())          return false; 
-    if (!get_dom_list_cols())    return false; 
+    if (!init_cursor())            return false; 
+    if (!get_dom_list_cols())      return false; 
     if (!subview_hide_all())       return false; 
     if (!subview_act(cursor.kind)) return false; 
     return true;
@@ -502,21 +547,22 @@ function init_ctls(): boolean {
 function update_ctls(): void {}
 
 function init_cursor(): boolean {
+    cursor_Hide = {kind: T_SubView.Hide, idx: 0}; 
     cursor_Team = {kind: T_SubView.Team, idx: 0}; 
     cursor_Guld = {kind: T_SubView.Guld, idx: 0}; 
     cursor_Menu = {kind: T_SubView.Menu, idx: 0}; 
-    cursor_Hide = {kind: T_SubView.Hide, idx: 0}; 
+    cursor_IpNm = {kind: T_SubView.IpNm, idx: 0}; 
 
     if (exist_team()) { 
-        TG_mode = 'Team';
+        TG_mode = T_TG_mode.Team;
         cursor  = cursor_Team; 
     }
     else if (exist_guld()) { 
-        TG_mode = 'Guld';
+        TG_mode = T_TG_mode.Guld;
         cursor  = cursor_Guld; 
     }
     else { 
-        TG_mode = 'Hide';
+        TG_mode = T_TG_mode.Hide;
         cursor  = cursor_Hide; 
     } 
     return true;
@@ -529,18 +575,18 @@ function subview_hide_all(): boolean {
     dom_team_fields.style.display = 'none';
     dom_guld_fields.style.display = 'none';
     dom_menu_fields.style.display = 'none';
+    dom_inpt_fields.style.display = 'none';
     return true;
 }
 
 function subview_act(sview: T_SubView): boolean {
-    if (!(sview in T_SubView)) return false;
-
-    clear_dom_menu_list();
+//    clear_dom_menu_list();
 
     switch (sview) {
         case T_SubView.Team: subview_act_team();return true;
         case T_SubView.Guld: subview_act_guld();return true;
         case T_SubView.Menu: subview_act_menu();return true;
+        case T_SubView.IpNm: subview_act_ipnm();return true;
         case T_SubView.Hide: subview_hide_all();return true;
         default:             subview_hide_all();return false;
     }
@@ -549,6 +595,7 @@ function subview_act(sview: T_SubView): boolean {
 function subview_act_team() {
     subview_hide_all();
     cursor  = cursor_Team;
+
     update_view();
     dom_team_fields.style.display = 'block';
 }
@@ -556,16 +603,31 @@ function subview_act_team() {
 function subview_act_guld() {
     subview_hide_all();
     cursor  = cursor_Guld;
+
     update_view();
     dom_guld_fields.style.display = 'block';
 }
 
 function subview_act_menu() {
 //    subview_hide_all();
+    clear_dom_inpt_list();
+    dom_inpt_fields.style.display = 'none';
+
     cursor  = cursor_Menu; 
     cursor.idx = 0;
-    update_view();
+
+//    update_view();
+    update_dom_menu_list();
     dom_menu_fields.style.display = 'block';
+}    
+
+function subview_act_ipnm() {
+    cursor  = cursor_IpNm; 
+    cursor.idx = 0;
+
+//    update_view();
+    update_dom_inpt_list();
+    dom_inpt_fields.style.display = 'block';
 }    
 
 // **************************************************************
@@ -708,17 +770,113 @@ function _calc_list_cols(): number {
 
 
 function isOK(): void { 
-//    if (!exist_data()) {isNG(); return;}
-//    isNG(); 
     switch (cursor.kind) {
         case T_SubView.Team:
+            mode = 'menu';
             subview_act(T_SubView.Menu);
+            display_default_message();
             break;
         case T_SubView.Guld:
+            mode = 'menu';
             subview_act(T_SubView.Menu);
+            display_default_message();
+            break;
+        case T_SubView.Menu:
+            do_menu();
             break;
     }
 }
+function do_menu(): void {
+    let menu_list: T_menu_list;
+    switch (TG_mode) {
+        case T_TG_mode.Team: menu_list = menu_list_for_team; break;
+        case T_TG_mode.Guld: menu_list = menu_list_for_guld; break;
+        default: return;
+    }
+    menu_list[cursor_Menu.idx].fnc();
+}
+
+
+function isOK_ipnm(): void {
+    mode = 'cknm';
+
+    add_hres_cknm_ctls();
+    display_default_message();
+}
+
+function isOK_cknm(): void {
+    switch (TG_mode) {
+        case T_TG_mode.Team: 
+            change_hero_name(team_list[cursor_Team.idx]); 
+            subview_act(T_SubView.Team);
+            break;
+        case T_TG_mode.Guld: 
+            change_hero_name(guld_list[cursor_Guld.idx]); 
+            subview_act(T_SubView.Guld);
+            break;
+    };
+    clear_dom_inpt_list();
+    go_back_view_mode('改名しました');
+}
+
+function isOK_leav(): void {
+    const hero = team_list[cursor_Team.idx];
+
+    g_guld.myteam.add_hero(hero);
+    g_team.rmv_hero(hero);
+    init_data_list();
+
+    cursor_Team.idx = 0;
+    go_back_view_mode('チームから外しました');
+}
+
+function isOK_join(): void {
+    const hero = guld_list[cursor_Guld.idx];
+
+    g_team.add_hero(hero);
+    g_guld.myteam.rmv_hero(hero);
+    init_data_list();
+
+    cursor_Guld.idx = 0;
+    go_back_view_mode('チームに入れました');
+}
+
+function isOK_fire(): void {
+    g_guld.myteam.rmv_hero(guld_list[cursor_Guld.idx]);
+    init_data_list();
+
+    cursor_Guld.idx = 0;
+    go_back_view_mode('クビにしました。。。');
+}
+
+function go_back_view_mode(msg: string): void {
+    mode = 'view';
+    switch (TG_mode) {
+        case T_TG_mode.Team: 
+            subview_act(T_SubView.Team);
+            break;
+        case T_TG_mode.Guld: 
+            subview_act(T_SubView.Guld);
+            break;
+    }
+    add_hres_nor_ctls();
+    update_view();
+    g_mvm.normal_message(msg);
+}
+
+function change_hero_name(hero: C_Hero): void {
+    let inpt_name: HTMLInputElement;
+    try {
+        inpt_name = document.getElementById('hres_name_inpt') as HTMLInputElement;
+    } catch (err) {
+        return;
+    }
+    if (inpt_name == null) return;
+
+    hero.set_name(inpt_name.value);
+}
+
+
 function isNG(): void {
     switch (cursor.kind) {
         case T_SubView.Team:
@@ -728,27 +886,42 @@ function isNG(): void {
             isRT();
             break;
         case T_SubView.Menu:
+            mode = 'view';
             switch (TG_mode) {
                 case T_TG_mode.Team: subview_act(T_SubView.Team); break;
                 case T_TG_mode.Guld: subview_act(T_SubView.Guld); break;
             }
+            clear_dom_menu_list();
+            display_default_message();
             break;
     }
 }
+function isNG_chek(): void {
+    mode = 'menu';
+    subview_act(T_SubView.Menu);
+    add_hres_nor_ctls();
+    display_default_message();
+}
+function isNG_cknm(): void {
+    isNG_chek();
+    clear_dom_inpt_list();
+}
+
 function isSL(): void {
     g_mvm.clear_message();
     switch (TG_mode) {
         case T_TG_mode.Team:
             if (!exist_guld()) break;
-            TG_mode = 'Guld';
+            TG_mode = T_TG_mode.Guld;
             subview_act(T_SubView.Guld);
             break;
         case T_TG_mode.Guld:
             if (!exist_team()) break;
-            TG_mode = 'Team';
+            TG_mode = T_TG_mode.Team;
             subview_act(T_SubView.Team);
             break;
     }
+    display_default_message();
 }
 function isRT(): void {
     g_mvm.clear_message();
@@ -759,19 +932,25 @@ function isRT(): void {
 function display_default_message(): void {
     switch (mode) {
         case 'view':
-            g_mvm.normal_message('誰を呼び出しますか？');
+            g_mvm.normal_message('冒険者を指名してください');
             break;
-        case 'select':
+        case 'menu':
             g_mvm.normal_message('どうしますか？');
+            break;
+        case 'ipnm':
+            g_mvm.normal_message('新しい名前を入力してください');
+            break;
+        case 'cknm':
+            g_mvm.normal_message('この名前でよろしいですか？');
             break;
         case 'join':
             g_mvm.normal_message('チームに加えますか？');
             break;
-        case 'leave':
+        case 'leav':
             g_mvm.normal_message('チームから外しますか？');
             break;
         case 'fire':
-            g_mvm.normal_message('ギルドをクビにしますか？');
+            g_mvm.notice_message('ギルドをクビにしますか？クビにしたメンバーは復帰できません');
             break;
         default:
             g_mvm.clear_message();
@@ -789,6 +968,11 @@ function go_back_guild_menu() {
 export function rmv_hres_ctls(): void {
     rmv_hres_nor_ctls();
     rmv_hres_rtn_ctls();
+    rmv_hres_ipnm_ctls();
+    rmv_hres_cknm_ctls();
+    rmv_hres_leav_ctls();
+    rmv_hres_join_ctls();
+    rmv_hres_fire_ctls();
 }
 const hres_rtn_ctls = {
     name: 'hres_rtn', 
@@ -823,4 +1007,74 @@ function rmv_hres_nor_ctls(): void {
 function add_hres_nor_ctls(): void {
     rmv_all_ctls();
     add_default_ctls(hres_nor_ctls);
+}
+
+const hres_ipnm_ctls = {
+    name: 'hres_ipnm', 
+    isOK:  isOK_ipnm,
+    isNG:  isNG_chek,
+    keyEvent: true,
+}
+function rmv_hres_ipnm_ctls(): void {
+    rmv_default_ctls(hres_ipnm_ctls);
+}
+function add_hres_ipnm_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(hres_ipnm_ctls);
+}
+
+const hres_cknm_ctls = {
+    name: 'hres_cknm', 
+    isOK:  isOK_cknm,
+    isNG:  isNG_cknm,
+    keyEvent: true,
+}
+function rmv_hres_cknm_ctls(): void {
+    rmv_default_ctls(hres_cknm_ctls);
+}
+function add_hres_cknm_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(hres_cknm_ctls);
+}
+
+const hres_leav_ctls = {
+    name: 'hres_leav', 
+    isOK:  isOK_leav,
+    isNG:  isNG_chek,
+    keyEvent: true,
+}
+function rmv_hres_leav_ctls(): void {
+    rmv_default_ctls(hres_leav_ctls);
+}
+function add_hres_leav_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(hres_leav_ctls);
+}
+
+const hres_join_ctls = {
+    name: 'hres_join', 
+    isOK:  isOK_join,
+    isNG:  isNG_chek,
+    keyEvent: true,
+}
+function rmv_hres_join_ctls(): void {
+    rmv_default_ctls(hres_join_ctls);
+}
+function add_hres_join_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(hres_join_ctls);
+}
+
+const hres_fire_ctls = {
+    name: 'hres_fire', 
+    isOK:  isOK_fire,
+    isNG:  isNG_chek,
+    keyEvent: true,
+}
+function rmv_hres_fire_ctls(): void {
+    rmv_default_ctls(hres_fire_ctls);
+}
+function add_hres_fire_ctls(): void {
+    rmv_all_ctls();
+    add_default_ctls(hres_fire_ctls);
 }
