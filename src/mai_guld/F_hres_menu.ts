@@ -1,12 +1,10 @@
+import { C_DefaultCtls } from './C_DefaultCtls';
 import { 
-    rmv_default_ctls, 
-    add_default_ctls, 
     hide_all_menu,
     calc_cursor_pos_L,
     calc_cursor_pos_R,
     calc_cursor_pos_U,
-    calc_cursor_pos_D,
-    rmv_all_ctls
+    calc_cursor_pos_D
 } from "./F_default_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { high_light_on }               from "./F_default_menu";
@@ -75,6 +73,7 @@ let cursor_Guld: T_cursor;
 let cursor_Menu: T_cursor;
 let cursor_IpNm: T_cursor;
 
+let hres_ctls:   C_DefaultCtls;
 
 let mode    = 'view';
 
@@ -85,12 +84,12 @@ export function display_hres_menu(): void {
 
     if (!exist_data()) {
         g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-        add_hres_rtn_ctls();
+        hres_ctls.act("rtn");
         return;
     }
     update_all(); 
 
-    add_hres_nor_ctls(); 
+    hres_ctls.act("nor");
     display_default_message(); 
     dom_view_switch.style.display = 'block'; 
 }
@@ -149,7 +148,7 @@ function _go_ipnm(): void {
     subview_act(T_SubView.IpNm);
     mode = 'ipnm';
     display_default_message();
-    add_hres_ipnm_ctls();
+    hres_ctls.act("ipnm");
 
     inpt_name_list['hres_name_li'].input.focus({preventScroll: false});
 }
@@ -161,7 +160,7 @@ function _go_leav(): void {
     }
     mode = 'leav';
     display_default_message();
-    add_hres_leav_ctls();
+    hres_ctls.act("leav");
 }
 function _go_join(): void {
     if (!exist_guld()) return;
@@ -171,14 +170,14 @@ function _go_join(): void {
     }
     mode = 'join';
     display_default_message();
-    add_hres_join_ctls();
+    hres_ctls.act("join");
 }
 function _go_fire(): void {
     if (!exist_guld()) return;
 
     mode = 'fire';
     display_default_message();
-    add_hres_fire_ctls();
+    hres_ctls.act("fire");
 }
 
 
@@ -537,11 +536,69 @@ function clear_dom_hero_detail() {
 
 // カーソルやイベントの初期化
 function init_ctls(): boolean { 
+    if (!init_default_ctls())      return false;
     if (!init_cursor())            return false; 
     if (!get_dom_list_cols())      return false; 
     if (!subview_hide_all())       return false; 
     if (!subview_act(cursor.kind)) return false; 
     return true;
+}
+function init_default_ctls(): boolean {
+    try {
+        hres_ctls = new C_DefaultCtls();
+        if (!hres_ctls.add('nor',  hres_ctls_nor))  return false;
+        if (!hres_ctls.add('rtn',  hres_ctls_rtn))  return false;
+        if (!hres_ctls.add('ipnm', hres_ctls_ipnm)) return false;
+        if (!hres_ctls.add('cknm', hres_ctls_cknm)) return false;
+        if (!hres_ctls.add('leav', hres_ctls_leav)) return false;
+        if (!hres_ctls.add('join', hres_ctls_join)) return false;
+        if (!hres_ctls.add('fire', hres_ctls_fire)) return false;
+    } catch (err) {
+        return false;
+    }
+    return true;
+}
+const hres_ctls_rtn = {
+    name: 'rtn', 
+    isOK:  isRT,
+    isNG:  isRT,
+    isRT:  isRT,
+}
+const hres_ctls_nor = {
+    name: 'nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK,
+    isNG:  isNG,
+    isSL:  isSL,
+    isRT:  isRT,
+}
+const hres_ctls_ipnm = {
+    name: 'ipnm', 
+    isOK:  isOK_ipnm,
+    isNG:  isNG_chek,
+}
+const hres_ctls_cknm = {
+    name: 'cknm', 
+    isOK:  isOK_cknm,
+    isNG:  isNG_cknm,
+}
+const hres_ctls_leav = {
+    name: 'leav', 
+    isOK:  isOK_leav,
+    isNG:  isNG_chek,
+}
+const hres_ctls_join = {
+    name: 'join', 
+    isOK:  isOK_join,
+    isNG:  isNG_chek,
+}
+const hres_ctls_fire = {
+    name: 'fire', 
+    isOK:  isOK_fire,
+    isNG:  isNG_chek,
 }
 
 function update_ctls(): void {}
@@ -800,7 +857,7 @@ function do_menu(): void {
 function isOK_ipnm(): void {
     mode = 'cknm';
 
-    add_hres_cknm_ctls();
+    hres_ctls.act("cknm");
     display_default_message();
 }
 
@@ -859,7 +916,7 @@ function go_back_view_mode(msg: string): void {
             subview_act(T_SubView.Guld);
             break;
     }
-    add_hres_nor_ctls();
+    hres_ctls.act("nor");
     update_view();
     g_mvm.normal_message(msg);
 }
@@ -899,7 +956,7 @@ function isNG(): void {
 function isNG_chek(): void {
     mode = 'menu';
     subview_act(T_SubView.Menu);
-    add_hres_nor_ctls();
+    hres_ctls.act("nor");
     display_default_message();
 }
 function isNG_cknm(): void {
@@ -960,121 +1017,9 @@ function display_default_message(): void {
 
 function go_back_guild_menu() {
     clear_view();
-    rmv_all_ctls();
+    hres_ctls.deact();
     display_guld_menu();
 }
-
-
 export function rmv_hres_ctls(): void {
-    rmv_hres_nor_ctls();
-    rmv_hres_rtn_ctls();
-    rmv_hres_ipnm_ctls();
-    rmv_hres_cknm_ctls();
-    rmv_hres_leav_ctls();
-    rmv_hres_join_ctls();
-    rmv_hres_fire_ctls();
-}
-const hres_rtn_ctls = {
-    name: 'hres_rtn', 
-    isOK:  isRT,
-    isNG:  isRT,
-    isRT:  isRT,
-    keyEvent: true,
-}
-function rmv_hres_rtn_ctls(): void {
-    rmv_default_ctls(hres_rtn_ctls);
-}
-function add_hres_rtn_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_rtn_ctls);
-}
-
-const hres_nor_ctls = {
-    name: 'hres_nor', 
-    do_U:  do_U,
-    do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
-    isOK:  isOK,
-    isNG:  isNG,
-    isSL:  isSL,
-    isRT:  isRT,
-    keyEvent: true,
-}
-function rmv_hres_nor_ctls(): void {
-    rmv_default_ctls(hres_nor_ctls);
-}
-function add_hres_nor_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_nor_ctls);
-}
-
-const hres_ipnm_ctls = {
-    name: 'hres_ipnm', 
-    isOK:  isOK_ipnm,
-    isNG:  isNG_chek,
-    keyEvent: true,
-}
-function rmv_hres_ipnm_ctls(): void {
-    rmv_default_ctls(hres_ipnm_ctls);
-}
-function add_hres_ipnm_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_ipnm_ctls);
-}
-
-const hres_cknm_ctls = {
-    name: 'hres_cknm', 
-    isOK:  isOK_cknm,
-    isNG:  isNG_cknm,
-    keyEvent: true,
-}
-function rmv_hres_cknm_ctls(): void {
-    rmv_default_ctls(hres_cknm_ctls);
-}
-function add_hres_cknm_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_cknm_ctls);
-}
-
-const hres_leav_ctls = {
-    name: 'hres_leav', 
-    isOK:  isOK_leav,
-    isNG:  isNG_chek,
-    keyEvent: true,
-}
-function rmv_hres_leav_ctls(): void {
-    rmv_default_ctls(hres_leav_ctls);
-}
-function add_hres_leav_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_leav_ctls);
-}
-
-const hres_join_ctls = {
-    name: 'hres_join', 
-    isOK:  isOK_join,
-    isNG:  isNG_chek,
-    keyEvent: true,
-}
-function rmv_hres_join_ctls(): void {
-    rmv_default_ctls(hres_join_ctls);
-}
-function add_hres_join_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_join_ctls);
-}
-
-const hres_fire_ctls = {
-    name: 'hres_fire', 
-    isOK:  isOK_fire,
-    isNG:  isNG_chek,
-    keyEvent: true,
-}
-function rmv_hres_fire_ctls(): void {
-    rmv_default_ctls(hres_fire_ctls);
-}
-function add_hres_fire_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(hres_fire_ctls);
+    hres_ctls.deact();
 }
