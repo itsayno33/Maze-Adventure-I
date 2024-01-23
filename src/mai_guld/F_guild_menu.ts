@@ -1,13 +1,12 @@
-import { calc_cursor_pos_D, calc_cursor_pos_U, hide_all_menu, high_light_on, rmv_all_ctls } from "./F_default_menu";
-import { display_hres_menu } from "./F_hres_menu";
-import { display_appd_menu } from "./F_appd_menu";
-import { display_load_menu, display_save_menu } from "./F_save_menu";
-import { g_mvm }             from "./global_for_guild";
-
 import { 
-    rmv_default_ctls, 
-    add_default_ctls 
+    calc_cursor_pos_D, 
+    calc_cursor_pos_U, 
+    hide_all_menu, 
+    high_light_on, 
 } from "./F_default_menu";
+import { display_load_menu, display_save_menu } from "./F_save_menu";
+import { display_hres_menu } from "./F_hres_menu";
+import { g_ctls, g_mvm }     from "./global_for_guild";
 
 
 let dom_view_switch : HTMLDivElement;
@@ -18,46 +17,34 @@ let menu_fnc: {[id: string]: number};
 
 let mode = '';
 
-const guld_ctls = {
-    name: 'guld', 
-    do_U:  do_U,
-    do_D:  do_D,
-    isOK:  isOK,
-    keyEvent: true,
-}
-export function rmv_guld_ctls(): void {
-    rmv_default_ctls(guld_ctls);
-}
-function _add_guld_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(guld_ctls);
-}
+export function display_guld_menu(): void { 
+    hide_all_menu(); 
+    try { 
+        dom_view_switch = document.getElementById('gld_view_switch_guld') as HTMLDivElement; 
+        menu_list       = document.getElementById('guld_menu_list') as HTMLUListElement; 
+    } catch (err) { 
+        alert('Guild Menu Get Element Error. ' + err);
+        return;
+    } 
 
-export function display_guld_menu(): void {
-    hide_all_menu();
+    if (dom_view_switch === null) return; 
+    if (menu_list === null) return; 
 
-    dom_view_switch = document.getElementById('gld_view_switch_guild') as HTMLDivElement;
-    menu_list       = document.getElementById('guild_list') as HTMLUListElement;
+    dom_view_switch.style.display = 'block'; 
 
-    if (dom_view_switch === null) return;
-    if (menu_list === null) return;
-
-    dom_view_switch.style.display = 'block';
-
-    init_all();
-    update_all();
-
-    _add_guld_ctls();
+    init_all(); 
+    update_all(); 
 }
 
-async function init_all() {
+function init_all() {
     mode = 'view';
-    await init_data_list();
-    init_view();
+    init_data_list(); 
+    init_view(); 
+    init_ctls(); 
 }
 
-async function update_all() {
-    await update_data_list();
+function update_all() {
+    update_data_list();
     update_view(idx_guld);
 }
 
@@ -90,6 +77,26 @@ function clear_view() {
     idx_guld = 0;
 }
 
+function init_ctls(): boolean {
+    if (!init_default_ctls()) return false;
+    return true;
+}
+function init_default_ctls(): boolean {
+    try {
+        if (!g_ctls.add('guld_nor',  guld_ctls_nor))  return false;
+        if (!g_ctls.act('guld_nor')) return false;
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+const guld_ctls_nor = {
+    name: 'guld_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    isOK:  isOK,
+}
+
 
 function do_U(): void {
     display_default_message();
@@ -107,24 +114,26 @@ function isOK(): void {
     display_default_message();
 
     switch ((menu_list.children.item(idx_guld) as HTMLLIElement).id) {
-        case 'guild_hres': 
-            rmv_all_ctls();
+        case 'guld_hres': 
+            g_ctls.deact();
             display_hres_menu();
             break;
-        case 'guild_edit': break;
-        case 'guild_appd': 
-            rmv_all_ctls();
+/*
+        case 'guld_edit': break;
+        case 'guld_appd': 
+            g_ctls.deact();
             display_appd_menu();
             break;
-        case 'guild_load': 
-            rmv_all_ctls();
+*/
+        case 'guld_load': 
+            g_ctls.deact();
             display_load_menu();
             break;
-        case 'guild_save': 
-            rmv_all_ctls();
+        case 'guld_save': 
+            g_ctls.deact();
             display_save_menu();
             break;
-        case 'guild_to_maze': break;
+        case 'guld_to_maze': break;
     }
 }
 

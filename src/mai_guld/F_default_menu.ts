@@ -1,9 +1,8 @@
-import { _ceil, _floor } from "../common/F_Math";
-import { rmv_guld_ctls, display_guld_menu } from "./F_guild_menu";
-import { rmv_appd_ctls } from "./F_appd_menu";
-import { rmv_hres_ctls } from "./F_hres_menu";
-import { rmv_svld_ctls } from "./F_save_menu";
-import { _alert }        from "../common/global";
+import { _ceil, _floor }     from "../common/F_Math";
+import { _alert }            from "../common/global";
+import { display_guld_menu } from "./F_guild_menu";
+import { rmv_svld_ctls }     from "./F_save_menu";
+import { g_ctls }            from "./global_for_guild";
 
 
 export function hide_all_menu(): void {
@@ -23,17 +22,18 @@ export function hide_all_menu(): void {
     if (div === null) return;
 
     const menues = div.children;
-    for (var i = 0; i < menues.length; i++) {
-        (menues.item(i) as HTMLElement).style.display = 'none';
-    } 
-    rmv_all_ctls(); // 正常に動いてるのか不安だ。。。
+    try {
+        for (var i = 0; i < menues.length; i++) {
+            (menues.item(i) as HTMLElement).style.display = 'none';
+        } 
+        rmv_all_ctls(); // 正常に動いてるのか不安だ。。。
+        return;
+    } catch (err) {}
 }
 
 export function rmv_all_ctls(): void {
     try {
-        rmv_guld_ctls();
-        rmv_hres_ctls();
-        rmv_appd_ctls();
+        g_ctls.deact();
         rmv_svld_ctls();
     } catch (err) {};
 }

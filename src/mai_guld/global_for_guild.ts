@@ -1,8 +1,8 @@
-import { I_JSON, I_JSON_Uniq, JSON_Any } from './../common/C_SaveData';
+import { I_JSON_Uniq } from './../common/C_SaveData';
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
-import { _alert, g_mes, init_after_loaded_DOM_in_common } from "../common/global";
+import { _alert, init_after_loaded_DOM_in_common } from "../common/global";
 
 import { C_Maze } from "../common/C_Maze";
 export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
@@ -23,11 +23,12 @@ import { init_display_menu } from "./F_default_menu";
 import { C_GldViewMessage }  from "./C_GldViewMessage";
 export var g_mvm: C_GldViewMessage;
 
+import { C_DefaultCtls }     from './C_DefaultCtls';
+export let g_ctls: C_DefaultCtls;
+
 import { get_mai_guld } from "../common/F_load_and_save";
-//export const g_hres = [] as C_Hero[];
 
 export function init_before_new_games(player_id: number): void {
-
     get_mai_guld().then((jsonObj:any)=>{ 
         if (jsonObj.save === undefined) {
             _alert('不正なデータを受信しました(New Game)' + jsonObj.emsg);
@@ -51,12 +52,13 @@ export function set_from_save_to_all_data(glob: {[uid: string]: I_JSON_Uniq}, sa
 }
 
 
-export function init_after_loaded_DOM(): void {
-    init_after_loaded_DOM_in_common();
-    g_mvm = C_GldViewMessage.get();
-    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。 */
-    init_display_menu();
-    stop_double_click();
+export function init_after_loaded_DOM(): void { 
+    init_after_loaded_DOM_in_common(); 
+    g_mvm = C_GldViewMessage.get(); 
+    g_ctls = new C_DefaultCtls(); 
+    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。 */ 
+    init_display_menu(); 
+    stop_double_click(); 
 }
 
 export function init_debug_mode(): void {
