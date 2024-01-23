@@ -61,6 +61,7 @@ const T_SubView: {[kind: string]: number}  = {
     Guld: 2,
     Menu: 3,
     IpNm: 5,
+    IpCk: 6,
 } as const;
 type T_SubView = T_MakeEnumType<typeof T_SubView>;
 
@@ -72,6 +73,7 @@ let cursor_Team: T_cursor;
 let cursor_Guld: T_cursor;
 let cursor_Menu: T_cursor;
 let cursor_IpNm: T_cursor;
+let cursor_IpCk: T_cursor;
 
 let hres_ctls:   C_DefaultCtls;
 
@@ -84,12 +86,12 @@ export function display_hres_menu(): void {
 
     if (!exist_data()) {
         g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-        hres_ctls.act("rtn");
+        hres_ctls.act("hres_rtn");
         return;
     }
     update_all(); 
 
-    hres_ctls.act("nor");
+    hres_ctls.act("hres_nor");
     display_default_message(); 
     dom_view_switch.style.display = 'block'; 
 }
@@ -148,7 +150,7 @@ function _go_ipnm(): void {
     subview_act(T_SubView.IpNm);
     mode = 'ipnm';
     display_default_message();
-    hres_ctls.act("ipnm");
+    hres_ctls.act("hres_ipnm");
 
     inpt_name_list['hres_name_li'].input.focus({preventScroll: false});
 }
@@ -158,9 +160,10 @@ function _go_leav(): void {
         g_mvm.notice_message('ギルドが満員です。誰かクビにしてください');
         return;
     }
+    subview_act(T_SubView.IpCk);
     mode = 'leav';
     display_default_message();
-    hres_ctls.act("leav");
+    hres_ctls.act("hres_leav");
 }
 function _go_join(): void {
     if (!exist_guld()) return;
@@ -168,16 +171,18 @@ function _go_join(): void {
         g_mvm.notice_message('チームが満員です。誰か外してください');
         return;
     }
+    subview_act(T_SubView.IpCk);
     mode = 'join';
     display_default_message();
-    hres_ctls.act("join");
+    hres_ctls.act("hres_join");
 }
 function _go_fire(): void {
     if (!exist_guld()) return;
 
+    subview_act(T_SubView.IpCk);
     mode = 'fire';
     display_default_message();
-    hres_ctls.act("fire");
+    hres_ctls.act("hres_fire");
 }
 
 
@@ -304,9 +309,12 @@ function update_dom_team_list():void {
 function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Team);
     cursor.idx  = Number(this.id); 
-    display_default_message();
+
     list_high_light_on(); 
     update_dom_hero_detail();
+
+    isOK();
+//    display_default_message();
 }
 
 function clear_dom_team_list(): void {
@@ -350,9 +358,12 @@ function update_dom_guld_list(): void {
 function _OK_guld_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Guld);
     cursor.idx  = Number(this.id); 
-    display_default_message();
+
     list_high_light_on(); 
     update_dom_hero_detail();
+
+    isOK();
+//    display_default_message();
 }
 
 function clear_dom_guld_list():void  {
@@ -403,8 +414,9 @@ function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor = cursor_Menu;
     subview_act(T_SubView.Menu);
     cursor.idx  = Number(this.id); 
-    display_default_message();
+
     list_high_light_on(); 
+    do_menu();
 //    update_dom_hero_detail();
 }
 
@@ -546,26 +558,27 @@ function init_ctls(): boolean {
 function init_default_ctls(): boolean {
     try {
         hres_ctls = new C_DefaultCtls();
-        if (!hres_ctls.add('nor',  hres_ctls_nor))  return false;
-        if (!hres_ctls.add('rtn',  hres_ctls_rtn))  return false;
-        if (!hres_ctls.add('ipnm', hres_ctls_ipnm)) return false;
-        if (!hres_ctls.add('cknm', hres_ctls_cknm)) return false;
-        if (!hres_ctls.add('leav', hres_ctls_leav)) return false;
-        if (!hres_ctls.add('join', hres_ctls_join)) return false;
-        if (!hres_ctls.add('fire', hres_ctls_fire)) return false;
+        if (!hres_ctls.add('hres_nor',  hres_ctls_nor))  return false;
+        if (!hres_ctls.add('hres_rtn',  hres_ctls_rtn))  return false;
+        if (!hres_ctls.add('hres_ipnm', hres_ctls_ipnm)) return false;
+        if (!hres_ctls.add('hres_cknm', hres_ctls_cknm)) return false;
+        if (!hres_ctls.add('hres_leav', hres_ctls_leav)) return false;
+        if (!hres_ctls.add('hres_join', hres_ctls_join)) return false;
+        if (!hres_ctls.add('hres_fire', hres_ctls_fire)) return false;
     } catch (err) {
         return false;
     }
     return true;
 }
 const hres_ctls_rtn = {
-    name: 'rtn', 
+    name: 'hres_rtn', 
     isOK:  isRT,
     isNG:  isRT,
     isRT:  isRT,
+    cpRT:  isRT,
 }
 const hres_ctls_nor = {
-    name: 'nor', 
+    name: 'hres_nor', 
     do_U:  do_U,
     do_D:  do_D,
     do_L:  do_L,
@@ -574,31 +587,42 @@ const hres_ctls_nor = {
     isNG:  isNG,
     isSL:  isSL,
     isRT:  isRT,
+    cpRT:  isRT,
 }
 const hres_ctls_ipnm = {
-    name: 'ipnm', 
+    name: 'hres_ipnm', 
     isOK:  isOK_ipnm,
     isNG:  isNG_chek,
+    cpOK:  isOK_ipnm,
+    cpNG:  isNG_chek,
 }
 const hres_ctls_cknm = {
-    name: 'cknm', 
+    name: 'hres_cknm', 
     isOK:  isOK_cknm,
     isNG:  isNG_cknm,
+    cpOK:  isOK_cknm,
+    cpNG:  isNG_cknm,
 }
 const hres_ctls_leav = {
-    name: 'leav', 
+    name: 'hres_leav', 
     isOK:  isOK_leav,
     isNG:  isNG_chek,
+    cpOK:  isOK_leav,
+    cpNG:  isNG_chek,
 }
 const hres_ctls_join = {
-    name: 'join', 
+    name: 'hres_join', 
     isOK:  isOK_join,
     isNG:  isNG_chek,
+    cpOK:  isOK_join,
+    cpNG:  isNG_chek,
 }
 const hres_ctls_fire = {
-    name: 'fire', 
+    name: 'hres_fire', 
     isOK:  isOK_fire,
     isNG:  isNG_chek,
+    cpOK:  isOK_fire,
+    cpNG:  isNG_chek,
 }
 
 function update_ctls(): void {}
@@ -609,6 +633,7 @@ function init_cursor(): boolean {
     cursor_Guld = {kind: T_SubView.Guld, idx: 0}; 
     cursor_Menu = {kind: T_SubView.Menu, idx: 0}; 
     cursor_IpNm = {kind: T_SubView.IpNm, idx: 0}; 
+    cursor_IpCk = {kind: T_SubView.IpCk, idx: 0}; 
 
     if (exist_team()) { 
         TG_mode = T_TG_mode.Team;
@@ -644,6 +669,7 @@ function subview_act(sview: T_SubView): boolean {
         case T_SubView.Guld: subview_act_guld();return true;
         case T_SubView.Menu: subview_act_menu();return true;
         case T_SubView.IpNm: subview_act_ipnm();return true;
+        case T_SubView.IpCk: subview_act_ipck();return true;
         case T_SubView.Hide: subview_hide_all();return true;
         default:             subview_hide_all();return false;
     }
@@ -680,6 +706,15 @@ function subview_act_menu() {
 
 function subview_act_ipnm() {
     cursor  = cursor_IpNm; 
+    cursor.idx = 0;
+
+//    update_view();
+    update_dom_inpt_list();
+    dom_inpt_fields.style.display = 'block';
+}    
+
+function subview_act_ipck() {
+    cursor  = cursor_IpCk; 
     cursor.idx = 0;
 
 //    update_view();
@@ -857,7 +892,7 @@ function do_menu(): void {
 function isOK_ipnm(): void {
     mode = 'cknm';
 
-    hres_ctls.act("cknm");
+    hres_ctls.act("hres_cknm");
     display_default_message();
 }
 
@@ -916,7 +951,7 @@ function go_back_view_mode(msg: string): void {
             subview_act(T_SubView.Guld);
             break;
     }
-    hres_ctls.act("nor");
+    hres_ctls.act("hres_nor");
     update_view();
     g_mvm.normal_message(msg);
 }
@@ -956,7 +991,7 @@ function isNG(): void {
 function isNG_chek(): void {
     mode = 'menu';
     subview_act(T_SubView.Menu);
-    hres_ctls.act("nor");
+    hres_ctls.act("hres_nor");
     display_default_message();
 }
 function isNG_cknm(): void {

@@ -8,6 +8,9 @@ export type T_Ctls = {
     isNG?: T_marg, 
     isSL?: T_marg, 
     isRT?: T_marg, 
+    cpOK?: T_marg, 
+    cpNG?: T_marg, 
+    cpRT?: T_marg, 
     keyEvent?: T_karg,
 }
 type T_mfnc = (e?: MouseEvent)=>(void|boolean);
@@ -28,20 +31,38 @@ export class C_DefaultCtls {
     protected n_btn: HTMLButtonElement;
     protected s_btn: HTMLButtonElement;
     protected r_btn: HTMLButtonElement;
+    protected y_cp1: HTMLButtonElement;
+    protected n_cp1: HTMLButtonElement;
+    protected r_cp1: HTMLButtonElement;
 
     public constructor() {
         this.ctls = {};
         this.flgs = {};
 
-        this.u_arr = document.getElementById('u_arrow') as HTMLButtonElement;
-        this.d_arr = document.getElementById('d_arrow') as HTMLButtonElement;
-        this.l_arr = document.getElementById('l_arrow') as HTMLButtonElement;
-        this.r_arr = document.getElementById('r_arrow') as HTMLButtonElement;
-        this.y_btn = document.getElementById('y_btn')   as HTMLButtonElement;
-        this.n_btn = document.getElementById('n_btn')   as HTMLButtonElement;
-        this.s_btn = document.getElementById('s_btn')   as HTMLButtonElement;
-        this.r_btn = document.getElementById('r_btn')   as HTMLButtonElement;
-    }
+        this.u_arr = document.getElementById('u_arr') as HTMLButtonElement;
+        this.d_arr = document.getElementById('d_arr') as HTMLButtonElement;
+        this.l_arr = document.getElementById('l_arr') as HTMLButtonElement;
+        this.r_arr = document.getElementById('r_arr') as HTMLButtonElement;
+        this.y_btn = document.getElementById('y_btn') as HTMLButtonElement;
+        this.n_btn = document.getElementById('n_btn') as HTMLButtonElement;
+        this.s_btn = document.getElementById('s_btn') as HTMLButtonElement;
+        this.r_btn = document.getElementById('r_btn') as HTMLButtonElement;
+        this.y_cp1 = document.getElementById('y_cp1') as HTMLButtonElement;
+        this.n_cp1 = document.getElementById('n_cp1') as HTMLButtonElement;
+        this.r_cp1 = document.getElementById('r_cp1') as HTMLButtonElement;
+        
+        this.u_arr.style.display = 'none';
+        this.d_arr.style.display = 'none';
+        this.l_arr.style.display = 'none';
+        this.r_arr.style.display = 'none';
+        this.y_btn.style.display = 'none';
+        this.n_btn.style.display = 'none';
+        this.s_btn.style.display = 'none';
+        this.r_btn.style.display = 'none';
+        this.y_cp1.style.display = 'none';
+        this.n_cp1.style.display = 'none';
+        this.r_cp1.style.display = 'none';
+}
     public clr(): boolean {
         this.ctls = {};
         this.flgs = {};
@@ -99,6 +120,9 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.removeEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.removeEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.removeEventListener("click", c.isRT as T_mfnc, false);
+            if (_c(c?.cpOK)) this.y_cp1.removeEventListener("click", c.cpOK as T_mfnc, false);
+            if (_c(c?.cpNG)) this.n_cp1.removeEventListener("click", c.cpNG as T_mfnc, false);
+            if (_c(c?.cpRT)) this.r_cp1.removeEventListener("click", c.cpRT as T_mfnc, false);
         
             if (c?.keyEvent !== undefined) {
                 window.removeEventListener('keydown', c.keyEvent);
@@ -114,6 +138,9 @@ export class C_DefaultCtls {
             this.n_btn.style.display = 'none';
             this.s_btn.style.display = 'none';
             this.r_btn.style.display = 'none';
+            this.y_cp1.style.display = 'none';
+            this.n_cp1.style.display = 'none';
+            this.r_cp1.style.display = 'none';
         } catch (err) {
             alert('Error Occuerd at Remove Default Ctls.');
             alert('' + err);
@@ -130,15 +157,6 @@ export class C_DefaultCtls {
     
         const c = this.ctls[name];
         try {
-            this.u_arr = document.getElementById('u_arrow') as HTMLButtonElement;
-            this.d_arr = document.getElementById('d_arrow') as HTMLButtonElement;
-            this.r_arr = document.getElementById('r_arrow') as HTMLButtonElement;
-            this.l_arr = document.getElementById('l_arrow') as HTMLButtonElement;
-            this.y_btn = document.getElementById('y_btn')   as HTMLButtonElement;
-            this.n_btn = document.getElementById('n_btn')   as HTMLButtonElement;
-            this.s_btn = document.getElementById('s_btn')   as HTMLButtonElement;
-            this.r_btn = document.getElementById('r_btn')   as HTMLButtonElement;
-        
             if (_c(c?.do_U)) this.u_arr.addEventListener("click", c.do_U as T_mfnc, false);
             if (_c(c?.do_D)) this.d_arr.addEventListener("click", c.do_D as T_mfnc, false);
             if (_c(c?.do_L)) this.l_arr.addEventListener("click", c.do_L as T_mfnc, false);
@@ -147,6 +165,9 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.addEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.addEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.addEventListener("click", c.isRT as T_mfnc, false);
+            if (_c(c?.cpOK)) this.y_cp1.addEventListener("click", c.cpOK as T_mfnc, false);
+            if (_c(c?.cpNG)) this.n_cp1.addEventListener("click", c.cpNG as T_mfnc, false);
+            if (_c(c?.cpRT)) this.r_cp1.addEventListener("click", c.cpRT as T_mfnc, false);
         
             if (c?.keyEvent !== undefined) {
                 window.addEventListener('keydown', c.keyEvent);
@@ -162,6 +183,9 @@ export class C_DefaultCtls {
             this.n_btn.style.display = _c(c?.isNG) ? 'block' : 'none';
             this.s_btn.style.display = _c(c?.isSL) ? 'block' : 'none';
             this.r_btn.style.display = _c(c?.isRT) ? 'block' : 'none';
+            this.y_cp1.style.display = _c(c?.cpOK) ? 'block' : 'none';
+            this.n_cp1.style.display = _c(c?.cpNG) ? 'block' : 'none';
+            this.r_cp1.style.display = _c(c?.cpRT) ? 'block' : 'none';
         } catch (err) {
             alert('Error Occuerd at Append Default Ctls.');
             alert('' + err);
@@ -182,22 +206,22 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'ArrowUp': 
         case 'KeyK': 
         case 'Numpad5': 
-                (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
         case 'KeyJ': 
         case 'Numpad2': 
-                (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
         case 'KeyH': 
         case 'Numpad1': 
-                (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
         case 'KeyL':
         case  'Numpad3': 
-                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyZ':

@@ -104,6 +104,9 @@ export type T_controlles = {
     isNG?: T_arg, 
     isSL?: T_arg, 
     isRT?: T_arg, 
+    cpOK?: T_arg, 
+    cpNG?: T_arg, 
+    cpRT?: T_arg, 
     keyEvent?: boolean,
 }
 
@@ -124,14 +127,17 @@ export function rmv_default_ctls(call: T_controlles): boolean {
     _all_ctls_name[call.name] = false;
 
     try {
-        const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-        const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-        const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-        const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-        const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-        const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-        const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
-        const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
+        const u_arrow = document.getElementById('u_arr') as HTMLButtonElement;
+        const d_arrow = document.getElementById('d_arr') as HTMLButtonElement;
+        const l_arrow = document.getElementById('l_arr') as HTMLButtonElement;
+        const r_arrow = document.getElementById('r_arr') as HTMLButtonElement;
+        const y_btn   = document.getElementById('y_btn') as HTMLButtonElement;
+        const n_btn   = document.getElementById('n_btn') as HTMLButtonElement;
+        const s_btn   = document.getElementById('s_btn') as HTMLButtonElement;
+        const r_btn   = document.getElementById('r_btn') as HTMLButtonElement;
+        const y_cp1   = document.getElementById('y_cp1') as HTMLButtonElement;
+        const n_cp1   = document.getElementById('n_cp1') as HTMLButtonElement;
+        const r_cp1   = document.getElementById('r_cp1') as HTMLButtonElement;
     
         if (_c(call?.do_U)) u_arrow.removeEventListener("click", call.do_U as T_fnc, false);
         if (_c(call?.do_D)) d_arrow.removeEventListener("click", call.do_D as T_fnc, false);
@@ -141,6 +147,9 @@ export function rmv_default_ctls(call: T_controlles): boolean {
         if (_c(call?.isNG)) n_btn  .removeEventListener("click", call.isNG as T_fnc, false);
         if (_c(call?.isSL)) s_btn  .removeEventListener("click", call.isSL as T_fnc, false);
         if (_c(call?.isRT)) r_btn  .removeEventListener("click", call.isRT as T_fnc, false);
+        if (_c(call?.cpOK)) y_cp1  .removeEventListener("click", call.cpOK as T_fnc, false);
+        if (_c(call?.cpNG)) n_cp1  .removeEventListener("click", call.cpNG as T_fnc, false);
+        if (_c(call?.cpRT)) r_cp1  .removeEventListener("click", call.cpRT as T_fnc, false);
     
         if (call?.keyEvent) window.removeEventListener('keydown', key_press_function);
     
@@ -152,6 +161,9 @@ export function rmv_default_ctls(call: T_controlles): boolean {
         n_btn  .style.display = 'none';
         s_btn  .style.display = 'none';
         r_btn  .style.display = 'none';
+        y_cp1  .style.display = 'none';
+        n_cp1  .style.display = 'none';
+        r_cp1  .style.display = 'none';
     } catch (err) {
         _alert('Error Occuerd at Remove Default Ctls.');
         _alert('' + err);
@@ -167,14 +179,17 @@ export function add_default_ctls(call: T_controlles): boolean {
     _all_ctls_name[call.name] = true;
 
     try {
-        const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-        const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-        const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-        const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-        const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-        const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-        const s_btn   = document.getElementById('s_btn')   as HTMLButtonElement;
-        const r_btn   = document.getElementById('r_btn')   as HTMLButtonElement;
+        const u_arrow = document.getElementById('u_arr') as HTMLButtonElement;
+        const d_arrow = document.getElementById('d_arr') as HTMLButtonElement;
+        const r_arrow = document.getElementById('r_arr') as HTMLButtonElement;
+        const l_arrow = document.getElementById('l_arr') as HTMLButtonElement;
+        const y_btn   = document.getElementById('y_btn') as HTMLButtonElement;
+        const n_btn   = document.getElementById('n_btn') as HTMLButtonElement;
+        const s_btn   = document.getElementById('s_btn') as HTMLButtonElement;
+        const r_btn   = document.getElementById('r_btn') as HTMLButtonElement;
+        const y_cp1   = document.getElementById('y_cp1') as HTMLButtonElement;
+        const n_cp1   = document.getElementById('n_cp1') as HTMLButtonElement;
+        const r_cp1   = document.getElementById('r_cp1') as HTMLButtonElement;
     
         if (_c(call?.do_U)) u_arrow.addEventListener("click", call.do_U as T_fnc, false);
         if (_c(call?.do_D)) d_arrow.addEventListener("click", call.do_D as T_fnc, false);
@@ -184,6 +199,9 @@ export function add_default_ctls(call: T_controlles): boolean {
         if (_c(call?.isNG)) n_btn  .addEventListener("click", call.isNG as T_fnc, false);
         if (_c(call?.isSL)) s_btn  .addEventListener("click", call.isSL as T_fnc, false);
         if (_c(call?.isRT)) r_btn  .addEventListener("click", call.isRT as T_fnc, false);
+        if (_c(call?.cpOK)) y_cp1  .addEventListener("click", call.cpOK as T_fnc, false);
+        if (_c(call?.cpNG)) n_cp1  .addEventListener("click", call.cpNG as T_fnc, false);
+        if (_c(call?.cpRT)) r_cp1  .addEventListener("click", call.cpRT as T_fnc, false);
     
         if (call?.keyEvent) window.addEventListener('keydown', key_press_function);
     
@@ -195,6 +213,9 @@ export function add_default_ctls(call: T_controlles): boolean {
         n_btn  .style.display = _c(call?.isNG) ? 'block' : 'none';
         s_btn  .style.display = _c(call?.isSL) ? 'block' : 'none';
         r_btn  .style.display = _c(call?.isRT) ? 'block' : 'none';
+        y_cp1  .style.display = _c(call?.cpOK) ? 'block' : 'none';
+        n_cp1  .style.display = _c(call?.cpNG) ? 'block' : 'none';
+        r_cp1  .style.display = _c(call?.cpRT) ? 'block' : 'none';
     } catch (err) {
         _alert('Error Occuerd at Append Default Ctls.');
         _alert('' + err);
@@ -209,22 +230,22 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'ArrowUp': 
         case 'KeyK': 
         case 'Numpad5': 
-                (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
         case 'KeyJ': 
         case 'Numpad2': 
-                (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
         case 'KeyH': 
         case 'Numpad1': 
-                (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
         case 'KeyL':
         case  'Numpad3': 
-                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyZ':
