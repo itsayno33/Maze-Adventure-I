@@ -1104,6 +1104,7 @@ function isOK_leav(): void {
     g_guld.myteam.add_hero(hero);
     g_team.rmv_hero(hero);
     update_data_list();
+    if (!exist_team()) isSL();
 
     cursor_Team.idx = 0;
     go_back_view_mode('チームから外しました');
@@ -1115,6 +1116,7 @@ function isOK_join(): void {
     g_team.add_hero(hero);
     g_guld.myteam.rmv_hero(hero);
     update_data_list();
+    if (!exist_guld()) isSL();
 
     cursor_Guld.idx = 0;
     go_back_view_mode('チームに入れました');
@@ -1123,6 +1125,7 @@ function isOK_join(): void {
 function isOK_fire(): void {
     g_guld.myteam.rmv_hero(guld_list[cursor_Guld.idx]);
     update_data_list();
+    if (!exist_guld()) isSL();
 
     cursor_Guld.idx = 0;
     go_back_view_mode('クビにしました。。。');
@@ -1134,6 +1137,7 @@ function isOK_adpt(): void {
     g_guld.myteam.add_hero(hero);
     appd_list.splice(cursor_Appd.idx, 1);
     update_data_list();
+    if (!exist_appd()) isSL();
 
     cursor_Appd.idx = 0;
     go_back_view_mode('ギルドに採用しました');
@@ -1144,6 +1148,7 @@ function isOK_away(): void {
 
     appd_list.splice(cursor_Appd.idx, 1);
     update_data_list();
+    if (!exist_appd()) isSL();
 
     cursor_Appd.idx = 0;
     go_back_view_mode('叩き出しました。。。');
