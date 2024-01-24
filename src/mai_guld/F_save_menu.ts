@@ -19,7 +19,7 @@ import { general_load, general_save, get_save_info }  from "../common/F_load_and
 
 import { 
     g_mvm, set_from_save_to_all_data, 
-    g_save, g_all_maze, g_all_team, g_all_guld, g_team 
+    g_save, g_all_maze, g_all_team, g_all_guld, g_team, g_guld, g_ctls 
 } 
 from "./global_for_guild";
 
@@ -40,12 +40,6 @@ let is_save:boolean;
 let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
 let dom_info_detail : HTMLUListElement;
-
-export function rmv_svld_ctls(): void {
-    _rmv_svld_nor_ctls();
-    _rmv_svld_rtn_ctls();
-    _rmv_svld_chk_ctls();
-}
 
 export function display_load_menu(): void {
     is_save = false;
@@ -87,11 +81,11 @@ async function _display_SL_menu(): Promise<void> {
         dom_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
-        _add_svld_rtn_ctls();
+        g_ctls.act('svld_rtn');
     } else {
         info_list.style.display = 'block';
         dom_info_fields.style.display = 'block';
-        _add_svld_nor_ctls();
+        g_ctls.act('svld_nor');
     }
     display_default_message();
 }
@@ -109,6 +103,7 @@ async function init_all() {
     mode = 'view';
     await init_data_list();
     init_view();
+    init_ctls();
 }
 
 async function update_all(): Promise<void> {
@@ -236,6 +231,45 @@ function clear_info_detail() {
     }
 }
 
+function init_ctls(): void {
+    init_default_ctls();
+}
+
+function init_default_ctls(): boolean {
+    try {
+        if (!g_ctls.add('svld_rtn', _svld_rtn_ctls))  return false;
+        if (!g_ctls.add('svld_nor', _svld_nor_ctls))  return false;
+        if (!g_ctls.add('svld_chk', _svld_chk_ctls))  return false;
+    } catch (err) {
+        return false;
+    }
+    return true;
+}
+
+
+const _svld_nor_ctls = {
+    name: 'svld_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK,
+    isNG:  isNG,
+    isRT:  isRT,
+}
+const _svld_rtn_ctls = {
+    name: 'svld_rtn', 
+    isNG:  go_back_guld_menu_for_first,
+    isRT:  go_back_guld_menu_for_first,
+}
+const _svld_chk_ctls = {
+    name: 'svld_chk', 
+    isOK:  _do_check,
+    isNG:  _do_check,
+}
+
+
+
 function do_U(): void {
     if (mode !== 'view') return;
     display_default_message();
@@ -276,7 +310,7 @@ async function _isOK_for_load(): Promise<void> {
                 display_default_message();
             } else {
                 g_mvm.notice_message('保存されていない項目です。戻る＝＞✖');
-                _add_svld_chk_ctls();
+                g_ctls.act('svld_chk');
             }
             break;
         case 'read_OK':
@@ -348,6 +382,8 @@ async function post_load_data(): Promise<boolean> {
         g_team.decode (g_save.all_team[g_save.team_uid].encode());
         g_team.set_loc(g_save.location);
 
+        g_guld.decode (g_save.all_guld[g_save.location.get_uid()].encode());
+
         return jsonObj.ecode == 0;
     })
     .then(async (YN:boolean)=>{
@@ -362,7 +398,8 @@ async function post_save_data(): Promise<boolean> {
         uniq_no:    idx, 
 //        save_id:    data_list[idx].save_id, 
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
-        detail:    '冒険者情報',                    // data_list[idx].detail, 
+        detail:    '冒険者ギルド情報',                    // data_list[idx].detail, 
+        point:     '冒険者ギルド',
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 
@@ -444,20 +481,12 @@ function go_back_guld_menu(): void {
     clear_view();
     go_back_guld_menu_for_first();
 }
-
-
-
-const _svld_nor_ctls = {
-    name: 'svld', 
-    do_U:  do_U,
-    do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
-    isOK:  isOK,
-    isNG:  isNG,
-    isRT:  isRT,
-    keyEvent: true,
+function _do_check(): void {
+    g_mvm.clear_message();
+    g_ctls.act("svld_nor");
 }
+
+/*
 function _rmv_svld_nor_ctls(): void {
     rmv_default_ctls(_svld_nor_ctls);
 }
@@ -466,25 +495,12 @@ function _add_svld_nor_ctls(): void {
     add_default_ctls(_svld_nor_ctls);
 }
 
-const _svld_rtn_ctls = {
-    name: 'svld_rtn', 
-    isNG:  go_back_guld_menu_for_first,
-    isRT:  go_back_guld_menu_for_first,
-    keyEvent: true,
-}
 function _rmv_svld_rtn_ctls(): void {
     rmv_default_ctls(_svld_rtn_ctls);
 }
 function _add_svld_rtn_ctls(): void {
     rmv_all_ctls();
     add_default_ctls(_svld_rtn_ctls);
-}
-
-const _svld_chk_ctls = {
-    name: 'svld_chk', 
-    isOK:  _do_check,
-    isNG:  _do_check,
-    keyEvent: true,
 }
 function _rmv_svld_chk_ctls(): void {
     rmv_default_ctls(_svld_chk_ctls);
@@ -493,7 +509,4 @@ function _add_svld_chk_ctls(): void {
     rmv_all_ctls();
     add_default_ctls(_svld_chk_ctls);
 }
-function _do_check(): void {
-    g_mvm.clear_message();
-    _add_svld_nor_ctls();
-}
+*/

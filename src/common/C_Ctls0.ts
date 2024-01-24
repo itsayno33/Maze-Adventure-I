@@ -30,8 +30,8 @@ type T_KeyDownArg    = {[name: string]: T_KeyDownFnc|null}
 type T_KeyDownFnc    = (e: KeyboardEvent)=>void;
 
 
-export class C_Ctls {
-    protected static me: C_Ctls|undefined;
+export class C_Ctls0 {
+    protected static me: C_Ctls0|undefined;
     public ctls:        T_CtlsElements;
     public is_set:      T_IsSet;
     public listeners:   T_Listeners;
@@ -49,15 +49,15 @@ export class C_Ctls {
     // シングルトン仕様
     // ひとつのプログラムに複数の入力制御があると地雷になるからね
     // 
-    public static get(ctls?: HTMLElement[]): C_Ctls|undefined {
-        if (C_Ctls.me === undefined) C_Ctls.me = new C_Ctls(ctls);
-        return C_Ctls.me;
+    public static get(ctls?: HTMLElement[]): C_Ctls0|undefined {
+        if (C_Ctls0.me === undefined) C_Ctls0.me = new C_Ctls0(ctls);
+        return C_Ctls0.me;
     }
 
     // 入力制御用の要素のユニークな識別子としてHTML要素のidを使用している
     // くれぐれも設定を忘れないこと！！ 
     // 
-    public init(ctls: HTMLElement[]): C_Ctls|undefined {
+    public init(ctls: HTMLElement[]): C_Ctls0|undefined {
         for (let ctl of ctls) {
             if (ctl?.id === undefined) return undefined;
             this.ctls[ctl.id] = ctl;

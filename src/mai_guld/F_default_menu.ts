@@ -1,7 +1,6 @@
 import { _ceil, _floor }     from "../common/F_Math";
 import { _alert }            from "../common/global";
 import { display_guld_menu } from "./F_guild_menu";
-import { rmv_svld_ctls }     from "./F_save_menu";
 import { g_ctls }            from "./global_for_guild";
 
 
@@ -34,7 +33,6 @@ export function hide_all_menu(): void {
 export function rmv_all_ctls(): void {
     try {
         g_ctls.deact();
-        rmv_svld_ctls();
     } catch (err) {};
 }
 
