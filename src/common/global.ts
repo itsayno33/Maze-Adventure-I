@@ -4,8 +4,38 @@ export const g_url_get_guld    = 2;
 export const g_url_check_JSON  = 3;
 export const g_url: string[] = new Array(4);
 
-export var g_pid: number[] = new Array(1) as number[];
+//export var g_pid: number[] = new Array(1) as number[];
 
+class C_ReadyGames  {
+    protected flgs: {[id: string]: boolean}; 
+    protected func: ()=>void;
+    public constructor() {
+        this.flgs = {};
+        this.flgs.loadedDOM = false; 
+        this.flgs.getWindow = false;
+        this.func = ()=>{};
+    }
+    public setLoadedDOM(): void {
+        this.flgs.loadedDOM = true;
+        this.check_and_do();
+    }
+    public setGetWindow(): void {
+        this.flgs.getWindow = true;
+        this.check_and_do();
+    }
+    public setFunction(func: ()=>void): void {
+        this.func = func;
+        this.check_and_do();
+    }
+    protected check_and_do(): void {
+        if (this.func === undefined) return;
+        for (let ii in this.flgs) if (!this.flgs[ii]) return;
+        this.func(); 
+    }
+}
+export const g_ready_games = new C_ReadyGames();
+
+export const g_start_env = {mode: '', pid: -1, uno: -1};
 
 import { C_DisplayMessage } from "../common/C_DisplayMessage";
 export var g_mes: C_DisplayMessage;
@@ -27,7 +57,7 @@ export function _alert(txt: string, page_size = 250): void {
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
     get_init_data: (url_baze: string, player_id: number)=>void,
-    new_game:      (url_baze: string, player_id: number)=>void, // 暫定版開始処理
+    start_game:    (mode: string, url_baze: string, player_id: number, uniq_no: number)=>void, 
 }
 // windowオブジェクトにインターフェースの定義を追加
 declare global {
@@ -40,17 +70,21 @@ declare global {
 const tsCaller: I_TsCall = (() => {
     return {
         get_init_data: (url_base: string, player_id: number): void => {
-//            const url_top = parent_url(url_base);
+            const url_home = parent_url(url_base);
             const url_top = url_base;
             g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
             g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
             g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
-            g_pid[0] = player_id; 
         },
         // 暫定版開始処理
-        new_game: (url_baze: string, player_id: number): void => {
+        start_game: (mode: string, url_baze: string, player_id: number, uniq_no: number): void => {
             tsCaller.get_init_data(url_baze, player_id);
+            g_start_env.mode = mode;
+            g_start_env.pid  = player_id;
+            g_start_env.uno  = uniq_no;
+
+            g_ready_games.setGetWindow();
         } 
     };
 })();

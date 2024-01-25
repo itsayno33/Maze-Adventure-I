@@ -8,9 +8,9 @@ import { _round, _min, _max  } from "../common/F_Math";
 import { C_UrlOpt }            from "../common/C_UrlOpt";  
 import { POST_and_get_JSON, POST_and_move_page } from "../common/F_POST";
 import { 
-    g_mes, g_pid, 
+    g_mes, g_start_env, 
     g_url, g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
-    _alert 
+    _alert, 
 } from "../common/global";
 
 
@@ -18,7 +18,7 @@ type T_callback = (jsonObj:any)=>(boolean|void);
 
 export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
 //    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_maze"});
-    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_game"});
+    const get_maze_opt = new C_UrlOpt({pid: g_start_env.pid, mode: "new_game"});
  
     return POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
@@ -63,7 +63,7 @@ export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
 export function get_save_info(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',       'save_info'); 
-    opt.set('pid',         g_pid[0]);
+    opt.set('pid',         g_start_env.pid);
 
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
@@ -202,19 +202,19 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
 
 export function instant_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     opt.set('mode',        'instant_save'); 
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_start_env.pid); 
     return __auto_save(opt, callback);
 }
 
 export function UD_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     opt.set('mode',        'UD_save'); 
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_start_env.pid); 
     return  __auto_save(opt, callback);
 }
 
 export function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'save'); 
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_start_env.pid); 
     return __auto_save(opt, callback);
 }
 

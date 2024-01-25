@@ -1,19 +1,16 @@
-import { _round }               from "../common/F_Math";
-import { C_UrlOpt }             from "../common/C_UrlOpt";
-import { C_SaveData  }          from "../common/C_SaveData";
-import { T_Lckd }               from "../common/C_Location";
-import { C_Point }              from "../common/C_Point";
-import { T_Direction }          from "../common/T_Direction";
-import { C_Hero }               from "../common/C_Hero";
-import { _alert, g_mes, g_pid } from "../common/global";
-import { T_CtlsMode }           from "./T_CtlsMode";
-import { hide_controlles }      from "./F_set_controlles";
-import { set_camp_controlles }  from "./F_set_camp_controlles";
+import { _round }                     from "../common/F_Math";
+import { C_UrlOpt }                   from "../common/C_UrlOpt";
+import { C_SaveData  }                from "../common/C_SaveData";
+import { T_Lckd }                     from "../common/C_Location";
+import { C_Hero }                     from "../common/C_Hero";
+import { _alert, g_mes, g_start_env } from "../common/global";
+import { T_CtlsMode }                 from "./T_CtlsMode";
+import { hide_controlles }            from "./F_set_controlles";
+import { set_camp_controlles }        from "./F_set_camp_controlles";
 import { general_load, general_save, get_save_info } from "../common/F_load_and_save";
 import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_save, g_hres } from "./global_for_maze";
 import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
-import { C_PointDir, JSON_PointDir } from "../common/C_PointDir";
-import { alert_team_info } from "../common/C_Team";
+import { C_PointDir, JSON_PointDir }  from "../common/C_PointDir";
 
 var   UL_idx: number = 0;
 var   save_UL_list_len: number;
@@ -581,7 +578,7 @@ export function set_g_save (
 
         g_save.decode({
             save_id:   save_id, 
-            player_id: g_pid[0],
+            player_id: g_start_env.pid,
             uniq_no:   uniq_no, 
             title:     title, 
             detail:    detail,

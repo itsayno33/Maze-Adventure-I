@@ -2,30 +2,10 @@
 ///   主処理
 ///
 
-import { init_after_loaded_DOM, init_debug_mode } from "./global_for_maze";
-import { 
-    g_pid, 
-    g_url, g_url_check_JSON, g_url_get_guld, g_url_get_maze, g_url_get_save 
-} from "../common/global";
-
-import { get_mai_maze }        from "../common/F_load_and_save";
-import { init_controlles }     from "./F_set_controlles";
-import { do_move_bottom_half } from "./F_set_move_controlles";
-import { decode_maze }         from "./F_set_save_controlles";
-import { calc_view2D_width }   from "./F_display_maze";
+import { init_after_loaded_DOM } from "./global_for_maze";
 
 window.addEventListener('DOMContentLoaded', function() { 
     init_after_loaded_DOM(); 
-
-    get_mai_maze().then((jsonObj:any)=>{
-        decode_maze(jsonObj);
-//        decode_all(jsonObj);
-        calc_view2D_width();
-
-        init_debug_mode();
-        init_controlles();
-        do_move_bottom_half('blink_off');
-    });
 });
 
 /*

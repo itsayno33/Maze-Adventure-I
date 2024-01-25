@@ -1,7 +1,4 @@
-import { C_Hero } from './../common/C_Hero';
 import { 
-    rmv_default_ctls, 
-    add_default_ctls, 
     hide_all_menu,
     high_light_on, 
     calc_cursor_pos_L,
@@ -14,16 +11,20 @@ import {
 import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData }            from "../common/C_SaveData";
+import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
+import { g_mes, g_start_env }    from "../common/global";
 
 import { 
     g_mvm, set_from_save_to_all_data, 
     g_save, g_all_maze, g_all_team, g_all_guld, g_team, g_guld, g_ctls 
 } 
 from "./global_for_guild";
+import { alert_team_info } from "../common/C_Team";
+import { alert_guld_info } from "../common/C_Guild";
+import { C_Location } from "../common/C_Location";
+import { g_maze } from "../mai_maze/global_for_maze";
 
-import { g_pid, g_mes }  from "../common/global";
 
 let data_list:  {[uniq_no: number]:C_SaveData};
 
@@ -108,8 +109,9 @@ async function init_all() {
 
 async function update_all(): Promise<void> {
     idx = 0;
-    await update_data_list();
-    update_view(idx);
+    await update_data_list().then(()=>{
+        update_view(idx);
+    });
 }
 
 async function init_data_list() {}
@@ -362,7 +364,7 @@ async function _isOK_for_save(): Promise<void> {
 
 async function post_load_data(): Promise<boolean> { 
     g_save.decode({
-        player_id:  g_pid[0],  
+        player_id:  g_start_env.pid,  
         uniq_no:    idx, 
         save_id:    data_list[idx].save_id, 
         title:      data_list[idx].title, 
@@ -373,33 +375,38 @@ async function post_load_data(): Promise<boolean> {
     const save_data = JSON.stringify(g_save.encode(), null, "\t");
 
     const  opt = new C_UrlOpt();
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_start_env.pid); 
     opt.set('save',        save_data);
-    return general_load(opt)
-    .then(async(jsonObj:any)=>{
-        g_save.decode(jsonObj.save);
 
+    return await general_load(opt).then((jsonObj:any)=>{ 
+        g_save.decode(jsonObj.save);
+ 
         set_from_save_to_all_data(g_all_maze, g_save.all_maze);
         set_from_save_to_all_data(g_all_team, g_save.all_team);
         set_from_save_to_all_data(g_all_guld, g_save.all_guld);
-
+ 
+        
         g_team.decode (g_save.all_team[g_save.team_uid].encode());
         g_team.set_loc(g_save.location);
-
+ 
         g_guld.decode (g_save.all_guld[g_save.location.get_uid()].encode());
 
         return jsonObj.ecode == 0;
-    })
-    .then(async (YN:boolean)=>{
-        await update_all();
-        return YN;
     }); 
 }
 
 async function post_save_data(): Promise<boolean> { 
 
+    const loc = new C_Location({
+        kind: 'Guld',
+        name: g_guld.get_name(),
+        uid:  g_guld.uid(),
+    });
+    g_team.set_loc(loc);
+
+
     g_save.decode({ 
-        player_id:  g_pid[0],  
+        player_id:  g_start_env.pid,  
         uniq_no:    idx, 
 //        save_id:    data_list[idx].save_id, 
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
@@ -409,11 +416,17 @@ async function post_save_data(): Promise<boolean> {
         is_active: '1', 
         is_delete: '0', 
     }); 
+    g_save.all_guld[g_guld.uid()] = g_guld;
+    g_save.all_team[g_team.uid()] = g_team;
+    g_save.team_uid = g_team.uid();
+    g_save.location = loc;
+
+
     const save_json = g_save.encode(); 
     const save_data = JSON.stringify(save_json, null, "\t"); 
 
     const  opt = new C_UrlOpt();
-    opt.set('pid',         g_pid[0]); 
+    opt.set('pid',         g_start_env.pid); 
     opt.set('save',        save_data); 
     return await general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
