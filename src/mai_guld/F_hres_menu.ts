@@ -93,18 +93,26 @@ let mode    = 'view';
 export function display_hres_menu(): void {
     hide_all_menu(); 
 
-    if (!init_all()) {display_guld_menu();return}; 
-
-    update_all(); 
-    if (!exist_data()) {
-        g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-        g_ctls.act("hres_rtn");
-        return;
-    }
-
-    g_ctls.act("hres_nor");
-    display_default_message(); 
-    dom_view_switch.style.display = 'block'; 
+    init_all().then((yn:boolean)=>{
+        if (yn) {
+            update_all().then(()=>{
+                /*
+                        if (!exist_data()) {
+                            g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
+                            g_ctls.act("hres_rtn");
+                            return;
+                        }
+                */
+                        g_ctls.act("hres_nor");
+                        display_default_message(); 
+                        dom_view_switch.style.display = 'block'; 
+                    }); 
+                
+        } else {
+            display_guld_menu();
+        }
+    }); 
+    return;
 }
 
 function exist_data(): boolean {
@@ -112,30 +120,35 @@ function exist_data(): boolean {
 }
 
 
-function init_all(): boolean {
+async function init_all(): Promise<boolean> {
     mode = 'view';
-    if (!init_data_list()) return false; 
-    if (!init_view()) return false; 
-    if (!init_ctls()) return false; 
-    return true;
+    return await init_data_list().then((yn: boolean)=>{
+        if (!yn) return false;
+        if (!init_view()) return false; 
+        if (!init_ctls()) return false;
+        return true; 
+    }); 
 }
 
-function update_all() {
-    update_data_list();
-    update_view();
-    update_ctls();
+async function update_all(): Promise<void> {
+    return await update_data_list().then(()=>{
+        update_view();
+        update_ctls();
+    });
 }
 
 // ******************************
 // モデル関係
 // ******************************
 
-function init_data_list(): boolean {
-    if (!init_team_list()) return false;
-    if (!init_guld_list()) return false;
-    if (!init_appd_list()) return false;
-    if (!init_menu_list()) return false;
-    return true;
+function init_data_list(): Promise<boolean> {
+    return init_appd_list().then((yn:boolean)=>{
+        if (!yn) return false;
+        if (!init_team_list()) return false;
+        if (!init_guld_list()) return false;
+        if (!init_menu_list()) return false;
+        return true;
+    })
 }
 
 function init_team_list(): boolean { 
@@ -146,8 +159,9 @@ function init_guld_list(): boolean {
     update_guld_list(); 
     return true;
 }
-function init_appd_list(): boolean { 
+async function init_appd_list(): Promise<boolean> { 
     appd_list = [];
+    await update_appd_list()
 //    update_appd_list(); 
     return true;
 }
@@ -228,11 +242,12 @@ function _go_away(): void {
 }
 
 
-function update_data_list(): void { 
-    update_team_list(); 
-    update_guld_list(); 
-    update_appd_list(); 
-    update_menu_list(); 
+async function update_data_list(): Promise<void> { 
+    return await update_appd_list().then(()=>{
+        update_team_list(); 
+        update_guld_list(); 
+        update_menu_list(); 
+    }); 
 }
 
 function update_team_list(): void {
@@ -257,12 +272,13 @@ function max_of_guld(): boolean {
     return guld_list.length > 99;
 }
 
-function update_appd_list(): void {
+async function update_appd_list(): Promise<void> {
 //    appd_list = [];
-    if (appd_list.length < 1) _get_appd_list();
+    if (appd_list.length < 1) return await _get_appd_list();
+    return;
 }
 async function _get_appd_list(): Promise<void> {
-    return await get_new_hero(8)?.then((jsonObj:any)=>{
+    return get_new_hero(8)?.then((jsonObj:any)=>{
         if (jsonObj.hres === undefined) {
             g_mes.warning_message('不正なデータを受信しました' + jsonObj.emsg);
             _alert(jsonObj.emsg);
@@ -271,7 +287,7 @@ async function _get_appd_list(): Promise<void> {
         for (let hero_data of jsonObj.hres) {
             appd_list.push(new C_Hero(hero_data));
         }
-    })
+    });
 }
 function exist_appd(): boolean {
     return appd_list.length > 0;
@@ -1100,11 +1116,12 @@ function isOK_leav(): void {
 
     g_guld.add_hero(hero);
     g_team.rmv_hero(hero);
-    update_data_list();
-    if (!exist_team()) isSL();
+    update_data_list().then(()=>{
+        if (!exist_team()) isSL();
 
-    cursor_Team.idx = 0;
-    go_back_view_mode('チームから外しました');
+        cursor_Team.idx = 0;
+        go_back_view_mode('チームから外しました');
+    });
 }
 
 function isOK_join(): void {
@@ -1112,20 +1129,22 @@ function isOK_join(): void {
 
     g_team.add_hero(hero);
     g_guld.rmv_hero(hero);
-    update_data_list();
-    if (!exist_guld()) isSL();
+    update_data_list().then(()=>{
+        if (!exist_guld()) isSL();
 
-    cursor_Guld.idx = 0;
-    go_back_view_mode('チームに入れました');
+        cursor_Guld.idx = 0;
+        go_back_view_mode('チームに入れました');
+    });
 }
 
 function isOK_fire(): void {
     g_guld.rmv_hero(guld_list[cursor_Guld.idx]);
-    update_data_list();
-    if (!exist_guld()) isSL();
+    update_data_list().then(()=>{
+        if (!exist_guld()) isSL();
 
-    cursor_Guld.idx = 0;
-    go_back_view_mode('クビにしました。。。');
+        cursor_Guld.idx = 0;
+        go_back_view_mode('クビにしました。。。');
+    });
 }
 
 function isOK_adpt(): void {
@@ -1133,22 +1152,20 @@ function isOK_adpt(): void {
 
     g_guld.add_hero(hero);
     appd_list.splice(cursor_Appd.idx, 1);
-    update_data_list();
-    if (!exist_appd()) isSL();
-
-    cursor_Appd.idx = 0;
-    go_back_view_mode('ギルドに採用しました');
+    update_data_list().then(()=>{
+        cursor_Appd.idx = 0;
+        go_back_view_mode('ギルドに採用しました');
+    });
 }
 
 function isOK_away(): void {
     const hero = appd_list[cursor_Appd.idx];
 
     appd_list.splice(cursor_Appd.idx, 1);
-    update_data_list();
-    if (!exist_appd()) isSL();
-
-    cursor_Appd.idx = 0;
-    go_back_view_mode('叩き出しました。。。');
+    update_data_list().then(()=>{
+        cursor_Appd.idx = 0;
+        go_back_view_mode('叩き出しました。。。');
+    });
 }
 
 function go_back_view_mode(msg: string): void {
