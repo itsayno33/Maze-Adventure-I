@@ -313,7 +313,7 @@ async function _isOK_for_load(): Promise<void> {
                 g_ctls.act('svld_chk');
             }
             break;
-        case 'read_OK':
+        case 'read_OK': 
             await post_load_data().then(result => {
                 if (result) {
                     g_mvm.notice_message('読み込みました!!');
@@ -331,16 +331,20 @@ async function _isOK_for_save(): Promise<void> {
             mode = idx in data_list ? 'rewrite_OK' : 'write_OK';
             display_default_message();
             break;
-        case 'write_OK':
-            await post_save_data().then(result => {
-                if (result) {
-                    g_mvm.notice_message('新規保存しました!!');
-                    update_all();
-                } else {
+        case 'write_OK': 
+            try {
+                await post_save_data().then(result => { 
+                if (result) { 
+                    g_mvm.notice_message('新規保存しました!!'); 
+                    update_all(); 
+                } else { 
                     g_mvm.warning_message('新規保存に失敗しました');
-                }
-                mode = 'view';
+                }; 
+                mode = 'view'; 
             });
+            } catch (err) {
+                alert('write_OK7');
+            }
             break;
         case 'rewrite_OK':
             await post_save_data().then(result => {
@@ -393,7 +397,8 @@ async function post_load_data(): Promise<boolean> {
 }
 
 async function post_save_data(): Promise<boolean> { 
-    g_save.decode({
+
+    g_save.decode({ 
         player_id:  g_pid[0],  
         uniq_no:    idx, 
 //        save_id:    data_list[idx].save_id, 
@@ -403,12 +408,13 @@ async function post_save_data(): Promise<boolean> {
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 
-    });
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
+    }); 
+    const save_json = g_save.encode(); 
+    const save_data = JSON.stringify(save_json, null, "\t"); 
 
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_pid[0]); 
-    opt.set('save',        save_data);
+    opt.set('save',        save_data); 
     return await general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
 
@@ -485,28 +491,3 @@ function _do_check(): void {
     g_mvm.clear_message();
     g_ctls.act("svld_nor");
 }
-
-/*
-function _rmv_svld_nor_ctls(): void {
-    rmv_default_ctls(_svld_nor_ctls);
-}
-function _add_svld_nor_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(_svld_nor_ctls);
-}
-
-function _rmv_svld_rtn_ctls(): void {
-    rmv_default_ctls(_svld_rtn_ctls);
-}
-function _add_svld_rtn_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(_svld_rtn_ctls);
-}
-function _rmv_svld_chk_ctls(): void {
-    rmv_default_ctls(_svld_chk_ctls);
-}
-function _add_svld_chk_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(_svld_chk_ctls);
-}
-*/

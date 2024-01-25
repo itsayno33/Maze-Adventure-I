@@ -118,24 +118,36 @@ export class C_SaveData implements I_JSON {
     }
 
     public encode(): JSON_SaveData {
-        return {
-            save_id:   this.save_id, 
-            player_id: this.player_id,  
-            uniq_no:   this.uniq_no, 
-            title:     this.title, 
-            detail:    this.detail, 
-            point:     this.point, 
-            auto_mode: this.auto_mode ? '1' : '0', 
-            is_active: this.is_active ? '1' : '0', 
-            is_delete: this.is_delete ? '1' : '0', 
-            save_time: this.save_time.toISOString(), 
+        let save_date: string;
+        try {
+            save_date = this.save_time.toISOString();
+        } catch (err) {
+            save_date = new Date().toISOString();
+        }
 
-            team_uid:  this.team_uid,
-            location:  this.location.encode(),
-
-            all_maze:  this._encode_all_data(this.all_maze), 
-            all_team:  this._encode_all_data(this.all_team), 
-            all_guld:  this._encode_all_data(this.all_guld),
+        try {
+            return {
+                save_id:   this.save_id, 
+                player_id: this.player_id,  
+                uniq_no:   this.uniq_no, 
+                title:     this.title, 
+                detail:    this.detail, 
+                point:     this.point, 
+                auto_mode: this.auto_mode ? '1' : '0', 
+                is_active: this.is_active ? '1' : '0', 
+                is_delete: this.is_delete ? '1' : '0', 
+                save_time: save_date, 
+    
+                team_uid:  this.team_uid,
+                location:  this.location.encode(),
+    
+                all_maze:  this._encode_all_data(this.all_maze), 
+                all_team:  this._encode_all_data(this.all_team), 
+                all_guld:  this._encode_all_data(this.all_guld),
+            }
+        } catch (err) {
+            alert('SaveData Encode Error: ' + err);
+            return {};
         }
     }
     protected _encode_all_data(all_data: {[uid:string]:I_JSON}): JSON_Any[] {
@@ -153,8 +165,8 @@ export class C_SaveData implements I_JSON {
         this.point     = s.point     ?? this.point;
         this.auto_mode = s.auto_mode != '0' ?? this.auto_mode;
         this.is_active = s.is_active != '0' ?? this.is_active;
-        this.is_delete = s.is_delete != '0' ?? this.is_delete;
-        if (s.save_time !== undefined) this.save_time = new Date(s.save_time);
+        this.is_delete = s.is_delete != '0' ?? this.is_delete; 
+        if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
 
         if (s.team_uid !== undefined) this.team_uid = s.team_uid;
         if (s.location !== undefined) this.location = new C_Location(s.location);
@@ -177,6 +189,10 @@ export class C_SaveData implements I_JSON {
             this.all_guld = {};
             for (const json_guld of s.all_guld) {
                 const guld = (new C_Guild()).decode(json_guld); 
+                if (guld.myteam_uid in this.all_team) {
+                    guld.myteam = this.all_team[guld.myteam_uid];
+                }
+                
                 this.all_guld[guld.uid()] = guld;
            }
         } 
