@@ -457,11 +457,12 @@ function load(): void {
 
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
-    general_load(opt).then((jsonObj:any)=>{ 
+    general_load(opt).then((jsonObj:any)=>{  
         decode_all(jsonObj);
 
         is_kakunin = false;
         g_mvm.notice_message('ロードしました'); 
+        g_mes.notice_message('ロードしました'); 
         set_move_controlles(); 
         g_vsw.view_maze(); 
         do_move_bottom_half('blink_off'); 

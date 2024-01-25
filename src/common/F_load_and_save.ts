@@ -192,7 +192,7 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
             if (callback !== undefined) callback(jsonObj);
             return jsonObj;
         } else {
-            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            g_mes.warning_message(`ロードできませんでした${jsonObj.ecode}\n` + jsonObj.emsg);
             _alert(jsonObj.emsg);
             return undefined;
         }
