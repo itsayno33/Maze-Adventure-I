@@ -33,6 +33,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\ncur_y: "     + (a.locate?.loc?.y ?? '?')
         + "\ncur_z: "     + (a.locate?.loc?.z ?? '?')
         + "\ncur_d: "     + (a.locate?.loc?.d ?? '?')
+        + "\ngoods: "     + (Object.keys(a.goods??0).length)
         + "\nheroes: "    + (a.heroes?.length ?? '?')
         + "\n"
     );
@@ -243,9 +244,10 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         if (a.motion !== undefined)  this.hope_motion = a.motion;
 
         if (a.locate !== undefined)  this.walker.decode(a.locate);
-        if (a.goods  !== undefined)  this.goods .decode(a.goods);
+        if (a.goods !== undefined)   this.goods.decode(a.goods);
 
         if (a.heroes !== undefined)  {
+            this.heroes = {};
             for (const json_hero of a.heroes) {
                 const hero = new C_Hero(json_hero);
                 this.heroes[hero.uid()] = hero;

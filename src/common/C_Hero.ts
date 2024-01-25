@@ -7,7 +7,6 @@ export interface JSON_Hero extends JSON_Any {
     id?:        number, 
     uniq_id?:   string, 
     save_id?:   number, 
-    team_id?:   number, 
     name?:      string, 
     sex?:       number; 
     age?:       number; 
@@ -38,14 +37,13 @@ export function alert_hres_info(a: (JSON_Hero|undefined)[]|undefined): void {
 export function alert_hero_info(a: JSON_Hero|undefined): void { 
     if (a === undefined) return;
     alert("Hero Info:\n" 
-    + "\nid:       "     + (a?.id        ?? '?')
-    + "\nuniq_id   "     + (a?.uniq_id   ?? '?')
-    + "\nname:     "     + (a?.name      ?? '?')
-    + "\nsave_id:  "     + (a?.save_id   ?? '?')
-    + "\nteam_id:  "     + (a?.team_id   ?? '?')
-    + "\nis_alive: "     + (a?.is_alive  ?? '?')
-    + "\n"
-);
+        + "\nid:       "     + (a?.id        ?? '?')
+        + "\nuniq_id   "     + (a?.uniq_id   ?? '?')
+        + "\nname:     "     + (a?.name      ?? '?')
+        + "\nsave_id:  "     + (a?.save_id   ?? '?')
+        + "\nis_alive: "     + (a?.is_alive  ?? '?')
+        + "\n"
+    );
 }
 
 export class C_Hero implements I_JSON_Uniq {
@@ -53,7 +51,6 @@ export class C_Hero implements I_JSON_Uniq {
     protected my_name:  string;
     protected uniq_id:  string; 
     protected save_id:  number; 
-    protected team_id:  number; 
     protected sex:      number; 
     protected age:      number; 
     protected state:    number; 
@@ -71,7 +68,6 @@ export class C_Hero implements I_JSON_Uniq {
         this.my_name    = 'No Name Hero';
         this.uniq_id    = 'mai_hero#' + _get_uuid();
         this.save_id    = 0;
-        this.team_id    = 0;
         this.sex        = 0; 
         this.age        = 0; 
         this.goods      = new C_Goods(); 
@@ -106,7 +102,6 @@ export class C_Hero implements I_JSON_Uniq {
             uniq_id:   this.uniq_id,
             name:      this.my_name,
             save_id:   this.save_id,
-            team_id:   this.team_id,
             sex:       this.sex, 
             age:       this.age, 
             state:     this.state, 
@@ -121,15 +116,14 @@ export class C_Hero implements I_JSON_Uniq {
     }
     public decode(a: JSON_Hero|undefined): C_Hero {
         if (a === undefined) return this;
-        if (a.id       !== undefined) this.my_id   = a.id;
-        if (a.name     !== undefined) this.my_name = a.name;
-        if (a.uniq_id  !== undefined) this.uniq_id = a.uniq_id;
-        if (a.save_id  !== undefined) this.save_id = a.save_id;
-        if (a.team_id  !== undefined) this.team_id = a.team_id;
-        if (a.sex      !== undefined) this.sex     = a.sex;
-        if (a.age      !== undefined) this.age     = a.age;
-        if (a.state    !== undefined) this.state   = a.state;
-        if (a.lv       !== undefined) this.lv      = a.lv;
+        if (a.id       !== undefined) this.my_id    = a.id;
+        if (a.name     !== undefined) this.my_name  = a.name;
+        if (a.uniq_id  !== undefined) this.uniq_id  = a.uniq_id;
+        if (a.save_id  !== undefined) this.save_id  = a.save_id;
+        if (a.sex      !== undefined) this.sex      = a.sex;
+        if (a.age      !== undefined) this.age      = a.age;
+        if (a.state    !== undefined) this.state    = a.state;
+        if (a.lv       !== undefined) this.lv       = a.lv;
         if (a.is_alive !== undefined) {
             if (typeof a.is_alive === "boolean") {
                 this.is_alive = a.is_alive;

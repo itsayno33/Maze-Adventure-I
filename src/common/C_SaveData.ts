@@ -189,10 +189,6 @@ export class C_SaveData implements I_JSON {
             this.all_guld = {};
             for (const json_guld of s.all_guld) {
                 const guld = (new C_Guild()).decode(json_guld); 
-                if (guld.myteam_uid in this.all_team) {
-                    guld.myteam = this.all_team[guld.myteam_uid];
-                }
-                
                 this.all_guld[guld.uid()] = guld;
            }
         } 

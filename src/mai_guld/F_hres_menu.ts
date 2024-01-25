@@ -95,12 +95,12 @@ export function display_hres_menu(): void {
 
     if (!init_all()) {display_guld_menu();return}; 
 
+    update_all(); 
     if (!exist_data()) {
         g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
         g_ctls.act("hres_rtn");
         return;
     }
-    update_all(); 
 
     g_ctls.act("hres_nor");
     display_default_message(); 
@@ -108,7 +108,7 @@ export function display_hres_menu(): void {
 }
 
 function exist_data(): boolean {
-    return exist_team() ||  exist_guld();
+    return exist_team() ||  exist_guld() || exist_appd();
 }
 
 
@@ -248,7 +248,7 @@ function max_of_team(): boolean {
 
 function update_guld_list(): void {
     guld_list = []; 
-    for (let hero of g_guld.myteam.hres()) guld_list.push(hero);
+    for (let hero of g_guld.hres()) guld_list.push(hero);
 }
 function exist_guld(): boolean {
     return guld_list.length > 0;
@@ -1098,7 +1098,7 @@ function isOK_cknm(): void {
 function isOK_leav(): void {
     const hero = team_list[cursor_Team.idx];
 
-    g_guld.myteam.add_hero(hero);
+    g_guld.add_hero(hero);
     g_team.rmv_hero(hero);
     update_data_list();
     if (!exist_team()) isSL();
@@ -1111,7 +1111,7 @@ function isOK_join(): void {
     const hero = guld_list[cursor_Guld.idx];
 
     g_team.add_hero(hero);
-    g_guld.myteam.rmv_hero(hero);
+    g_guld.rmv_hero(hero);
     update_data_list();
     if (!exist_guld()) isSL();
 
@@ -1120,7 +1120,7 @@ function isOK_join(): void {
 }
 
 function isOK_fire(): void {
-    g_guld.myteam.rmv_hero(guld_list[cursor_Guld.idx]);
+    g_guld.rmv_hero(guld_list[cursor_Guld.idx]);
     update_data_list();
     if (!exist_guld()) isSL();
 
@@ -1131,7 +1131,7 @@ function isOK_fire(): void {
 function isOK_adpt(): void {
     const hero = appd_list[cursor_Appd.idx];
 
-    g_guld.myteam.add_hero(hero);
+    g_guld.add_hero(hero);
     appd_list.splice(cursor_Appd.idx, 1);
     update_data_list();
     if (!exist_appd()) isSL();
