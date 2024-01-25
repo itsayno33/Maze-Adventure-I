@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
+/*
 // 以下、HTML側から呼び出せる関数の定義
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
@@ -72,7 +72,7 @@ window.tsCall = tsCaller;
 
 // これでHTML側のscriptタグ内から <script>windows.tsCall.getplayer(1);</script>
 // みたいに呼び出せる。ただし、bundle.jsのscriptタグでtype属性をmoduleにしていると失敗する。
-
+*/
 
 
 /*
