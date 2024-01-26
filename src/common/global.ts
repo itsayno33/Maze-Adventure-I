@@ -4,6 +4,8 @@ export const g_url_get_guld    = 2;
 export const g_url_check_JSON  = 3;
 export const g_url: string[] = new Array(4);
 
+export let   g_my_url: string;
+
 //export var g_pid: number[] = new Array(1) as number[];
 
 class C_ReadyGames  {
@@ -56,8 +58,8 @@ export function _alert(txt: string, page_size = 250): void {
 // 以下、HTML側から呼び出せる関数の定義
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
-    get_init_data: (url_baze: string, player_id: number)=>void,
-    start_game:    (mode: string, url_baze: string, player_id: number, uniq_no: number)=>void, 
+    get_init_data: (url_base: string)=>void,
+    start_game:    (mode: string, url_base: string, player_id: number, uniq_no: number)=>void, 
 }
 // windowオブジェクトにインターフェースの定義を追加
 declare global {
@@ -69,17 +71,18 @@ declare global {
 //（どうやらインターフェースはプロパティ定義のオブジェクトになってるらしい）
 const tsCaller: I_TsCall = (() => {
     return {
-        get_init_data: (url_base: string, player_id: number): void => {
-            const url_home = parent_url(url_base);
-            const url_top = url_base;
+        get_init_data: (my_url: string): void => {
+            g_my_url = my_url;
+            const url_top = parent_url(my_url);
+//            const url_top = url_base;
             g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
             g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
             g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },
         // 暫定版開始処理
-        start_game: (mode: string, url_baze: string, player_id: number, uniq_no: number): void => {
-            tsCaller.get_init_data(url_baze, player_id);
+        start_game: (mode: string, my_url: string, player_id: number, uniq_no: number): void => {
+            tsCaller.get_init_data(my_url);
             g_start_env.mode = mode;
             g_start_env.pid  = player_id;
             g_start_env.uno  = uniq_no;
@@ -90,7 +93,7 @@ const tsCaller: I_TsCall = (() => {
 })();
 
 function parent_url(url: string): string {
-    let re = /\/[^\/]+$/;
+    let re = /\/[^\/]+?$/;
     return url.replace(re, '');
 }
 

@@ -46,7 +46,7 @@ export function init_before_games(): void {
             return;
     }
 }
-function init_before_new_games(): void {
+export function init_before_new_games(): void {
     get_mai_maze().then((jsonObj:any)=>{
         decode_maze(jsonObj);
         calc_view2D_width();
@@ -63,8 +63,8 @@ export function init_after_loaded_DOM(): void {
     g_mvm  = C_MazeViewMessage.get();
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
-    g_ready_games.setFunction(()=>{init_before_games()});
-    g_ready_games.setLoadedDOM();
+//    g_ready_games.setFunction(init_before_games);
+//    g_ready_games.setLoadedDOM();
     stop_double_click();
 }
 

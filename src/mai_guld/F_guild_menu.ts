@@ -7,6 +7,7 @@ import {
 import { display_load_menu, display_save_menu } from "./F_save_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { g_ctls, g_mvm }     from "./global_for_guild";
+import { g_my_url, g_url, g_url_get_save } from "../common/global";
 
 
 let dom_view_switch : HTMLDivElement;
