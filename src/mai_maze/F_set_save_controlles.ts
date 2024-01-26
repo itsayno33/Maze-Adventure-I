@@ -11,6 +11,7 @@ import { general_load, general_save, get_save_info } from "../common/F_load_and_
 import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_save, g_hres } from "./global_for_maze";
 import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
 import { C_PointDir, JSON_PointDir }  from "../common/C_PointDir";
+import { POST_and_move_page } from "../common/F_POST";
 
 var   UL_idx: number = 0;
 var   save_UL_list_len: number;
@@ -442,28 +443,38 @@ function check_save(): void{ // 入力チェックと既存データ上書きの
 
 function load(): void {
     const data_idx = UL_to_Data[UL_idx];
-    set_g_save(
-        /* save_id: */   save_list[data_idx].save_id, //Number(form_id.value),
-        /* uniq_no: */   save_list[data_idx].uniq_no,
-        /* title: */     save_list[data_idx].title, 
-        /* detail: */    save_list[data_idx].detail,
-        /* point: */     save_list[data_idx].point,
-        /* auto_mode: */ false,
-    );
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
+    if (save_list[data_idx].myurl !== '' && save_list[data_idx].myurl != g_my_url) {
+        _load_other(data_idx);
+        return;
+    }
+    _load_here(data_idx);
+    return;
+}
+function _load_other(data_idx: number): void {
     const opt = new C_UrlOpt();
-    opt.set('save', save_data); 
-    general_load(opt).then((jsonObj:any)=>{  
-        decode_all(jsonObj);
+    opt.set('mode', 'load');
+    opt.set('pid',   g_start_env.pid);
+    opt.set('uno',   save_list[data_idx].uniq_no);
+    POST_and_move_page(save_list[data_idx].myurl, opt);
+    return;
+}
 
+function _load_here(data_idx: number): void {
+    const opt = new C_UrlOpt();
+    opt.set('pid',  save_list[data_idx].player_id); 
+    opt.set('uno',  save_list[data_idx].uniq_no); 
+    general_load(opt).then((jsonObj:any)=>{  
         is_kakunin = false;
-        g_mvm.notice_message('ロードしました'); 
-        g_mes.notice_message('ロードしました'); 
-        set_move_controlles(); 
-        g_vsw.view_maze(); 
-        do_move_bottom_half('blink_off'); 
+        do_load_bottom_half(jsonObj, 'ロードしました'); 
     });
+}
+export function do_load_bottom_half(jsonObj: any, msg: string): void{
+    decode_all(jsonObj);
+    g_mvm.notice_message(msg); 
+    g_mes.notice_message(msg); 
+    set_move_controlles(); 
+    g_vsw.view_maze(); 
+    do_move_bottom_half('blink_off'); 
 }
 
 async function save(): Promise<void> {
@@ -483,11 +494,6 @@ async function save(): Promise<void> {
 
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
-/*
-    await general_save(opt).then((jsonObj:any)=>{
-        decode_all(jsonObj);
-    });
-*/
     general_save(opt).then((jsonObj)=>{
         decode_all(jsonObj);
 

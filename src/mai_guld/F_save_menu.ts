@@ -13,7 +13,7 @@ import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
-import { g_mes, g_my_url, g_start_env }    from "../common/global";
+import { _alert, g_mes, g_my_url, g_start_env }    from "../common/global";
 
 import { 
     g_mvm, set_from_save_to_all_data, 
@@ -24,6 +24,7 @@ import { alert_team_info } from "../common/C_Team";
 import { alert_guld_info } from "../common/C_Guild";
 import { C_Location } from "../common/C_Location";
 import { g_maze } from "../mai_maze/global_for_maze";
+import { POST_and_move_page } from "../common/F_POST";
 
 
 let data_list:  {[uniq_no: number]:C_SaveData};
@@ -362,7 +363,21 @@ async function _isOK_for_save(): Promise<void> {
     }
 }
 
-async function post_load_data(): Promise<boolean> { 
+async function post_load_data(): Promise<boolean> {
+    if (data_list[idx].myurl !== '' && data_list[idx].myurl != g_my_url) {
+        return _post_load_data_other();
+    }
+    return await _post_load_data_here();
+} 
+async function _post_load_data_other(): Promise<boolean> {
+    const opt = new C_UrlOpt();
+    opt.set('mode', 'load');
+    opt.set('pid',   g_start_env.pid);
+    opt.set('uno',   idx);
+    POST_and_move_page(data_list[idx].myurl, opt);
+    return false;
+} 
+async function _post_load_data_here(): Promise<boolean> { 
     g_save.decode({
         player_id:  g_start_env.pid,  
         uniq_no:    idx, 
@@ -417,14 +432,20 @@ async function post_save_data(): Promise<boolean> {
         is_active: '1', 
         is_delete: '0', 
     }); 
+    
     g_save.all_guld[g_guld.uid()] = g_guld;
-    g_save.all_team[g_team.uid()] = g_team;
+    g_save.all_team[g_team.uid()] = g_team; 
     g_save.team_uid = g_team.uid();
     g_save.location = loc;
-
+    
 
     const save_json = g_save.encode(); 
     const save_data = JSON.stringify(save_json, null, "\t"); 
+
+    alert_save_info(save_json);
+    alert_team_info(save_json?.all_team?.[0]);
+    alert_guld_info(save_json?.all_guld?.[0]);
+    _alert(save_data);
 
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_start_env.pid); 

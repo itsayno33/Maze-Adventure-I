@@ -9,7 +9,7 @@ import { display_maze2D, display_maze3D,
          maze3D_blink_on_direction, maze3D_blink_off_direction }      from "./F_display_maze";
 import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }    from "./F_set_UD_controlles";
 import { set_camp_controlles }                     from "./F_set_camp_controlles";
-import { set_g_save }                              from "./F_set_save_controlles";
+import { do_load_bottom_half, set_g_save }         from "./F_set_save_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
 import { g_save , g_maze, g_team }                 from "./global_for_maze";
 
@@ -122,21 +122,10 @@ function key_press_function1(e: KeyboardEvent):void  {
     /************ *************************** **************/
 
 function do_instant_load(): void {
-    set_g_save(
-        /* save_id: */   -1,
-        /* uniq_no: */   -1,
-        /* title: */     '簡易保存データ', 
-        /* detail: */    '', 
-                    `『${g_maze.get_name()}』 ` 
-                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
-                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
-        /* auto_mode: */ true,
-    );
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
     const opt = new C_UrlOpt();
-    opt.set('save', save_data); 
-    instant_load(opt);
+    instant_load(opt).then((jsonObj:any)=>{  
+        do_load_bottom_half(jsonObj, 'ロードしました');  
+    });
 }
 
 function do_instant_save(): void {

@@ -154,18 +154,37 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 }
 
 
+export function tmp_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt.set('mode',       'tmp_load'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               100); 
+    return __auto_load(opt, callback);
+}
+
 export function instant_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-    opt.set('mode',        'instant_load'); 
+    opt.set('mode',   'instant_load'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               101); 
     return __auto_load(opt, callback);
 }
 
 export function UD_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',        'UD_load'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               102); 
+    return __auto_load(opt, callback);
+}
+
+export function before_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt.set('mode',    'before_load'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               103); 
     return __auto_load(opt, callback);
 }
 
 export function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-    opt.set('mode',        'load'); 
+    opt.set('mode',           'load'); 
+    opt.set('pid',   g_start_env.pid); 
     return __auto_load(opt, callback);
 }
 
@@ -200,21 +219,37 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
 }
 
 
+export function tmp_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt.set('mode',       'tmp_save'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               100); 
+    return __auto_save(opt, callback);
+}
+
 export function instant_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
-    opt.set('mode',        'instant_save'); 
-    opt.set('pid',         g_start_env.pid); 
+    opt.set('mode',   'instant_save'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               101); 
     return __auto_save(opt, callback);
 }
 
 export function UD_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     opt.set('mode',        'UD_save'); 
-    opt.set('pid',         g_start_env.pid); 
-    return  __auto_save(opt, callback);
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               102); 
+    return __auto_save(opt, callback);
+}
+
+export function before_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt.set('mode',    'before_save'); 
+    opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',               103); 
+    return __auto_save(opt, callback);
 }
 
 export function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-    opt.set('mode',        'save'); 
-    opt.set('pid',         g_start_env.pid); 
+    opt.set('mode',           'save'); 
+    opt.set('pid',   g_start_env.pid); 
     return __auto_save(opt, callback);
 }
 
