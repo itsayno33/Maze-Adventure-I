@@ -4,15 +4,15 @@ export var g_debug_mode: boolean = false;
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
 import { _alert, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 
-import { C_Maze }      from "../common/C_Maze";
+import { C_Maze }  from "../common/C_Maze";
+import { C_Team }  from "../common/C_Team";
+import { C_Guild } from "../common/C_Guild";
+
 export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
-
-import { C_Team, alert_team_info }  from "../common/C_Team";
 export const g_all_team: {[uniq_id: string]: C_Team} = {};
-export let   g_team: C_Team;
-
-import { C_Guild, alert_guld_info } from "../common/C_Guild";
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
+
+export let   g_team: C_Team;
 export let   g_guld: C_Guild;
 
 import { C_SaveData }        from "../common/C_SaveData";
@@ -26,7 +26,9 @@ export var g_mvm: C_GldViewMessage;
 import { C_DefaultCtls }     from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
-import { get_mai_guld }      from "../common/F_load_and_save";
+import { general_load, get_mai_guld }      from "../common/F_load_and_save";
+import { C_UrlOpt } from '../common/C_UrlOpt';
+import { post_load_function } from './F_save_menu';
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -61,18 +63,27 @@ export function set_from_save_to_all_data(glob: {[uid: string]: I_JSON_Uniq}, sa
     for (let ii in save) glob[save[ii].uid()] = save[ii];
 }
 
-function init_before_load_games(): void {}
+function init_before_load_games(): void {
+    const  opt = new C_UrlOpt();
+    opt.set('pid', g_start_env.pid); 
+    opt.set('uno', g_start_env.uno); 
+
+    general_load(opt).then((jsonObj:any)=>{ 
+        post_load_function(jsonObj);
+    }); 
+}
 
 export function init_after_loaded_DOM(): void { 
     init_after_loaded_DOM_in_common(); 
-    g_ready_games.setFunction(init_before_games);
-    g_ready_games.setLoadedDOM();
 
     g_mvm = C_GldViewMessage.get(); 
     g_ctls = new C_DefaultCtls(); 
     init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。 */ 
     init_display_menu(); 
     stop_double_click(); 
+
+    g_ready_games.setFunction(init_before_games);
+    g_ready_games.setLoadedDOM();
 }
 
 export function init_debug_mode(): void {

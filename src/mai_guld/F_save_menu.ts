@@ -378,36 +378,29 @@ async function _post_load_data_other(): Promise<boolean> {
     return false;
 } 
 async function _post_load_data_here(): Promise<boolean> { 
-    g_save.decode({
-        player_id:  g_start_env.pid,  
-        uniq_no:    idx, 
-        save_id:    data_list[idx].save_id, 
-        title:      data_list[idx].title, 
-        auto_mode:  data_list[idx].auto_mode ? '1' : '0', 
-        is_active:  data_list[idx].is_active ? '1' : '0', 
-        is_delete:  data_list[idx].is_delete ? '1' : '0', 
-    });
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_start_env.pid); 
-    opt.set('save',        save_data);
+    opt.set('uno',         idx); 
 
     return await general_load(opt).then((jsonObj:any)=>{ 
-        g_save.decode(jsonObj.save);
- 
-        set_from_save_to_all_data(g_all_maze, g_save.all_maze);
-        set_from_save_to_all_data(g_all_team, g_save.all_team);
-        set_from_save_to_all_data(g_all_guld, g_save.all_guld);
- 
-        
-        g_team.decode (g_save.all_team[g_save.team_uid].encode());
-        g_team.set_loc(g_save.location);
- 
-        g_guld.decode (g_save.all_guld[g_save.location.get_uid()].encode());
-
-        return jsonObj.ecode == 0;
+        return post_load_function(jsonObj);
     }); 
+}
+export function post_load_function(jsonObj: any): boolean {
+    if (jsonObj.ecode !== 0) return false;
+
+    g_save.decode(jsonObj.save);
+ 
+    set_from_save_to_all_data(g_all_maze, g_save.all_maze);
+    set_from_save_to_all_data(g_all_team, g_save.all_team);
+    set_from_save_to_all_data(g_all_guld, g_save.all_guld);
+
+    g_team.decode (g_save.all_team[g_save.team_uid].encode());
+    g_team.set_loc(g_save.location);
+
+    g_guld.decode (g_save.all_guld[g_save.location.get_uid()].encode());
+
+    return true;
 }
 
 async function post_save_data(): Promise<boolean> { 
@@ -441,12 +434,12 @@ async function post_save_data(): Promise<boolean> {
 
     const save_json = g_save.encode(); 
     const save_data = JSON.stringify(save_json, null, "\t"); 
-
+/*
     alert_save_info(save_json);
     alert_team_info(save_json?.all_team?.[0]);
     alert_guld_info(save_json?.all_guld?.[0]);
     _alert(save_data);
-
+*/
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_start_env.pid); 
     opt.set('save',        save_data); 
