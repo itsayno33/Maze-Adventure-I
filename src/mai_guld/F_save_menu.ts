@@ -13,7 +13,7 @@ import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
 import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
-import { g_mes, g_start_env }    from "../common/global";
+import { g_mes, g_my_url, g_start_env }    from "../common/global";
 
 import { 
     g_mvm, set_from_save_to_all_data, 
@@ -412,6 +412,7 @@ async function post_save_data(): Promise<boolean> {
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
         detail:    '冒険者ギルド情報',                    // data_list[idx].detail, 
         point:     '冒険者ギルド',
+        myurl:      g_my_url,
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 

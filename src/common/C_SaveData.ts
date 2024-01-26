@@ -35,6 +35,7 @@ export interface JSON_SaveData extends JSON_Any {
     title?:     string,
     detail?:    string,
     point?:     string,
+    myurl?:     string,
     auto_mode?: string,
     is_active?: string,
     is_delete?: string,
@@ -57,6 +58,7 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
         + "\ntitle:      " + (a.title     ?? '?')
         + "\ndetail:     " + (a.detail    ?? '?')
         + "\npoint:      " + (a.point     ?? '?')
+        + "\nmyurl:      " + (a.myurl    ?? '?')
         + "\nauto_mode:  " + (a.auto_mode ?? '?')
         + "\nis_active:  " + (a.is_active ?? '?')
         + "\nis_delete:  " + (a.is_delete ?? '?')
@@ -79,6 +81,7 @@ export class C_SaveData implements I_JSON {
     public title:     string;
     public detail:    string;
     public point:     string;
+    public myurl:     string;
     public auto_mode: boolean;
     public is_active: boolean;
     public is_delete: boolean;
@@ -98,6 +101,7 @@ export class C_SaveData implements I_JSON {
         this.title     = '';
         this.detail    = '';
         this.point     = '';
+        this.myurl     = '';
         this.auto_mode = false;
         this.is_active = true;
         this.is_delete = false;
@@ -133,6 +137,7 @@ export class C_SaveData implements I_JSON {
                 title:     this.title, 
                 detail:    this.detail, 
                 point:     this.point, 
+                myurl:     this.myurl, 
                 auto_mode: this.auto_mode ? '1' : '0', 
                 is_active: this.is_active ? '1' : '0', 
                 is_delete: this.is_delete ? '1' : '0', 
@@ -163,6 +168,7 @@ export class C_SaveData implements I_JSON {
         this.title     = s.title     ?? this.title;
         this.detail    = s.detail    ?? this.detail;
         this.point     = s.point     ?? this.point;
+        this.myurl     = s.myurl     ?? this.myurl;
         this.auto_mode = s.auto_mode != '0' ?? this.auto_mode;
         this.is_active = s.is_active != '0' ?? this.is_active;
         this.is_delete = s.is_delete != '0' ?? this.is_delete; 

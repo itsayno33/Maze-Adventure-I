@@ -4,10 +4,10 @@ export var g_debug_mode: boolean = false;
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
 import { _alert, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 
-import { C_Maze } from "../common/C_Maze";
+import { C_Maze }      from "../common/C_Maze";
 export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
 
-import { C_Team, alert_team_info } from "../common/C_Team";
+import { C_Team, alert_team_info }  from "../common/C_Team";
 export const g_all_team: {[uniq_id: string]: C_Team} = {};
 export let   g_team: C_Team;
 
@@ -15,7 +15,7 @@ import { C_Guild, alert_guld_info } from "../common/C_Guild";
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
 export let   g_guld: C_Guild;
 
-import { C_SaveData } from "../common/C_SaveData";
+import { C_SaveData }        from "../common/C_SaveData";
 export const g_save = new C_SaveData();
 
 import { init_display_menu } from "./F_default_menu";
@@ -26,14 +26,14 @@ export var g_mvm: C_GldViewMessage;
 import { C_DefaultCtls }     from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
-import { get_mai_guld } from "../common/F_load_and_save";
+import { get_mai_guld }      from "../common/F_load_and_save";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
-        case 'new_guld':
+        case 'new':
             init_before_new_games();
             return;
-        case 'load_guld':
+        case 'load':
             init_before_load_games();
             return;
     }

@@ -36,12 +36,11 @@ import { g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../
 export const g_save = new C_SaveData();
 
 export function init_before_games(): void {
-    alert(g_start_env.mode);
     switch (g_start_env.mode) {
-        case 'new_maze':
+        case 'new':
             init_before_new_games();
             return;
-        case 'load_maze':
+        case 'load':
             init_before_load_games();
             return;
     }
@@ -59,12 +58,12 @@ function init_before_load_games(): void {}
 
 export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common();
+    g_ready_games.setFunction(init_before_games);
+    g_ready_games.setLoadedDOM();
 
     g_mvm  = C_MazeViewMessage.get();
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
-//    g_ready_games.setFunction(init_before_games);
-//    g_ready_games.setLoadedDOM();
     stop_double_click();
 }
 

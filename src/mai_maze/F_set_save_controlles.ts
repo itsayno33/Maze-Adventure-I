@@ -3,7 +3,7 @@ import { C_UrlOpt }                   from "../common/C_UrlOpt";
 import { C_SaveData  }                from "../common/C_SaveData";
 import { T_Lckd }                     from "../common/C_Location";
 import { C_Hero }                     from "../common/C_Hero";
-import { _alert, g_mes, g_start_env } from "../common/global";
+import { _alert, g_mes, g_my_url, g_start_env } from "../common/global";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
@@ -582,10 +582,11 @@ export function set_g_save (
             uniq_no:   uniq_no, 
             title:     title, 
             detail:    detail,
+            point:     point, 
+            myurl:     g_my_url, 
             auto_mode: auto_mode ? '1' : '0',
             is_active: '1',
             is_delete: '0',
-            point:     point, 
     
 // 初期設定かロードの時点で設定されているはず
 //            team_uid: g_team.uid(),
