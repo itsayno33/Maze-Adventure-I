@@ -321,7 +321,7 @@ async function _isOK_for_load(): Promise<void> {
                 if (result) {
                     g_mvm.notice_message('読み込みました!!');
                 } else {
-                    g_mvm.warning_message('読み込みに失敗しました');
+                    g_mvm.notice_message('ページを移動しました。あるいは読み込みに失敗しました');
                 }
                 mode = 'view';
             });
@@ -375,7 +375,7 @@ async function _post_load_data_other(): Promise<boolean> {
     opt.set('pid',   g_start_env.pid);
     opt.set('uno',   idx);
     POST_and_move_page(data_list[idx].myurl, opt);
-    return false;
+    return true;
 } 
 async function _post_load_data_here(): Promise<boolean> { 
     const  opt = new C_UrlOpt();

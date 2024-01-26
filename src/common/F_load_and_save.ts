@@ -17,7 +17,6 @@ import {
 type T_callback = (jsonObj:any)=>(boolean|void);
 
 export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
-//    const get_maze_opt = new C_UrlOpt({pid: g_pid[0], mode: "new_maze"});
     const get_maze_opt = new C_UrlOpt({pid: g_start_env.pid, mode: "new_game"});
  
     return POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{

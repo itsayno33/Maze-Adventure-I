@@ -329,6 +329,7 @@ export function display_save_list(for_save: boolean) {
                     title:     save_info.title      ?? '??? Unknown Title',
                     detail:    save_info.detail     ?? '???',
                     point:     save_info.point      ?? '???',
+                    myurl:     save_info.myurl      ?? '????-??-?? ??:??:??',
                     save_time: save_info.save_time  ?? '????-??-?? ??:??:??',
                     auto_mode: save_info.auto_mode  ?? '0',
                 });
@@ -364,6 +365,10 @@ export function display_save_list(for_save: boolean) {
                         case '__InstantSaveData__':
                             save_list[data_idx].title  = '簡易保存データ';
                             save_list[data_idx].detail = 'デバッグモードで簡易保存したデータです';
+                            break;
+                        case '__BeforeTheEventData__':
+                            save_list[data_idx].title  = '救済保存データ';
+                            save_list[data_idx].detail = 'イベント(失敗)直前に簡易保存したデータです';
                             break;
                         case '__UpDownSaveData__':
                             save_list[data_idx].title  = '階段直前データ';
@@ -441,8 +446,10 @@ function check_save(): void{ // 入力チェックと既存データ上書きの
     g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
-function load(): void {
+function load(): void { 
     const data_idx = UL_to_Data[UL_idx];
+                                            alert(`savedata.myurl = 「${save_list[data_idx].myurl}」`);
+                                            alert(`g_my_url = 「${g_my_url}」`);
     if (save_list[data_idx].myurl !== '' && save_list[data_idx].myurl != g_my_url) {
         _load_other(data_idx);
         return;
@@ -482,7 +489,7 @@ async function save(): Promise<void> {
     set_g_save(
         /* save_id: */   save_list[data_idx].save_id, //Number(form_id.value),
         /* uniq_no: */   save_list[data_idx].uniq_no,
-        /* title: */     save_list[data_idx].title, 
+        /* title: */     `保存済: #${data_idx.toString().padStart(2, '0')}`, //save_list[data_idx].title, 
         /* detail: */    form_detail.value,
         /* point: */     
                     `『${g_maze.get_name()}』 ` 
