@@ -168,9 +168,17 @@ function update_info_list(): void {
         let DOM_idx = 0;
         for (let key in data_list) {
             const uno = Number(key);
+            let   title: string;
 
             const li = document.createElement('li') as HTMLLIElement;
-            li.innerHTML = `${data_list[uno].title}<p></p>`;
+            switch (uno) {
+                case 100: title = '自動保存分';break;
+                case 101: title = 'デバッグ用';break;
+                case 102: title = '昇降直前分';break;
+                case 100: title = 'ｲﾍﾞﾝﾄ直前分';break;
+                default:  title = data_list[uno].title;break;
+            }
+            li.innerHTML = `${title}<p></p>`;
     
             li.id = uno.toString();
             li.addEventListener("click",_OK_Fnc, false);
