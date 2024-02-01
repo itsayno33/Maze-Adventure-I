@@ -1,4 +1,3 @@
-import { C_DefaultCtls } from './C_DefaultCtls';
 import { 
     hide_all_menu,
     calc_cursor_pos_L,
@@ -7,16 +6,15 @@ import {
     calc_cursor_pos_D
 } from "./F_default_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { high_light_on }               from "./F_default_menu";
-import { display_guld_menu }           from "./F_guild_menu";
+import { high_light_on }                 from "./F_default_menu";
+import { display_guld_menu }             from "./F_guild_menu";
 
-import { _ceil, _floor, _min, _round } from "../common/F_Math";
-import { C_Hero }                      from "../common/C_Hero";
-import { T_MakeEnumType }              from "../common/T_MakeEnumType";
-import { g_mvm, g_team, g_guld, g_ctls }       from "./global_for_guild";
+import { _ceil, _floor, _min, _round }   from "../common/F_Math";
+import { C_Hero }                        from "../common/C_Hero";
+import { T_MakeEnumType }                from "../common/T_MakeEnumType";
+import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
 import { _alert, g_mes } from "../common/global";
-import { get_new_hero } from '../common/F_load_and_save';
-import { promises } from 'dns';
+import { get_new_hero }  from '../common/F_load_and_save';
 
 let dom_view_switch : HTMLDivElement;
 

@@ -451,8 +451,6 @@ function check_save(): void{ // 入力チェックと既存データ上書きの
 
 function load(): void { 
     const data_idx = UL_to_Data[UL_idx];
-                                            alert(`savedata.myurl = 「${save_list[data_idx].mypos.url()}」`);
-                                            alert(`g_my_url = 「${g_my_url}」`);
     if (save_list[data_idx].mypos.url() !== '' && save_list[data_idx].mypos.url() != g_my_url) {
         _load_other(data_idx);
         return;
@@ -603,7 +601,7 @@ export function set_g_save (
             is_delete: '0',
     
 // 初期設定かロードの時点で設定されているはず
-//            team_uid: g_team.uid(),
+//            all_mvpt: all_mvpt,
 //            all_maze: all_maze,
 //            all_team: all_team,
 //            all_guld: all_guld,

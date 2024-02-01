@@ -1,8 +1,7 @@
-import { C_Maze, JSON_Maze  }  from "./C_Maze";
-import { C_Team, JSON_Team  }  from "./C_Team";
-import { C_Guild, JSON_Guild } from "./C_Guild";
-import { C_Location, JSON_Location } from "./C_Location";
-import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
+import { C_Maze, JSON_Maze, alert_maze_info  }  from "./C_Maze";
+import { C_Team, JSON_Team, alert_team_info  }  from "./C_Team";
+import { C_Guild, JSON_Guild, alert_guld_info } from "./C_Guild";
+import { C_MovablePoint, JSON_MovablePoint, alert_mvpt_info } from "./C_MovablePoint";
 
 // サーバー側とやりとりするJSON形式データのテンプレート
 export interface JSON_Any {
@@ -40,12 +39,8 @@ export interface JSON_SaveData extends JSON_Any {
     is_active?: string,
     is_delete?: string,
     save_time?: string,
-    locate?:    JSON_MovablePoint,
-/*
-    myurl?:     string,
-    location?:  JSON_Location,
-    team_uid?:  string,
-*/
+    mypos?:     JSON_MovablePoint,
+
     all_mvpt?:  JSON_MovablePoint[],
     all_maze?:  JSON_Maze[],
     all_team?:  JSON_Team[],
@@ -65,16 +60,40 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
         + "\nis_active:  " + (a.is_active ?? '?')
         + "\nis_delete:  " + (a.is_delete ?? '?')
         + "\nmyurl:      " + (a.mypos?.cur_url   ?? '?')
-        + "\nteam_uid    " + (a.mypos?.team_uid  ?? '?')
+        + "\nteam_uid:   " + (a.mypos?.team_uid  ?? '?')
         + "\nloc_kind:   " + (a.mypos?.kind      ?? '?')
         + "\nloc_name:   " + (a.mypos?.name      ?? '?')
-        + "\nloc_uid:    " + (a.mypos?.uid       ?? '?')
+        + "\nloc_uid:    " + (a.mypos?.loc_uid   ?? '?')
         + "\nmvpt_count: " + (a.all_mvpt?.length ?? '?')
         + "\nmaze_count: " + (a.all_maze?.length ?? '?')
         + "\nguld_count: " + (a.all_guld?.length ?? '?')
         + "\nteam_count: " + (a.all_team?.length ?? '?')
         + "\n"
     );
+}
+
+export function alert_save_detail(a: JSON_SaveData|undefined): void {
+    if (a === undefined) return;
+
+    try { 
+        alert("Save Detail(mvpt):");
+        for (const mvpt of a.all_mvpt??[]) alert_mvpt_info(mvpt);
+    } catch (err) {alert('alert mvpt error: ' + err)}
+
+    try { 
+        alert("Save Detail(team):");
+        for (const team of a.all_team??[]) alert_team_info(team);
+    } catch (err) {alert('alert team error: ' + err)}
+
+    try { 
+        alert("Save Detail(maze):");
+        for (const maze of a.all_maze??[]) alert_maze_info(maze);
+    } catch (err) {alert('alert maze error: ' + err)}
+
+    try { 
+        alert("Save Detail(guld):");
+        for (const guld of a.all_guld??[]) alert_guld_info(guld);
+    } catch (err) {alert('alert guld error: ' + err)}
 }
 
 
@@ -112,11 +131,7 @@ export class C_SaveData implements I_JSON {
         this.is_delete = false;
         this.save_time = new Date();
         this.mypos     = new C_MovablePoint();
-/*
-        this.myurl     = '';
-        this.team_uid  = '';
-        this.location  = new C_Location();
-*/
+
         this.all_mvpt  = {};
         this.all_maze  = {};
         this.all_team  = {}
@@ -149,7 +164,7 @@ export class C_SaveData implements I_JSON {
                 is_active: this.is_active ? '1' : '0', 
                 is_delete: this.is_delete ? '1' : '0', 
                 save_time: save_date, 
-                locate:    this.mypos.encode(),
+                mypos:     this.mypos.encode(),
 /* 
                 myurl:     this.myurl, 
                 team_uid:  this.team_uid,
@@ -182,13 +197,8 @@ export class C_SaveData implements I_JSON {
         this.is_active = s.is_active != '0' ?? this.is_active;
         this.is_delete = s.is_delete != '0' ?? this.is_delete; 
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
-        if (s.locate    !== undefined) this.mypos.decode(s.locate); 
+        if (s.mypos     !== undefined) this.mypos.decode(s.mypos); 
 
-/*
-        this.myurl     = s.myurl     ?? this.myurl;
-        if (s.team_uid !== undefined) this.team_uid = s.team_uid;
-        if (s.location !== undefined) this.location = new C_Location(s.location);
-*/
         if (s.all_mvpt  !== undefined) {
             this.all_mvpt = {};
             for (const json_mvpt of s.all_mvpt) {

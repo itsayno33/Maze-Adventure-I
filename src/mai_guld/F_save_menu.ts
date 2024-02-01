@@ -11,9 +11,9 @@ import {
 import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData, alert_save_info }            from "../common/C_SaveData";
+import { C_SaveData, alert_save_info }                from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
-import { _alert, g_mes, g_my_url, g_start_env }    from "../common/global";
+import { _alert, g_mes, g_my_url, g_start_env }       from "../common/global";
 
 import { 
     g_mvm, set_from_save_to_all_data, 
@@ -338,16 +338,20 @@ async function _isOK_for_save(): Promise<void> {
         case 'write_OK': 
             try {
                 await post_save_data().then(result => { 
-                if (result) { 
-                    g_mvm.notice_message('新規保存しました!!'); 
-                    update_all(); 
-                } else { 
-                    g_mvm.warning_message('新規保存に失敗しました');
-                }; 
-                mode = 'view'; 
-            });
+                    try {
+                        if (result) { 
+                            g_mvm.notice_message('新規保存しました!!'); 
+                            update_all(); 
+                        } else { 
+                            g_mvm.warning_message('新規保存に失敗しました');
+                        }; 
+                        mode = 'view'; 
+                    } catch (err) {
+                        _alert('write_OK6: ' + err);
+                    }
+                });
             } catch (err) {
-                alert('write_OK7');
+                alert('write_OK7: ' + err);
             }
             break;
         case 'rewrite_OK':
@@ -406,16 +410,14 @@ export function post_load_function(jsonObj: any): boolean {
 }
 
 async function post_save_data(): Promise<boolean> { 
-
     const loc = new C_MovablePoint({
         cur_url:  g_my_url,
         team_uid: g_team.uid(),
         kind:     'Guld',
-        name:     g_guld.get_name(),
-        uid:      g_guld.uid(),
-    });
-    g_team.set_loc(loc);
-
+        name:     g_guld.get_name(), 
+        loc_uid:  g_guld.uid(),
+    }); 
+    g_team.set_loc(loc); 
 
     g_save.decode({ 
         player_id:  g_start_env.pid,  
@@ -428,20 +430,13 @@ async function post_save_data(): Promise<boolean> {
         is_active: '1', 
         is_delete: '0', 
     }); 
-    
-    g_save.all_guld[g_guld.uid()] = g_guld;
+    g_save.all_guld[g_guld.uid()] = g_guld; 
     g_save.all_team[g_team.uid()] = g_team; 
-    g_save.mypos = loc;
-    
+    g_save.mypos = loc;     
 
     const save_json = g_save.encode(); 
     const save_data = JSON.stringify(save_json, null, "\t"); 
-/*
-    alert_save_info(save_json);
-    alert_team_info(save_json?.all_team?.[0]);
-    alert_guld_info(save_json?.all_guld?.[0]);
-    _alert(save_data);
-*/
+
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_start_env.pid); 
     opt.set('save',        save_data); 

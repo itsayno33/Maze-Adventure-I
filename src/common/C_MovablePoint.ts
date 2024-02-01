@@ -8,6 +8,25 @@ export interface JSON_MovablePoint extends JSON_Location {
     team_uid?: string,
 }
 
+
+export function alert_mvpt_info(a: JSON_MovablePoint|undefined): void {
+    if (a === undefined) return;
+    alert("MvPt Info:" 
+        + "\nuniq_id:  "  + (a.uniq_id    ?? '?')
+        + "\ncur_url:  "  + (a.cur_url    ?? '?')
+        + "\nteam_uid: "  + (a.team_uid   ?? '?')
+        + "\nlckd: "      + (a.kind       ?? '?')
+        + "\nlcnm: "      + (a.name       ?? '?')
+        + "\nlcid: "      + (a.loc_uid    ?? '?')
+        + "\ncur_x: "     + (a.loc_pos?.x ?? '?')
+        + "\ncur_y: "     + (a.loc_pos?.y ?? '?')
+        + "\ncur_z: "     + (a.loc_pos?.z ?? '?')
+        + "\ncur_d: "     + (a.loc_pos?.d ?? '?')
+        + "\n"
+    );
+}
+
+
 export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
     protected uniq_id:  string;
     protected cur_url:  string;

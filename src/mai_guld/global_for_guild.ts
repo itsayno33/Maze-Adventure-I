@@ -1,8 +1,8 @@
-import { I_JSON_Uniq } from './../common/C_SaveData';
+import { I_JSON_Uniq, alert_save_info, alert_save_detail } from './../common/C_SaveData';
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
-import { _alert, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
+import { _alert, g_my_url, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 
 import { C_Maze }  from "../common/C_Maze";
 import { C_Team }  from "../common/C_Team";
@@ -51,9 +51,12 @@ function init_before_new_games(): void {
 
         g_save.decode(jsonObj.save);
 
-        g_team = g_save.all_team[g_save.mypos.tid()??'']; 
+        g_team = g_save.all_team[g_save.mypos.tid() as string]; 
         g_guld = g_save.all_guld[g_team.get_loc().get_uid()]; 
 
+        g_team.set_place(g_guld, g_my_url, g_save.mypos.get_pd());
+
+        set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
         set_from_save_to_all_data(g_all_maze, g_save.all_maze);
         set_from_save_to_all_data(g_all_team, g_save.all_team);
         set_from_save_to_all_data(g_all_guld, g_save.all_guld);

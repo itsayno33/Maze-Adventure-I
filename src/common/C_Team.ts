@@ -1,13 +1,13 @@
 import { _get_uuid }               from "./F_Rand";
 import { C_Point }                 from "./C_Point";
 import { C_PointDir, T_Direction } from './C_PointDir';
-import { C_Location, I_Locate }    from './C_Location';
+import { I_Locate }                from './C_Location';
+import { C_MovablePoint }          from "./C_MovablePoint";
 import { C_Walker, JSON_Walker }   from "./C_Walker";
 import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
-import { I_Exist, I_HasHope, I_HopeAction } from "./I_Common"
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
-import { C_MovablePoint } from "./C_MovablePoint";
+import { I_Exist, I_HopeAction }   from "./I_Common"
+import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -27,14 +27,15 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\nuniq_id:  "  + (a.uniq_id   ?? '?')
         + "\nname:  "     + (a.name      ?? '?')
         + "\nsave_id: "   + (a.save_id   ?? '?')
-        + "\nlckd: "      + (a.locate?.kind   ?? '?')
-        + "\nlcnm: "      + (a.locate?.name   ?? '?')
-        + "\nlcid: "      + (a.locate?.uid    ?? '?')
-        + "\ncur_x: "     + (a.locate?.loc?.x ?? '?')
-        + "\ncur_y: "     + (a.locate?.loc?.y ?? '?')
-        + "\ncur_z: "     + (a.locate?.loc?.z ?? '?')
-        + "\ncur_d: "     + (a.locate?.loc?.d ?? '?')
-        + "\ngoods: "     + (Object.keys(a.goods??0).length)
+        + "\nurl:  "      + (a.locate?.cur_url    ?? '?')
+        + "\nlckd: "      + (a.locate?.kind       ?? '?')
+        + "\nlcnm: "      + (a.locate?.name       ?? '?')
+        + "\nlcid: "      + (a.locate?.loc_uid    ?? '?')
+        + "\ncur_x: "     + (a.locate?.loc_pos?.x ?? '?')
+        + "\ncur_y: "     + (a.locate?.loc_pos?.y ?? '?')
+        + "\ncur_z: "     + (a.locate?.loc_pos?.z ?? '?')
+        + "\ncur_d: "     + (a.locate?.loc_pos?.d ?? '?')
+        + "\ngoods: "     + (Object.keys(a.goods??[]).length)
         + "\nheroes: "    + (a.heroes?.length ?? '?')
         + "\n"
     );
