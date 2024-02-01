@@ -15,7 +15,6 @@ import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_her
 import { high_light_on }                 from "./F_default_menu";
 import { display_guld_menu }             from "./F_guild_menu";
 import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
-import { alert_team_info } from "../common/C_Team";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -720,6 +719,7 @@ const hres_ctls_nor = {
     isNG:  isNG,
     isSL:  isSL,
     isRT:  isRT,
+    cpSL:  isSL,
     cpRT:  isRT,
 }
 const hres_ctls_ipnm = {

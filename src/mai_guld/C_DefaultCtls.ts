@@ -10,6 +10,7 @@ export type T_Ctls = {
     isRT?: T_marg, 
     cpOK?: T_marg, 
     cpNG?: T_marg, 
+    cpSL?: T_marg, 
     cpRT?: T_marg, 
     keyEvent?: T_karg,
 }
@@ -33,6 +34,7 @@ export class C_DefaultCtls {
     protected r_btn: HTMLButtonElement;
     protected y_cp1: HTMLButtonElement;
     protected n_cp1: HTMLButtonElement;
+    protected s_cp1: HTMLButtonElement;
     protected r_cp1: HTMLButtonElement;
 
     public constructor() {
@@ -49,6 +51,7 @@ export class C_DefaultCtls {
         this.r_btn = document.getElementById('r_btn') as HTMLButtonElement;
         this.y_cp1 = document.getElementById('y_cp1') as HTMLButtonElement;
         this.n_cp1 = document.getElementById('n_cp1') as HTMLButtonElement;
+        this.s_cp1 = document.getElementById('s_cp1') as HTMLButtonElement;
         this.r_cp1 = document.getElementById('r_cp1') as HTMLButtonElement;
         
         this.u_arr.style.display = 'none';
@@ -61,6 +64,7 @@ export class C_DefaultCtls {
         this.r_btn.style.display = 'none';
         this.y_cp1.style.display = 'none';
         this.n_cp1.style.display = 'none';
+        this.s_cp1.style.display = 'none';
         this.r_cp1.style.display = 'none';
 }
     public clr(): boolean {
@@ -122,6 +126,7 @@ export class C_DefaultCtls {
             if (_c(c?.isRT)) this.r_btn.removeEventListener("click", c.isRT as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.removeEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.removeEventListener("click", c.cpNG as T_mfnc, false);
+            if (_c(c?.cpSL)) this.s_cp1.removeEventListener("click", c.cpSL as T_mfnc, false);
             if (_c(c?.cpRT)) this.r_cp1.removeEventListener("click", c.cpRT as T_mfnc, false);
         
             if (c?.keyEvent !== undefined) {
@@ -140,6 +145,7 @@ export class C_DefaultCtls {
             this.r_btn.style.display = 'none';
             this.y_cp1.style.display = 'none';
             this.n_cp1.style.display = 'none';
+            this.s_cp1.style.display = 'none';
             this.r_cp1.style.display = 'none';
         } catch (err) {
             alert('Error Occuerd at Remove Default Ctls.');
@@ -167,6 +173,7 @@ export class C_DefaultCtls {
             if (_c(c?.isRT)) this.r_btn.addEventListener("click", c.isRT as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.addEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.addEventListener("click", c.cpNG as T_mfnc, false);
+            if (_c(c?.cpSL)) this.s_cp1.addEventListener("click", c.cpSL as T_mfnc, false);
             if (_c(c?.cpRT)) this.r_cp1.addEventListener("click", c.cpRT as T_mfnc, false);
         
             if (c?.keyEvent !== undefined) {
@@ -185,6 +192,7 @@ export class C_DefaultCtls {
             this.r_btn.style.display = _c(c?.isRT) ? 'block' : 'none';
             this.y_cp1.style.display = _c(c?.cpOK) ? 'block' : 'none';
             this.n_cp1.style.display = _c(c?.cpNG) ? 'block' : 'none';
+            this.s_cp1.style.display = _c(c?.cpSL) ? 'block' : 'none';
             this.r_cp1.style.display = _c(c?.cpRT) ? 'block' : 'none';
         } catch (err) {
             alert('Error Occuerd at Append Default Ctls.');
