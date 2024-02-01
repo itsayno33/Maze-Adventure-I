@@ -55,3 +55,4 @@ typings/
 /html
 **/_ord_src
 **/_old_src
+**/no_git/*
