@@ -31,12 +31,14 @@ let data_list:  {[uniq_no: number]:C_SaveData};
 
 let info_list: HTMLUListElement;
 let info_list_cols: number;
-let idx:  number = 0;
+let dom_idx:  number = 0;
 let info_detail: {[key: string]: HTMLLIElement};
 
 let mode = 'view';
 
 let is_save:boolean;
+
+let dom_to_uno: {[id: number]: number};
 
 
 let dom_view_switch : HTMLDivElement;
@@ -109,9 +111,9 @@ async function init_all() {
 }
 
 async function update_all(): Promise<void> {
-    idx = 0;
+    dom_idx = 0;
     await update_data_list().then(()=>{
-        update_view(idx);
+        update_view(dom_idx);
     });
 }
 
@@ -121,7 +123,7 @@ async function update_data_list(): Promise<void> {
         await get_save_info().then((jsonObj:any) => {
             try {
                 if (jsonObj.save_info !== undefined) {
-                    data_list = [];
+                    data_list = {};
                     for (let save_info of jsonObj.save_info) {
                         const s = new C_SaveData();
                         s.decode(save_info);
@@ -145,9 +147,9 @@ function init_view() {
     init_info_list();
     init_info_detail();
 }
-function update_view(idx: number) {
+function update_view(dom_idx: number) {
     update_info_list();
-    update_info_detail(idx);
+    update_info_detail(dom_idx);
 }
 function clear_view() {
     clear_info_list();
@@ -160,28 +162,49 @@ function init_info_list() {
 
 function update_info_list(): void {
     clear_info_list();
-    for (let i = 0; i < 20; i++) {
-        const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = (i in data_list) ? `${data_list[i].title}<p></p>` : `新規保存 #${i.toString().padStart(2,'0')}<p></p>`;
 
-        li.id = i.toString();
-        li.addEventListener("click",_OK_Fnc, false);
-        info_list.appendChild(li);
+    dom_to_uno = {};
+    if (!is_save) {
+        let DOM_idx = 0;
+        for (let key in data_list) {
+            const uno = Number(key);
+
+            const li = document.createElement('li') as HTMLLIElement;
+            li.innerHTML = `${data_list[uno].title}<p></p>`;
+    
+            li.id = uno.toString();
+            li.addEventListener("click",_OK_Fnc, false);
+            info_list.appendChild(li);
+            dom_to_uno[DOM_idx++] = uno;
+        }
+    } else {
+        for (let uno = 0; uno < 20; uno++) {
+            const li = document.createElement('li') as HTMLLIElement;
+            if (uno in data_list) {
+                li.innerHTML = `${data_list[uno].title}<p></p>`;
+            } else {
+                li.innerHTML =  `新規保存 #${uno.toString().padStart(2,'0')}<p></p>`;
+            } 
+            li.id = uno.toString();
+            li.addEventListener("click",_OK_Fnc, false);
+            info_list.appendChild(li);
+            dom_to_uno[uno] = uno;
+        }
     }
 
-    high_light_on(info_list, idx); 
+    high_light_on(info_list, dom_idx); 
     return;
 }
-let old_idx:number;
+let old_dom_idx:number;
 function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
-    idx = Number(this.id); 
-    high_light_on(info_list, idx); 
-    update_info_detail(idx);
+    dom_idx = Number(this.id); 
+    high_light_on(info_list, dom_idx); 
+    update_info_detail(dom_idx);
 
-    if (idx === old_idx) isOK();
+    if (dom_idx === old_dom_idx) isOK();
     else {
         if (mode !== 'view') mode = 'view';
-        old_idx = idx;
+        old_dom_idx = dom_idx;
     }
     display_default_message();
 }
@@ -190,7 +213,7 @@ function clear_info_list() {
     while (info_list.firstChild !== null) {
         info_list.removeChild(info_list.firstChild);
     }
-    idx = 0; old_idx=999; 
+    dom_idx = 0; old_dom_idx=999; 
 }
 
 function init_info_detail(): void {
@@ -211,14 +234,16 @@ function _append_elm(id: string): void {
     dom_info_detail.appendChild(li);
 }
 
-function update_info_detail(idx: number) {
-    if (idx in data_list) {
-        info_detail['title']    .innerHTML = data_list[idx].title;
-        info_detail['detail']   .innerHTML = data_list[idx].detail;
-        info_detail['point']    .innerHTML = data_list[idx].point;
-        info_detail['save_time'].innerHTML = data_list[idx].save_time.toLocaleString();
+function update_info_detail(dom_idx: number) {
+    const uno = dom_to_uno[dom_idx];
+
+    if (uno in data_list) {
+        info_detail['title']    .innerHTML = data_list[uno].title;
+        info_detail['detail']   .innerHTML = data_list[uno].detail;
+        info_detail['point']    .innerHTML = data_list[uno].point;
+        info_detail['save_time'].innerHTML = data_list[uno].save_time.toLocaleString();
     } else {
-        info_detail['title']    .innerHTML = `新規保存: #${idx.toString().padStart(2, '0')}`;
+        info_detail['title']    .innerHTML = `新規保存: #${dom_idx.toString().padStart(2, '0')}`;
         info_detail['detail']   .innerHTML = ' ';
         info_detail['point']    .innerHTML = ' --- ';
         info_detail['save_time'].innerHTML = ' --- ';
@@ -277,29 +302,29 @@ function do_U(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    idx = calc_cursor_pos_U(idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx); 
+    dom_idx = calc_cursor_pos_U(dom_idx, info_list.children.length, info_list_cols);
+    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx); 
 }
 function do_D(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    idx = calc_cursor_pos_D(idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);  
+    dom_idx = calc_cursor_pos_D(dom_idx, info_list.children.length, info_list_cols);
+    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);  
 }
 function do_L(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    idx = calc_cursor_pos_L(idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);
+    dom_idx = calc_cursor_pos_L(dom_idx, info_list.children.length, info_list_cols);
+    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 function do_R(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    idx = calc_cursor_pos_R(idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);
+    dom_idx = calc_cursor_pos_R(dom_idx, info_list.children.length, info_list_cols);
+    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 
 function isOK(): void { 
@@ -308,7 +333,7 @@ function isOK(): void {
 async function _isOK_for_load(): Promise<void> { 
     switch (mode) {
         case 'view':
-            if (idx in data_list) {
+            if (dom_to_uno[dom_idx] in data_list) {
                 mode = 'read_OK';
                 display_default_message();
             } else {
@@ -331,7 +356,7 @@ async function _isOK_for_load(): Promise<void> {
 async function _isOK_for_save(): Promise<void> { 
     switch (mode) {
         case 'view':
-            mode = idx in data_list ? 'rewrite_OK' : 'write_OK';
+            mode = dom_to_uno[dom_idx] in data_list ? 'rewrite_OK' : 'write_OK';
             display_default_message();
             break;
         case 'write_OK': 
@@ -368,23 +393,29 @@ async function _isOK_for_save(): Promise<void> {
 }
 
 async function post_load_data(): Promise<boolean> {
-    if (data_list[idx].mypos.url() !== '' && data_list[idx].mypos.url() != g_my_url) {
+    const uno = dom_to_uno[dom_idx];
+
+    if (data_list[uno].mypos.url() !== '' && data_list[uno].mypos.url() != g_my_url) {
         return _post_load_data_other();
     }
     return await _post_load_data_here();
 } 
 async function _post_load_data_other(): Promise<boolean> {
+    const uno = dom_to_uno[dom_idx];
+
     const opt = new C_UrlOpt();
     opt.set('mode', 'load');
     opt.set('pid',   g_start_env.pid);
-    opt.set('uno',   idx);
-    POST_and_move_page(data_list[idx].mypos.url(), opt);
+    opt.set('uno',   uno);
+    POST_and_move_page(data_list[uno].mypos.url(), opt);
     return true;
 } 
 async function _post_load_data_here(): Promise<boolean> { 
+    const uno = dom_to_uno[dom_idx];
+
     const  opt = new C_UrlOpt();
     opt.set('pid',         g_start_env.pid); 
-    opt.set('uno',         idx); 
+    opt.set('uno',         uno); 
 
     return await general_load(opt).then((jsonObj:any)=>{ 
         return post_load_function(jsonObj);
@@ -421,12 +452,13 @@ async function post_save_data(): Promise<boolean> {
     }); 
     g_team.set_loc(loc); 
 
+    const uno = dom_to_uno[dom_idx];
     g_save.decode({ 
         player_id:  g_start_env.pid,  
-        uniq_no:    idx, 
-//        save_id:    data_list[idx].save_id, 
-        title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
-        detail:    '冒険者ギルド情報',                    // data_list[idx].detail, 
+        uniq_no:    uno, 
+//        save_id:    data_list[uno].save_id, 
+        title:     `保存済: #${uno.toString().padStart(2, '0')}`,  // data_list[uno].title, 
+        detail:    '冒険者ギルド情報',                    // data_list[uno].detail, 
         point:     '冒険者ギルド',
         auto_mode: '0', 
         is_active: '1', 
