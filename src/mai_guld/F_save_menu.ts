@@ -11,21 +11,20 @@ import {
 import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData, alert_save_info }                from "../common/C_SaveData";
+import { C_SaveData, I_JSON_Uniq, alert_save_info }   from "../common/C_SaveData";
 import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_start_env }       from "../common/global";
 
 import { 
-    g_mvm, set_from_save_to_all_data, 
-    g_save, g_all_maze, g_all_team, g_all_guld, g_team, g_guld, g_ctls, g_all_mvpt 
+    g_mvm, g_save, g_team, g_guld, g_ctls, 
+    g_all_maze, g_all_team, g_all_guld, g_all_mvpt 
 } 
 from "./global_for_guild";
-import { alert_team_info } from "../common/C_Team";
-import { alert_guld_info } from "../common/C_Guild";
-import { C_Location } from "../common/C_Location";
-import { g_maze } from "../mai_maze/global_for_maze";
+
+import { alert_team_info }    from "../common/C_Team";
+import { alert_guld_info }    from "../common/C_Guild";
+import { C_MovablePoint }     from "../common/C_MovablePoint";
 import { POST_and_move_page } from "../common/F_POST";
-import { C_MovablePoint } from "../common/C_MovablePoint";
 
 
 let data_list:  {[uniq_no: number]:C_SaveData};
@@ -401,13 +400,16 @@ export function post_load_function(jsonObj: any): boolean {
     set_from_save_to_all_data(g_all_team, g_save.all_team);
     set_from_save_to_all_data(g_all_guld, g_save.all_guld);
 
-    g_team.decode (g_save.all_team[g_save.mypos.tid()??''].encode());
-    g_team.set_loc(g_save.mypos);
-
-    g_guld.decode (g_save.all_guld[g_save.mypos.get_uid()].encode());
+    g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
+    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
 
     return true;
 }
+function set_from_save_to_all_data(glob: {[uid: string]: I_JSON_Uniq}, save: {[uid: string]: I_JSON_Uniq}): void {
+    for (let ii in glob) delete glob[ii];
+    for (let ii in save) glob[save[ii].uid()] = save[ii];
+}
+
 
 async function post_save_data(): Promise<boolean> { 
     const loc = new C_MovablePoint({

@@ -1,8 +1,7 @@
-import { I_JSON_Uniq, alert_save_info, alert_save_detail } from './../common/C_SaveData';
 export var g_debug_mode: boolean = false;
 
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
-import { _alert, g_my_url, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
+import { _alert, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 
 import { C_Maze }  from "../common/C_Maze";
 import { C_Team }  from "../common/C_Team";
@@ -13,8 +12,8 @@ export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
 export const g_all_team: {[uniq_id: string]: C_Team} = {};
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
 
-export let   g_team: C_Team;
-export let   g_guld: C_Guild;
+export let   g_team: C_Team  = new C_Team();
+export let   g_guld: C_Guild = new C_Guild();
 
 import { C_SaveData }        from "../common/C_SaveData";
 export const g_save = new C_SaveData();
@@ -42,30 +41,16 @@ export function init_before_games(): void {
             return;
     }
 }
+
 function init_before_new_games(): void {
     get_mai_guld().then((jsonObj:any)=>{ 
         if (jsonObj.save === undefined) {
             _alert('不正なデータを受信しました(New Game)' + jsonObj.emsg);
             return;
         }
-
-        g_save.decode(jsonObj.save);
-
-        g_team = g_save.all_team[g_save.mypos.tid() as string]; 
-        g_guld = g_save.all_guld[g_team.get_loc().get_uid()]; 
-
-        g_team.set_place(g_guld, g_my_url, g_save.mypos.get_pd());
-
-        set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
-        set_from_save_to_all_data(g_all_maze, g_save.all_maze);
-        set_from_save_to_all_data(g_all_team, g_save.all_team);
-        set_from_save_to_all_data(g_all_guld, g_save.all_guld);
+        post_load_function(jsonObj);
     });
     return;
-}
-export function set_from_save_to_all_data(glob: {[uid: string]: I_JSON_Uniq}, save: {[uid: string]: I_JSON_Uniq}): void {
-    for (let ii in glob) delete glob[ii];
-    for (let ii in save) glob[save[ii].uid()] = save[ii];
 }
 
 function init_before_load_games(): void {
@@ -83,7 +68,7 @@ export function init_after_loaded_DOM(): void {
 
     g_mvm = C_GldViewMessage.get(); 
     g_ctls = new C_DefaultCtls(); 
-    init_debug_mode(); /* F_load_and_save.tsのget_mai_maze()で呼んでるが。。。 */ 
+    init_debug_mode(); 
     init_display_menu(); 
     stop_double_click(); 
 

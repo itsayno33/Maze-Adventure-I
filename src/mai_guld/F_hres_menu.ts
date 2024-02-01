@@ -1,3 +1,9 @@
+import { _ceil, _floor, _min, _round }   from "../common/F_Math";
+import { T_MakeEnumType }                from "../common/T_MakeEnumType";
+import { C_Hero }                        from "../common/C_Hero";
+import { get_new_hero }                  from '../common/F_load_and_save';
+import { _alert, g_mes }                 from "../common/global";
+
 import { 
     hide_all_menu,
     calc_cursor_pos_L,
@@ -8,13 +14,8 @@ import {
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { high_light_on }                 from "./F_default_menu";
 import { display_guld_menu }             from "./F_guild_menu";
-
-import { _ceil, _floor, _min, _round }   from "../common/F_Math";
-import { C_Hero }                        from "../common/C_Hero";
-import { T_MakeEnumType }                from "../common/T_MakeEnumType";
 import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
-import { _alert, g_mes } from "../common/global";
-import { get_new_hero }  from '../common/F_load_and_save';
+import { alert_team_info } from "../common/C_Team";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -91,21 +92,13 @@ let mode    = 'view';
 export function display_hres_menu(): void {
     hide_all_menu(); 
 
-    init_all().then((yn:boolean)=>{
+    init_all().then((yn:boolean)=>{ 
         if (yn) {
-            update_all().then(()=>{
-                /*
-                        if (!exist_data()) {
-                            g_mvm.notice_message('現在、冒険者情報は有りません。戻る＝＞✖');
-                            g_ctls.act("hres_rtn");
-                            return;
-                        }
-                */
-                        g_ctls.act("hres_nor");
-                        display_default_message(); 
-                        dom_view_switch.style.display = 'block'; 
-                    }); 
-                
+            update_all().then(()=>{ 
+                g_ctls.act("hres_nor");
+                display_default_message(); 
+                dom_view_switch.style.display = 'block'; 
+            }); 
         } else {
             display_guld_menu();
         }
@@ -118,12 +111,12 @@ function exist_data(): boolean {
 }
 
 
-async function init_all(): Promise<boolean> {
-    mode = 'view';
-    return await init_data_list().then((yn: boolean)=>{
-        if (!yn) return false;
+async function init_all(): Promise<boolean> { 
+    mode = 'view'; 
+    return await init_data_list().then((yn: boolean)=>{ 
+        if (!yn) return false; 
         if (!init_view()) return false; 
-        if (!init_ctls()) return false;
+        if (!init_ctls()) return false; 
         return true; 
     }); 
 }
@@ -139,12 +132,12 @@ async function update_all(): Promise<void> {
 // モデル関係
 // ******************************
 
-function init_data_list(): Promise<boolean> {
-    return init_appd_list().then((yn:boolean)=>{
-        if (!yn) return false;
-        if (!init_team_list()) return false;
-        if (!init_guld_list()) return false;
-        if (!init_menu_list()) return false;
+function init_data_list(): Promise<boolean> { 
+    return init_appd_list().then((yn:boolean)=>{ 
+        if (!yn) return false; 
+        if (!init_team_list()) return false; 
+        if (!init_guld_list()) return false; 
+        if (!init_menu_list()) return false; 
         return true;
     })
 }
@@ -248,7 +241,7 @@ async function update_data_list(): Promise<void> {
     }); 
 }
 
-function update_team_list(): void {
+function update_team_list(): void { 
     team_list = []; 
     for (let hero of g_team.hres()) team_list.push(hero);
 }
