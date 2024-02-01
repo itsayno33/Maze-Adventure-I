@@ -364,18 +364,22 @@ export function display_save_list(for_save: boolean) {
                 if (save_list[data_idx].auto_mode) {
                     if (for_save) continue;
 
-                    switch (save_list[data_idx].title) {
-                        case '__InstantSaveData__':
-                            save_list[data_idx].title  = '簡易保存データ';
+                    switch (save_list[data_idx].uniq_no) {
+                        case 100:
+                            save_list[data_idx].title  = '自動保存分';
+                            save_list[data_idx].detail = '作業用に簡易保存したデータです';
+                            break;
+                        case 101:
+                            save_list[data_idx].title  = '簡易保存分';
                             save_list[data_idx].detail = 'デバッグモードで簡易保存したデータです';
                             break;
-                        case '__BeforeTheEventData__':
-                            save_list[data_idx].title  = '救済保存データ';
-                            save_list[data_idx].detail = 'イベント(失敗)直前に簡易保存したデータです';
-                            break;
-                        case '__UpDownSaveData__':
-                            save_list[data_idx].title  = '階段直前データ';
+                        case 102:
+                            save_list[data_idx].title  = '階段直前分';
                             save_list[data_idx].detail = '一番最近のフロア移動直前に自動保存したデータです';
+                            break;
+                        case 100:
+                            save_list[data_idx].title  = 'ｲﾍﾞﾝﾄ直前分';
+                            save_list[data_idx].detail = 'イベント(失敗)直前に簡易保存したデータです';
                             break;
                     }
                 }

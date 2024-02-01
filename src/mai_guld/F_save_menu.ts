@@ -174,8 +174,8 @@ function update_info_list(): void {
             switch (uno) {
                 case 100: title = '自動保存分';break;
                 case 101: title = 'デバッグ用';break;
-                case 102: title = '昇降直前分';break;
-                case 100: title = 'ｲﾍﾞﾝﾄ直前分';break;
+                case 102: title = '階段直前分';break;
+                case 103: title = 'ｲﾍﾞﾝﾄ直前分';break;
                 default:  title = data_list[uno].title;break;
             }
             li.innerHTML = `${title}<p></p>`;
