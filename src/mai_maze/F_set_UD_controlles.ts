@@ -163,26 +163,34 @@ function do_up(): void {
     const rslt = g_team.hope_p_up();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
+        g_mvm.clear_message();
+        set_move_controlles();
+        do_move_bottom_half('blink_off');
     } else {
-        do_UD_save();
-        rslt.doOK();
+        do_UD_save().then(()=>{
+            rslt.doOK();
+            g_mvm.clear_message();
+            set_move_controlles();
+            do_move_bottom_half('blink_off');
+        });
     }
-    g_mvm.clear_message();
-    set_move_controlles();
-    do_move_bottom_half('blink_off');
 }
 
 function do_down(): void {
     const rslt = g_team.hope_p_down();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
+        g_mvm.clear_message();
+        set_move_controlles();
+        do_move_bottom_half('blink_off');
     } else {
-        do_UD_save();
-        rslt.doOK();
+        do_UD_save().then(()=>{
+            rslt.doOK();
+            g_mvm.clear_message();
+            set_move_controlles();
+            do_move_bottom_half('blink_off');
+        });
     }
-    g_mvm.clear_message();
-    set_move_controlles();
-    do_move_bottom_half('blink_off');
 }
 
 function do_UD(): void {
@@ -223,8 +231,9 @@ function do_UD_save() {
 
     const opt = new C_UrlOpt();
     opt.set('save', save_data); 
-    UD_save(opt).then((jsonObj)=>{
-        decode_all(jsonObj);
-    });
+    return UD_save(opt);
+//        .then((jsonObj)=>{
+//        decode_all(jsonObj);
+//    });
 }
 

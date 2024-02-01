@@ -2,6 +2,7 @@ import { C_Maze, JSON_Maze  }  from "./C_Maze";
 import { C_Team, JSON_Team  }  from "./C_Team";
 import { C_Guild, JSON_Guild } from "./C_Guild";
 import { C_Location, JSON_Location } from "./C_Location";
+import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
 
 // サーバー側とやりとりするJSON形式データのテンプレート
 export interface JSON_Any {
@@ -35,15 +36,17 @@ export interface JSON_SaveData extends JSON_Any {
     title?:     string,
     detail?:    string,
     point?:     string,
-    myurl?:     string,
     auto_mode?: string,
     is_active?: string,
     is_delete?: string,
     save_time?: string,
-
+    locate?:    JSON_MovablePoint,
+/*
+    myurl?:     string,
     location?:  JSON_Location,
     team_uid?:  string,
-
+*/
+    all_mvpt?:  JSON_MovablePoint[],
     all_maze?:  JSON_Maze[],
     all_team?:  JSON_Team[],
     all_guld?:  JSON_Guild[],
@@ -58,14 +61,15 @@ export function alert_save_info(a: JSON_SaveData|undefined): void {
         + "\ntitle:      " + (a.title     ?? '?')
         + "\ndetail:     " + (a.detail    ?? '?')
         + "\npoint:      " + (a.point     ?? '?')
-        + "\nmyurl:      " + (a.myurl    ?? '?')
         + "\nauto_mode:  " + (a.auto_mode ?? '?')
         + "\nis_active:  " + (a.is_active ?? '?')
         + "\nis_delete:  " + (a.is_delete ?? '?')
-        + "\nteam_uid    " + (a.team_uid  ?? '?')
-        + "\nloc_kind:   " + (a.location?.kind   ?? '?')
-        + "\nloc_name:   " + (a.location?.name   ?? '?')
-        + "\nloc_uid:    " + (a.location?.uid    ?? '?')
+        + "\nmyurl:      " + (a.mypos?.cur_url   ?? '?')
+        + "\nteam_uid    " + (a.mypos?.team_uid  ?? '?')
+        + "\nloc_kind:   " + (a.mypos?.kind      ?? '?')
+        + "\nloc_name:   " + (a.mypos?.name      ?? '?')
+        + "\nloc_uid:    " + (a.mypos?.uid       ?? '?')
+        + "\nmvpt_count: " + (a.all_mvpt?.length ?? '?')
         + "\nmaze_count: " + (a.all_maze?.length ?? '?')
         + "\nguld_count: " + (a.all_guld?.length ?? '?')
         + "\nteam_count: " + (a.all_team?.length ?? '?')
@@ -81,15 +85,17 @@ export class C_SaveData implements I_JSON {
     public title:     string;
     public detail:    string;
     public point:     string;
-    public myurl:     string;
     public auto_mode: boolean;
     public is_active: boolean;
     public is_delete: boolean;
     public save_time: Date;
-
+    public mypos:     C_MovablePoint;
+/*
+    public myurl:     string;
     public team_uid:  string;
     public location:  C_Location;
-
+*/
+    public all_mvpt:  {[uid: string]: C_MovablePoint};
     public all_maze:  {[uid: string]: C_Maze};
     public all_team:  {[uid: string]: C_Team};
     public all_guld:  {[uid: string]: C_Guild};
@@ -101,15 +107,17 @@ export class C_SaveData implements I_JSON {
         this.title     = '';
         this.detail    = '';
         this.point     = '';
-        this.myurl     = '';
         this.auto_mode = false;
         this.is_active = true;
         this.is_delete = false;
         this.save_time = new Date();
-
+        this.mypos     = new C_MovablePoint();
+/*
+        this.myurl     = '';
         this.team_uid  = '';
         this.location  = new C_Location();
-
+*/
+        this.all_mvpt  = {};
         this.all_maze  = {};
         this.all_team  = {}
         this.all_guld  = {};
@@ -137,15 +145,17 @@ export class C_SaveData implements I_JSON {
                 title:     this.title, 
                 detail:    this.detail, 
                 point:     this.point, 
-                myurl:     this.myurl, 
                 auto_mode: this.auto_mode ? '1' : '0', 
                 is_active: this.is_active ? '1' : '0', 
                 is_delete: this.is_delete ? '1' : '0', 
                 save_time: save_date, 
-    
+                locate:    this.mypos.encode(),
+/* 
+                myurl:     this.myurl, 
                 team_uid:  this.team_uid,
                 location:  this.location.encode(),
-    
+*/    
+                all_mvpt:  this._encode_all_data(this.all_mvpt), 
                 all_maze:  this._encode_all_data(this.all_maze), 
                 all_team:  this._encode_all_data(this.all_team), 
                 all_guld:  this._encode_all_data(this.all_guld),
@@ -168,15 +178,24 @@ export class C_SaveData implements I_JSON {
         this.title     = s.title     ?? this.title;
         this.detail    = s.detail    ?? this.detail;
         this.point     = s.point     ?? this.point;
-        this.myurl     = s.myurl     ?? this.myurl;
         this.auto_mode = s.auto_mode != '0' ?? this.auto_mode;
         this.is_active = s.is_active != '0' ?? this.is_active;
         this.is_delete = s.is_delete != '0' ?? this.is_delete; 
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
+        if (s.locate    !== undefined) this.mypos.decode(s.locate); 
 
+/*
+        this.myurl     = s.myurl     ?? this.myurl;
         if (s.team_uid !== undefined) this.team_uid = s.team_uid;
         if (s.location !== undefined) this.location = new C_Location(s.location);
-
+*/
+        if (s.all_mvpt  !== undefined) {
+            this.all_mvpt = {};
+            for (const json_mvpt of s.all_mvpt) {
+                 const mvpt = (new C_MovablePoint()).decode(json_mvpt); 
+                 this.all_mvpt[mvpt.uid()] = mvpt;
+            }
+        } 
         if (s.all_maze  !== undefined) {
             this.all_maze = {};
             for (const json_maze of s.all_maze) {

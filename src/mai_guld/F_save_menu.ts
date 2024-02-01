@@ -17,7 +17,7 @@ import { _alert, g_mes, g_my_url, g_start_env }    from "../common/global";
 
 import { 
     g_mvm, set_from_save_to_all_data, 
-    g_save, g_all_maze, g_all_team, g_all_guld, g_team, g_guld, g_ctls 
+    g_save, g_all_maze, g_all_team, g_all_guld, g_team, g_guld, g_ctls, g_all_mvpt 
 } 
 from "./global_for_guild";
 import { alert_team_info } from "../common/C_Team";
@@ -25,6 +25,7 @@ import { alert_guld_info } from "../common/C_Guild";
 import { C_Location } from "../common/C_Location";
 import { g_maze } from "../mai_maze/global_for_maze";
 import { POST_and_move_page } from "../common/F_POST";
+import { C_MovablePoint } from "../common/C_MovablePoint";
 
 
 let data_list:  {[uniq_no: number]:C_SaveData};
@@ -198,8 +199,8 @@ function init_info_detail(): void {
 
     clear_info_detail();
     _append_elm('title');
-    _append_elm('detail');
     _append_elm('point');
+    _append_elm('detail');
     _append_elm('save_time');
     return;
 }
@@ -364,7 +365,7 @@ async function _isOK_for_save(): Promise<void> {
 }
 
 async function post_load_data(): Promise<boolean> {
-    if (data_list[idx].myurl !== '' && data_list[idx].myurl != g_my_url) {
+    if (data_list[idx].mypos.url() !== '' && data_list[idx].mypos.url() != g_my_url) {
         return _post_load_data_other();
     }
     return await _post_load_data_here();
@@ -374,7 +375,7 @@ async function _post_load_data_other(): Promise<boolean> {
     opt.set('mode', 'load');
     opt.set('pid',   g_start_env.pid);
     opt.set('uno',   idx);
-    POST_and_move_page(data_list[idx].myurl, opt);
+    POST_and_move_page(data_list[idx].mypos.url(), opt);
     return true;
 } 
 async function _post_load_data_here(): Promise<boolean> { 
@@ -391,24 +392,27 @@ export function post_load_function(jsonObj: any): boolean {
 
     g_save.decode(jsonObj.save);
  
+    set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
     set_from_save_to_all_data(g_all_maze, g_save.all_maze);
     set_from_save_to_all_data(g_all_team, g_save.all_team);
     set_from_save_to_all_data(g_all_guld, g_save.all_guld);
 
-    g_team.decode (g_save.all_team[g_save.team_uid].encode());
-    g_team.set_loc(g_save.location);
+    g_team.decode (g_save.all_team[g_save.mypos.tid()??''].encode());
+    g_team.set_loc(g_save.mypos);
 
-    g_guld.decode (g_save.all_guld[g_save.location.get_uid()].encode());
+    g_guld.decode (g_save.all_guld[g_save.mypos.get_uid()].encode());
 
     return true;
 }
 
 async function post_save_data(): Promise<boolean> { 
 
-    const loc = new C_Location({
-        kind: 'Guld',
-        name: g_guld.get_name(),
-        uid:  g_guld.uid(),
+    const loc = new C_MovablePoint({
+        cur_url:  g_my_url,
+        team_uid: g_team.uid(),
+        kind:     'Guld',
+        name:     g_guld.get_name(),
+        uid:      g_guld.uid(),
     });
     g_team.set_loc(loc);
 
@@ -420,7 +424,6 @@ async function post_save_data(): Promise<boolean> {
         title:     `保存済: #${idx.toString().padStart(2, '0')}`,  // data_list[idx].title, 
         detail:    '冒険者ギルド情報',                    // data_list[idx].detail, 
         point:     '冒険者ギルド',
-        myurl:      g_my_url,
         auto_mode: '0', 
         is_active: '1', 
         is_delete: '0', 
@@ -428,8 +431,7 @@ async function post_save_data(): Promise<boolean> {
     
     g_save.all_guld[g_guld.uid()] = g_guld;
     g_save.all_team[g_team.uid()] = g_team; 
-    g_save.team_uid = g_team.uid();
-    g_save.location = loc;
+    g_save.mypos = loc;
     
 
     const save_json = g_save.encode(); 

@@ -1,9 +1,8 @@
-import { I_Locate, T_Lckd } from "./C_Location";
+import { I_Locate, T_Lckd }      from "./C_Location";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
-import { C_Team }     from "./C_Team";
-import { _get_uuid }  from "./F_Rand";
-import { C_Hero, JSON_Hero }  from "./C_Hero";
-import { C_Goods, JSON_Goods } from "./C_Goods";
+import { _get_uuid }             from "./F_Rand";
+import { C_Hero, JSON_Hero }     from "./C_Hero";
+import { C_Goods, JSON_Goods }   from "./C_Goods";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,

@@ -8,6 +8,7 @@ import { C_Maze }  from "../common/C_Maze";
 import { C_Team }  from "../common/C_Team";
 import { C_Guild } from "../common/C_Guild";
 
+export const g_all_mvpt: {[uniq_id: string]: C_MovablePoint} = {};
 export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
 export const g_all_team: {[uniq_id: string]: C_Team} = {};
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
@@ -29,6 +30,7 @@ export let g_ctls: C_DefaultCtls;
 import { general_load, get_mai_guld }      from "../common/F_load_and_save";
 import { C_UrlOpt } from '../common/C_UrlOpt';
 import { post_load_function } from './F_save_menu';
+import { C_MovablePoint } from '../common/C_MovablePoint';
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -49,7 +51,7 @@ function init_before_new_games(): void {
 
         g_save.decode(jsonObj.save);
 
-        g_team = g_save.all_team[g_save.team_uid]; 
+        g_team = g_save.all_team[g_save.mypos.tid()??'']; 
         g_guld = g_save.all_guld[g_team.get_loc().get_uid()]; 
 
         set_from_save_to_all_data(g_all_maze, g_save.all_maze);

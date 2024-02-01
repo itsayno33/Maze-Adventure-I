@@ -15,12 +15,11 @@ function _lckd_key(lckd: T_Lckd): string {
     return Object.keys(T_Lckd).find(key => T_Lckd[key] === lckd) ?? "????";
 }
 
-
 export interface JSON_Location extends JSON_Any {
-    kind?: string,
-    name?: string,
-    uid?:  string,
-    loc?:  JSON_PointDir,
+    kind?:    string,
+    name?:    string,
+    loc_uid?: string,
+    loc_pos?: JSON_PointDir,
 }
 
 export interface I_Locate {
@@ -33,13 +32,13 @@ export class C_Location implements I_JSON {
     protected loc_kind: T_Lckd = T_Lckd.Unkn;
     protected loc_name: string = '';
     protected loc_uid:  string = '';
-    protected pd:       C_PointDir;
+    protected loc_pos:  C_PointDir;
 
     public constructor(json?: JSON_Location) {
         this.loc_kind = T_Lckd.Unkn; 
         this.loc_name = '';
         this.loc_uid  = '';
-        this.pd       = new C_PointDir();
+        this.loc_pos  = new C_PointDir();
 
         if (json !== undefined) this.decode(json);
     }
@@ -66,53 +65,53 @@ export class C_Location implements I_JSON {
 
     public get_p(): C_Point     {
 //        if (this.loc_kind != T_Lckd.Maze) return undefined;
-        return this.pd.get_p();
+        return this.loc_pos.get_p();
     }
     public get_d(): T_Direction {
 //        if (this.loc_kind != T_Lckd.Maze) return undefined;
-        return this.pd.get_d();
+        return this.loc_pos.get_d();
     }
     public get_pd(): C_PointDir {
 //        if (this.loc_kind != T_Lckd.Maze) return undefined;
-        return this.pd.get_pd();
+        return this.loc_pos.get_pd();
     }
 
     public set_p   (p: C_PointDir): C_PointDir|undefined {
         if (this.loc_kind !== T_Lckd.Maze)   return undefined;
-        if (this.pd.set_p(p) === undefined)  return undefined;
+        if (this.loc_pos.set_p(p) === undefined)  return undefined;
 
-        return this.pd;
+        return this.loc_pos;
     }
     public set_d   (d: T_Direction): T_Direction|undefined {
         if (this.loc_kind !== T_Lckd.Maze)   return undefined;
-        if (this.pd.set_d(d) === undefined)  return undefined;
+        if (this.loc_pos.set_d(d) === undefined)  return undefined;
 
-        return this.pd.d;
+        return this.loc_pos.d;
     }
     public set_pd  (pd: C_PointDir): C_PointDir|undefined {
         if (this.loc_kind !== T_Lckd.Maze)    return undefined;
-        if (this.pd.set_pd(pd) === undefined) return undefined;
+        if (this.loc_pos.set_pd(pd) === undefined) return undefined;
 
-        return this.pd;
+        return this.loc_pos;
     }
 
 
     public encode(): JSON_Location {
         return {
-            kind: _lckd_key(this.loc_kind),
-            name: this.loc_name,
-            uid:  this.loc_uid,
-            loc:  this.pd.encode(),
+            kind:     _lckd_key(this.loc_kind),
+            name:     this.loc_name,
+            loc_uid:  this.loc_uid,
+            loc_pos:  this.loc_pos.encode(),
         };
     }
     public decode(j: JSON_Location): C_Location {
         if (j === undefined) return this;
         if (j.kind === undefined || !(j.kind in T_Lckd)) return this;
 
-        if (j.kind !== undefined) this.loc_kind = T_Lckd[j.kind];
-        if (j.name !== undefined) this.loc_name = j.name;
-        if (j.uid  !== undefined) this.loc_uid  = j.uid;
-        if (j.loc  !== undefined) this.pd.decode(j.loc);
+        if (j.kind    !== undefined) this.loc_kind = T_Lckd[j.kind];
+        if (j.loc_uid !== undefined) this.loc_uid  = j.loc_uid;
+        if (j.loc_pos !== undefined) this.loc_pos.decode(j.loc_pos);
         return this;
     }
 }
+

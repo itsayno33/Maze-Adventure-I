@@ -323,16 +323,19 @@ export function display_save_list(for_save: boolean) {
 
             for (let save_info of jsonObj.save_info) {
 //                if (for_save && jsonObj.save_info.auto_mode == '1') continue; 
+                save_list[save_info.uniq_no] = new C_SaveData(save_info);
+/*
                 save_list[save_info.uniq_no] = new C_SaveData({
                     save_id:   save_info.save_id    ?? -1,
                     uniq_no:   save_info.uniq_no    ?? -1,
                     title:     save_info.title      ?? '??? Unknown Title',
                     detail:    save_info.detail     ?? '???',
                     point:     save_info.point      ?? '???',
-                    myurl:     save_info.myurl      ?? '????-??-?? ??:??:??',
+                    locate:    save_info.locate     ?? '????-??-?? ??:??:??',
                     save_time: save_info.save_time  ?? '????-??-?? ??:??:??',
                     auto_mode: save_info.auto_mode  ?? '0',
                 });
+*/
             }
             if (for_save) {
                 for (let uniq_no_cnt = 0; uniq_no_cnt < save_list_max; uniq_no_cnt++) {
@@ -448,9 +451,9 @@ function check_save(): void{ // 入力チェックと既存データ上書きの
 
 function load(): void { 
     const data_idx = UL_to_Data[UL_idx];
-                                            alert(`savedata.myurl = 「${save_list[data_idx].myurl}」`);
+                                            alert(`savedata.myurl = 「${save_list[data_idx].mypos.url()}」`);
                                             alert(`g_my_url = 「${g_my_url}」`);
-    if (save_list[data_idx].myurl !== '' && save_list[data_idx].myurl != g_my_url) {
+    if (save_list[data_idx].mypos.url() !== '' && save_list[data_idx].mypos.url() != g_my_url) {
         _load_other(data_idx);
         return;
     }
@@ -462,7 +465,7 @@ function _load_other(data_idx: number): void {
     opt.set('mode', 'load');
     opt.set('pid',   g_start_env.pid);
     opt.set('uno',   save_list[data_idx].uniq_no);
-    POST_and_move_page(save_list[data_idx].myurl, opt);
+    POST_and_move_page(save_list[data_idx].mypos.url(), opt);
     return;
 }
 
@@ -517,8 +520,8 @@ export function decode_all(jsonObj: any):void {
     if (jsonObj.save !== undefined) g_save.decode(jsonObj.save); 
 
     //Team関連のデコード
-    g_team.decode(g_save.all_team[g_save.team_uid].encode()); 
-    g_team.set_loc(g_save.location);
+    g_team.decode(g_save.all_team[g_save.mypos.tid()??''].encode()); 
+    g_team.set_loc(g_save.mypos);
 
     // Maze関連のデコード
     const loc = g_team.get_loc(); 
@@ -554,8 +557,8 @@ export function decode_maze(jsonObj: any):void {
             z: jsonObj.data.pos?.z, 
             d: jsonObj.data.pos?.d, 
         }); 
-        g_team.set_place(g_maze, pos);
-        g_save.location = g_team.get_loc();
+        g_team.set_place(g_maze, g_my_url, pos);
+        g_save.mypos = g_team.get_loc();
     }
 
     // Hero関連のデコード
@@ -570,7 +573,7 @@ export function decode_maze(jsonObj: any):void {
     g_maze.add_obj(g_team);
 
     // SaveDataのベースの作成
-    g_save.team_uid = g_team.uid();
+    g_save.mypos = g_team.get_loc();
     g_save.all_maze[g_maze.uid()] = g_maze;
     g_save.all_team[g_team.uid()] = g_team;
 }
@@ -583,8 +586,7 @@ export function set_g_save (
         point:     string,
         auto_mode: boolean,
     ) {
-        g_save.team_uid = g_team.uid();
-        g_save.location = g_team.get_loc();
+        g_save.mypos = g_team.get_loc();
 
         g_save.all_team[g_team.uid()] = g_team;
         g_save.all_maze[g_maze.uid()] = g_maze; //
@@ -596,7 +598,6 @@ export function set_g_save (
             title:     title, 
             detail:    detail,
             point:     point, 
-            myurl:     g_my_url, 
             auto_mode: auto_mode ? '1' : '0',
             is_active: '1',
             is_delete: '0',

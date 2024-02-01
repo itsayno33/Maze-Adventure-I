@@ -7,6 +7,7 @@ import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
 import { I_Exist, I_HasHope, I_HopeAction } from "./I_Common"
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { C_MovablePoint } from "./C_MovablePoint";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -60,7 +61,10 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         this.my_name   = 'Neo Team?';
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
+
         this.walker = new C_Walker();
+        this.walker.set_tid(this.uid());
+
         this.goods  = new C_Goods();
         this.heroes = {};
         this.hope_motion = 'NOP';    
@@ -105,24 +109,29 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
 
     public set_place(
         place: I_Locate, 
-        pos:   C_PointDir|undefined = undefined) {
+        url?:  string, 
+        pos?:  C_PointDir) {
 
         this.walker.set_uid (place.uid());
         this.walker.set_lckd(place.get_lckd());
         this.walker.set_name(place.get_name());
 
+        if (url !== undefined) this.walker.set_url(url);
         if (pos !== undefined) {
             this.walker.set_pd(pos);
         }
     }
-    public get_loc(): C_Location {
+    public get_loc(): C_MovablePoint {
         return this.walker;
     }
-    public set_loc(loc: C_Location): void {
+    public set_loc(loc: C_MovablePoint): void {
+        this.walker.decode(loc.encode());
+        /*
         this.walker.set_uid (loc.get_uid());
         this.walker.set_lckd(loc.get_lckd());
         this.walker.set_name(loc.get_name());
         this.walker.set_pd  (loc.get_pd());
+        */
     }
 
 
