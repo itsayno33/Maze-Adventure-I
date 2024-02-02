@@ -3,33 +3,35 @@ export var g_debug_mode: boolean = false;
 //import { g_save, g_guld, g_maze, g_team, init_after_loaded_DOM_in_common } from "../common/global";
 import { _alert, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 
-import { C_Maze }  from "../common/C_Maze";
-import { C_Team }  from "../common/C_Team";
-import { C_Guild } from "../common/C_Guild";
+import { C_Maze }         from "../common/C_Maze";
+import { C_Team }         from "../common/C_Team";
+import { C_Guild }        from "../common/C_Guild";
+import { C_MovablePoint } from '../common/C_MovablePoint';
 
-export const g_all_mvpt: {[uniq_id: string]: C_MovablePoint} = {};
-export const g_all_maze: {[uniq_id: string]: C_Maze} = {};
-export const g_all_team: {[uniq_id: string]: C_Team} = {};
+export const g_all_maze: {[uniq_id: string]: C_Maze}  = {};
+export const g_all_team: {[uniq_id: string]: C_Team}  = {};
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
+export const g_all_mvpt: {[uniq_id: string]: C_MovablePoint} = {};
+export const g_maze_inf: {[name:    string]: C_MazeInfo}     = {};
 
 export let   g_team: C_Team  = new C_Team();
 export let   g_guld: C_Guild = new C_Guild();
 
-import { C_SaveData }        from "../common/C_SaveData";
+import { C_SaveData }         from "../common/C_SaveData";
 export const g_save = new C_SaveData();
 
-import { init_display_menu } from "./F_default_menu";
+import { init_display_menu }  from "./F_default_menu";
 
-import { C_GldViewMessage }  from "./C_GldViewMessage";
+import { C_GldViewMessage }   from "./C_GldViewMessage";
 export var g_mvm: C_GldViewMessage;
 
-import { C_DefaultCtls }     from './C_DefaultCtls';
+import { C_DefaultCtls }      from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
-import { general_load, get_mai_guld }      from "../common/F_load_and_save";
-import { C_UrlOpt } from '../common/C_UrlOpt';
+import { general_load, get_mai_guld } from "../common/F_load_and_save";
+import { C_UrlOpt }           from '../common/C_UrlOpt';
 import { post_load_function } from './F_save_menu';
-import { C_MovablePoint } from '../common/C_MovablePoint';
+import { C_MazeInfo } from "../common/C_MazeInfo";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {

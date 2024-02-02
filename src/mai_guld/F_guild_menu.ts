@@ -1,13 +1,13 @@
 import { 
-    calc_cursor_pos_D, 
     calc_cursor_pos_U, 
+    calc_cursor_pos_D, 
     hide_all_menu, 
     high_light_on, 
 } from "./F_default_menu";
 import { display_load_menu, display_save_menu } from "./F_save_menu";
 import { display_hres_menu } from "./F_hres_menu";
+import { display_tomz_menu } from "./F_tomz_menu";
 import { g_ctls, g_mvm }     from "./global_for_guild";
-import { g_my_url, g_url, g_url_get_save } from "../common/global";
 
 
 let dom_view_switch : HTMLDivElement;
@@ -119,13 +119,6 @@ function isOK(): void {
             g_ctls.deact();
             display_hres_menu();
             break;
-/*
-        case 'guld_edit': break;
-        case 'guld_appd': 
-            g_ctls.deact();
-            display_appd_menu();
-            break;
-*/
         case 'guld_load': 
             g_ctls.deact();
             display_load_menu();
@@ -134,7 +127,10 @@ function isOK(): void {
             g_ctls.deact();
             display_save_menu();
             break;
-        case 'guld_to_maze': break;
+        case 'guld_to_maze': 
+            g_ctls.deact();
+            display_tomz_menu();
+            break;
     }
 }
 

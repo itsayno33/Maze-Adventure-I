@@ -55,14 +55,14 @@ let guld_list_cols: number;
 let appd_list_cols: number;
 let menu_list_cols: number;
 
-const T_TG_mode: {[kind: string]: number}  = {
+const T_TGA_mode: {[kind: string]: number}  = {
     Hide: 0,
     Team: 1,
     Guld: 2,
     Appd: 3,
 } as const;
-type T_TG_mode = T_MakeEnumType<typeof T_TG_mode>;
-let TG_mode: T_TG_mode;
+type T_TGA_mode = T_MakeEnumType<typeof T_TGA_mode>;
+let TGA_mode: T_TGA_mode;
 
 const T_SubView: {[kind: string]: number}  = {
     Hide: 0,
@@ -519,10 +519,10 @@ function update_dom_menu_list(): void {
     clear_dom_menu_list();
 
     let menu_list: T_menu_list;
-    switch (TG_mode) {
-        case T_TG_mode.Team: menu_list = menu_list_for_team;break;
-        case T_TG_mode.Guld: menu_list = menu_list_for_guld;break;
-        case T_TG_mode.Appd: menu_list = menu_list_for_appd;break;
+    switch (TGA_mode) {
+        case T_TGA_mode.Team: menu_list = menu_list_for_team;break;
+        case T_TGA_mode.Guld: menu_list = menu_list_for_guld;break;
+        case T_TGA_mode.Appd: menu_list = menu_list_for_appd;break;
         default: return;
     }
     for (let ii in menu_list) {
@@ -607,14 +607,14 @@ function update_dom_ipnm(): void {
     const name_label = inpt_name_list['hres_name_li'].label;
     const name_input = inpt_name_list['hres_name_li'].input;
 
-    switch (TG_mode) {
-        case T_TG_mode.Team: 
+    switch (TGA_mode) {
+        case T_TGA_mode.Team: 
             name_input.value = team_list[cursor_Team.idx].name();
             break;
-        case T_TG_mode.Guld: 
+        case T_TGA_mode.Guld: 
             name_input.value = guld_list[cursor_Guld.idx].name();
             break;
-        case T_TG_mode.Appd: 
+        case T_TGA_mode.Appd: 
             name_input.value = appd_list[cursor_Appd.idx].name();
             break;
         default: return;
@@ -784,19 +784,19 @@ function init_cursor(): boolean {
     cursor_IpCk = {kind: T_SubView.IpCk, idx: 0}; 
 
     if (exist_team()) { 
-        TG_mode = T_TG_mode.Team;
+        TGA_mode = T_TGA_mode.Team;
         cursor  = cursor_Team; 
     }
     else if (exist_guld()) { 
-        TG_mode = T_TG_mode.Guld;
+        TGA_mode = T_TGA_mode.Guld;
         cursor  = cursor_Guld; 
     }
     else if (exist_appd()) { 
-        TG_mode = T_TG_mode.Appd;
+        TGA_mode = T_TGA_mode.Appd;
         cursor  = cursor_Appd; 
     }
     else { 
-        TG_mode = T_TG_mode.Hide;
+        TGA_mode = T_TGA_mode.Hide;
         cursor  = cursor_Hide; 
     } 
     return true;
@@ -1066,10 +1066,10 @@ function isOK(): void {
 }
 function do_menu(): void {
     let menu_list: T_menu_list;
-    switch (TG_mode) {
-        case T_TG_mode.Team: menu_list = menu_list_for_team; break;
-        case T_TG_mode.Guld: menu_list = menu_list_for_guld; break;
-        case T_TG_mode.Appd: menu_list = menu_list_for_appd; break;
+    switch (TGA_mode) {
+        case T_TGA_mode.Team: menu_list = menu_list_for_team; break;
+        case T_TGA_mode.Guld: menu_list = menu_list_for_guld; break;
+        case T_TGA_mode.Appd: menu_list = menu_list_for_appd; break;
         default: return;
     }
     menu_list[cursor_Menu.idx].fnc();
@@ -1084,16 +1084,16 @@ function isOK_ipnm(): void {
 }
 
 function isOK_cknm(): void {
-    switch (TG_mode) {
-        case T_TG_mode.Team: 
+    switch (TGA_mode) {
+        case T_TGA_mode.Team: 
             change_hero_name(team_list[cursor_Team.idx]); 
             subview_act(T_SubView.Team);
             break;
-        case T_TG_mode.Guld: 
+        case T_TGA_mode.Guld: 
             change_hero_name(guld_list[cursor_Guld.idx]); 
             subview_act(T_SubView.Guld);
             break;
-        case T_TG_mode.Appd: 
+        case T_TGA_mode.Appd: 
             change_hero_name(appd_list[cursor_Appd.idx]); 
             subview_act(T_SubView.Appd);
             break;
@@ -1161,14 +1161,14 @@ function isOK_away(): void {
 
 function go_back_view_mode(msg: string): void {
     mode = 'view';
-    switch (TG_mode) {
-        case T_TG_mode.Team: 
+    switch (TGA_mode) {
+        case T_TGA_mode.Team: 
             subview_act(T_SubView.Team);
             break;
-        case T_TG_mode.Guld: 
+        case T_TGA_mode.Guld: 
             subview_act(T_SubView.Guld);
             break;
-        case T_TG_mode.Appd: 
+        case T_TGA_mode.Appd: 
             subview_act(T_SubView.Appd);
             break;
     }
@@ -1203,10 +1203,10 @@ function isNG(): void {
             break;
         case T_SubView.Menu:
             mode = 'view';
-            switch (TG_mode) {
-                case T_TG_mode.Team: subview_act(T_SubView.Team); break;
-                case T_TG_mode.Guld: subview_act(T_SubView.Guld); break;
-                case T_TG_mode.Appd: subview_act(T_SubView.Appd); break;
+            switch (TGA_mode) {
+                case T_TGA_mode.Team: subview_act(T_SubView.Team); break;
+                case T_TGA_mode.Guld: subview_act(T_SubView.Guld); break;
+                case T_TGA_mode.Appd: subview_act(T_SubView.Appd); break;
             }
             clear_dom_menu_list();
             display_default_message();
@@ -1226,29 +1226,29 @@ function isNG_cknm(): void {
 
 function isSL(): void {
     g_mvm.clear_message();
-    switch (TG_mode) {
-        case T_TG_mode.Team:
+    switch (TGA_mode) {
+        case T_TGA_mode.Team:
             if (exist_guld()) {
-                TG_mode = T_TG_mode.Guld;
+                TGA_mode = T_TGA_mode.Guld;
                 break;
             }
-            TG_mode = T_TG_mode.Appd;
+            TGA_mode = T_TGA_mode.Appd;
             break;
-        case T_TG_mode.Guld:
-            TG_mode = T_TG_mode.Appd;
+        case T_TGA_mode.Guld:
+            TGA_mode = T_TGA_mode.Appd;
             break;
-        case T_TG_mode.Appd:
+        case T_TGA_mode.Appd:
             if (exist_team()) {
-                TG_mode = T_TG_mode.Team;
+                TGA_mode = T_TGA_mode.Team;
                 break;
             }
             if (exist_guld()) {
-                TG_mode = T_TG_mode.Guld;
+                TGA_mode = T_TGA_mode.Guld;
                 break;
             }
             break;
     }
-    subview_act(TG_mode);
+    subview_act(TGA_mode);
     display_default_message();
 }
 function isRT(): void {

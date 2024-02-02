@@ -1,17 +1,18 @@
-import { alert_maze_info }     from "../common/C_Maze";     // 通常時はコメントアウトされている関数
-import { alert_team_info }     from "../common/C_Team";     // 通常時はコメントアウトされている関数
-import { alert_hres_info }     from "../common/C_Hero";     // 通常時はコメントアウトされている関数
-import { alert_save_info }     from "../common/C_SaveData"; // 通常時はコメントアウトされている関数
-import { alert_guld_info }     from "../common/C_Guild";    // 通常時はコメントアウトされている関数
+import { alert_maze_info }     from "./C_Maze";     // 通常時はコメントアウトされている関数
+import { alert_team_info }     from "./C_Team";     // 通常時はコメントアウトされている関数
+import { alert_hres_info }     from "./C_Hero";     // 通常時はコメントアウトされている関数
+import { alert_save_info }     from "./C_SaveData"; // 通常時はコメントアウトされている関数
+import { alert_guld_info }     from "./C_Guild";    // 通常時はコメントアウトされている関数
+import { alert_mazeinfo_info } from './C_MazeInfo';
 
-import { _round, _min, _max  } from "../common/F_Math";
-import { C_UrlOpt }            from "../common/C_UrlOpt";  
-import { POST_and_get_JSON, POST_and_move_page } from "../common/F_POST";
+import { _round, _min, _max  } from "./F_Math";
+import { C_UrlOpt }            from "./C_UrlOpt";  
+import { POST_and_get_JSON, POST_and_move_page } from "./F_POST";
 import { 
     g_mes, g_start_env, 
     g_url, g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
     _alert, 
-} from "../common/global";
+} from "./global";
 
 
 type T_callback = (jsonObj:any)=>(boolean|void);
@@ -116,6 +117,33 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
         
             if (callback !== undefined) callback(jsonObj);
             return jsonObj;
+        } else {
+            g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
+            _alert(jsonObj.emsg);
+            return undefined;
+        }
+    });
+}
+
+export async function get_maze_info(callback?: T_callback): Promise<any|undefined> {
+    const opt = new C_UrlOpt();
+    opt.set('mode',        'maze_info'); 
+    return await POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+        if (jsonObj.ecode == 0) {
+            g_mes.normal_message('正常にロードされました');
+            if (jsonObj?.data?.mazeinfo === undefined) {
+                g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
+                _alert(jsonObj.emsg);
+                return;
+            }
+        
+            const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+            if (monitor) {
+                if (jsonObj?.data?.mazeinfo  !== undefined) alert_mazeinfo_info(jsonObj.data.mazeinfo);
+            }
+        
+            if (callback !== undefined) callback(jsonObj?.data?.mazenfo);
+            return jsonObj?.data?.mazenfo;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
             _alert(jsonObj.emsg);
