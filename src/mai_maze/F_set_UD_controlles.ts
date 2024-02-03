@@ -2,7 +2,7 @@ import { T_CtlsMode }       from "./T_CtlsMode";
 import { hide_controlles }  from "./F_set_controlles";
 import { UD_save }          from "../common/F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm, g_save }         from "./global_for_maze";
+import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
 import { g_maze, g_team,  } from "./global_for_maze";
 import { C_UrlOpt } from "../common/C_UrlOpt";
 import { decode_all, set_g_save } from "./F_set_save_controlles";
@@ -227,11 +227,7 @@ function do_UD_save() {
                     + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
-    const opt = new C_UrlOpt();
-    opt.set('save', save_data); 
-    return UD_save(opt);
+    return UD_save();
 //        .then((jsonObj)=>{
 //        decode_all(jsonObj);
 //    });

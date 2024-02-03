@@ -11,12 +11,12 @@ import {
 import { display_guld_menu }     from "./F_guild_menu";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData, I_JSON_Uniq, alert_save_info }   from "../common/C_SaveData";
-import { general_load, general_save, get_save_info }  from "../common/F_load_and_save";
-import { _alert, g_mes, g_my_url, g_start_env }       from "../common/global";
+import { C_SaveData, I_JSON_Uniq, alert_save_info }     from "../common/C_SaveData";
+import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
+import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
 
 import { 
-    g_mvm, g_save, g_team, g_guld, g_ctls, 
+    g_mvm, g_team, g_guld, g_ctls, 
     g_all_maze, g_all_team, g_all_guld, g_all_mvpt 
 } 
 from "./global_for_guild";
@@ -421,11 +421,7 @@ async function _post_load_data_other(): Promise<boolean> {
 async function _post_load_data_here(): Promise<boolean> { 
     const uno = dom_to_uno[dom_idx];
 
-    const  opt = new C_UrlOpt();
-    opt.set('pid',         g_start_env.pid); 
-    opt.set('uno',         uno); 
-
-    return await general_load(opt).then((jsonObj:any)=>{ 
+    return await general_load(uno).then((jsonObj:any)=>{ 
         return post_load_function(jsonObj);
     }); 
 }
@@ -474,15 +470,9 @@ async function post_save_data(): Promise<boolean> {
     }); 
     g_save.all_guld[g_guld.uid()] = g_guld; 
     g_save.all_team[g_team.uid()] = g_team; 
-    g_save.mypos = loc;     
+    g_save.mypos = loc; 
 
-    const save_json = g_save.encode(); 
-    const save_data = JSON.stringify(save_json, null, "\t"); 
-
-    const  opt = new C_UrlOpt();
-    opt.set('pid',         g_start_env.pid); 
-    opt.set('save',        save_data); 
-    return await general_save(opt).then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
+    return await general_save().then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
 }
 
 function isNG(): void {

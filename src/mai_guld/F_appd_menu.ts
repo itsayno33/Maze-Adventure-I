@@ -10,11 +10,12 @@ import {
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { C_Hero }                from "../common/C_Hero";
-import { _ceil, _floor, _round } from "../common/F_Math";
 import { high_light_on }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
-import { g_mvm, g_guld, g_save } from "./global_for_guild";
+import { g_mvm, g_guld }         from "./global_for_guild";
+
+import { C_Hero }                from "../common/C_Hero";
+import { _ceil, _floor, _round } from "../common/F_Math";
 import { get_new_hero }          from "../common/F_load_and_save";
 import { _alert, g_mes }         from "../common/global";
 

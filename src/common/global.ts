@@ -42,6 +42,9 @@ export const g_start_env = {mode: '', pid: -1, uno: -1};
 import { C_DisplayMessage } from "../common/C_DisplayMessage";
 export var g_mes: C_DisplayMessage;
 
+import { C_SaveData }         from "../common/C_SaveData";
+export const g_save = new C_SaveData();
+
 export function init_after_loaded_DOM_in_common(): void {
     const  con = document.getElementById('message_pane');
     g_mes  = C_DisplayMessage.get(con, 'client_message');

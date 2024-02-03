@@ -1,4 +1,3 @@
-import { C_UrlOpt }                   from "../common/C_UrlOpt";
 import { T_MzKind }                   from "../common/T_MzKind";
 import { I_HopeAction }               from "../common/I_Common";
 import { C_Point }                    from "../common/C_Point";
@@ -6,12 +5,12 @@ import { instant_load, instant_save } from "../common/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
 import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction }      from "./F_display_maze";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }    from "./F_set_UD_controlles";
+         maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { set_camp_controlles }                     from "./F_set_camp_controlles";
 import { do_load_bottom_half, set_g_save }         from "./F_set_save_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { g_save , g_maze, g_team }                 from "./global_for_maze";
+import { g_maze, g_team }                          from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -122,8 +121,7 @@ function key_press_function1(e: KeyboardEvent):void  {
     /************ *************************** **************/
 
 function do_instant_load(): void {
-    const opt = new C_UrlOpt();
-    instant_load(opt).then((jsonObj:any)=>{  
+    instant_load().then((jsonObj:any)=>{  
         do_load_bottom_half(jsonObj, 'ロードしました');  
     });
 }
@@ -139,11 +137,7 @@ function do_instant_save(): void {
                     + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
-    const opt = new C_UrlOpt();
-    opt.set('save', save_data); 
-    instant_save(opt);
+    instant_save();
 }
 
 

@@ -25,16 +25,12 @@ export const g_team = new C_Team();
 import { C_Guild } from "../common/C_Guild";
 export const g_guld = new C_Guild();
 
-import { C_SaveData }          from "../common/C_SaveData";
 import { general_load, get_mai_maze }        from "../common/F_load_and_save";
 import { decode_maze, do_load_bottom_half }  from "./F_set_save_controlles";
 import { init_controlles }     from "./F_set_controlles";
 import { do_move_bottom_half } from "./F_set_move_controlles";
 
 import { g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
-import { C_UrlOpt } from "../common/C_UrlOpt";
-
-export const g_save = new C_SaveData();
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -56,10 +52,7 @@ export function init_before_new_games(): void {
     });
 }
 function init_before_load_games(): void {
-    const opt = new C_UrlOpt();
-    opt.set('pid',  g_start_env.pid); 
-    opt.set('uno',  g_start_env.uno); 
-    general_load(opt).then((jsonObj:any)=>{  
+    general_load(g_start_env.uno).then((jsonObj:any)=>{  
         do_load_bottom_half(jsonObj, 'ロードしました'); 
     });
 }

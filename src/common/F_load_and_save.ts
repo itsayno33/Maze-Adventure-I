@@ -9,9 +9,9 @@ import { _round, _min, _max  } from "./F_Math";
 import { C_UrlOpt }            from "./C_UrlOpt";  
 import { POST_and_get_JSON, POST_and_move_page } from "./F_POST";
 import { 
-    g_mes, g_start_env, 
-    g_url, g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
-    _alert, 
+    _alert, g_mes, g_start_env, 
+    g_url,  g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
+    g_save, 
 } from "./global";
 
 
@@ -185,37 +185,43 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 }
 
 
-export function tmp_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function tmp_load(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',       'tmp_load'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               100); 
     return __auto_load(opt, callback);
 }
 
-export function instant_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function instant_load(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',   'instant_load'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               101); 
     return __auto_load(opt, callback);
 }
 
-export function UD_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function UD_load(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',        'UD_load'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               102); 
     return __auto_load(opt, callback);
 }
 
-export function before_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function before_load(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',    'before_load'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               103); 
     return __auto_load(opt, callback);
 }
 
-export function general_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function general_load(uniq_no: number, opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',           'load'); 
     opt.set('pid',   g_start_env.pid); 
+    opt.set('uno',           uniq_no); 
     return __auto_load(opt, callback);
 }
 
@@ -250,41 +256,49 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
 }
 
 
-export function tmp_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function tmp_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt ??= new C_UrlOpt();
     opt.set('mode',       'tmp_save'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               100); 
     return __auto_save(opt, callback);
 }
 
-export function instant_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function instant_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt ??= new C_UrlOpt();
     opt.set('mode',   'instant_save'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               101); 
     return __auto_save(opt, callback);
 }
 
-export function UD_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function UD_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt ??= new C_UrlOpt();
     opt.set('mode',        'UD_save'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               102); 
     return __auto_save(opt, callback);
 }
 
-export function before_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+export function before_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    opt ??= new C_UrlOpt();
     opt.set('mode',    'before_save'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',               103); 
     return __auto_save(opt, callback);
 }
 
-export function general_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+export function general_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    opt ??= new C_UrlOpt();
     opt.set('mode',           'save'); 
     opt.set('pid',   g_start_env.pid); 
     return __auto_save(opt, callback);
 }
 
 function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+    if (!opt.isset('save')) {
+        opt.set('save', JSON.stringify(g_save.encode(), null, "\t"));
+    }
 
     // 送信データをcheck_JSON.phpに送ってチェックするときにtrueにする。
     const move_page = false;

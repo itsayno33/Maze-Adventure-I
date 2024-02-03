@@ -1,17 +1,17 @@
-import { _round }                     from "../common/F_Math";
-import { C_UrlOpt }                   from "../common/C_UrlOpt";
-import { C_SaveData  }                from "../common/C_SaveData";
-import { T_Lckd }                     from "../common/C_Location";
-import { C_Hero }                     from "../common/C_Hero";
-import { _alert, g_mes, g_my_url, g_start_env } from "../common/global";
-import { T_CtlsMode }                 from "./T_CtlsMode";
-import { hide_controlles }            from "./F_set_controlles";
-import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { general_load, general_save, get_save_info } from "../common/F_load_and_save";
-import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_save, g_hres } from "./global_for_maze";
-import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
-import { C_PointDir, JSON_PointDir }  from "../common/C_PointDir";
-import { POST_and_move_page } from "../common/F_POST";
+import { _round }              from "../common/F_Math";
+import { C_UrlOpt }            from "../common/C_UrlOpt";
+import { C_SaveData  }         from "../common/C_SaveData";
+import { T_Lckd }              from "../common/C_Location";
+import { C_Hero }              from "../common/C_Hero";
+import { C_PointDir }          from "../common/C_PointDir";
+import { POST_and_move_page }  from "../common/F_POST";
+import { general_load, general_save, get_save_info }         from "../common/F_load_and_save";
+import { T_CtlsMode }          from "./T_CtlsMode";
+import { hide_controlles }     from "./F_set_controlles";
+import { set_camp_controlles } from "./F_set_camp_controlles";
+import { do_move_bottom_half, set_move_controlles }          from "./F_set_move_controlles";
+import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_hres } from "./global_for_maze";
+import { _alert, g_mes, g_my_url, g_save, g_start_env }      from "../common/global";
 
 var   UL_idx: number = 0;
 var   save_UL_list_len: number;
@@ -472,10 +472,9 @@ function _load_other(data_idx: number): void {
 }
 
 function _load_here(data_idx: number): void {
-    const opt = new C_UrlOpt();
-    opt.set('pid',  save_list[data_idx].player_id); 
-    opt.set('uno',  save_list[data_idx].uniq_no); 
-    general_load(opt).then((jsonObj:any)=>{  
+    g_start_env.pid = save_list[data_idx].player_id;
+
+    general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
         is_kakunin = false;
         do_load_bottom_half(jsonObj, 'ロードしました'); 
     });
@@ -502,11 +501,7 @@ async function save(): Promise<void> {
                     + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ false,
     );
-    const save_data = JSON.stringify(g_save.encode(), null, "\t");
-
-    const opt = new C_UrlOpt();
-    opt.set('save', save_data); 
-    general_save(opt).then((jsonObj)=>{
+    general_save().then((jsonObj)=>{
         decode_all(jsonObj);
 
         is_kakunin = false;

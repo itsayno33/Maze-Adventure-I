@@ -1,8 +1,8 @@
 import { T_MakeEnumType }        from "../common/T_MakeEnumType";
 import { C_MovablePoint }        from "../common/C_MovablePoint";
-import { get_maze_info }         from "../common/F_load_and_save";
-import { C_MazeInfo, alert_mazeinfo_info }            from "../common/C_MazeInfo";
-import { _alert }                from "../common/global";
+import { get_maze_info, tmp_save }         from "../common/F_load_and_save";
+import { C_MazeInfo }            from "../common/C_MazeInfo";
+import { _alert, g_save, g_start_env, g_url, g_url_get_maze }        from "../common/global";
 import { 
     calc_cursor_pos_U, 
     calc_cursor_pos_D, 
@@ -12,7 +12,9 @@ import {
     high_light_on 
 } from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
-import { g_ctls, g_mvm, g_save, g_team } from "./global_for_guild";
+import { g_ctls, g_mvm, g_team } from "./global_for_guild";
+import { C_UrlOpt }              from "../common/C_UrlOpt";
+import { POST_and_move_page } from "../common/F_POST";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -184,7 +186,7 @@ function update_DOM_maze_list(): void {
 
     for (let ii in maze_list) {
         const li = document.createElement('li') as HTMLLIElement;
-        li.innerHTML = `${maze_list[ii].mbname}<p>レベル: ${maze_list[ii].lv} 「${maze_list[ii].size_x} × ${maze_list[ii].size_y}」${maze_list[ii].size_z}階層</p>`;
+        li.innerHTML = `${maze_list[ii].mbname}<p>　💎レベル: ${maze_list[ii].lv} 「${maze_list[ii].size_x} × ${maze_list[ii].size_y}」${maze_list[ii].size_z}階層</p>`;
 
         li.id = ii.toString();
         li.addEventListener("click", _OK_maze_Fnc, false);
@@ -235,7 +237,7 @@ function update_DOM_mvpt_list(): void {
     for (let ii in mvpt_list) {
         const li = document.createElement('li') as HTMLLIElement;
         const pos = mvpt_list[ii].get_pd();
-        li.innerHTML = `${mvpt_list[ii].get_name()}<p>「${pos.x} , ${pos.y}」${pos.z}階層</p>`;
+        li.innerHTML = `${mvpt_list[ii].get_name()}<p>　💎「${pos.x} , ${pos.y}」${pos.z}階層</p>`;
 
         li.id = ii.toString();
         li.addEventListener("click", _OK_mvpt_Fnc, false);
@@ -296,8 +298,6 @@ const ctls_tomz_nor_maze = {
     name: 'tomz_nor_maze', 
     do_U:  do_U,
     do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
     isOK:  isCK_maze,
     isNG:  isRT,
     isSL:  isSL_maze,
@@ -310,8 +310,6 @@ const ctls_tomz_nor_mvpt = {
     name: 'tomz_nor_mvpt', 
     do_U:  do_U,
     do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
     isOK:  isCK_mvpt,
     isNG:  isRT,
     isSL:  isSL_mvpt,
@@ -520,9 +518,32 @@ function isCK_mvpt(): void {
 }
 
 
-function isGO_maze(): void {}
+function isGO_maze(): void {
+    tmp_save().then(()=>{
+        const opt = new C_UrlOpt();
+        opt.set('mode',     'start');
+        opt.set('pid',       g_start_env.pid);
+        opt.set('maze_name', maze_list[cursor.idx].name);
 
-function isGO_mvpt(): void {}
+        POST_and_move_page(g_url[g_url_get_maze], opt);
+    });
+}
+
+function isGO_mvpt(): void {
+    const loc = mvpt_list[cursor.idx];
+    g_team.set_loc(loc);
+    g_save.mypos = loc;
+    delete g_save.all_mvpt[loc.uid()];
+
+    tmp_save().then(()=>{
+        const opt = new C_UrlOpt();
+        opt.set('mode', 'mvpt');
+        opt.set('pid',  g_start_env.pid);
+        opt.set('mvpt', mvpt_list[cursor.idx].toJSON());
+
+        POST_and_move_page(mvpt_list[cursor.idx].url(), opt);
+    });
+}
 
 
 function isNG_maze(): void {

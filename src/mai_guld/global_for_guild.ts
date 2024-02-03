@@ -17,9 +17,6 @@ export const g_maze_inf: {[name:    string]: C_MazeInfo}     = {};
 export let   g_team: C_Team  = new C_Team();
 export let   g_guld: C_Guild = new C_Guild();
 
-import { C_SaveData }         from "../common/C_SaveData";
-export const g_save = new C_SaveData();
-
 import { init_display_menu }  from "./F_default_menu";
 
 import { C_GldViewMessage }   from "./C_GldViewMessage";
@@ -56,11 +53,7 @@ function init_before_new_games(): void {
 }
 
 function init_before_load_games(): void {
-    const  opt = new C_UrlOpt();
-    opt.set('pid', g_start_env.pid); 
-    opt.set('uno', g_start_env.uno); 
-
-    general_load(opt).then((jsonObj:any)=>{ 
+    general_load(g_start_env.uno).then((jsonObj:any)=>{ 
         post_load_function(jsonObj);
     }); 
 }
