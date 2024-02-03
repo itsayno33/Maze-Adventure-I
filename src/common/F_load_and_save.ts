@@ -1,4 +1,4 @@
-import { alert_save_info }     from "./C_SaveData"; 
+import { alert_save_detail, alert_save_info } from "./C_SaveData"; 
 import { alert_team_info }     from "./C_Team"; 
 import { alert_maze_info }     from "./C_Maze"; 
 import { alert_guld_info }     from "./C_Guild"; 
@@ -47,11 +47,10 @@ async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback):
 
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.save  !== undefined) alert_save_info(jsonObj.save);
-                if (jsonObj?.save?.all_maze?.length  !== undefined) for (const maze of jsonObj.save.all_maze) alert_maze_info(maze);
-                if (jsonObj?.save?.all_team?.length  !== undefined) for (const team of jsonObj.save.all_team) alert_team_info(team);
-                if (jsonObj?.save?.all_guld?.length  !== undefined) for (const guld of jsonObj.save.all_guld) alert_guld_info(guld);
-                if (jsonObj?.save?.all_mvpt?.length  !== undefined) for (const mvpt of jsonObj.save.all_mvpt) alert_mvpt_info(mvpt);
+                if (jsonObj?.save  !== undefined) {
+                    alert_save_info(jsonObj.save);
+                    alert_save_detail(jsonObj.save);
+                }
             }
         
             if (callback !== undefined) callback(jsonObj);
@@ -121,11 +120,10 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
                 for (let save of jsonObj.save_info) {
-                    if (save       !== undefined) alert_save_info(save);
-//                    if (save?.team !== undefined) for (const team of save.all_team) alert_team_info(team);
-//                    if (save?.maze !== undefined) for (const maze of save.all_maze) alert_maze_info(maze);
-//                    if (save?.guld !== undefined) for (const guld of save.all_guld) alert_guld_info(guld);
-//                    if (save?.mvpt !== undefined) for (const mvpt of save.all_mvpt) alert_mvpt_info(mvpt);
+                    if (save       !== undefined) {
+                        alert_save_info(save);
+//                        alert_save_detail(save);
+                    }
                 }
             }
 
@@ -253,10 +251,10 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
     
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.save                !== undefined) alert_save_info(jsonObj.save);
-//                if (jsonObj?.save?.all_maze?.[0] !== undefined) alert_maze_info(jsonObj.save.all_maze[0]);
-//                if (jsonObj?.save?.all_guld?.[0] !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
-//                if (jsonObj?.save?.all_team?.[0] !== undefined) alert_team_info(jsonObj.save.all_team[0]);
+                if (jsonObj?.save                !== undefined) {
+                    alert_save_info(jsonObj.save);
+                    alert_save_detail(jsonObj.save);
+                }
             }
         
             if (callback !== undefined) callback(jsonObj);
@@ -338,10 +336,10 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.save                !== undefined) alert_save_info(jsonObj.save);
-//                if (jsonObj?.save?.all_maze?.[0] !== undefined) alert_maze_info(jsonObj.save.all_maze[0]);
-//                if (jsonObj?.save?.all_guld?.[0] !== undefined) alert_guld_info(jsonObj.save.all_guld[0]);
-//                if (jsonObj?.save?.all_team?.[0] !== undefined) alert_team_info(jsonObj.save.all_team[0]);
+                if (jsonObj?.save                !== undefined) {
+                    alert_save_info(jsonObj.save);
+                    alert_save_detail(jsonObj.save);
+                }
             }
             if (callback !== undefined) callback(jsonObj);
             g_mes.normal_message('正常にセーブされました');

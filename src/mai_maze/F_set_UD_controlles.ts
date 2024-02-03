@@ -41,7 +41,7 @@ var canDn: boolean  =  false;
 
 var isUp:  boolean  =  false;
 
-export function set_Up_controlles() {
+export function set_Up_controlles(): void {
     g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
 
     hide_controlles();
@@ -50,7 +50,7 @@ export function set_Up_controlles() {
     __set_UD_controlles();
 }
 
-export function set_Dn_controlles() {
+export function set_Dn_controlles(): void {
     g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
 
     hide_controlles();
@@ -59,7 +59,7 @@ export function set_Dn_controlles() {
     __set_UD_controlles();
 }
 
-export function set_UD_controlles() {
+export function set_UD_controlles(): void {
     g_mvm.notice_message('上下テレポーターが有ります。登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
 
     hide_controlles();
@@ -68,7 +68,7 @@ export function set_UD_controlles() {
     __set_UD_controlles();
 }
 
-function __set_UD_controlles() {
+function __set_UD_controlles(): void {
     g_ctls_mode[0] = T_CtlsMode.UD;
 
     const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
@@ -215,7 +215,7 @@ function hope_Down(): void {
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
 }
 
-function do_UD_save() {
+async function do_UD_save(): Promise<any|undefined> {
     set_g_save(
         /* save_id: */   -1,
         /* uniq_no: */   -1,

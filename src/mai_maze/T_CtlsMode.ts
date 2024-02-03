@@ -7,6 +7,7 @@ export const T_CtlsMode = {
     Camp:     5,
     Load:     6,
     Save:     7,
+    MvPt:     8,
     Unknown: 99
 } as const;
 export type T_CtlsMode = T_MakeEnumType<typeof T_CtlsMode>;

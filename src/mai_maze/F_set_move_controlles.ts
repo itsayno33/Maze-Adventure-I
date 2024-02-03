@@ -158,27 +158,27 @@ function change_unexp_to_floor(p: C_Point): void {
     g_maze.change_unexp_to_floor(p);
 }
 
-function go_F() {
+function go_F(): void {
     const rslt = g_team.hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
-function go_B() {
+function go_B(): void {
     const rslt = g_team.hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
-function tr_R() {
+function tr_R(): void {
     const rslt = g_team.hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
-function tr_L() {
+function tr_L(): void {
     const rslt = g_team.hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
-function move_check(r: I_HopeAction) {
+function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
     if (!r.has_hope) return;
     if (r.hope == 'Turn') {

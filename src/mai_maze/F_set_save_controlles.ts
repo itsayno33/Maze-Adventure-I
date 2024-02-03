@@ -166,21 +166,21 @@ function key_press_function5(e: KeyboardEvent):void  {
     }
 }
 
-function is_OK_for_load() {
+function is_OK_for_load(): void {
     if (save_UL_list === null) return;
     if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 
     if (!is_kakunin) check_load(); else load();
 }
 
-function isOK_for_save() {
+function isOK_for_save(): void {
     if (save_UL_list === null) return;
     if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 
     if (!is_kakunin) check_save(); else save();
 }
 
-function isNG() {
+function isNG(): void {
     g_mvm.clear_message();
     if (!is_kakunin) {
         set_camp_controlles();
@@ -192,7 +192,7 @@ function isNG() {
 }
 
 
-function do_U() {
+function do_U(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
@@ -204,7 +204,7 @@ function do_U() {
     high_light_on(); form_set();
 }
 
-function do_D() { 
+function do_D(): void { 
     if (is_kakunin) return;
 
     g_mvm.clear_message();
@@ -216,7 +216,7 @@ function do_D() {
     high_light_on();  form_set();
 }
 
-function do_L() {
+function do_L(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
@@ -229,7 +229,7 @@ function do_L() {
     high_light_on();  form_set();
 }
 
-function do_R() {
+function do_R(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
@@ -305,7 +305,7 @@ function form_set():void {
     }
 }
 
-export function display_save_list(for_save: boolean) {
+export function display_save_list(for_save: boolean): void {
     const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
     const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
@@ -426,7 +426,7 @@ function display_load_fields(): void {
     }
 }
 
-function check_load(): void{ // 入力チェックと既存データ上書きの確認
+function check_load(): void { // 入力チェックと既存データ上書きの確認
     const data_idx = UL_to_Data[UL_idx];
     if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
@@ -435,7 +435,7 @@ function check_load(): void{ // 入力チェックと既存データ上書きの
     g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
 }
 
-function check_save(): void{ // 入力チェックと既存データ上書きの確認
+function check_save(): void { // 入力チェックと既存データ上書きの確認
     const data_idx = UL_to_Data[UL_idx];
     if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
@@ -499,7 +499,7 @@ async function save(): Promise<void> {
     });
 }
 
-export function decode_all(jsonObj: any):void { 
+export function decode_all(jsonObj: any): void { 
     // SaveData関連のデコード
     if (jsonObj === undefined) return;
     g_save.decode(jsonObj); 
@@ -512,16 +512,6 @@ export function decode_all(jsonObj: any):void {
     const loc = g_team.get_loc(); 
     if (loc.get_lckd() == T_Lckd.Maze) {
         g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
-/*
-    } else { 
-        g_mes.warning_message('不正なデータを受信しました(迷宮探索以外)');
-        _alert(
-            '不正なデータを受信しました(迷宮探索以外) => ' 
-            + loc.get_lckd_str() 
-            + '(' + loc.get_lckd() + ')'
-            );
-        return;
-*/
     }
 
     //Hero関連のデコード
@@ -533,7 +523,7 @@ export function decode_all(jsonObj: any):void {
 }
 
 // 新規ゲームの初期データの読み込み(暫定)
-export function decode_maze(jsonObj: any):void {
+export function decode_maze(jsonObj: any): void {
     // Maze関連のデコード
     if (jsonObj?.maze !== undefined) g_maze.decode(jsonObj.maze);
 
@@ -569,7 +559,7 @@ export function set_g_save (
         detail:    string, 
         point:     string,
         auto_mode: boolean,
-    ) {
+    ): void {
         g_save.mypos = g_team.get_loc();
 
         g_save.all_team[g_team.uid()] = g_team;

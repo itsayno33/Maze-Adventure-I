@@ -109,11 +109,7 @@ export class C_SaveData implements I_JSON {
     public is_delete: boolean;
     public save_time: Date;
     public mypos:     C_MovablePoint;
-/*
-    public myurl:     string;
-    public team_uid:  string;
-    public location:  C_Location;
-*/
+
     public all_mvpt:  {[uid: string]: C_MovablePoint};
     public all_maze:  {[uid: string]: C_Maze};
     public all_team:  {[uid: string]: C_Team};
@@ -165,11 +161,7 @@ export class C_SaveData implements I_JSON {
                 is_delete: this.is_delete ? '1' : '0', 
                 save_time: save_date, 
                 mypos:     this.mypos.encode(),
-/* 
-                myurl:     this.myurl, 
-                team_uid:  this.team_uid,
-                location:  this.location.encode(),
-*/    
+
                 all_mvpt:  this._encode_all_data(this.all_mvpt), 
                 all_maze:  this._encode_all_data(this.all_maze), 
                 all_team:  this._encode_all_data(this.all_team), 
