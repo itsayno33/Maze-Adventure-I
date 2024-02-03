@@ -427,13 +427,13 @@ async function _post_load_data_here(): Promise<boolean> {
 }
 export function post_load_function(jsonObj: any): boolean {
     if (jsonObj.ecode !== 0) return false;
-
-    g_save.decode(jsonObj.save);
  
-    set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
-    set_from_save_to_all_data(g_all_maze, g_save.all_maze);
+    g_save.decode(jsonObj.save);
+
     set_from_save_to_all_data(g_all_team, g_save.all_team);
+    set_from_save_to_all_data(g_all_maze, g_save.all_maze);
     set_from_save_to_all_data(g_all_guld, g_save.all_guld);
+    set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
 
     g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
     g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());

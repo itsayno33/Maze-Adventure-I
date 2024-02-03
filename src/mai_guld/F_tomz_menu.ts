@@ -1,8 +1,11 @@
-import { T_MakeEnumType }        from "../common/T_MakeEnumType";
-import { C_MovablePoint }        from "../common/C_MovablePoint";
-import { get_maze_info, tmp_save }         from "../common/F_load_and_save";
-import { C_MazeInfo }            from "../common/C_MazeInfo";
-import { _alert, g_save, g_start_env, g_url, g_url_get_maze }        from "../common/global";
+import { C_UrlOpt }                from "../common/C_UrlOpt";
+import { C_MovablePoint }          from "../common/C_MovablePoint";
+import { C_MazeInfo }              from "../common/C_MazeInfo";
+import { T_MakeEnumType }          from "../common/T_MakeEnumType";
+import { POST_and_move_page }      from "../common/F_POST";
+import { get_maze_info, tmp_save } from "../common/F_load_and_save";
+import { _alert, g_save, g_start_env, g_url, g_url_mai_maze } from "../common/global";
+
 import { 
     calc_cursor_pos_U, 
     calc_cursor_pos_D, 
@@ -13,8 +16,6 @@ import {
 } from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_ctls, g_mvm, g_team } from "./global_for_guild";
-import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { POST_and_move_page } from "../common/F_POST";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -525,7 +526,7 @@ function isGO_maze(): void {
         opt.set('pid',   g_start_env.pid);
         opt.set('opt',   maze_list[cursor.idx].name);
 
-        POST_and_move_page(g_url[g_url_get_maze], opt);
+        POST_and_move_page(g_url[g_url_mai_maze], opt);
     });
 }
 

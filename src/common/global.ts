@@ -1,8 +1,10 @@
 export const g_url_get_save    = 0;
 export const g_url_get_maze    = 1;
 export const g_url_get_guld    = 2;
-export const g_url_check_JSON  = 3;
-export const g_url: string[] = new Array(4);
+export const g_url_mai_maze    = 3;
+export const g_url_mai_guld    = 5;
+export const g_url_check_JSON  = 9;
+export const g_url: string[] = new Array(10);
 
 export let   g_my_url: string;
 
@@ -81,6 +83,8 @@ const tsCaller: I_TsCall = (() => {
             g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
             g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
             g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
+            g_url[g_url_mai_maze]   = url_top + "/mai_maze.php";
+            g_url[g_url_mai_guld]   = url_top + "/mai_guld.php";
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },
         // 暫定版開始処理

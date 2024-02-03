@@ -358,8 +358,8 @@ export function display_save_list(for_save: boolean) {
                 if (save_list[data_idx].auto_mode) {
                     if (for_save) continue;
 
-                    switch (save_list[data_idx].uniq_no) {
-                        case 100:
+                    switch (save_list[data_idx].uniq_no) { 
+                        case 100: 
                             save_list[data_idx].title  = '自動保存分';
                             save_list[data_idx].detail = '作業用に簡易保存したデータです';
                             break;
@@ -371,7 +371,7 @@ export function display_save_list(for_save: boolean) {
                             save_list[data_idx].title  = '階段直前分';
                             save_list[data_idx].detail = '一番最近のフロア移動直前に自動保存したデータです';
                             break;
-                        case 100:
+                        case 103:
                             save_list[data_idx].title  = 'ｲﾍﾞﾝﾄ直前分';
                             save_list[data_idx].detail = 'イベント(失敗)直前に簡易保存したデータです';
                             break;
@@ -510,7 +510,10 @@ export function decode_all(jsonObj: any):void {
 
     // Maze関連のデコード
     const loc = g_team.get_loc(); 
-    if (loc.get_lckd() != T_Lckd.Maze) { 
+    if (loc.get_lckd() == T_Lckd.Maze) {
+        g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
+/*
+    } else { 
         g_mes.warning_message('不正なデータを受信しました(迷宮探索以外)');
         _alert(
             '不正なデータを受信しました(迷宮探索以外) => ' 
@@ -518,8 +521,8 @@ export function decode_all(jsonObj: any):void {
             + '(' + loc.get_lckd() + ')'
             );
         return;
+*/
     }
-    g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
 
     //Hero関連のデコード
     for (let i in g_hres) delete g_hres[i]; 

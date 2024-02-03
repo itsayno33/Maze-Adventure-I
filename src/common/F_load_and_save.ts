@@ -26,49 +26,6 @@ export async function get_mai_maze(callback?: T_callback): Promise<any|undefined
     return await _get_new_game(g_url[g_url_get_maze], opt, callback);
 }
 
-/*
-export function get_mai_maze(callback?: T_callback): Promise<any|undefined> {
-    const get_maze_opt = new C_UrlOpt({pid: g_start_env.pid, mode: "new_game"});
- 
-    return POST_and_get_JSON(g_url[g_url_get_maze], get_maze_opt)?.then(jsonObj=>{
-        if (jsonObj.ecode != 0) {
-            g_mes.warning_message("初期データを受信できませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
-            return undefined;
-        }
-        if (jsonObj?.data  === undefined) {
-            g_mes.warning_message("受信データが不正な形式でした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
-            return undefined;
-        }
-        if (jsonObj?.data?.maze  === undefined) {
-            g_mes.warning_message("迷宮データが不正な形式でした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
-            return undefined;
-        }
-        if (jsonObj?.data?.pos   === undefined) {
-            g_mes.warning_message("位置データが不正な形式でした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
-            return undefined;
-        }
-
-        if (jsonObj?.data?.hres  === undefined) {
-            g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
-            return undefined;
-        }
-
-        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
-        if (monitor) {
-            if (jsonObj?.data?.maze  !== undefined) alert_maze_info(jsonObj.data.maze);
-            if (jsonObj?.data?.team  !== undefined) alert_team_info(jsonObj.data.team);
-        }
-        if (callback !== undefined) callback(jsonObj?.data);
-
-        return jsonObj?.data;
-    }); 
-}
-*/
 
 export async function get_mai_guld(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
@@ -189,7 +146,7 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.mazeinfo === undefined) {
-                g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
+                g_mes.warning_message("迷宮情報が不正な形式でした\n" + jsonObj.emsg);
                 _alert(jsonObj.emsg);
                 return undefined;
             }
@@ -346,13 +303,19 @@ export function before_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|
 }
 
 export function general_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    g_save.auto_mode = false;
+
     opt ??= new C_UrlOpt();
     opt.set('mode',           'save'); 
     opt.set('pid',   g_start_env.pid); 
-    return __auto_save(opt, callback);
+    return __save(opt, callback);
 }
 
-function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
+function __auto_save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
+    g_save.auto_mode = true;
+    return __save(opt, callback);
+} 
+function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> { 
     if (!opt.isset('save')) {
         opt.set('save', JSON.stringify(g_save.encode(), null, "\t"));
     }

@@ -51,7 +51,7 @@ export function init_before_games(): void {
 export function init_before_new_games(): void {
     get_mai_maze().then((jsonObj:any)=>{
         decode_all(jsonObj?.save);
-        do_load_bottom_half('blink_off');
+        do_load_bottom_half('');
     });
 }
 function init_before_load_games(): void {
