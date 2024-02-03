@@ -127,7 +127,7 @@ function isOK(): void {
             g_ctls.deact();
             display_save_menu();
             break;
-        case 'guld_to_maze': 
+        case 'guld_tomz': 
             g_ctls.deact();
             display_tomz_menu();
             break;

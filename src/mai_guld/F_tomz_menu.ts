@@ -1,7 +1,7 @@
 import { T_MakeEnumType }        from "../common/T_MakeEnumType";
 import { C_MovablePoint }        from "../common/C_MovablePoint";
 import { get_maze_info }         from "../common/F_load_and_save";
-import { C_MazeInfo }            from "../common/C_MazeInfo";
+import { C_MazeInfo, alert_mazeinfo_info }            from "../common/C_MazeInfo";
 import { _alert }                from "../common/global";
 import { 
     calc_cursor_pos_U, 
@@ -44,26 +44,28 @@ let cursor_mvpt: T_cursor;
 
 let mode    = 'view';
 
-export function display_tomz_menu(): void {
+export function display_tomz_menu(): void { 
     hide_all_menu(); 
-    init_all();
-    update_all();
-    if (!exist_hero()) {
-        subview_hide_all();
-        g_mvm.notice_message('出発の前にチームを編成してください');
-        g_ctls.act('tomz_rtn');
-        display_guld_menu();
-        return;
-    }
+    init_all().then(()=>{
+        update_all(); 
+        if (!exist_hero()) { 
+            subview_hide_all(); 
+            g_mvm.notice_message('出発の前にチームを編成してください'); 
+            g_ctls.act('tomz_rtn'); 
+            display_guld_menu(); 
+            return;
+        } 
+    }); 
     return;
 }
 function exist_hero(): boolean {return g_team.hres().length > 0}
 
 
-function init_all(): void {
-    init_data();
-    init_view();
-    init_ctls();
+async function init_all(): Promise<void> {
+    return await init_data().then(()=>{
+        init_view();
+        init_ctls();
+    }); 
 }
 
 function update_all(): void {
@@ -76,19 +78,23 @@ function update_all(): void {
  * モデル関係
  * 
 /***********************/
-function init_data(): void {
-    init_maze_list();
-    init_mvpt_list();
+async function init_data(): Promise<void> {
+    return await init_maze_list().then(()=>{
+        init_mvpt_list(); 
+    }); 
 }
 function update_data(): void {
     update_maze_list();
     update_mvpt_list();
 }
 
-function init_maze_list(): void {
-    maze_list = [];
-    get_maze_info().then((jsonObj:any)=>{
-        for (const json_mazeinfo of jsonObj) maze_list.push(new C_MazeInfo(json_mazeinfo));
+async function init_maze_list(): Promise<void> {
+    return await get_maze_info().then((jsonObj:any)=>{
+        maze_list = [];
+        for (const json_mazeinfo of jsonObj) {
+//            alert_mazeinfo_info(json_mazeinfo);
+            maze_list.push(new C_MazeInfo(json_mazeinfo));
+        }
     });
 }
 function update_maze_list(): void {}
@@ -171,6 +177,11 @@ function init_DOM_maze_list(): void {
 }
 function update_DOM_maze_list(): void {
     clear_dom_maze_list();
+    if (!exist_maze_list()) {
+        dom_maze_fields.style.display = 'none';
+        return;
+    }
+
     for (let ii in maze_list) {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = `${maze_list[ii].mbname}<p>レベル: ${maze_list[ii].lv} 「${maze_list[ii].size_x} × ${maze_list[ii].size_y}」${maze_list[ii].size_z}階層</p>`;
@@ -180,6 +191,7 @@ function update_DOM_maze_list(): void {
         dom_maze_list.appendChild(li);
     }
     list_high_light_on();
+    dom_maze_fields.style.display = 'block';
 }
 function _OK_maze_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     switch_cursor(T_List_mode.Maze);
@@ -215,6 +227,11 @@ function init_DOM_mvpt_list(): void {
 }
 function update_DOM_mvpt_list(): void {
     clear_dom_mvpt_list();
+    if (!exist_mvpt_list()) {
+        dom_mvpt_fields.style.display = 'none';
+        return;
+    }
+
     for (let ii in mvpt_list) {
         const li = document.createElement('li') as HTMLLIElement;
         const pos = mvpt_list[ii].get_pd();
@@ -225,6 +242,7 @@ function update_DOM_mvpt_list(): void {
         dom_mvpt_list.appendChild(li);
     }
     list_high_light_on();
+    dom_mvpt_fields.style.display = 'block';
 }
 function _OK_mvpt_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     switch_cursor(T_List_mode.MvPt);
@@ -247,12 +265,12 @@ function clear_dom_mvpt_list(): void {
  * コントロール関係
  * 
 /***********************/
-function init_ctls(): void {
-    init_default_ctls();
-    init_cursor();
-    get_dom_list_cols();
-    subview_show_all();
-    switch_cursor(cursor.mode);
+function init_ctls(): void { 
+    init_default_ctls(); 
+    init_cursor(); 
+    get_dom_list_cols(); 
+    subview_show_all(); 
+    switch_cursor(cursor.mode); 
 }
 
 function init_default_ctls(): boolean {
@@ -317,7 +335,7 @@ const ctls_tomz_jmp_mvpt = {
     cpOK:  isGO_mvpt,
 }
 
-function init_cursor(): boolean {
+function init_cursor(): boolean { 
     cursor_hide = {mode: T_List_mode.Hide, idx: 0}; 
     cursor_maze = {mode: T_List_mode.Maze, idx: 0}; 
     cursor_mvpt = {mode: T_List_mode.MvPt, idx: 0}; 
@@ -364,8 +382,8 @@ function _get_dom_list_cols(dom_list: HTMLUListElement): number {
 
 function subview_show_all(): boolean {
     subview_hide_all();
-    dom_maze_fields.style.display = 'block';
-    dom_mvpt_fields.style.display = 'block';
+    if (exist_maze_list()) dom_maze_fields.style.display = 'block';
+    if (exist_mvpt_list()) dom_mvpt_fields.style.display = 'block';
     return true;
 }
 function subview_hide_all(): boolean {
@@ -382,14 +400,16 @@ function switch_cursor(sview: T_List_mode): boolean {
     return false;
 } 
 
-function switch_cursor_to_maze() {
+function switch_cursor_to_maze(): void {
+    if (!exist_maze_list()) return;
     cursor  = cursor_maze;
     update_view();
     g_ctls.act('tomz_nor_maze');
     dom_maze_fields.style.display = 'block';
 }
 
-function switch_cursor_to_mvpt() {
+function switch_cursor_to_mvpt(): void {
+    if (!exist_mvpt_list()) return;
     cursor  = cursor_mvpt;
     update_view();
     g_ctls.act('tomz_nor_mvpt');

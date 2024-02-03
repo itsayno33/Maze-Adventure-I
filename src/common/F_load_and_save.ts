@@ -134,16 +134,20 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
             if (jsonObj?.data?.mazeinfo === undefined) {
                 g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
                 _alert(jsonObj.emsg);
-                return;
+                return undefined;
             }
         
             const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
             if (monitor) {
-                if (jsonObj?.data?.mazeinfo  !== undefined) alert_mazeinfo_info(jsonObj.data.mazeinfo);
+                if (jsonObj?.data?.mazeinfo  !== undefined) { 
+                    for (const mazeinfo of jsonObj.data.mazeinfo) {
+                        alert_mazeinfo_info(mazeinfo);
+                    }
+                }
             }
         
-            if (callback !== undefined) callback(jsonObj?.data?.mazenfo);
-            return jsonObj?.data?.mazenfo;
+            if (callback !== undefined) callback(jsonObj?.data?.mazeinfo);
+            return jsonObj?.data?.mazeinfo;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
             _alert(jsonObj.emsg);

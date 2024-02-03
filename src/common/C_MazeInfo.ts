@@ -61,14 +61,14 @@ export class C_MazeInfo {
     public decode(j?: JSON_MazeInfo): C_MazeInfo {
         if (j === undefined) return this;
 
-        if (j.name      != undefined) this.name      = j.name;
-        if (j.mbname    != undefined) this.mbname    = j.mbname;
-        if (j.lv        != undefined) this.lv        = j.lv;
-        if (j.size_x    != undefined) this.size_x    = j.size_x;
-        if (j.size_y    != undefined) this.size_y    = j.size_y;
-        if (j.size_z    != undefined) this.size_z    = j.size_z;
-        if (j.max_room  != undefined) this.max_room  = j.max_room;
-        if (j.room_size != undefined) this.room_size = j.room_size;
+        if (j.name      !== undefined) this.name      = j.name;
+        if (j.mbname    !== undefined) this.mbname    = j.mbname;
+        if (j.lv        !== undefined) this.lv        = j.lv;
+        if (j.size_x    !== undefined) this.size_x    = j.size_x;
+        if (j.size_y    !== undefined) this.size_y    = j.size_y;
+        if (j.size_z    !== undefined) this.size_z    = j.size_z;
+        if (j.max_room  !== undefined) this.max_room  = j.max_room;
+        if (j.room_size !== undefined) this.room_size = j.room_size;
 
         return this;
     }
