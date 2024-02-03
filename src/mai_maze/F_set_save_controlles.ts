@@ -2,16 +2,22 @@ import { _round }              from "../common/F_Math";
 import { C_UrlOpt }            from "../common/C_UrlOpt";
 import { C_SaveData  }         from "../common/C_SaveData";
 import { T_Lckd }              from "../common/C_Location";
-import { C_Hero }              from "../common/C_Hero";
 import { C_PointDir }          from "../common/C_PointDir";
 import { POST_and_move_page }  from "../common/F_POST";
-import { general_load, general_save, get_save_info }         from "../common/F_load_and_save";
+import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
+import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { do_move_bottom_half, set_move_controlles }          from "./F_set_move_controlles";
-import { g_ctls_mode, g_mvm, g_vsw, g_maze, g_team, g_hres } from "./global_for_maze";
-import { _alert, g_mes, g_my_url, g_save, g_start_env }      from "../common/global";
+import { 
+    g_ctls_mode, 
+    g_mvm, 
+    g_vsw, 
+    g_maze, 
+    g_team, 
+    g_hres, 
+    do_load_bottom_half 
+} from "./global_for_maze";
 
 var   UL_idx: number = 0;
 var   save_UL_list_len: number;
@@ -324,18 +330,6 @@ export function display_save_list(for_save: boolean) {
             for (let save_info of jsonObj.save_info) {
 //                if (for_save && jsonObj.save_info.auto_mode == '1') continue; 
                 save_list[save_info.uniq_no] = new C_SaveData(save_info);
-/*
-                save_list[save_info.uniq_no] = new C_SaveData({
-                    save_id:   save_info.save_id    ?? -1,
-                    uniq_no:   save_info.uniq_no    ?? -1,
-                    title:     save_info.title      ?? '??? Unknown Title',
-                    detail:    save_info.detail     ?? '???',
-                    point:     save_info.point      ?? '???',
-                    locate:    save_info.locate     ?? '????-??-?? ??:??:??',
-                    save_time: save_info.save_time  ?? '????-??-?? ??:??:??',
-                    auto_mode: save_info.auto_mode  ?? '0',
-                });
-*/
             }
             if (for_save) {
                 for (let uniq_no_cnt = 0; uniq_no_cnt < save_list_max; uniq_no_cnt++) {
@@ -466,7 +460,7 @@ function _load_other(data_idx: number): void {
     const opt = new C_UrlOpt();
     opt.set('mode', 'load');
     opt.set('pid',   g_start_env.pid);
-    opt.set('uno',   save_list[data_idx].uniq_no);
+    opt.set('opt',   save_list[data_idx].uniq_no.toString());
     POST_and_move_page(save_list[data_idx].mypos.url(), opt);
     return;
 }
@@ -476,16 +470,9 @@ function _load_here(data_idx: number): void {
 
     general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
         is_kakunin = false;
-        do_load_bottom_half(jsonObj, 'ロードしました'); 
+        decode_all(jsonObj?.save);
+        do_load_bottom_half('ロードしました'); 
     });
-}
-export function do_load_bottom_half(jsonObj: any, msg: string): void{
-    decode_all(jsonObj);
-    g_mvm.notice_message(msg); 
-    g_mes.notice_message(msg); 
-    set_move_controlles(); 
-    g_vsw.view_maze(); 
-    do_move_bottom_half('blink_off'); 
 }
 
 async function save(): Promise<void> {
@@ -514,7 +501,8 @@ async function save(): Promise<void> {
 
 export function decode_all(jsonObj: any):void { 
     // SaveData関連のデコード
-    if (jsonObj.save !== undefined) g_save.decode(jsonObj.save); 
+    if (jsonObj === undefined) return;
+    g_save.decode(jsonObj); 
 
     //Team関連のデコード
     g_team.decode(g_save.all_team[g_save.mypos.tid()??''].encode()); 
@@ -544,27 +532,23 @@ export function decode_all(jsonObj: any):void {
 // 新規ゲームの初期データの読み込み(暫定)
 export function decode_maze(jsonObj: any):void {
     // Maze関連のデコード
-    if (jsonObj.data.maze !== undefined) g_maze.decode(jsonObj.data.maze);
+    if (jsonObj?.maze !== undefined) g_maze.decode(jsonObj.maze);
 
     //　Team関連(現在地)のデコード
-    if (jsonObj.data.pos !== undefined) {
+    if (jsonObj?.pos !== undefined) {
         let pos = new C_PointDir({
-            x: jsonObj.data.pos?.x, 
-            y: jsonObj.data.pos?.y, 
-            z: jsonObj.data.pos?.z, 
-            d: jsonObj.data.pos?.d, 
+            x: jsonObj.pos?.x, 
+            y: jsonObj.pos?.y, 
+            z: jsonObj.pos?.z, 
+            d: jsonObj.pos?.d, 
         }); 
         g_team.set_place(g_maze, g_my_url, pos);
         g_save.mypos = g_team.get_loc();
     }
 
     // Hero関連のデコード
-    for (let i in g_hres) delete g_hres[i];
-    for (let hero_data of jsonObj.data.hres) {
-        const new_hero = (new C_Hero()).decode(hero_data);
-        g_hres.push(new_hero);
-        g_team.add_hero(new_hero);
-    }
+    for (const i in g_hres) delete g_hres[i];
+    for (const hero of g_team.hres()) g_hres.push(hero);
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team);

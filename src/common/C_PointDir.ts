@@ -19,6 +19,17 @@ export interface JSON_PointDir extends JSON_Point {
     d?: number;
 }
 
+export function alert_PD_info(a: JSON_PointDir|undefined): void {
+    if (a === undefined) return;
+    alert("PointData Info:" 
+        + "\nx: "     + (a?.x ?? '?')
+        + "\ny: "     + (a?.y ?? '?')
+        + "\nz: "     + (a?.z ?? '?')
+        + "\nd: "     + (a?.d ?? '?')
+        + "\n"
+    );
+}
+
 export class  C_PointDir extends C_Point {
     public d: T_Direction;
     public constructor(d?: number|T_Direction|C_PointDir|JSON_PointDir) {

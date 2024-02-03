@@ -521,9 +521,9 @@ function isCK_mvpt(): void {
 function isGO_maze(): void {
     tmp_save().then(()=>{
         const opt = new C_UrlOpt();
-        opt.set('mode',     'start');
-        opt.set('pid',       g_start_env.pid);
-        opt.set('maze_name', maze_list[cursor.idx].name);
+        opt.set('mode', 'start');
+        opt.set('pid',   g_start_env.pid);
+        opt.set('opt',   maze_list[cursor.idx].name);
 
         POST_and_move_page(g_url[g_url_get_maze], opt);
     });
@@ -538,8 +538,8 @@ function isGO_mvpt(): void {
     tmp_save().then(()=>{
         const opt = new C_UrlOpt();
         opt.set('mode', 'mvpt');
-        opt.set('pid',  g_start_env.pid);
-        opt.set('mvpt', mvpt_list[cursor.idx].toJSON());
+        opt.set('pid',   g_start_env.pid);
+        opt.set('opt',   '');
 
         POST_and_move_page(mvpt_list[cursor.idx].url(), opt);
     });

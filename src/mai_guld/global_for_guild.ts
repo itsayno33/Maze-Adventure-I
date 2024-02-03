@@ -53,7 +53,8 @@ function init_before_new_games(): void {
 }
 
 function init_before_load_games(): void {
-    general_load(g_start_env.uno).then((jsonObj:any)=>{ 
+    const uno = Number(g_start_env.opt);
+    general_load(uno).then((jsonObj:any)=>{ 
         post_load_function(jsonObj);
     }); 
 }

@@ -4,13 +4,20 @@ import { C_Point }                    from "../common/C_Point";
 import { instant_load, instant_save } from "../common/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
+import { set_camp_controlles }        from "./F_set_camp_controlles";
+import { set_g_save }                 from "./F_set_save_controlles";
 import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
-import { set_camp_controlles }                     from "./F_set_camp_controlles";
-import { do_load_bottom_half, set_g_save }         from "./F_set_save_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { g_maze, g_team }                          from "./global_for_maze";
+         maze3D_blink_on_direction, maze3D_blink_off_direction }     from "./F_display_maze";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }   from "./F_set_UD_controlles";
+import { 
+    g_debug_mode, 
+    g_ctls_mode, 
+    g_mvm, 
+    g_vsw, 
+    g_maze, 
+    g_team,
+    do_load_bottom_half, 
+} from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -122,7 +129,7 @@ function key_press_function1(e: KeyboardEvent):void  {
 
 function do_instant_load(): void {
     instant_load().then((jsonObj:any)=>{  
-        do_load_bottom_half(jsonObj, 'ロードしました');  
+        do_load_bottom_half('ロードしました');  
     });
 }
 

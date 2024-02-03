@@ -37,7 +37,7 @@ class C_ReadyGames  {
 }
 export const g_ready_games = new C_ReadyGames();
 
-export const g_start_env = {mode: '', pid: -1, uno: -1};
+export const g_start_env = {mode: '', pid: -1, opt: ''};
 
 import { C_DisplayMessage } from "../common/C_DisplayMessage";
 export var g_mes: C_DisplayMessage;
@@ -62,7 +62,7 @@ export function _alert(txt: string, page_size = 250): void {
 // windowオブジェクトに渡すインターフェースを定義
 interface I_TsCall {
     get_init_data: (url_base: string)=>void,
-    start_game:    (mode: string, url_base: string, player_id: number, uniq_no: number)=>void, 
+    start_game:    (mode: string, url_base: string, player_id: number, option: string)=>void, 
 }
 // windowオブジェクトにインターフェースの定義を追加
 declare global {
@@ -84,11 +84,11 @@ const tsCaller: I_TsCall = (() => {
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },
         // 暫定版開始処理
-        start_game: (mode: string, my_url: string, player_id: number, uniq_no: number): void => {
+        start_game: (mode: string, my_url: string, player_id: number, opt: string): void => {
             tsCaller.get_init_data(my_url);
             g_start_env.mode = mode;
             g_start_env.pid  = player_id;
-            g_start_env.uno  = uniq_no;
+            g_start_env.opt  = opt;
 
             g_ready_games.setGetWindow();
         } 

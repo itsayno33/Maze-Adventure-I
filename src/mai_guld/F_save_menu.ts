@@ -414,7 +414,7 @@ async function _post_load_data_other(): Promise<boolean> {
     const opt = new C_UrlOpt();
     opt.set('mode', 'load');
     opt.set('pid',   g_start_env.pid);
-    opt.set('uno',   uno);
+    opt.set('opt',   uno.toString());
     POST_and_move_page(data_list[uno].mypos.url(), opt);
     return true;
 } 
