@@ -66,9 +66,9 @@ async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback):
 
 export function get_new_maze(maze_name: string, callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
-    opt.set('mode', 'new_maze');
-    opt.set('pid',   g_start_env.pid);
-    opt.set('name',  maze_name);
+    opt.set('mode',      'new_maze');
+    opt.set('pid',        g_start_env.pid);
+    opt.set('maze_name',  maze_name);
 
     return POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode != 0) {
@@ -92,7 +92,7 @@ export function get_new_maze(maze_name: string, callback?: T_callback): Promise<
             return undefined;
         }
 
-        const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+        const monitor = false  // alertで受信したテキストを表示するときにtrueにする
         if (monitor) {
             if (jsonObj?.data?.maze  !== undefined) alert_maze_info(jsonObj.data.maze);
             if (jsonObj?.data?.pos   !== undefined) alert_PD_info  (jsonObj.data.pos);
