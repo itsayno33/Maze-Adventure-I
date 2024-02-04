@@ -46,6 +46,8 @@ let cursor_hide: T_cursor;
 let cursor_maze: T_cursor;
 let cursor_mvpt: T_cursor;
 
+let old_idx: number;
+
 let mode    = 'view';
 
 export function display_tomz_menu(): void { 
@@ -59,6 +61,7 @@ export function display_tomz_menu(): void {
             display_guld_menu(); 
             return;
         } 
+        display_default_message();
     }); 
     return;
 }
@@ -198,11 +201,28 @@ function update_DOM_maze_list(): void {
     dom_maze_fields.style.display = 'block';
 }
 function _OK_maze_Fnc(this: HTMLLIElement, e: MouseEvent): void {
-    switch_cursor(T_List_mode.Maze);
+//    switch_cursor(T_List_mode.Maze);
     cursor.idx  = Number(this.id); 
-
     list_high_light_on(); 
-    isCK_maze();
+    switch (mode) {
+        case 'tomz_nor_maze': 
+            isCK_maze();
+            old_idx = cursor.idx;
+            break;
+        case 'tomz_jmp_maze':
+            if (cursor.idx === old_idx) isGO_maze();
+            else {
+                isCK_maze();
+                old_idx = cursor.idx;
+            }
+            break;
+        default:
+            cursor_maze.idx = Number(this.id);
+            isSL_mvpt();
+            isCK_maze();
+            old_idx = cursor.idx;
+            break;
+    }
 //    display_default_message();
 }
 
@@ -249,11 +269,27 @@ function update_DOM_mvpt_list(): void {
     dom_mvpt_fields.style.display = 'block';
 }
 function _OK_mvpt_Fnc(this: HTMLLIElement, e: MouseEvent): void {
-    switch_cursor(T_List_mode.MvPt);
+//    switch_cursor(T_List_mode.MvPt);
     cursor.idx  = Number(this.id); 
-
     list_high_light_on(); 
-    isCK_mvpt();
+    switch (mode) {
+        case 'tomz_nor_mvpt': 
+            isCK_mvpt();
+            old_idx = cursor.idx;
+            break;
+        case 'tomz_jmp_mvpt':
+            if (cursor.idx === old_idx) isGO_mvpt();
+            else {
+                isCK_mvpt();
+                old_idx = cursor.idx;
+            }
+            break;
+        default:
+            cursor_mvpt.idx = Number(this.id);
+            isSL_maze();
+            isCK_mvpt();
+            old_idx = cursor.idx;
+        }
 //    display_default_message();
 }
 
@@ -304,7 +340,6 @@ const ctls_tomz_nor_maze = {
     isNG:  isRT,
     isSL:  isSL_maze,
     isRT:  isRT,
-    cpOK:  isCK_maze,
     cpSL:  isSL_maze,
     cpRT:  isRT,
 } 
@@ -316,7 +351,6 @@ const ctls_tomz_nor_mvpt = {
     isNG:  isRT,
     isSL:  isSL_mvpt,
     isRT:  isRT,
-    cpOK:  isCK_mvpt,
     cpSL:  isSL_mvpt,
     cpRT:  isRT,
 }
@@ -326,6 +360,7 @@ const ctls_tomz_jmp_maze = {
     isNG:  isNG_maze,
     isRT:  isRT,
     cpOK:  isGO_maze,
+    cpNG:  isNG_maze,
 }
 const ctls_tomz_jmp_mvpt = {
     name: 'tomz_jmp_mvpt', 
@@ -333,12 +368,14 @@ const ctls_tomz_jmp_mvpt = {
     isNG:  isNG_mvpt,
     isRT:  isRT,
     cpOK:  isGO_mvpt,
+    cpNG:  isNG_mvpt,
 }
 
 function init_cursor(): boolean { 
     cursor_hide = {mode: T_List_mode.Hide, idx: 0}; 
     cursor_maze = {mode: T_List_mode.Maze, idx: 0}; 
     cursor_mvpt = {mode: T_List_mode.MvPt, idx: 0}; 
+    old_idx     = 999;
 
     if (exist_maze_list()) { 
         mode = 'tomz_nor_maze';
