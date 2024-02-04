@@ -1,15 +1,23 @@
 import { T_MzKind }                   from "../common/T_MzKind";
-import { I_HopeAction }               from "../common/I_EventMap";
+import { I_HopeAction }               from "../common/I_Common";
 import { C_Point }                    from "../common/C_Point";
+import { instant_load, instant_save } from "../common/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
-import { instant_load, instant_save } from "./F_load_and_save";
-import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm, g_vsw }                 from "./global_for_maze";
-import { g_maze, g_team }             from "../common/global";
+import { set_g_save }                 from "./F_set_save_controlles";
+import { display_maze2D, display_maze3D, 
+         maze3D_blink_on_direction, maze3D_blink_off_direction }     from "./F_display_maze";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }   from "./F_set_UD_controlles";
+import { 
+    g_debug_mode, 
+    g_ctls_mode, 
+    g_mvm, 
+    g_vsw, 
+    g_maze, 
+    g_team,
+    do_load_bottom_half, 
+} from "./global_for_maze";
 
 export function clr_move_controlles(): void {
     const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
@@ -86,14 +94,14 @@ function key_press_function1(e: KeyboardEvent):void  {
                 break;
         case 'KeyL':
             if (g_debug_mode) {
-                instant_load();
+                do_instant_load();
             } else {
                 (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
             }
             break;
         case 'KeyS': 
             if (g_debug_mode) { 
-                instant_save();
+                do_instant_save();
                 do_move_bottom_half('blink_off');
             }
             break;
@@ -119,35 +127,58 @@ function key_press_function1(e: KeyboardEvent):void  {
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
+function do_instant_load(): void {
+    instant_load().then((jsonObj:any)=>{  
+        do_load_bottom_half('ロードしました');  
+    });
+}
+
+function do_instant_save(): void {
+    set_g_save(
+        /* save_id: */   -1,
+        /* uniq_no: */   -1,
+        /* title: */     '簡易保存データ', 
+        /* detail: */    '', 
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
+        /* auto_mode: */ true,
+    );
+    instant_save();
+}
+
+
+
+
 function clear_mask_around_the_team(): void {
-    g_maze.clear_mask_around_the_team();
+    g_maze.clear_mask_around_the_team(g_team);
 }
 
 function change_unexp_to_floor(p: C_Point): void {
     g_maze.change_unexp_to_floor(p);
 }
 
-function go_F() {
+function go_F(): void {
     const rslt = g_team.hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
-function go_B() {
+function go_B(): void {
     const rslt = g_team.hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
-function tr_R() {
+function tr_R(): void {
     const rslt = g_team.hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
-function tr_L() {
+function tr_L(): void {
     const rslt = g_team.hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
-function move_check(r: I_HopeAction) {
+function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
     if (!r.has_hope) return;
     if (r.hope == 'Turn') {
@@ -175,7 +206,7 @@ function move_check(r: I_HopeAction) {
 
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
-    change_unexp_to_floor(g_team.get_p());
+    change_unexp_to_floor(g_team.get_pd());
     clear_mask_around_the_team();
     display_maze2D();
     display_maze3D();

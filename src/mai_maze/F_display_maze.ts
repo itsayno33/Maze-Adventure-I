@@ -2,13 +2,37 @@ import { C_Point }        from "../common/C_Point"
 import { C_Range }        from "../common/C_Range";
 import { T_MzKind }       from "../common/T_MzKind";
 import { T_Direction }    from "../common/T_Direction";
+import { g_mes }          from "../common/global";
+import { _min, _round }   from "../common/F_Math";
 import { C_Wall }         from "./C_Wall";
-import { g_ds,   g_debug_mode }  from "./global_for_maze";
-import { g_maze, g_team, g_mes } from "../common/global";
+import { g_maze, g_team, g_ds, g_debug_mode }  from "./global_for_maze";
+
+// 【初期設定】View2Dの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
+export function calc_view2D_width(): void {
+    const pre = document.getElementById('Maze_view2D_pre') as HTMLPreElement;
+    if (pre === null) return;
+
+    const view2D_width  = pre.clientWidth;
+    const view2D_height = pre.clientHeight;
+
+    const col    = g_maze.get_x_max() + 1;
+    const col_px = view2D_width  / col;
+
+    const row    = g_maze.get_y_max() + 1;
+    const row_px = view2D_height / row;
+
+    const font_size   = _round(0.95 *  _min([col_px, row_px]), 2);
+    const line_height = _round(1.00 *  _min([col_px, row_px]), 2);
+
+    pre.setAttribute('width',  view2D_width .toString());
+    pre.setAttribute('height', view2D_height.toString());
+    pre.style.setProperty('font-size',  `${font_size}px`);
+    pre.style.setProperty('line-height',`${line_height}px`);
+}
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('Maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_p().z, g_debug_mode);
+    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_pd().z, g_debug_mode);
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
 export type T_DrowSet = {
@@ -337,7 +361,8 @@ export function displey_mase3D_direction(): void {
         return;
     }
     var direction: string;
-    switch (g_team.get_dir()) {
+    const p = g_team.get_pd();
+    switch (p.d) {
         case T_Direction.N:
             direction = '<span class="direction_N">《北》</span>';
             break;
@@ -355,7 +380,6 @@ export function displey_mase3D_direction(): void {
             break;
     }
 
-    const p = g_team.get_p();
     const mes = '地下 ' + (p.z + 1) + '階　' + direction + '　(x = <span id="direction_X">' + p.x + '</span>, y = <span id="direction_Y">' + p.y + '</span>)';
     p_dir.innerHTML = mes;
 }

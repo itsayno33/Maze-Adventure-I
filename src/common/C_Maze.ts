@@ -1,43 +1,43 @@
-import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { C_Point }              from "./C_Point";
-import { C_Range }              from "./C_Range";
-import { I_Exist }              from "./I_EventMap";
-import { g_team  }              from "./global";
+import { T_MzKind, T_RvMzKind }  from "./T_MzKind";
+import { C_Point }               from "./C_Point";
+import { I_Locate, T_Lckd }      from "./C_Location";
+import { C_Range }               from "./C_Range";
+import { I_Exist }               from "./I_Common";
+import { C_Team, JSON_Team }     from "./C_Team";
+import { _get_uuid }             from "./F_Rand";
+import { _alert }                from "./global";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 
-export type JSON_Maze = {
+export interface JSON_Maze extends JSON_Any {
     id?:      number,
+    uniq_id?: string,
     save_id?: number,
     floor?:   number,
-    title?:   string,
+    name?:    string,
     size_x?:  number,
     size_y?:  number,
     size_z?:  number,
     maze?:    string, 
     mask?:    string, 
-    objs?:    object[],
+    myteam?:  JSON_Team, 
+    objs?:    string[],
 }
+
 
 export function alert_maze_info(a: JSON_Maze|undefined): void {
     if (a === undefined) return;
 
-    alert("Maze Info:"
+    _alert("Maze Info:"
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
+        + "\nuniq id :" + (a.uniq_id ?? '?')
         + "\nsave id :" + (a.save_id ?? '?')
-        + "\ntitle: "   + (a.title   ?? '?')
+        + "\nname:   "  + (a.name    ?? '?')
         + "\nsize_x: "  + (a.size_x  ?? '?')
         + "\nsize_y: "  + (a.size_y  ?? '?')
         + "\nsize_z: "  + (a.size_z  ?? '?')
-        + "\n"
-    );
-
-    alert(
-        "maze:\n"    + (a.maze ?? '?')
-        + "\n"
-    );
-
-    alert(
-        "mask:\n"    + (a.mask ?? '?')
+        + "maze:\n"     + (a.maze    ?? '?')
+        + "mask:\n"     + (a.mask    ?? '?')
         + "\n"
     );
 }
@@ -132,60 +132,44 @@ class C_MazeCell  {
     }
 }
 
-export class C_Maze {
+type _init_arg = {
+    maze_id?: number,
+    save_id?: number,
+    floor?:   number,
+    name?:    string,
+    size_x?:  number,
+    size_y?:  number,
+    size_z?:  number,
+}
+
+export class C_Maze implements I_Locate, I_JSON_Uniq {
     protected maze_id:  number;
+    protected uniq_id:  string;
     protected save_id:  number;
     protected floor:    number;
-    protected title:    string;
+    protected name:     string;
     protected my_layer: number = 0;
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
-    protected objs:     I_Exist[];
-    public constructor(
-        {maze_id = -1, save_id = -1, floor = 0, title = '', size_x = 3, size_y = 3, size_z = 1}: {
-            maze_id?: number,
-            save_id?: number,
-            floor?:   number,
-            title?:   string,
-            size_x?:  number,
-            size_y?:  number,
-            size_z?:  number,
-        }
-    ) {
-        this.maze_id = maze_id;
-        this.save_id = save_id;
-        this.floor   = floor;
-        this.title   = title;
+    protected objs:     {[uid: string]: I_Exist};
+
+    public constructor(a?: _init_arg) {
+        this.maze_id = -1;
+        this.save_id = -1;
+        this.uniq_id = 'mai_maze#' + _get_uuid();
+        this.floor   = 0;
+        this.name    = '';
         this.size    = new C_Range(
             new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z - 1));
+            new C_Point(2, 2, 2));
         this.cells   = this.__init_maze(T_MzKind.Stone);
         this.masks   = this.__init_mask(true);
-        this.objs    = [] as I_Exist[];
+        this.objs    = {};
+        
+        if (a !== undefined) this.decode(a);
     }
-    public init(
-        {maze_id, save_id, floor, title, size_x, size_y, size_z}: {
-            maze_id: number,
-            save_id: number,
-            floor:   number,
-            title:   string,
-            size_x:  number,
-            size_y:  number,
-            size_z:  number,
-        }
-    ) {
-        this.maze_id = maze_id;
-        this.save_id = save_id;
-        this.floor   = floor;
-        this.title   = title;
-        this.size    = new C_Range(
-            new C_Point(0, 0, 0), 
-            new C_Point(size_x - 1, size_y - 1, size_z - 1));
-        this.cells   = this.__init_maze(T_MzKind.Stone);
-        this.masks   = this.__init_mask(true);
-        this.objs    = [] as I_Exist[];
-    }
+
     protected __init_maze(kind: T_MzKind = T_MzKind.Stone): C_MazeCell[][][] {
         const size_x = this.size.size_x();
         const size_y = this.size.size_y();
@@ -220,10 +204,9 @@ export class C_Maze {
         }
         return masks;
     }
-
-    public get_title(): string {
-        return this.title;
-    }
+    public uid(): string      {return this.uniq_id}
+    public get_lckd(): T_Lckd {return T_Lckd.Maze}
+    public get_name(): string {return this.name}
 
     public within(p: C_Point): boolean {
         return this.size.within(p);
@@ -231,10 +214,10 @@ export class C_Maze {
     
     // メイズ内のオブジェクトやモンスター等の配置
     public add_obj(obj: I_Exist): void {
-        this.objs.push(obj);
+        this.objs[obj.uid()] = obj;
     }
     public remove_obj(obj: I_Exist): void {
-        this.objs = this.objs.filter(item => item.id() !== obj.id());
+        delete this.objs[obj.uid()];
     }
     public get_obj_xyz(x: number, y: number, z: number): I_Exist|null {
         return this.get_obj(new C_Point(x, y, z));
@@ -242,11 +225,14 @@ export class C_Maze {
     public get_obj(p: C_Point): I_Exist|null {
         var layer = -1;
         var obj: I_Exist|null   = null;
-        for (const item of this.objs) {
-            if (item.within(p)) {
-                if (item.layer() > layer) {
-                    layer = item.layer();
-                    obj = item;
+
+        for (const id in this.objs) {
+            const exist = this.objs[id];
+
+            if (exist.within(p)) {
+                if (exist.layer() > layer) {
+                    layer = exist.layer();
+                    obj   = exist;
                 }
             }
         } 
@@ -261,27 +247,27 @@ export class C_Maze {
     }
 
     // 2Dマップのマスク外し関連
-    public clear_mask_around_the_team(): void {
+    public clear_mask_around_the_team(team: C_Team): void {
         // 現在地と真横は自動的に見える
-        this.__clear_mask(g_team.get_around(0, -1));
-        this.__clear_mask(g_team.get_around(0,  0));
-        this.__clear_mask(g_team.get_around(0,  1));
+        this.__clear_mask(team.get_around(0, -1));
+        this.__clear_mask(team.get_around(0,  0));
+        this.__clear_mask(team.get_around(0,  1));
 
         const depth   =  5; // 2Dマップ用の奥行き限界
 
         // 前方の見通しをチェックしながら見えるところは解放する
         for (var d = 1; d < depth; d++) {
-            const front_pos = g_team.get_around(d, 0)
+            const front_pos = team.get_around(d, 0)
             if (this.is_movable(front_pos)) {
                 // 正面に障害物が無ければ、その両側も見える
-                this.__clear_mask(g_team.get_around(d, -1));
-                this.__clear_mask(g_team.get_around(d,  0));
-                this.__clear_mask(g_team.get_around(d,  1));
+                this.__clear_mask(team.get_around(d, -1));
+                this.__clear_mask(team.get_around(d,  0));
+                this.__clear_mask(team.get_around(d,  1));
             } else {
                 // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
-                this.__clear_mask(g_team.get_around(d, -1));
-                this.__clear_mask(g_team.get_around(d,  0));
-                this.__clear_mask(g_team.get_around(d,  1));
+                this.__clear_mask(team.get_around(d, -1));
+                this.__clear_mask(team.get_around(d,  0));
+                this.__clear_mask(team.get_around(d,  1));
                 // 正面に障害物が有ったらその奥は見えないので探索終了
                 break;
             }
@@ -384,9 +370,11 @@ export class C_Maze {
 
         return {
             id:      this.maze_id,
+            uniq_id: this.uniq_id,
             save_id: this.save_id,
             floor:   this.floor,
-            title:   this.title,
+            name:    this.name,
+//            objs:    this.objs.encode(),
             size_x:  this.size.size_x(),
             size_y:  this.size.size_y(),
             size_z:  this.size.size_z(),
@@ -394,14 +382,16 @@ export class C_Maze {
             mask:    mask_str,
         }
     }
-    public decode(a: JSON_Maze|undefined): void {
-        if (a === undefined) return;
+    public decode(a: JSON_Maze|undefined): C_Maze {
+        if (a === undefined) return this;
 
         if (a.id      !== undefined) this.maze_id = a.id;
+        if (a.uniq_id !== undefined) this.uniq_id = a.uniq_id;
         if (a.save_id !== undefined) this.save_id = a.save_id;
         if (a.floor   !== undefined) this.floor   = a.floor;
-        if (a.title   !== undefined) this.title   = a.title;
-        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
+        if (a.name    !== undefined) this.name    = a.name;
+
+//        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
 
         if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
             this.size  = new C_Range(
@@ -458,6 +448,21 @@ export class C_Maze {
                 }
             }      
         }
+        return this;
+    }
+    public static encode_all(all_maze: C_Maze[]): JSON_Maze[] {
+        const all_maze_data: JSON_Maze[] = [];
+        for (let maze of all_maze) {
+            all_maze_data.push(maze.encode());
+        }
+        return all_maze_data;
+    }
+    public static decode_all(all_maze_data: JSON_Maze[]): C_Maze[] {
+        const all_maze: C_Maze[] = [];
+        for (let maze_data of all_maze_data) {
+            all_maze.push((new C_Maze({})).decode(maze_data));
+        }
+        return all_maze;
     }
 }
 function  _min(a: number, b: number): number {

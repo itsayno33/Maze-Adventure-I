@@ -1,33 +1,51 @@
 import { _round }              from "../common/F_Math";
 import { C_UrlOpt }            from "../common/C_UrlOpt";
+import { C_SaveData  }         from "../common/C_SaveData";
+import { T_Lckd }              from "../common/C_Location";
+import { C_PointDir }          from "../common/C_PointDir";
+import { POST_and_move_page }  from "../common/F_POST";
+import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
+import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { general_load, general_save, get_save_info }        from "./F_load_and_save";
-import { g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { g_maze, g_team, g_mes }     from "../common/global";
+import { 
+    g_ctls_mode, 
+    g_mvm, 
+    g_vsw, 
+    g_maze, 
+    g_team, 
+    g_hres, 
+    do_load_bottom_half 
+} from "./global_for_maze";
 
-var   idx: number = 0;
-var   save_UL_list: HTMLUListElement;
-var   form_id:      HTMLInputElement;
-var   form_time:    HTMLParagraphElement;
-var   form_detail:  HTMLTextAreaElement;
-var   form_point:   HTMLParagraphElement;
+var   UL_idx: number = 0;
+var   save_UL_list_len: number;
+var   save_UL_list:     HTMLUListElement;
+var   UL_to_Data:       {[UL_idx: number]: /* data_idx: */ number}
+
+var   form_id:          HTMLInputElement;
+var   form_time:        HTMLParagraphElement;
+var   form_detail:      HTMLTextAreaElement;
+var   form_point:       HTMLParagraphElement;
 
 var   is_kakunin = false;
 
 export type T_save_list = {
-    id:        number,
+    save_id:   number,
+    uniq_no:   number,
     title:     string,
     detail:    string,
+    scene:     string,
     point:     string,
     save_time: string,
     auto_mode: string,
     __is_new:  boolean,
 }
 
-var   save_list:    T_save_list[];
-var   link_list:    T_save_list[];
+var   save_list:        {[uniq_no: number]: C_SaveData};
+const save_list_max = 10;
+//var   link_list:    T_save_list[];
 
 export function clr_load_controlles(): void {
     __clr_controlles(false);
@@ -148,25 +166,21 @@ function key_press_function5(e: KeyboardEvent):void  {
     }
 }
 
-function is_OK_for_load() {
+function is_OK_for_load(): void {
     if (save_UL_list === null) return;
-
-    const children = save_UL_list.children;
-    if (idx < 0 || idx > children.length - 1) return;
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 
     if (!is_kakunin) check_load(); else load();
 }
 
-function isOK_for_save() {
+function isOK_for_save(): void {
     if (save_UL_list === null) return;
-
-    const children = save_UL_list.children;
-    if (idx < 0 || idx > children.length - 1) return;
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 
     if (!is_kakunin) check_save(); else save();
 }
 
-function isNG() {
+function isNG(): void {
     g_mvm.clear_message();
     if (!is_kakunin) {
         set_camp_controlles();
@@ -178,52 +192,52 @@ function isNG() {
 }
 
 
-function do_U() {
+function do_U(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    if (idx < 1) {
+    if (UL_idx < 1) {
 //        idx = link_list.length;
-        idx = 1;
+        UL_idx = 1;
     }
-    --idx;
+    --UL_idx;
     high_light_on(); form_set();
 }
 
-function do_D() { 
+function do_D(): void { 
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    if (idx > link_list.length - 2) {
+    if (UL_idx > save_UL_list_len - 2) {
 //        idx = -1;
-        idx = link_list.length - 2
+        UL_idx = save_UL_list_len - 2
     }
-    ++idx; 
+    ++UL_idx; 
     high_light_on();  form_set();
 }
 
-function do_L() {
+function do_L(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    const limit = _round((link_list.length - 1) / 2, 0);
-    if (idx < limit) {
-        idx += limit;
+    const limit = _round((save_UL_list_len - 1) / 2, 0);
+    if (UL_idx < limit) {
+        UL_idx += limit;
     } else {
-        idx -= limit;
+        UL_idx -= limit;
     } 
     high_light_on();  form_set();
 }
 
-function do_R() {
+function do_R(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    const limit = _round((link_list.length - 1) / 2, 0);
-    if (idx >= limit) {
-        idx -= limit;
+    const limit = _round((save_UL_list_len - 1) / 2, 0);
+    if (UL_idx >= limit) {
+        UL_idx -= limit;
     } else {
-        idx += limit;
+        UL_idx += limit;
     } 
     high_light_on();  form_set();
 }
@@ -232,13 +246,13 @@ function high_light_on(): void {
     if (save_UL_list === null) return;
 
     const children = save_UL_list.children;
-    if (idx < 0 || idx > children.length - 1) return;
+    if (UL_idx < 0 || UL_idx > children.length - 1) return;
 
     for (var i = 0; i < children.length; i++) {
         const li = children.item(i) as HTMLLIElement;
         __high_light_on(li, false);
     }
-    const li = children.item(idx) as HTMLLIElement;
+    const li = children.item(UL_idx) as HTMLLIElement;
     __high_light_on(li, true);
 }
 
@@ -257,8 +271,8 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
 }
 
 function form_clr():void {
-    const children = save_UL_list.children;
-    if (idx < 0 || idx > children.length - 1) return;
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
+
     form_id   .value      = '-1';
     form_time .innerText  = '';
     form_point.innerText  = '';
@@ -273,24 +287,25 @@ function form_clr():void {
 }
 
 function form_set():void {
-    const children = save_UL_list.children;
-    if (idx < 0 || idx > children.length - 1) return;
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 
     form_clr();
-    form_id   .value      = link_list[idx].id.toString();
-    form_time .innerText  = link_list[idx].save_time;
-    form_point.innerText  = link_list[idx].point;
+    const data_idx = UL_to_Data[UL_idx];
+
+    form_id   .value      = save_list[data_idx].save_id.toString();
+    form_time .innerText  = save_list[data_idx].save_time.toISOString();
+    form_point.innerText  = save_list[data_idx].point;
 
     if (form_detail.hasAttribute('readonly')) {
         form_detail.removeAttribute('readonly');
-        form_detail.value = link_list[idx].detail;
+        form_detail.value = save_list[data_idx].detail;
         form_detail.setAttribute('readonly', 'readonly');
     }else {
-        form_detail.value = link_list[idx].detail;
+        form_detail.value = save_list[data_idx].detail;
     }
 }
 
-export function display_save_list(for_save: boolean) {
+export function display_save_list(for_save: boolean): void {
     const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
     const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
@@ -310,29 +325,24 @@ export function display_save_list(for_save: boolean) {
             return undefined;
         }
         try {
-            save_list = [] as T_save_list[];
-            for (var save_item of jsonObj.save) {
-                save_list.push({
-                    id:        (save_item?.save_id    ?? 0),
-                    title:     (save_item?.title      ?? '??? Unknown Title'),
-                    detail:    (save_item?.detail     ?? '???'),
-                    point:     (save_item?.point      ?? '???'),
-                    save_time: (save_item?.save_time  ?? '????-??-?? ??:??:??'),
-                    auto_mode: (save_item?.auto_mode  ?? 'N'),
-                    __is_new:   false,
-                } as T_save_list)
+            save_list = {}; 
+
+            for (let save_info of jsonObj.save_info) {
+//                if (for_save && jsonObj.save_info.auto_mode == '1') continue; 
+                save_list[save_info.uniq_no] = new C_SaveData(save_info);
             }
             if (for_save) {
-                for (var j = save_list.length; j < 10; j++) { 
-                    save_list.push({
-                        id:         -1,
+                for (let uniq_no_cnt = 0; uniq_no_cnt < save_list_max; uniq_no_cnt++) {
+                    if (uniq_no_cnt in save_list) continue;
+                    save_list[uniq_no_cnt] = new C_SaveData({
+                        save_id:    -1,
+                        uniq_no:     uniq_no_cnt,
                         title:      `保存データ`,
                         detail:    '',
                         point:     '',
                         save_time: '',
-                        auto_mode: 'N',
-                        __is_new:   true,
-                    })
+                        auto_mode: '0',
+                    });
                 }
             }
 
@@ -343,24 +353,36 @@ export function display_save_list(for_save: boolean) {
                 save_UL_list.removeChild(save_UL_list.firstChild);
             }
 
-            link_list = [] as T_save_list[];
-            for (var i in save_list) {
-                const li = document.createElement('li') as HTMLLIElement;
-                switch (save_list[i].title) {
-                    case '__InstantSaveData__':
-                        if (for_save) continue;
-                        save_list[i].title  = '簡易保存データ';
-                        save_list[i].detail = 'デバッグモードで簡易保存したデータです';
-                        break;
-                    case '__UpDownSaveData__':
-                        if (for_save) continue;
-                        save_list[i].title  = '階段直前データ';
-                        save_list[i].detail = '一番最近のフロア移動直前に自動保存したデータです';
-                        break;
+            save_UL_list_len = 0; UL_to_Data = {};
+            for (let data_idx in save_list) {
+                if (save_list[data_idx].auto_mode) {
+                    if (for_save) continue;
+
+                    switch (save_list[data_idx].uniq_no) { 
+                        case 100: 
+                            save_list[data_idx].title  = '自動保存分';
+                            save_list[data_idx].detail = '作業用に簡易保存したデータです';
+                            break;
+                        case 101:
+                            save_list[data_idx].title  = '簡易保存分';
+                            save_list[data_idx].detail = 'デバッグモードで簡易保存したデータです';
+                            break;
+                        case 102:
+                            save_list[data_idx].title  = '階段直前分';
+                            save_list[data_idx].detail = '一番最近のフロア移動直前に自動保存したデータです';
+                            break;
+                        case 103:
+                            save_list[data_idx].title  = 'ｲﾍﾞﾝﾄ直前分';
+                            save_list[data_idx].detail = 'イベント(失敗)直前に簡易保存したデータです';
+                            break;
+                    }
                 }
-                li.innerHTML = `『${save_list[i].title}』`;
+
+                const li = document.createElement('li') as HTMLLIElement;
+                li.innerHTML = `『${save_list[data_idx].title}』`;
                 save_UL_list.appendChild(li);
-                link_list.push(save_list[i]);
+                UL_to_Data[save_UL_list_len] = Number(data_idx);
+                save_UL_list_len++;
             }
 
             form_id     = document.getElementById(data_id)     as HTMLInputElement;
@@ -370,8 +392,8 @@ export function display_save_list(for_save: boolean) {
 
             if (!for_save) display_load_fields();
             if (for_save) g_vsw.view_save(); else g_vsw.view_load();
-            idx = 0; high_light_on(); form_set();
-        
+            UL_idx = 0; high_light_on(); 
+            form_set();
             return;
         } catch (err) {
             g_mes.warning_message(err as unknown as string);
@@ -382,7 +404,8 @@ export function display_save_list(for_save: boolean) {
 }
 
 function display_load_fields(): void {
-    if (link_list.length > 0) {
+//    if (link_list.length > 0) {
+    if (Object.keys(save_list).length > 0) {
         // ロードできるデータ有り
         // ロードデータリストと詳細パネルを表示
         const ul = document.getElementById('load_data_list')   as HTMLUListElement;
@@ -403,49 +426,161 @@ function display_load_fields(): void {
     }
 }
 
-function check_load(): void{ // 入力チェックと既存データ上書きの確認
-    if (idx < 0 || idx > link_list.length - 1) {
-        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+function check_load(): void { // 入力チェックと既存データ上書きの確認
+    const data_idx = UL_to_Data[UL_idx];
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
+        g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
     g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
 }
 
-function check_save(): void{ // 入力チェックと既存データ上書きの確認
-    if (idx < 0 || idx > link_list.length - 1) {
-        g_mes.warning_message(`check!! No longer access idx!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+function check_save(): void { // 入力チェックと既存データ上書きの確認
+    const data_idx = UL_to_Data[UL_idx];
+    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
+        g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
-    if (link_list[idx].auto_mode == 'Y') {
-        g_mes.warning_message(`check!! This is Auto Mode!『${link_list[idx].title}』(id: ${link_list[idx].id})`);
+    if (save_list[data_idx].auto_mode) {
+        g_mes.warning_message(`check!! This is Auto Mode!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
     g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
 
-function load(): void {
+function load(): void { 
+    const data_idx = UL_to_Data[UL_idx];
+    if (save_list[data_idx].mypos.url() !== '' && save_list[data_idx].mypos.url() != g_my_url) {
+        _load_other(data_idx);
+        return;
+    }
+    _load_here(data_idx);
+    return;
+}
+function _load_other(data_idx: number): void {
     const opt = new C_UrlOpt();
-    opt.set('save_id',     Number(form_id.value)); 
-    general_load(opt);
-
-    is_kakunin = false;
-    g_mvm.notice_message('ロードしました');
-    g_vsw.view_maze();
+    opt.set('mode', 'load');
+    opt.set('pid',   g_start_env.pid);
+    opt.set('opt',   save_list[data_idx].uniq_no.toString());
+    POST_and_move_page(save_list[data_idx].mypos.url(), opt);
+    return;
 }
 
-function save(): void{
-    const opt = new C_UrlOpt();
-    opt.set('save_id',     Number(form_id.value)); 
-    opt.set('save_title',  `保存データ`);
-    opt.set('save_detail', form_detail.value);
-    opt.set('save_point',  
-        `『${g_maze.get_title()}』 ` 
-        + `地下 ${g_team.get_p().z + 1}階層 ` 
-        + `(X: ${g_team.get_p().x}, Y: ${g_team.get_p().y})`
-    );
-    general_save(opt);
+function _load_here(data_idx: number): void {
+    g_start_env.pid = save_list[data_idx].player_id;
 
-    is_kakunin = false;
-    g_mvm.notice_message('保存しました');
-    set_camp_controlles();
-    g_vsw.view_camp();
+    general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
+        is_kakunin = false;
+        decode_all(jsonObj?.save);
+        do_load_bottom_half('ロードしました'); 
+    });
+}
+
+async function save(): Promise<void> {
+    const data_idx = UL_to_Data[UL_idx];
+    set_g_save(
+        /* save_id: */   save_list[data_idx].save_id, //Number(form_id.value),
+        /* uniq_no: */   save_list[data_idx].uniq_no,
+        /* title: */     `保存済: #${data_idx.toString().padStart(2, '0')}`, //save_list[data_idx].title, 
+        /* detail: */    form_detail.value,
+        /* point: */     
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
+        /* auto_mode: */ false,
+    );
+    general_save().then((jsonObj)=>{
+        decode_all(jsonObj);
+
+        is_kakunin = false;
+        g_mvm.notice_message('保存しました');
+        set_camp_controlles();
+        g_vsw.view_camp();
+        
+    });
+}
+
+export function decode_all(jsonObj: any): void { 
+    // SaveData関連のデコード
+    if (jsonObj === undefined) return;
+    g_save.decode(jsonObj); 
+    g_save.mypos.set_url(g_my_url);
+
+    //Team関連のデコード
+    g_team.decode(g_save.all_team[g_save.mypos.tid()??''].encode()); 
+    g_team.set_loc(g_save.mypos);
+
+    // Maze関連のデコード
+    const loc = g_team.get_loc(); 
+    if (loc.get_lckd() == T_Lckd.Maze) {
+        g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
+    }
+
+    //Hero関連のデコード
+    for (const i in g_hres) delete g_hres[i]; 
+    for (const hero of g_team.hres())  g_hres.push(hero); 
+
+    // MazeにTeamを追加
+    g_maze.add_obj(g_team); 
+}
+
+// 新規ゲームの初期データの読み込み(暫定)
+export function decode_maze(jsonObj: any): void {
+    // Maze関連のデコード
+    if (jsonObj?.maze !== undefined) g_maze.decode(jsonObj.maze);
+
+    //　Team関連(現在地)のデコード
+    if (jsonObj?.pos !== undefined) {
+        let pos = new C_PointDir({
+            x: jsonObj.pos?.x, 
+            y: jsonObj.pos?.y, 
+            z: jsonObj.pos?.z, 
+            d: jsonObj.pos?.d, 
+        }); 
+        g_team.set_place(g_maze, g_my_url, pos);
+        g_save.mypos = g_team.get_loc();
+    }
+
+    // Hero関連のデコード
+    for (const i in g_hres) delete g_hres[i];
+    for (const hero of g_team.hres()) g_hres.push(hero);
+
+    // MazeにTeamを追加
+    g_maze.add_obj(g_team);
+
+    // SaveDataのベースの作成
+    g_save.mypos = g_team.get_loc();
+    g_save.all_maze[g_maze.uid()] = g_maze;
+    g_save.all_team[g_team.uid()] = g_team;
+}
+
+export function set_g_save (
+        save_id:   number,
+        uniq_no:   number, 
+        title:     string, 
+        detail:    string, 
+        point:     string,
+        auto_mode: boolean,
+    ): void {
+        g_save.mypos = g_team.get_loc();
+
+        g_save.all_team[g_team.uid()] = g_team;
+        g_save.all_maze[g_maze.uid()] = g_maze; //
+
+        g_save.decode({
+            save_id:   save_id, 
+            player_id: g_start_env.pid,
+            uniq_no:   uniq_no, 
+            title:     title, 
+            detail:    detail,
+            point:     point, 
+            auto_mode: auto_mode ? '1' : '0',
+            is_active: '1',
+            is_delete: '0',
+    
+// 初期設定かロードの時点で設定されているはず
+//            all_mvpt: all_mvpt,
+//            all_maze: all_maze,
+//            all_team: all_team,
+//            all_guld: all_guld,
+        });
 }

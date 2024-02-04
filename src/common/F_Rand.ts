@@ -1,4 +1,4 @@
-import { _round } from "./F_Math";
+import { _max, _min, _round } from "./F_Math";
 
 // 乱数関数呼び出し用の型宣言
 type T_frand = (()=>number)
@@ -6,7 +6,7 @@ const frand: T_frand =  ()=>{return Math.random()}
 
 // 一様乱数(整数)
 export function _irand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    const frand = Math.floor(rand() * (max - min + 1)) + min;
+    const frand = Math.floor(rand() * (max - min + 1) + min);
     return _round(frand, 0);
 }
 
@@ -17,7 +17,7 @@ export function _igrand(min: number = 0, max: number = 1, rand: T_frand = frand)
 
 // 正規分布もどき乱数(実数)
 export function _grand(min: number = 0, max: number = 1, rand: T_frand = frand):number {
-    return Math.floor(___gaussianRand(rand) * (max - min + 1)) + min;
+    return Math.floor(___gaussianRand(rand) * (max - min + 1) + min);
 }
 function ___gaussianRand(rand: T_frand = frand) {
     let sum = 0;
@@ -28,24 +28,30 @@ function ___gaussianRand(rand: T_frand = frand) {
 }
 
 // 少し真面目な正規分布乱数(整数)
-export function _inrand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    return _irand(min, max, ()=>{return _nrand(0, 1, rand)[0]})
+export function _inrand(min: number = 0, max: number = 1, dd: number = 3.0, rand: T_frand = frand): number {
+    return Math.floor(_nrand(min, max, dd, rand));
 }
 
-// 少し真面目な正規分布乱数(実数 × 2)
+// 少し真面目な正規分布乱数(実数)
 // 一様確率変数a,bを変数関数を用いて x=f(a,b), y=g(a,b)として2つの正規分布乱数x,yを得る
-// x = f(a,b) = sqrt(-2*log(a) * sin(2*π*b)) 
-// y = g(a,b) = sqrt(-2*log(a) * cos(2*π*b)) 
-export function _nrand(min: number = 0, max: number = 1, rand: T_frand = frand): [number, number] {
-    const x = Math.floor(_fab(rand) * (max - min +1)) + min;
-    const y = Math.floor(_gab(rand) * (max - min +1)) + min;
-    return [x, y];
+// x = f(a,b) = sqrt(-2*log(a)) * sin(2*π*b) 
+// y = g(a,b) = sqrt(-2*log(a)) * cos(2*π*b) 
+export function _nrand(min: number = 0.0, max: number = 1.0, dd: number = 3.0, rand: T_frand = frand): number {
+    const ave = 0.5;
+    const a = rand();
+    const b = rand();
+    let x = ave + _fab(a, b) / (2.0 * dd); // ここまで、N(0,1)の正規分布乱数の作成
+
+    x = min + x * (max - min);
+    x = _max([min, x]);
+    x = _min([max, x]);
+    return x;
 }
-function _fab(rand: (()=>number) = ()=>{return Math.random()}): number {
-    return Math.sqrt(-2.0 * Math.log(rand()) * Math.sin(2.0 * Math.PI * rand()));
+function _fab(a: number, b: number): number {
+    return Math.sqrt(-2.0 * Math.log(a)) * Math.sin(2.0 * Math.PI * b);
 }
-function _gab(rand: (()=>number) = ()=>{return Math.random()}): number {
-    return Math.sqrt(-2.0 * Math.log(rand()) * Math.cos(2.0 * Math.PI * rand()));
+function _gab(a: number, b: number): number {
+    return Math.sqrt(-2.0 * Math.log(a)) * Math.cos(2.0 * Math.PI * b);
 }
 
 
@@ -66,6 +72,15 @@ export class C_SeededRand {
         this.seed = (this.seed * 9301 + 49297) % 233280;
         return this.seed / 233280.0;
     }
+}
+
+//ユニークID(uuid)の生成
+export function _get_uuid(len: number = 20, rand: T_frand = frand): string {
+    const lft = (new Date()).getTime().toString(16); // たぶん13桁
+    const rgt_len = _max([len - lft.length, 1]);
+
+    const rgt = Math.floor(Math.pow(10, rgt_len) * rand()).toString(16);
+    return lft + rgt;
 }
 
 // 確率に基づく要素選択

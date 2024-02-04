@@ -1,14 +1,12 @@
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
-import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { set_save_controlles, display_save_list, set_load_controlles   } from "./F_set_save_controlles";
+import { set_move_controlles, do_move_bottom_half }   from "./F_set_move_controlles";
+import { set_save_controlles, set_load_controlles   } from "./F_set_save_controlles";
+import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
 import { g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { g_mes, g_pid }              from "../common/global";
+import { g_mes }                     from "../common/global";
 
-var canUp: boolean  =  false;
-var canDn: boolean  =  false;
-
-const mode:  string[] =  ['Load', 'Save'];
+const mode:  string[] =  ['Load', 'Save', 'MvPt'];
 var   idx:   number   =   0;
 
 export function clr_camp_controlles(): void {
@@ -88,7 +86,7 @@ function key_press_function3(e: KeyboardEvent):void  {
     }
 }
 
-function isOK() {
+function isOK(): void {
     const camp_list = document.getElementById('camp_list') as HTMLUListElement;
     if (camp_list === null) return;
 
@@ -99,10 +97,11 @@ function isOK() {
     switch (li.id) {
         case 'camp_load': do_load();return;
         case 'camp_save': do_save();return;
+        case 'camp_mvpt': do_mvpt();return;
     }
 }
 
-function isNG() {
+function isNG(): void {
     g_mvm.clear_message();
     set_move_controlles();
     g_vsw.view_maze();
@@ -110,13 +109,13 @@ function isNG() {
 }
 
 
-function do_U() {
+function do_U(): void {
     g_mvm.clear_message();
     idx = (idx > 0) ? --idx : idx;
     high_light_on(); 
 }
 
-function do_D() {
+function do_D(): void {
     g_mvm.clear_message();
     idx = (idx < mode.length - 1) ? ++idx : idx;
     high_light_on(); 
@@ -157,4 +156,8 @@ function do_load(): void {
 
 function do_save(): void {
     set_save_controlles();
+}
+
+function do_mvpt(): void {
+    set_mvpt_controlles();
 }

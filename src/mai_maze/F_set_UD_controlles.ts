@@ -1,9 +1,11 @@
 import { T_CtlsMode }       from "./T_CtlsMode";
 import { hide_controlles }  from "./F_set_controlles";
-import { UD_save }          from "./F_load_and_save";
+import { UD_save }          from "../common/F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
-import { g_maze, g_team,  } from "../common/global";
+import { g_maze, g_team,  } from "./global_for_maze";
+import { C_UrlOpt } from "../common/C_UrlOpt";
+import { decode_all, set_g_save } from "./F_set_save_controlles";
 
 
 export function clr_UD_controlles(): void {
@@ -39,7 +41,7 @@ var canDn: boolean  =  false;
 
 var isUp:  boolean  =  false;
 
-export function set_Up_controlles() {
+export function set_Up_controlles(): void {
     g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
 
     hide_controlles();
@@ -48,7 +50,7 @@ export function set_Up_controlles() {
     __set_UD_controlles();
 }
 
-export function set_Dn_controlles() {
+export function set_Dn_controlles(): void {
     g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
 
     hide_controlles();
@@ -57,7 +59,7 @@ export function set_Dn_controlles() {
     __set_UD_controlles();
 }
 
-export function set_UD_controlles() {
+export function set_UD_controlles(): void {
     g_mvm.notice_message('上下テレポーターが有ります。登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
 
     hide_controlles();
@@ -66,7 +68,7 @@ export function set_UD_controlles() {
     __set_UD_controlles();
 }
 
-function __set_UD_controlles() {
+function __set_UD_controlles(): void {
     g_ctls_mode[0] = T_CtlsMode.UD;
 
     const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
@@ -161,26 +163,34 @@ function do_up(): void {
     const rslt = g_team.hope_p_up();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
+        g_mvm.clear_message();
+        set_move_controlles();
+        do_move_bottom_half('blink_off');
     } else {
-        UD_save();
-        rslt.doOK();
+        do_UD_save().then(()=>{
+            rslt.doOK();
+            g_mvm.clear_message();
+            set_move_controlles();
+            do_move_bottom_half('blink_off');
+        });
     }
-    g_mvm.clear_message();
-    set_move_controlles();
-    do_move_bottom_half('blink_off');
 }
 
 function do_down(): void {
     const rslt = g_team.hope_p_down();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
+        g_mvm.clear_message();
+        set_move_controlles();
+        do_move_bottom_half('blink_off');
     } else {
-        UD_save();
-        rslt.doOK();
+        do_UD_save().then(()=>{
+            rslt.doOK();
+            g_mvm.clear_message();
+            set_move_controlles();
+            do_move_bottom_half('blink_off');
+        });
     }
-    g_mvm.clear_message();
-    set_move_controlles();
-    do_move_bottom_half('blink_off');
 }
 
 function do_UD(): void {
@@ -203,5 +213,23 @@ function hope_Down(): void {
     document.getElementById('u_arrow')?.style.setProperty('visibility', 'hidden');
     document.getElementById('d_arrow')?.style.setProperty('visibility', 'visible');
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
+}
+
+async function do_UD_save(): Promise<any|undefined> {
+    set_g_save(
+        /* save_id: */   -1,
+        /* uniq_no: */   -1,
+        /* title: */     '自動保存データ', 
+        /* detail: */    '',
+        /* point: */     
+                    `『${g_maze.get_name()}』 ` 
+                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
+        /* auto_mode: */ true,
+    );
+    return UD_save();
+//        .then((jsonObj)=>{
+//        decode_all(jsonObj);
+//    });
 }
 

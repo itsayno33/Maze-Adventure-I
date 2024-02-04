@@ -64,6 +64,9 @@ export class C_UrlOpt {
         }
         return;
     }
+    public isset(key: string): boolean {
+        return (key in this.v);
+    }
     public remove(key: string): void {
         if (key in this.v) {
             delete this.v[key];
