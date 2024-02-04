@@ -109,6 +109,7 @@ export class C_Location implements I_JSON {
         if (j.kind === undefined || !(j.kind in T_Lckd)) return this;
 
         if (j.kind    !== undefined) this.loc_kind = T_Lckd[j.kind];
+        if (j.name    !== undefined) this.loc_name = j.name;
         if (j.loc_uid !== undefined) this.loc_uid  = j.loc_uid;
         if (j.loc_pos !== undefined) this.loc_pos.decode(j.loc_pos);
         return this;

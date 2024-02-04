@@ -12,7 +12,8 @@ import {
     calc_cursor_pos_L, 
     calc_cursor_pos_R, 
     hide_all_menu, 
-    high_light_on 
+    high_light_on, 
+    high_light_off
 } from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_ctls, g_mvm, g_team } from "./global_for_guild";
@@ -238,7 +239,7 @@ function update_DOM_mvpt_list(): void {
     for (let ii in mvpt_list) {
         const li = document.createElement('li') as HTMLLIElement;
         const pos = mvpt_list[ii].get_pd();
-        li.innerHTML = `${mvpt_list[ii].get_name()}<p>　💎「${pos.x} , ${pos.y}」${pos.z}階層</p>`;
+        li.innerHTML = `${mvpt_list[ii].get_name()}<p>　💎「${pos.x} , ${pos.y}」${pos.z + 1}階</p>`;
 
         li.id = ii.toString();
         li.addEventListener("click", _OK_mvpt_Fnc, false);
@@ -347,7 +348,7 @@ function init_cursor(): boolean {
     else if (exist_mvpt_list()) { 
         mode = 'tomz_nor_mvpt';
         list_mode = T_List_mode.MvPt;
-        cursor  = cursor_maze; 
+        cursor  = cursor_mvpt; 
     }
     else { 
         mode = 'nop';
@@ -417,14 +418,15 @@ function switch_cursor_to_mvpt(): void {
     
 
 // 選択されている行のハイライト表示(暫定)
-// cursorが切り替わったときにバグる状態
 function list_high_light_on() {
     switch (cursor.mode) {
         case T_List_mode.Maze:
-            high_light_on(dom_maze_list, cursor.idx);
+            high_light_on (dom_maze_list, cursor.idx);
+            high_light_off(dom_mvpt_list);
             break; 
         case T_List_mode.MvPt:
-            high_light_on(dom_mvpt_list, cursor.idx);
+            high_light_off(dom_maze_list);
+            high_light_on (dom_mvpt_list, cursor.idx);
             break; 
     }
 }

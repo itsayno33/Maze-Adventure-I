@@ -43,8 +43,15 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
     public url(): string { return this.cur_url}
     public tid(): string|undefined { return this.team_uid}
 
+    public new_uid(): void {this.uniq_id = 'MvPoint#' + _get_uuid();}
     public set_url(url: string): void { this.cur_url  = url;}
     public set_tid(tid: string): void { this.team_uid = tid;}
+
+    public clone(): C_MovablePoint {
+        const mvpt = new C_MovablePoint(this.encode());
+        mvpt.new_uid();
+        return mvpt;
+    }
 
     public fromJSON(txt: string): C_MovablePoint {
         try {

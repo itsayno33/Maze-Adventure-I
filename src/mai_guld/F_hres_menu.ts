@@ -939,7 +939,6 @@ function get_dom_menu_list_cols(): number {
 }
 
 // 選択されている行のハイライト表示(暫定)
-// cursorが切り替わったときにバグる状態
 function list_high_light_on() {
     switch (cursor.kind) {
         case T_SubView.Team:

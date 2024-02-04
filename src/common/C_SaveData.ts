@@ -76,22 +76,22 @@ export function alert_save_detail(a: JSON_SaveData|undefined): void {
     if (a === undefined) return;
 
     try { 
-        alert("Save Detail(mvpt):");
+//        alert("Save Detail(mvpt):");
         for (const mvpt of a.all_mvpt??[]) alert_mvpt_info(mvpt);
     } catch (err) {alert('alert mvpt error: ' + err)}
 
     try { 
-        alert("Save Detail(team):");
+//        alert("Save Detail(team):");
         for (const team of a.all_team??[]) alert_team_info(team);
     } catch (err) {alert('alert team error: ' + err)}
 
     try { 
-        alert("Save Detail(maze):");
+//        alert("Save Detail(maze):");
         for (const maze of a.all_maze??[]) alert_maze_info(maze);
     } catch (err) {alert('alert maze error: ' + err)}
 
     try { 
-        alert("Save Detail(guld):");
+//        alert("Save Detail(guld):");
         for (const guld of a.all_guld??[]) alert_guld_info(guld);
     } catch (err) {alert('alert guld error: ' + err)}
 }

@@ -503,6 +503,7 @@ export function decode_all(jsonObj: any): void {
     // SaveData関連のデコード
     if (jsonObj === undefined) return;
     g_save.decode(jsonObj); 
+    g_save.mypos.set_url(g_my_url);
 
     //Team関連のデコード
     g_team.decode(g_save.all_team[g_save.mypos.tid()??''].encode()); 
@@ -515,8 +516,8 @@ export function decode_all(jsonObj: any): void {
     }
 
     //Hero関連のデコード
-    for (let i in g_hres) delete g_hres[i]; 
-    for (let hero of g_team.hres())  g_hres.push(hero); 
+    for (const i in g_hres) delete g_hres[i]; 
+    for (const hero of g_team.hres())  g_hres.push(hero); 
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team); 

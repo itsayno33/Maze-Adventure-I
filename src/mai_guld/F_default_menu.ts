@@ -80,6 +80,15 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
     }
 }
 
+export function high_light_off(parent: HTMLElement|null): void {
+    if (parent === null) return;
+
+    const children = parent.children;
+    for (var i = 0; i < children.length; i++) {
+        const li = children.item(i) as HTMLLIElement;
+        __high_light_on(li, false);
+    }
+}
 
 
 
