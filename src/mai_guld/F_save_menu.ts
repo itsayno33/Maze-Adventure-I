@@ -180,7 +180,7 @@ function update_info_list(): void {
             }
             li.innerHTML = `${title}<p></p>`;
     
-            li.id = uno.toString();
+            li.id = DOM_idx.toString();
             li.addEventListener("click",_OK_Fnc, false);
             info_list.appendChild(li);
             dom_to_uno[DOM_idx++] = uno;
@@ -209,11 +209,28 @@ function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     high_light_on(info_list, dom_idx); 
     update_info_detail(dom_idx);
 
-    if (dom_idx === old_dom_idx) isOK();
-    else {
-        if (mode !== 'view') mode = 'view';
+    if (dom_idx === old_dom_idx) {
+        isOK();
+    } else {
         old_dom_idx = dom_idx;
+        mode = 'view';
+        isOK();
     }
+
+/*
+    if (mode === 'view') {
+        old_dom_idx = dom_idx;
+        isOK();
+    } else {
+        if (dom_idx === old_dom_idx) {
+            isOK();
+        } else {
+            mode = 'view';
+            old_dom_idx = dom_idx;
+            isOK();
+        }
+    }
+*/
     display_default_message();
 }
 
@@ -276,6 +293,7 @@ function init_default_ctls(): boolean {
         if (!g_ctls.add('svld_rtn', _svld_rtn_ctls))  return false;
         if (!g_ctls.add('svld_nor', _svld_nor_ctls))  return false;
         if (!g_ctls.add('svld_chk', _svld_chk_ctls))  return false;
+        if (!g_ctls.add('svld_bak', _svld_bak_ctls))  return false;
     } catch (err) {
         return false;
     }
@@ -292,16 +310,28 @@ const _svld_nor_ctls = {
     isOK:  isOK,
     isNG:  isNG,
     isRT:  isRT,
+    cpRT:  isRT,
+}
+const _svld_chk_ctls = {
+    name: 'svld_chk', 
+    isOK:  isOK,
+    isNG:  isNG,
+    isRT:  isRT,
+    cpOK:  isOK,
+    cpNG:  isNG,
+    cpRT:  isRT,
 }
 const _svld_rtn_ctls = {
     name: 'svld_rtn', 
     isNG:  go_back_guld_menu_for_first,
     isRT:  go_back_guld_menu_for_first,
+    cpRT:  go_back_guld_menu_for_first,
 }
-const _svld_chk_ctls = {
-    name: 'svld_chk', 
+const _svld_bak_ctls = {
+    name: 'svld_bak', 
     isOK:  _do_check,
     isNG:  _do_check,
+    cpNG:  _do_check,
 }
 
 
@@ -336,7 +366,7 @@ function do_R(): void {
 }
 
 function isOK(): void { 
-    is_save ? _isOK_for_save() : _isOK_for_load()
+    is_save ? _isOK_for_save() : _isOK_for_load();
 }
 async function _isOK_for_load(): Promise<void> { 
     switch (mode) {
@@ -344,9 +374,10 @@ async function _isOK_for_load(): Promise<void> {
             if (dom_to_uno[dom_idx] in data_list) {
                 mode = 'read_OK';
                 display_default_message();
+                g_ctls.act('svld_chk');
             } else {
                 g_mvm.notice_message('保存されていない項目です。戻る＝＞✖');
-                g_ctls.act('svld_chk');
+                g_ctls.act('svld_bak');
             }
             break;
         case 'read_OK': 
@@ -357,6 +388,7 @@ async function _isOK_for_load(): Promise<void> {
                     g_mvm.notice_message('ページを移動しました。あるいは読み込みに失敗しました');
                 }
                 mode = 'view';
+                g_ctls.act('svld_nor');
             });
             break;
     }
@@ -366,6 +398,7 @@ async function _isOK_for_save(): Promise<void> {
         case 'view':
             mode = dom_to_uno[dom_idx] in data_list ? 'rewrite_OK' : 'write_OK';
             display_default_message();
+            g_ctls.act('svld_chk');
             break;
         case 'write_OK': 
             try {
@@ -378,6 +411,7 @@ async function _isOK_for_save(): Promise<void> {
                             g_mvm.warning_message('新規保存に失敗しました');
                         }; 
                         mode = 'view'; 
+                        g_ctls.act('svld_nor');
                     } catch (err) {
                         _alert('write_OK6: ' + err);
                     }
@@ -394,6 +428,7 @@ async function _isOK_for_save(): Promise<void> {
                 } else {
                     g_mvm.warning_message('上書き保存に失敗しました');
                 }
+                g_ctls.act('svld_nor');
                 mode = 'view';
             });
             break;
@@ -486,6 +521,7 @@ function _isNG_for_load(): void {
         case 'read_OK':
             mode = 'view';
             display_default_message();
+            g_ctls.act('svld_nor');
             break;
     }
 }
@@ -498,6 +534,7 @@ function _isNG_for_save(): void {
         case 'rewrite_OK':
             mode = 'view';
             display_default_message();
+            g_ctls.act('svld_nor');
             break;
     }
 }
