@@ -18,6 +18,9 @@ export function set_mvpt_controlles(): void {
     g_ctls.add('mvpt_nor', ctls_mvpt_nor);
     g_ctls.act('mvpt_nor');
 
+    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
+    ctl_view?.style.setProperty('display', 'block');
+
     g_mvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
     mode = 'chek';
 }

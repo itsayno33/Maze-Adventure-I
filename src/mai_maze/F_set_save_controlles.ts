@@ -29,7 +29,8 @@ import {
     g_ctls
 } from "./global_for_maze";
 
-var   UL_idx: number = 0;
+var   UL_idx: number =   0;
+var   UL_bak: number = 999;
 var   save_UL_list_len: number;
 var   save_UL_list:     HTMLUListElement;
 var   UL_to_Data:       {[UL_idx: number]: /* data_idx: */ number}
@@ -54,40 +55,12 @@ export type T_save_list = {
 }
 
 let   save_list:        {[uniq_no: number]: C_SaveData};
-const save_list_max = 10;
-//var   link_list:    T_save_list[];
+const save_list_max = 20;
+
 let   dom_load_list: HTMLUListElement;
 let   dom_save_list: HTMLUListElement;
-let   sl_list_cols:   number;
+let   sl_list_cols:  number;
 
-export function set_load_controlles(): void {
-    hide_controlles();
-    g_ctls_mode[0] = T_CtlsMode.Load;
-    sl_list_cols = get_load_data_list_cols();
-
-    g_ctls.add('load_nor', ctls_load_nor);
-    g_ctls.act('load_nor');
-    __set_controlles(false);
-}
-
-export function set_save_controlles(): void {
-    hide_controlles();
-    g_ctls_mode[0] = T_CtlsMode.Save;
-    sl_list_cols = get_save_data_list_cols();
-
-    g_ctls.add('save_nor', ctls_save_nor);
-    g_ctls.act('save_nor');
-    __set_controlles(true);
-}
-
-function __set_controlles(for_save: boolean): void {
-//    hide_controlles();
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view?.style.setProperty('display', 'block');
-
-    is_kakunin = false;
-    display_save_list(for_save); // true: For Save.
-}
 const ctls_load_nor = {
     name: 'load_nor', 
     do_U:  do_U,
@@ -105,6 +78,46 @@ const ctls_save_nor = {
     do_R:  do_R,
     isOK:  isOK_for_save,
     isNG:  isNG,
+}
+
+export function set_load_controlles(): void {
+    hide_controlles();
+    g_ctls_mode[0] = T_CtlsMode.Load;
+    sl_list_cols = get_load_data_list_cols();
+
+    init_ctls();
+    g_ctls.act('load_nor');
+    __set_controlles(false);
+}
+
+export function set_save_controlles(): void {
+    hide_controlles();
+    g_ctls_mode[0] = T_CtlsMode.Save;
+    sl_list_cols = get_save_data_list_cols();
+
+    init_ctls();
+    g_ctls.act('save_nor');
+    __set_controlles(true);
+}
+
+function __set_controlles(for_save: boolean): void {
+//    hide_controlles();
+
+    is_kakunin = false;
+    display_save_list(for_save); // true: For Save.
+
+    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
+    ctl_view?.style.setProperty('display', 'block');
+}
+
+function init_data(): void {}
+function init_view(): void {}
+function init_ctls(): void {
+    is_kakunin = false;
+    UL_bak = 999;
+
+    g_ctls.add('load_nor', ctls_load_nor);
+    g_ctls.add('save_nor', ctls_save_nor);
 }
 
 function isOK_for_load(): void {
@@ -256,8 +269,6 @@ export function display_save_list(for_save: boolean): void {
             save_list = {}; 
 
             for (let save_info of jsonObj.save_info) {
-//                if (for_save && jsonObj.save_info.auto_mode == '1') continue; 
-//                if (!for_save && jsonObj.save_info.uniq_no == 100) continue; 
                 save_list[save_info.uniq_no] = new C_SaveData(save_info);
             }
             if (for_save) {
@@ -310,6 +321,10 @@ export function display_save_list(for_save: boolean): void {
 
                 const li = document.createElement('li') as HTMLLIElement;
                 li.innerHTML = `『${save_list[data_idx].title}』`;
+
+                li.id = save_UL_list_len.toString();
+                li.addEventListener("click", for_save?_OK_save_Fnc:_OK_load_Fnc, false);
+
                 save_UL_list.appendChild(li);
                 UL_to_Data[save_UL_list_len] = Number(data_idx);
                 save_UL_list_len++;
@@ -332,6 +347,27 @@ export function display_save_list(for_save: boolean): void {
         }
     });
 }
+function _OK_load_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    UL_idx = Number(this.id);
+    
+    if (UL_idx !== UL_bak) {
+        UL_bak =   UL_idx;
+        is_kakunin = false;
+    }
+    isOK_for_load();
+    list_high_light_on(); form_set();
+}
+function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    UL_idx = Number(this.id);
+    
+    if (UL_idx !== UL_bak) {
+        UL_bak =   UL_idx;
+        is_kakunin = false;
+    }
+    isOK_for_save();
+    list_high_light_on(); form_set();
+}
+
 
 function display_load_fields(): void {
 //    if (link_list.length > 0) {

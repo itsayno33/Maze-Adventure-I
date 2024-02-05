@@ -16,9 +16,7 @@ export function set_camp_controlles(): void {
 
     g_ctls.add('camp_nor', ctls_camp_nor);
     g_ctls.act('camp_nor');
-
-    const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLDivElement;
-    maze2D_view?.style.setProperty('display', 'none');
+    init_view();
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
@@ -33,6 +31,25 @@ const ctls_camp_nor = {
     isNG:  isNG,
 }
 
+function init_view(): boolean {
+    try {
+        const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLDivElement;
+        maze2D_view?.style.setProperty('display', 'none');
+
+        const menu_list   = document.getElementById('camp_list') as HTMLUListElement;
+        for (var i = 0; i < menu_list.children.length; i++) {
+            const item = menu_list.children[i] as HTMLLIElement;
+            item.addEventListener("click", _OK_camp_Fnc, false);
+        }
+    } catch(err) {
+        alert('Error: ' + err);
+        return false;
+    }
+    return true;
+}
+function _OK_camp_Fnc(this: HTMLLIElement, e: MouseEvent): void {
+    __isOK(this.id);
+}
 
 function isOK(): void {
     const camp_list = document.getElementById('camp_list') as HTMLUListElement;
@@ -42,7 +59,10 @@ function isOK(): void {
     if (idx < 0 || idx > children.length - 1) return;
 
     const li = children.item(idx) as HTMLLIElement;
-    switch (li.id) {
+    __isOK(li.id);
+}
+function __isOK(id: string): void {
+    switch (id) {
         case 'camp_load': do_load();return;
         case 'camp_save': do_save();return;
         case 'camp_mvpt': do_mvpt();return;
