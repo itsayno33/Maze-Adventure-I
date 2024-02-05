@@ -23,35 +23,33 @@ var isUp:  boolean  =  false;
 
 const ctls_updn_up = {
     name: 'updn_up', 
+    do_U:  do_up,
     isOK:  do_up,
     isNG:  do_cancel,
 }
 const ctls_updn_dn = {
     name: 'updn_dn', 
+    do_D:  do_down,
     isOK:  do_down,
     isNG:  do_cancel,
 }
 const ctls_updn_ud_hpup = {
     name: 'updn_ud_hpup', 
-    do_U:  hope_Up,
-    isOK:  do_UD,
+//    do_U:  hope_Up,
+//    isOK:  do_UD,
+    do_U:  do_up,
+    do_D:  do_down,
     isNG:  do_cancel,
 }
 const ctls_updn_ud_hpdn = {
     name: 'updn_ud_hpdn', 
-    do_D:  hope_Down,
-    isOK:  do_UD,
+//    do_D:  hope_Down,
+//    isOK:  do_UD,
+    do_U:  do_up,
+    do_D:  do_down,
     isNG:  do_cancel,
 }
 
-
-export function clr_UD_controlles(): void {
-    canUp = false;
-    canDn = false;
-    isUp  = false;
-
-    g_ctls.deact();
-}
 
 export function set_Up_controlles(): void {
     if (g_team.get_z() > 0) {

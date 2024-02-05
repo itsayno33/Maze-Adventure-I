@@ -9,9 +9,6 @@ import { g_mes }                     from "../common/global";
 const mode:  string[] =  ['Load', 'Save', 'MvPt'];
 var   idx:   number   =   0;
 
-export function clr_camp_controlles(): void {
-    g_ctls.deact();
-}
 
 export function set_camp_controlles(): void {
     hide_controlles();

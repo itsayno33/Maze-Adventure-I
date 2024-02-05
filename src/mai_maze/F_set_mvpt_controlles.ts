@@ -10,9 +10,6 @@ import { g_my_url, g_save, g_start_env, g_url, g_url_mai_guld } from "../common/
 
 let mode: string;
 
-export function clr_mvpt_controlles(): void {
-    g_ctls.deact();
-}
 
 export function set_mvpt_controlles(): void {
     hide_controlles();
@@ -28,26 +25,6 @@ const ctls_mvpt_nor = {
     name: 'mvpt_nor', 
     isOK:  isOK,
     isNG:  isNG,
-}
-
-
-function key_press_function8(e: KeyboardEvent):void  {
-    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
-        case 'KeyO':
-        case 'KeyY':
-        case 'Digit0':
-        case 'Enter':
-        case 'NumpadEnter':
-            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyN':
-        case 'KeyX':
-        case 'Numpad0':
-        case 'NumpadAdd':
-//        case 'NumpadSubtract':
-            (document.getElementById('n_btn') as HTMLButtonElement)?.click();
-            return;
-    }
 }
 
 function isOK(): void {

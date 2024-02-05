@@ -9,6 +9,15 @@ import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
+
+import { 
+    _high_light_on, 
+    calc_cursor_pos_U, 
+    calc_cursor_pos_D, 
+    calc_cursor_pos_L, 
+    calc_cursor_pos_R, 
+} from "./F_default_menu";
+
 import { 
     g_ctls_mode, 
     g_mvm, 
@@ -44,25 +53,18 @@ export type T_save_list = {
     __is_new:  boolean,
 }
 
-var   save_list:        {[uniq_no: number]: C_SaveData};
+let   save_list:        {[uniq_no: number]: C_SaveData};
 const save_list_max = 10;
 //var   link_list:    T_save_list[];
-
-export function clr_load_controlles(): void {
-    __clr_controlles(false);
-}
-
-export function clr_save_controlles(): void {
-    __clr_controlles(true);
-}
-
-function __clr_controlles(for_save: boolean): void {
-    g_ctls.deact();
-}
+let   dom_load_list: HTMLUListElement;
+let   dom_save_list: HTMLUListElement;
+let   sl_list_cols:   number;
 
 export function set_load_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Load;
+    sl_list_cols = get_load_data_list_cols();
+
     g_ctls.add('load_nor', ctls_load_nor);
     g_ctls.act('load_nor');
     __set_controlles(false);
@@ -71,6 +73,8 @@ export function set_load_controlles(): void {
 export function set_save_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Save;
+    sl_list_cols = get_save_data_list_cols();
+
     g_ctls.add('save_nor', ctls_save_nor);
     g_ctls.act('save_nor');
     __set_controlles(true);
@@ -133,78 +137,65 @@ function do_U(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    if (UL_idx < 1) {
-//        idx = link_list.length;
-        UL_idx = 1;
-    }
-    --UL_idx;
-    high_light_on(); form_set();
+    UL_idx = calc_cursor_pos_U(UL_idx, save_UL_list_len, sl_list_cols);
+    list_high_light_on(); form_set();
 }
 
 function do_D(): void { 
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    if (UL_idx > save_UL_list_len - 2) {
-//        idx = -1;
-        UL_idx = save_UL_list_len - 2
-    }
-    ++UL_idx; 
-    high_light_on();  form_set();
+    UL_idx = calc_cursor_pos_D(UL_idx, save_UL_list_len, sl_list_cols);
+    list_high_light_on();  form_set();
 }
 
 function do_L(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    const limit = _round((save_UL_list_len - 1) / 2, 0);
-    if (UL_idx < limit) {
-        UL_idx += limit;
-    } else {
-        UL_idx -= limit;
-    } 
-    high_light_on();  form_set();
+    UL_idx = calc_cursor_pos_L(UL_idx, save_UL_list_len, sl_list_cols);
+    list_high_light_on();  form_set();
 }
 
 function do_R(): void {
     if (is_kakunin) return;
 
     g_mvm.clear_message();
-    const limit = _round((save_UL_list_len - 1) / 2, 0);
-    if (UL_idx >= limit) {
-        UL_idx -= limit;
-    } else {
-        UL_idx += limit;
-    } 
-    high_light_on();  form_set();
+    UL_idx = calc_cursor_pos_R(UL_idx, save_UL_list_len, sl_list_cols);
+    list_high_light_on();  form_set();
 }
 
-function high_light_on(): void {
-    if (save_UL_list === null) return;
-
-    const children = save_UL_list.children;
-    if (UL_idx < 0 || UL_idx > children.length - 1) return;
-
-    for (var i = 0; i < children.length; i++) {
-        const li = children.item(i) as HTMLLIElement;
-        __high_light_on(li, false);
+// ロード一覧の列数(CSSから取得)
+function get_load_data_list_cols(): number {
+    try {
+        dom_load_list = document.getElementById('load_data_list') as HTMLUListElement;
+    } catch (err) {
+        return 1;
     }
-    const li = children.item(UL_idx) as HTMLLIElement;
-    __high_light_on(li, true);
+    let __col   = window.getComputedStyle(dom_load_list).columnCount !== '' 
+                ? window.getComputedStyle(dom_load_list).columnCount
+                : '1';
+ 
+    return Number(__col); 
 }
 
-function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
-    if (elm === null) return;
-    const fw_color = elm.parentElement?.style.getPropertyValue('color')            ?? 'black';
-    const bg_color = elm.parentElement?.style.getPropertyValue('background-color') ?? 'white';
-    elm.style.setProperty('color',            isOn ? bg_color : fw_color);
-    elm.style.setProperty('background-color', isOn ? fw_color : bg_color);
-
-    elm.style.setProperty('font-weight',      isOn ? 'bold' : 'normal');
-    for (var j = 0; j < elm.children.length; j++) {
-        const p = elm.children.item(j) as HTMLElement;
-        p.style.setProperty('display', isOn ? 'block' : 'none');
+// セーブ一覧の列数(CSSから取得)
+function get_save_data_list_cols(): number {
+    try {
+        dom_save_list = document.getElementById('save_data_list') as HTMLUListElement;
+    } catch (err) {
+        return 1;
     }
+    let __col   = window.getComputedStyle(dom_save_list).columnCount !== '' 
+                ? window.getComputedStyle(dom_save_list).columnCount
+                : '1';
+ 
+    return Number(__col); 
+}
+
+
+function list_high_light_on(): void { 
+    _high_light_on(save_UL_list, UL_idx);
 }
 
 function form_clr():void {
@@ -266,6 +257,7 @@ export function display_save_list(for_save: boolean): void {
 
             for (let save_info of jsonObj.save_info) {
 //                if (for_save && jsonObj.save_info.auto_mode == '1') continue; 
+//                if (!for_save && jsonObj.save_info.uniq_no == 100) continue; 
                 save_list[save_info.uniq_no] = new C_SaveData(save_info);
             }
             if (for_save) {
@@ -299,7 +291,8 @@ export function display_save_list(for_save: boolean): void {
                         case 100: 
                             save_list[data_idx].title  = '自動保存分';
                             save_list[data_idx].detail = '作業用に簡易保存したデータです';
-                            break;
+                            continue;
+//                            break;
                         case 101:
                             save_list[data_idx].title  = '簡易保存分';
                             save_list[data_idx].detail = 'デバッグモードで簡易保存したデータです';
@@ -329,7 +322,7 @@ export function display_save_list(for_save: boolean): void {
 
             if (!for_save) display_load_fields();
             if (for_save) g_vsw.view_save(); else g_vsw.view_load();
-            UL_idx = 0; high_light_on(); 
+            UL_idx = 0; list_high_light_on(); 
             form_set();
             return;
         } catch (err) {

@@ -6,22 +6,13 @@
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
-import { clr_move_controlles, set_move_controlles } from "./F_set_move_controlles";
-import { clr_UD_controlles }   from "./F_set_UD_controlles";
-import { clr_camp_controlles } from "./F_set_camp_controlles";
-import { clr_mvpt_controlles } from "./F_set_mvpt_controlles";
-import { clr_load_controlles, clr_save_controlles } from "./F_set_save_controlles";
+import { set_move_controlles } from "./F_set_move_controlles";
 import { T_CtlsMode } from "./T_CtlsMode";
-import { g_ctls_mode } from "./global_for_maze";
+import { g_ctls, g_ctls_mode } from "./global_for_maze";
 
 export function hide_controlles(): void {
     g_ctls_mode[0] = T_CtlsMode.Nop;
-    clr_move_controlles();
-    clr_UD_controlles();
-    clr_camp_controlles();
-    clr_load_controlles();
-    clr_save_controlles();
-    clr_mvpt_controlles();
+    g_ctls.deact();
     const move_ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     move_ctl_view?.style.setProperty('display', 'none');
 }

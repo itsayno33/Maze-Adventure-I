@@ -38,7 +38,7 @@ export function rmv_all_ctls(): void {
 
 // メニューのデフォルト操作(ハイライトと詳細表示制御)
 
-export function high_light_on(parent: HTMLElement|null, idx: number): void {
+export function _high_light_on(parent: HTMLElement|null, idx: number): void {
     if (parent === null) return;
 
     const children = parent.children;
