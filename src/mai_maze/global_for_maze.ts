@@ -25,6 +25,9 @@ export const g_team = new C_Team();
 import { C_Guild } from "../common/C_Guild";
 export const g_guld = new C_Guild();
 
+import { C_DefaultCtls }            from './C_DefaultCtls';
+export let g_ctls: C_DefaultCtls;
+
 import { init_controlles }          from "./F_set_controlles";
 import { decode_all, decode_maze }  from "./F_set_save_controlles";
 
@@ -99,6 +102,7 @@ export function init_after_loaded_DOM(): void {
     g_ready_games.setLoadedDOM();
 
     g_mvm  = C_MazeViewMessage.get();
+    g_ctls = new C_DefaultCtls(); 
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();
     stop_double_click();

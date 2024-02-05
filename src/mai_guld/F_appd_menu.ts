@@ -1,18 +1,15 @@
 import { 
-    rmv_default_ctls, 
-    add_default_ctls, 
     hide_all_menu,
     calc_cursor_pos_L,
     calc_cursor_pos_R,
     calc_cursor_pos_U,
     calc_cursor_pos_D,
-    rmv_all_ctls
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { high_light_on }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
-import { g_mvm, g_guld }         from "./global_for_guild";
+import { g_mvm, g_guld, g_ctls }         from "./global_for_guild";
 
 import { C_Hero }                from "../common/C_Hero";
 import { _ceil, _floor, _round } from "../common/F_Math";
@@ -49,7 +46,7 @@ export function display_appd_menu(): void {
     get_info_list_cols();
     /* await */ init_all();
     /* await */ update_all();
-    _add_appd_nor_ctls();
+    g_ctls.act('appd_nor');
     display_default_message();
 }
 
@@ -66,11 +63,13 @@ function init_all() {
     mode = 'view';
     init_data_list();
     init_view();
+    init_ctls();
 }
 
 function update_all() {
     update_data_list().then(()=>{
         update_view(0);
+        update_ctls();
     })
 }
 
@@ -162,6 +161,40 @@ function clear_info_detail() {
     hero_info_clear(dom_info_detail);
 }
 
+
+function init_ctls(): boolean { 
+    if (!init_default_ctls())      return false;
+    return true;
+}
+function init_default_ctls(): boolean {
+    try {
+        if (!g_ctls.add('appd_nor',  appd_nor_ctls))  return false;
+        if (!g_ctls.add('appd_chk',  appd_chk_ctls))  return false;
+    } catch (err) {
+        return false;
+    }
+    return true;
+}
+const appd_nor_ctls = {
+    name: 'appd_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK,
+    isNG:  isNG,
+    isRT:  isRT,
+};
+const appd_chk_ctls = {
+    name: 'appd_chk', 
+    isOK:  isOK,
+    isNG:  isNG,
+};
+
+function update_ctls(): void {}
+
+
+
 function do_U(): void {
     display_default_message();
 
@@ -193,24 +226,24 @@ function isOK(): void {
     switch (mode) {
         case 'view':
             mode = 'recruit';
-            _add_appd_chk_ctls();
+            g_ctls.act('appd_chk');
             display_default_message();
             break;
         case 'recruit':
             mode = 'check_OK';
-            _add_appd_chk_ctls();
+            g_ctls.act('appd_chk');
             display_default_message();
             break;
         case 'check_OK':
             mode = 'view';
-            _add_appd_nor_ctls();
+            g_ctls.act('appd_nor');
             g_mvm.notice_message('採用しました!!');
             g_guld.add_hero(new_hres[idx]);
             _after_check();
             break;
         case 'check_NG':
             mode = 'view';
-            _add_appd_nor_ctls();
+            g_ctls.act('appd_nor');
             g_mvm.normal_message('お帰りいただきました。。。');
             _after_check();
             break;
@@ -263,43 +296,7 @@ function display_default_message(): void {
 
 function go_back_guild_menu() {
     clear_view();
-    rmv_appd_ctls();
+    g_ctls.deact();
     display_guld_menu();
 }
 
-
-export function rmv_appd_ctls(): void {
-    _rmv_appd_nor_ctls();
-    _rmv_appd_chk_ctls();
-}
-const appd_nor_ctls = {
-    name: 'appd_nor', 
-    do_U:  do_U,
-    do_D:  do_D,
-    do_L:  do_L,
-    do_R:  do_R,
-    isOK:  isOK,
-    isNG:  isNG,
-    isRT:  isRT,
-    keyEvent: true,
-};
-function _rmv_appd_nor_ctls(): void {
-    rmv_default_ctls(appd_nor_ctls);
-}
-function _add_appd_nor_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(appd_nor_ctls);
-}
-const appd_chk_ctls = {
-    name: 'appd_chk', 
-    isOK:  isOK,
-    isNG:  isNG,
-    keyEvent: true,
-};
-function _rmv_appd_chk_ctls(): void {
-    rmv_default_ctls(appd_chk_ctls);
-}
-function _add_appd_chk_ctls(): void {
-    rmv_all_ctls();
-    add_default_ctls(appd_chk_ctls);
-}

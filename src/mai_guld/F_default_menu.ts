@@ -92,7 +92,7 @@ export function high_light_off(parent: HTMLElement|null): void {
 
 
 
-
+/*
 // 以下、矢印キーと〇✖ボタン処理のデフォルト処理。
 // イベントリスナー以外の処理を定型化した。
 
@@ -279,7 +279,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
     }
 }
-
+*/
 
 export function calc_cursor_pos_U(idx: number, list_length: number, list_col_size: number): number {
     const list_row_size = _ceil(list_length / list_col_size, 0);
