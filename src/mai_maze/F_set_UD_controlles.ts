@@ -1,11 +1,13 @@
 import { T_CtlsMode }       from "./T_CtlsMode";
 import { hide_controlles }  from "./F_set_controlles";
-import { UD_save }          from "../common/F_load_and_save";
+import { UD_save, tmp_save }          from "../common/F_load_and_save";
 import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
 import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
 import { g_maze, g_team,  } from "./global_for_maze";
 import { C_UrlOpt } from "../common/C_UrlOpt";
 import { decode_all, set_g_save } from "./F_set_save_controlles";
+import { g_start_env, g_url, g_url_mai_guld } from "../common/global";
+import { POST_and_move_page } from "../common/F_POST";
 
 
 export function clr_UD_controlles(): void {
@@ -42,7 +44,11 @@ var canDn: boolean  =  false;
 var isUp:  boolean  =  false;
 
 export function set_Up_controlles(): void {
-    g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
+    if (g_team.get_z() > 0) {
+        g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
+    } else {
+        g_mvm.notice_message('街に戻りますか？戻る ⇒ 〇 戻らない ⇒ ✖');
+    }
 
     hide_controlles();
     canUp = true;
@@ -161,6 +167,23 @@ function do_cancel(): void {
 
 function do_up(): void {
     const rslt = g_team.hope_p_up();
+
+    //　上り階段が地下一階の場合はセーブしてから街(冒険者ギルド)へ移動する
+    if (rslt.has_hope && rslt.subj.z < 0) {
+        do_UD_save().then(async ()=>{
+            return await tmp_save();
+        }).then(()=>{
+            const opt = new C_UrlOpt();
+            opt.set('mode', 'load');
+            opt.set('pid',   g_start_env.pid);
+            opt.set('opt',   100);
+            POST_and_move_page(g_url[g_url_mai_guld], opt);
+            return;
+        });
+        return;
+    }
+
+    // 上り階段が地下二階以下の場合はセーブしてから上の階に移動する
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
         g_mvm.clear_message();
@@ -205,7 +228,11 @@ function hope_Up(): void {
     isUp = true;
     document.getElementById('u_arrow')?.style.setProperty('visibility', 'hidden');
     document.getElementById('d_arrow')?.style.setProperty('visibility', 'visible');
-    g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
+    if (g_team.get_z() > 0) {
+        g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
+    } else {
+        g_mvm.notice_message('街に戻りますか？戻る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
+    };
 }
 function hope_Down(): void {
     if (!canUp || !canDn) return;
