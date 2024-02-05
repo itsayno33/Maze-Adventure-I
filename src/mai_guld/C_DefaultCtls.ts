@@ -98,8 +98,8 @@ export class C_DefaultCtls {
         }
         return true;
     }
-    public act(name: string): boolean {
-        if(!this.deact()) return false;
+    public act(name: string, add: boolean = false): boolean {
+        if(!add && !this.deact()) return false;
         return this._add_default_ctls(name);
     }
 

@@ -3,88 +3,36 @@ import { hide_controlles } from "./F_set_controlles";
 import { set_move_controlles, do_move_bottom_half }   from "./F_set_move_controlles";
 import { set_save_controlles, set_load_controlles   } from "./F_set_save_controlles";
 import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
-import { g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
+import { g_ctls, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
 import { g_mes }                     from "../common/global";
 
 const mode:  string[] =  ['Load', 'Save', 'MvPt'];
 var   idx:   number   =   0;
 
 export function clr_camp_controlles(): void {
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn') as HTMLButtonElement;
-
-    u_arr.removeEventListener("click", do_U, false);
-    d_arr.removeEventListener("click", do_D, false);
-    y_btn.removeEventListener("click", isOK, false);
-    n_btn.removeEventListener("click", isNG, false);
-
-    window.removeEventListener('keypress', key_press_function3);
-
-    u_arr.style.setProperty('display', 'none');
-    d_arr.style.setProperty('display', 'none');
-    y_btn.style.setProperty('display', 'none');
-    n_btn.style.setProperty('display', 'none');
+    g_ctls.deact();
 }
 
 export function set_camp_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Camp;
 
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn')   as HTMLButtonElement;
-
-    u_arr.addEventListener("click", do_U, false);
-    d_arr.addEventListener("click", do_D, false);
-    y_btn  .addEventListener("click", isOK, false);
-    n_btn  .addEventListener("click", isNG, false);
-
-    window.addEventListener('keypress', key_press_function3);
-
-    u_arr.style.setProperty('display', 'block');
-    d_arr.style.setProperty('display', 'block');
-    y_btn.style.setProperty('display', 'block');
-    n_btn.style.setProperty('display', 'block');
+    g_ctls.add('camp_nor', ctls_camp_nor);
+    g_ctls.act('camp_nor');
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 
     idx = 0; high_light_on();
-
+}
+const ctls_camp_nor = {
+    name: 'camp_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    isOK:  isOK,
+    isNG:  isNG,
 }
 
-
-function key_press_function3(e: KeyboardEvent):void  {
-    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
-        case 'ArrowUp': 
-        case 'KeyK': 
-        case 'Numpad5': 
-            (document.getElementById('u_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'ArrowDown': 
-        case 'KeyJ': 
-        case 'Numpad2': 
-            (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyO':
-        case 'KeyY':
-        case 'Digit0':
-        case 'Enter':
-        case 'NumpadEnter':
-            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyN':
-        case 'KeyX':
-        case 'Numpad0':
-        case 'NumpadAdd':
-//        case 'NumpadSubtract':
-            (document.getElementById('n_btn') as HTMLButtonElement)?.click();
-            return;
-    }
-}
 
 function isOK(): void {
     const camp_list = document.getElementById('camp_list') as HTMLUListElement;

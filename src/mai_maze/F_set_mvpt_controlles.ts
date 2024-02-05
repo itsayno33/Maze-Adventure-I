@@ -1,7 +1,7 @@
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { g_ctls_mode, g_maze, g_mvm, g_team, g_vsw } from "./global_for_maze";
+import { g_ctls, g_ctls_mode, g_maze, g_mvm, g_team, g_vsw } from "./global_for_maze";
 
 import { tmp_save }            from "../common/F_load_and_save";
 import { C_UrlOpt }            from "../common/C_UrlOpt";
@@ -11,39 +11,23 @@ import { g_my_url, g_save, g_start_env, g_url, g_url_mai_guld } from "../common/
 let mode: string;
 
 export function clr_mvpt_controlles(): void {
-    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-
-    y_btn  .removeEventListener("click", isOK, false);
-    n_btn  .removeEventListener("click", isNG, false);
-
-    window.removeEventListener('keypress', key_press_function8);
-
-    y_btn  .style.setProperty('display', 'none');
-    n_btn  .style.setProperty('display', 'none');
+    g_ctls.deact();
 }
 
 export function set_mvpt_controlles(): void {
     hide_controlles();
     mode = 'view';
     g_ctls_mode[0] = T_CtlsMode.MvPt;
-
-    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
-
-    y_btn  .addEventListener("click", isOK, false);
-    n_btn  .addEventListener("click", isNG, false);
-
-    window.addEventListener('keypress', key_press_function8);
-
-    y_btn  .style.setProperty('display', 'block');
-    n_btn  .style.setProperty('display', 'block');
-
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view?.style.setProperty('display', 'block');
+    g_ctls.add('mvpt_nor', ctls_mvpt_nor);
+    g_ctls.act('mvpt_nor');
 
     g_mvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
     mode = 'chek';
+}
+const ctls_mvpt_nor = {
+    name: 'mvpt_nor', 
+    isOK:  isOK,
+    isNG:  isNG,
 }
 
 

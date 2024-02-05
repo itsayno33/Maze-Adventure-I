@@ -16,7 +16,8 @@ import {
     g_maze, 
     g_team, 
     g_hres, 
-    do_load_bottom_half 
+    do_load_bottom_half, 
+    g_ctls
 } from "./global_for_maze";
 
 var   UL_idx: number = 0;
@@ -56,117 +57,53 @@ export function clr_save_controlles(): void {
 }
 
 function __clr_controlles(for_save: boolean): void {
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
-    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn') as HTMLButtonElement;
-
-    u_arr.removeEventListener("click", do_U, false);
-    d_arr.removeEventListener("click", do_D, false);
-    l_arr.removeEventListener("click", do_L, false);
-    r_arr.removeEventListener("click", do_R, false);
-    y_btn.removeEventListener("click", for_save ? isOK_for_save : is_OK_for_load, false);
-    n_btn.removeEventListener("click", isNG, false);
-
-    window.removeEventListener('keypress', key_press_function5);
-
-    u_arr.style.setProperty('display', 'none');
-    d_arr.style.setProperty('display', 'none');
-    l_arr.style.setProperty('display', 'none');
-    r_arr.style.setProperty('display', 'none');
-    y_btn.style.setProperty('display', 'none');
-    n_btn.style.setProperty('display', 'none');
+    g_ctls.deact();
 }
 
 export function set_load_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Load;
-
+    g_ctls.add('load_nor', ctls_load_nor);
+    g_ctls.act('load_nor');
     __set_controlles(false);
 }
 
 export function set_save_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Save;
-
+    g_ctls.add('save_nor', ctls_save_nor);
+    g_ctls.act('save_nor');
     __set_controlles(true);
 }
 
 function __set_controlles(for_save: boolean): void {
 //    hide_controlles();
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
-    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn') as HTMLButtonElement;
-
-    u_arr.addEventListener("click", do_U, false);
-    d_arr.addEventListener("click", do_D, false);
-    l_arr.addEventListener("click", do_L, false);
-    r_arr.addEventListener("click", do_R, false);
-    y_btn.addEventListener("click", for_save ? isOK_for_save : is_OK_for_load, false);
-    n_btn.addEventListener("click", isNG, false);
-
-    window.addEventListener('keypress', key_press_function5);
-
-    u_arr.style.setProperty('display', 'block');
-    d_arr.style.setProperty('display', 'block');
-    l_arr.style.setProperty('display', 'block');
-    r_arr.style.setProperty('display', 'block');
-    y_btn.style.setProperty('display', 'block');
-    n_btn.style.setProperty('display', 'block');
-
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 
     is_kakunin = false;
     display_save_list(for_save); // true: For Save.
 }
-
-
-function key_press_function5(e: KeyboardEvent):void  {
-    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
-        case 'ArrowUp': 
-        case 'KeyK': 
-        case 'Numpad5': 
-            (document.getElementById('u_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'ArrowDown': 
-        case 'KeyJ': 
-        case 'Numpad2': 
-            (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'ArrowLeft': 
-        case 'KeyH': 
-        case 'Numpad1': 
-            (document.getElementById('l_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'ArrowRight': 
-        case 'KeyL': 
-        case  'Numpad3': 
-            (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyO':
-        case 'KeyY':
-        case 'Digit0':
-        case 'Enter':
-        case 'NumpadEnter':
-            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyN':
-        case 'KeyX':
-        case 'Numpad0':
-        case 'NumpadAdd':
-//        case 'NumpadSubtract':
-            (document.getElementById('n_btn') as HTMLButtonElement)?.click();
-            return;
-    }
+const ctls_load_nor = {
+    name: 'load_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK_for_load,
+    isNG:  isNG,
+}
+const ctls_save_nor = {
+    name: 'save_nor', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
+    isOK:  isOK_for_save,
+    isNG:  isNG,
 }
 
-function is_OK_for_load(): void {
+function isOK_for_load(): void {
     if (save_UL_list === null) return;
     if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
 

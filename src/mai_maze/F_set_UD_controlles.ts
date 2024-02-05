@@ -1,13 +1,48 @@
-import { T_CtlsMode }       from "./T_CtlsMode";
-import { hide_controlles }  from "./F_set_controlles";
+import { C_UrlOpt }                   from "../common/C_UrlOpt";
 import { UD_save, tmp_save }          from "../common/F_load_and_save";
-import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
-import { g_debug_mode, g_ctls_mode, g_mvm }         from "./global_for_maze";
-import { g_maze, g_team,  } from "./global_for_maze";
-import { C_UrlOpt } from "../common/C_UrlOpt";
-import { decode_all, set_g_save } from "./F_set_save_controlles";
+import { POST_and_move_page }         from "../common/F_POST";
 import { g_start_env, g_url, g_url_mai_guld } from "../common/global";
-import { POST_and_move_page } from "../common/F_POST";
+
+import { T_CtlsMode }                 from "./T_CtlsMode";
+import { hide_controlles }            from "./F_set_controlles";
+import { set_g_save }                 from "./F_set_save_controlles";
+import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
+import { 
+    g_ctls_mode, 
+    g_mvm, 
+    g_maze, 
+    g_team,
+    g_ctls, 
+}   from "./global_for_maze";
+
+
+var canUp: boolean  =  false;
+var canDn: boolean  =  false;
+
+var isUp:  boolean  =  false;
+
+const ctls_updn_up = {
+    name: 'updn_up', 
+    isOK:  do_up,
+    isNG:  do_cancel,
+}
+const ctls_updn_dn = {
+    name: 'updn_dn', 
+    isOK:  do_down,
+    isNG:  do_cancel,
+}
+const ctls_updn_ud_hpup = {
+    name: 'updn_ud_hpup', 
+    do_U:  hope_Up,
+    isOK:  do_UD,
+    isNG:  do_cancel,
+}
+const ctls_updn_ud_hpdn = {
+    name: 'updn_ud_hpdn', 
+    do_D:  hope_Down,
+    isOK:  do_UD,
+    isNG:  do_cancel,
+}
 
 
 export function clr_UD_controlles(): void {
@@ -15,33 +50,8 @@ export function clr_UD_controlles(): void {
     canDn = false;
     isUp  = false;
 
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const y_btn = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn')   as HTMLButtonElement;
-
-    window.removeEventListener('keypress', key_press_function2);
-
-    u_arr.removeEventListener("click", hope_Up);
-    d_arr.removeEventListener("click", hope_Down);
-
-    y_btn.removeEventListener("click", do_up);
-    y_btn.removeEventListener("click", do_down);
-    y_btn.removeEventListener("click", do_UD);
-    n_btn.removeEventListener("click", do_cancel);
-
-    u_arr.style.setProperty('display', 'none');
-    d_arr.style.setProperty('display', 'none');
-    y_btn.style.setProperty('display', 'none');
-    n_btn.style.setProperty('display', 'none');
+    g_ctls.deact();
 }
-
-
-
-var canUp: boolean  =  false;
-var canDn: boolean  =  false;
-
-var isUp:  boolean  =  false;
 
 export function set_Up_controlles(): void {
     if (g_team.get_z() > 0) {
@@ -53,6 +63,8 @@ export function set_Up_controlles(): void {
     hide_controlles();
     canUp = true;
     canDn = false;
+    g_ctls.add('updn_up', ctls_updn_up);
+    g_ctls.act('updn_up');
     __set_UD_controlles();
 }
 
@@ -62,6 +74,8 @@ export function set_Dn_controlles(): void {
     hide_controlles();
     canUp = false;
     canDn = true;
+    g_ctls.add('updn_dn', ctls_updn_dn);
+    g_ctls.act('updn_dn');
     __set_UD_controlles();
 }
 
@@ -71,93 +85,18 @@ export function set_UD_controlles(): void {
     hide_controlles();
     canUp = true;
     canDn = true;
+    g_ctls.add('updn_ud_hpup', ctls_updn_ud_hpup);
+    g_ctls.add('updn_ud_hpdn', ctls_updn_ud_hpdn);
+    if (!isUp)  g_ctls.act('updn_ud_hpup');
+    else        g_ctls.act('updn_ud_hpdn');
     __set_UD_controlles();
 }
 
 function __set_UD_controlles(): void {
     g_ctls_mode[0] = T_CtlsMode.UD;
 
-    const y_btn = document.getElementById('y_btn') as HTMLButtonElement;
-    const n_btn = document.getElementById('n_btn') as HTMLButtonElement;
-    y_btn.style.setProperty('display', 'block');
-    n_btn.style.setProperty('display', 'block');
-
-    n_btn.addEventListener("click", do_cancel, false);
-
-    if (canUp && !canDn) {
-        y_btn.addEventListener("click", do_up,     false);
-    } 
-    if (canDn && !canUp) {
-        y_btn.addEventListener("click", do_down,   false);
-    }
-    if (canUp && canDn) {
-        y_btn.addEventListener("click", do_UD,     false);
-
-        const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-        u_arr.addEventListener("click", hope_Up, false);
-        u_arr.style.setProperty('display', 'block');
-
-        const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-        d_arr.addEventListener("click", hope_Down, false);
-        d_arr.style.setProperty('display', 'block');
-
-        if (isUp)  u_arr.style.setProperty('visibility', 'hidden');
-        else       u_arr.style.setProperty('visibility', 'visible');
-
-        if (!isUp) d_arr.style.setProperty('visibility', 'hidden');
-        else       d_arr.style.setProperty('visibility', 'visible');
-    }
-    window.addEventListener('keypress', key_press_function2);
-
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view.style.setProperty('display', 'block');
-}
-
-function key_press_function2(e: KeyboardEvent):void  {
-    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
-        case 'ArrowUp': 
-        case 'KeyK': 
-        case 'Numpad5': 
-            (document.getElementById('u_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'ArrowDown': 
-        case 'KeyJ': 
-        case 'Numpad2': 
-            (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyO':
-        case 'KeyY':
-        case 'Digit0':
-        case 'Enter':
-        case 'NumpadEnter':
-            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyN':
-        case 'KeyX':
-        case 'Numpad0':
-        case 'NumpadAdd':
-//        case 'NumpadSubtract':
-            (document.getElementById('n_btn') as HTMLButtonElement)?.click();
-            return;
-        case 'KeyU':
-            if (g_debug_mode && g_team.get_z() > 0) {
-                g_team.set_z(g_team.get_z() - 1);
-                return;
-            }
-            if (canUp) {
-                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
-            }
-            return;
-        case 'KeyD':
-            if (g_debug_mode && g_team.get_z() < (g_maze.get_z_max() - 1)) {
-                g_team.set_z(g_team.get_z() + 1);
-                return;
-            }
-            if (canDn) {
-                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-            }
-            return;
-    }
 }
 
 function do_cancel(): void {
@@ -226,8 +165,8 @@ function do_UD(): void {
 function hope_Up(): void {
     if (!canUp || !canDn) return;
     isUp = true;
-    document.getElementById('u_arr')?.style.setProperty('visibility', 'hidden');
-    document.getElementById('d_arr')?.style.setProperty('visibility', 'visible');
+    g_ctls.act('updn_ud_hpdn');
+
     if (g_team.get_z() > 0) {
         g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
     } else {
@@ -237,8 +176,8 @@ function hope_Up(): void {
 function hope_Down(): void {
     if (!canUp || !canDn) return;
     isUp = false;
-    document.getElementById('u_arr')?.style.setProperty('visibility', 'hidden');
-    document.getElementById('d_arr')?.style.setProperty('visibility', 'visible');
+    g_ctls.act('updn_ud_hpup');
+
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
 }
 
@@ -255,8 +194,5 @@ async function do_UD_save(): Promise<any|undefined> {
         /* auto_mode: */ true,
     );
     return UD_save();
-//        .then((jsonObj)=>{
-//        decode_all(jsonObj);
-//    });
 }
 

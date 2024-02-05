@@ -16,109 +16,32 @@ import {
     g_vsw, 
     g_maze, 
     g_team,
-    do_load_bottom_half, 
+    do_load_bottom_half,
+    g_ctls, 
 } from "./global_for_maze";
 
 export function clr_move_controlles(): void {
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
-    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
-    const c_btn = document.getElementById('c_btn')   as HTMLButtonElement;
-
-    window.removeEventListener('keypress', key_press_function1);
-
-    u_arr.removeEventListener("click", go_F);
-    d_arr.removeEventListener("click", go_B);
-    r_arr.removeEventListener("click", tr_R);
-    l_arr.removeEventListener("click", tr_L);
-    c_btn.removeEventListener("click", camp);
-
-    u_arr.style.setProperty('display', 'none');
-    d_arr.style.setProperty('display', 'none');
-    r_arr.style.setProperty('display', 'none');
-    l_arr.style.setProperty('display', 'none');
-    c_btn.style.setProperty('display', 'none');
+    g_ctls.deact();
 }
 
 export function set_move_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Move;
-    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
-    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
-    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
-    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
-    const c_btn = document.getElementById('c_btn') as HTMLButtonElement;
-
-    u_arr.addEventListener("click", go_F, false);
-    d_arr.addEventListener("click", go_B, false);
-    r_arr.addEventListener("click", tr_R, false);
-    l_arr.addEventListener("click", tr_L, false);
-    c_btn  .addEventListener("click", camp, false);
-
-    window.addEventListener('keypress', key_press_function1); 
-
-    u_arr.style.setProperty('display', 'block');
-    d_arr.style.setProperty('display', 'block');
-    r_arr.style.setProperty('display', 'block');
-    l_arr.style.setProperty('display', 'block');
-    c_btn  .style.setProperty('display', 'block');
+    g_ctls.add('move_nor', ctls_move_nor);
+    g_ctls.act('move_nor');
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 }
-
-function key_press_function1(e: KeyboardEvent):void  {
-    switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
-        case 'ArrowUp': 
-        case 'KeyK': 
-        case 'Numpad5': 
-                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'ArrowDown': 
-        case 'KeyJ': 
-        case 'Numpad2': 
-                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'ArrowLeft': 
-        case 'KeyH': 
-        case 'Numpad1': 
-                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'ArrowRight': 
-        case  'Numpad3': 
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'KeyC':
-                (document.getElementById('c_btn')   as HTMLButtonElement)?.click();
-                break;
-        case 'KeyL':
-            if (g_debug_mode) {
-                do_instant_load();
-            } else {
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-            }
-            break;
-        case 'KeyS': 
-            if (g_debug_mode) { 
-                do_instant_save();
-                do_move_bottom_half('blink_off');
-            }
-            break;
-        case 'KeyU':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_team.get_z() > 0) {
-                g_team.set_z(g_team.get_z() - 1);
-                do_move_bottom_half('blink_off');
-            }
-            break;
-        case 'KeyD':
-            if (g_ctls_mode[0] == T_CtlsMode.Move && g_debug_mode && g_team.get_z() < (g_maze.get_z_max() - 1)) {
-                g_team.set_z(g_team.get_z() + 1);
-                do_move_bottom_half('blink_off');
-            }
-            break;
-    }
+const ctls_move_nor = {
+    name: 'move_nor', 
+    do_U:  go_F,
+    do_D:  go_B,
+    do_L:  tr_L,
+    do_R:  tr_R,
+    camp:  camp,
 }
+
 
     /************ *************************** **************/
     /*  HTMLPreElement = document.createElement('pre');    */
