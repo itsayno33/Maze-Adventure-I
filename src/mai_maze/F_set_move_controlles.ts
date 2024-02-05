@@ -26,6 +26,9 @@ export function set_move_controlles(): void {
     g_ctls.add('move_nor', ctls_move_nor);
     g_ctls.act('move_nor');
 
+    const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLDivElement;
+    maze2D_view?.style.setProperty('display', 'block');
+
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
 }
