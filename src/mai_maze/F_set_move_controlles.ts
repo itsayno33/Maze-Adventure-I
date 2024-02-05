@@ -20,48 +20,48 @@ import {
 } from "./global_for_maze";
 
 export function clr_move_controlles(): void {
-    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-    const c_btn   = document.getElementById('c_btn')   as HTMLButtonElement;
+    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
+    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
+    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
+    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
+    const c_btn = document.getElementById('c_btn')   as HTMLButtonElement;
 
     window.removeEventListener('keypress', key_press_function1);
 
-    u_arrow.removeEventListener("click", go_F);
-    d_arrow.removeEventListener("click", go_B);
-    r_arrow.removeEventListener("click", tr_R);
-    l_arrow.removeEventListener("click", tr_L);
-    c_btn  .removeEventListener("click", camp);
+    u_arr.removeEventListener("click", go_F);
+    d_arr.removeEventListener("click", go_B);
+    r_arr.removeEventListener("click", tr_R);
+    l_arr.removeEventListener("click", tr_L);
+    c_btn.removeEventListener("click", camp);
 
-    u_arrow.style.setProperty('display', 'none');
-    d_arrow.style.setProperty('display', 'none');
-    r_arrow.style.setProperty('display', 'none');
-    l_arrow.style.setProperty('display', 'none');
-    c_btn  .style.setProperty('display', 'none');
+    u_arr.style.setProperty('display', 'none');
+    d_arr.style.setProperty('display', 'none');
+    r_arr.style.setProperty('display', 'none');
+    l_arr.style.setProperty('display', 'none');
+    c_btn.style.setProperty('display', 'none');
 }
 
 export function set_move_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Move;
-    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const r_arrow = document.getElementById('r_arrow') as HTMLButtonElement;
-    const l_arrow = document.getElementById('l_arrow') as HTMLButtonElement;
-    const c_btn   = document.getElementById('c_btn')   as HTMLButtonElement;
+    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
+    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
+    const r_arr = document.getElementById('r_arr') as HTMLButtonElement;
+    const l_arr = document.getElementById('l_arr') as HTMLButtonElement;
+    const c_btn = document.getElementById('c_btn') as HTMLButtonElement;
 
-    u_arrow.addEventListener("click", go_F, false);
-    d_arrow.addEventListener("click", go_B, false);
-    r_arrow.addEventListener("click", tr_R, false);
-    l_arrow.addEventListener("click", tr_L, false);
+    u_arr.addEventListener("click", go_F, false);
+    d_arr.addEventListener("click", go_B, false);
+    r_arr.addEventListener("click", tr_R, false);
+    l_arr.addEventListener("click", tr_L, false);
     c_btn  .addEventListener("click", camp, false);
 
-    window.addEventListener('keypress', key_press_function1);
+    window.addEventListener('keypress', key_press_function1); 
 
-    u_arrow.style.setProperty('display', 'block');
-    d_arrow.style.setProperty('display', 'block');
-    r_arrow.style.setProperty('display', 'block');
-    l_arrow.style.setProperty('display', 'block');
+    u_arr.style.setProperty('display', 'block');
+    d_arr.style.setProperty('display', 'block');
+    r_arr.style.setProperty('display', 'block');
+    l_arr.style.setProperty('display', 'block');
     c_btn  .style.setProperty('display', 'block');
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
@@ -73,21 +73,21 @@ function key_press_function1(e: KeyboardEvent):void  {
         case 'ArrowUp': 
         case 'KeyK': 
         case 'Numpad5': 
-                (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
         case 'KeyJ': 
         case 'Numpad2': 
-                (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
         case 'KeyH': 
         case 'Numpad1': 
-                (document.getElementById('l_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
         case  'Numpad3': 
-                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyC':
                 (document.getElementById('c_btn')   as HTMLButtonElement)?.click();
@@ -96,7 +96,7 @@ function key_press_function1(e: KeyboardEvent):void  {
             if (g_debug_mode) {
                 do_instant_load();
             } else {
-                (document.getElementById('r_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
             }
             break;
         case 'KeyS': 
@@ -127,13 +127,13 @@ function key_press_function1(e: KeyboardEvent):void  {
     /*  HTMLElement?.appendChild(HTMLElement);             */
     /************ *************************** **************/
 
-function do_instant_load(): void {
+export function do_instant_load(): void {
     instant_load().then((jsonObj:any)=>{  
         do_load_bottom_half('ロードしました');  
     });
 }
 
-function do_instant_save(): void {
+export function do_instant_save(): void {
     set_g_save(
         /* save_id: */   -1,
         /* uniq_no: */   -1,

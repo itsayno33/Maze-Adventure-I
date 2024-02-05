@@ -15,25 +15,25 @@ export function clr_UD_controlles(): void {
     canDn = false;
     isUp  = false;
 
-    const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-    const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-    const y_btn   = document.getElementById('y_btn')   as HTMLButtonElement;
-    const n_btn   = document.getElementById('n_btn')   as HTMLButtonElement;
+    const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
+    const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
+    const y_btn = document.getElementById('y_btn')   as HTMLButtonElement;
+    const n_btn = document.getElementById('n_btn')   as HTMLButtonElement;
 
     window.removeEventListener('keypress', key_press_function2);
 
-    u_arrow.removeEventListener("click", hope_Up);
-    d_arrow.removeEventListener("click", hope_Down);
+    u_arr.removeEventListener("click", hope_Up);
+    d_arr.removeEventListener("click", hope_Down);
 
     y_btn.removeEventListener("click", do_up);
     y_btn.removeEventListener("click", do_down);
     y_btn.removeEventListener("click", do_UD);
     n_btn.removeEventListener("click", do_cancel);
 
-    u_arrow.style.setProperty('display', 'none');
-    d_arrow.style.setProperty('display', 'none');
-    y_btn.style  .setProperty('display', 'none');
-    n_btn.style  .setProperty('display', 'none');
+    u_arr.style.setProperty('display', 'none');
+    d_arr.style.setProperty('display', 'none');
+    y_btn.style.setProperty('display', 'none');
+    n_btn.style.setProperty('display', 'none');
 }
 
 
@@ -93,19 +93,19 @@ function __set_UD_controlles(): void {
     if (canUp && canDn) {
         y_btn.addEventListener("click", do_UD,     false);
 
-        const u_arrow = document.getElementById('u_arrow') as HTMLButtonElement;
-        u_arrow.addEventListener("click", hope_Up, false);
-        u_arrow.style.setProperty('display', 'block');
+        const u_arr = document.getElementById('u_arr') as HTMLButtonElement;
+        u_arr.addEventListener("click", hope_Up, false);
+        u_arr.style.setProperty('display', 'block');
 
-        const d_arrow = document.getElementById('d_arrow') as HTMLButtonElement;
-        d_arrow.addEventListener("click", hope_Down, false);
-        d_arrow.style.setProperty('display', 'block');
+        const d_arr = document.getElementById('d_arr') as HTMLButtonElement;
+        d_arr.addEventListener("click", hope_Down, false);
+        d_arr.style.setProperty('display', 'block');
 
-        if (isUp)  u_arrow.style.setProperty('visibility', 'hidden');
-        else       u_arrow.style.setProperty('visibility', 'visible');
+        if (isUp)  u_arr.style.setProperty('visibility', 'hidden');
+        else       u_arr.style.setProperty('visibility', 'visible');
 
-        if (!isUp) d_arrow.style.setProperty('visibility', 'hidden');
-        else       d_arrow.style.setProperty('visibility', 'visible');
+        if (!isUp) d_arr.style.setProperty('visibility', 'hidden');
+        else       d_arr.style.setProperty('visibility', 'visible');
     }
     window.addEventListener('keypress', key_press_function2);
 
@@ -118,12 +118,12 @@ function key_press_function2(e: KeyboardEvent):void  {
         case 'ArrowUp': 
         case 'KeyK': 
         case 'Numpad5': 
-            (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+            (document.getElementById('u_arr') as HTMLButtonElement)?.click();
             return;
         case 'ArrowDown': 
         case 'KeyJ': 
         case 'Numpad2': 
-            (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+            (document.getElementById('d_arr') as HTMLButtonElement)?.click();
             return;
         case 'KeyO':
         case 'KeyY':
@@ -145,7 +145,7 @@ function key_press_function2(e: KeyboardEvent):void  {
                 return;
             }
             if (canUp) {
-                (document.getElementById('u_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
             }
             return;
         case 'KeyD':
@@ -154,7 +154,7 @@ function key_press_function2(e: KeyboardEvent):void  {
                 return;
             }
             if (canDn) {
-                (document.getElementById('d_arrow') as HTMLButtonElement)?.click();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
             }
             return;
     }
@@ -226,8 +226,8 @@ function do_UD(): void {
 function hope_Up(): void {
     if (!canUp || !canDn) return;
     isUp = true;
-    document.getElementById('u_arrow')?.style.setProperty('visibility', 'hidden');
-    document.getElementById('d_arrow')?.style.setProperty('visibility', 'visible');
+    document.getElementById('u_arr')?.style.setProperty('visibility', 'hidden');
+    document.getElementById('d_arr')?.style.setProperty('visibility', 'visible');
     if (g_team.get_z() > 0) {
         g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
     } else {
@@ -237,8 +237,8 @@ function hope_Up(): void {
 function hope_Down(): void {
     if (!canUp || !canDn) return;
     isUp = false;
-    document.getElementById('u_arrow')?.style.setProperty('visibility', 'hidden');
-    document.getElementById('d_arrow')?.style.setProperty('visibility', 'visible');
+    document.getElementById('u_arr')?.style.setProperty('visibility', 'hidden');
+    document.getElementById('d_arr')?.style.setProperty('visibility', 'visible');
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
 }
 
