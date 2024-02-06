@@ -103,6 +103,30 @@ export class C_DefaultCtls {
         return this._add_default_ctls(name);
     }
 
+    public is_act(name: string): boolean {
+        return  this.flgs[name] ?? false;
+    }
+/*
+    public is_act_fnc(name: string, func: string): boolean {
+        if (!(func in Object.keys(this.ctls))) return false;
+        if (!this.is_act(name)) return false; 
+        return  _c(this.ctls[name][func]);
+    }
+*/
+
+
+    public keys_of_add(): string[] {
+        const key_list = [] as string[];
+        for (const name in this.ctls) key_list.push(name);
+        return key_list;
+    }
+
+    public keys_of_act(): string[] {
+        const key_list = [] as string[];
+        for (const name in this.flgs) if (this.flgs[name]) key_list.push(name);
+        return key_list;
+    }
+
     protected _rmv_default_ctls(name: string): boolean {
         // flgs[name]が定義されていない
         // つまり_add_default_ctlsがまだ呼ばれてない(ctlsがaddされてない)か、

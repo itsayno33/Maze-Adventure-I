@@ -29,6 +29,7 @@ const ctls_camp_nor = {
     do_D:  do_D,
     isOK:  isOK,
     isNG:  isNG,
+    cpRT:  isNG,
 }
 
 function init_view(): boolean {
@@ -118,7 +119,7 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
 }
 
 function do_load(): void {
-    g_mes.notice_message('Do Load!');
+//    g_mes.notice_message('Do Load!');
     set_load_controlles();
 }
 

@@ -28,6 +28,8 @@ const ctls_mvpt_nor = {
     name: 'mvpt_nor', 
     isOK:  isOK,
     isNG:  isNG,
+    cpOK:  isOK,
+    cpNG:  isNG,
 }
 
 function isOK(): void {

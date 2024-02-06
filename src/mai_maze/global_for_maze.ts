@@ -7,11 +7,11 @@ export var g_debug_mode: boolean = false;
 import {T_DrowSet, init_maze3D } from "./F_display_maze";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
-import { C_MazeViewMessage } from "./C_MazeViewMessage";
-export var g_mvm: C_MazeViewMessage;
-
-import { C_SwitchView } from "./C_SwitchView";
+import { C_SwitchView }          from "./C_SwitchView";
 export var g_vsw: C_SwitchView;
+
+import { C_OneLineViewMessage }  from "../common/C_OneLineViewMessage";
+export var g_mvm: C_OneLineViewMessage;
 
 import { C_Hero } from "../common/C_Hero";
 export const g_hres: C_Hero[] = [];
@@ -101,7 +101,7 @@ export function init_after_loaded_DOM(): void {
     g_ready_games.setFunction(init_before_games);
     g_ready_games.setLoadedDOM();
 
-    g_mvm  = C_MazeViewMessage.get();
+    g_mvm  = C_OneLineViewMessage.get('Maze_view_message');
     g_ctls = new C_DefaultCtls(); 
     g_vsw  = C_SwitchView.get();g_vsw.view_maze();
     g_ds   = init_maze3D();

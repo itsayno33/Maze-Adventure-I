@@ -29,8 +29,8 @@ export let   g_team: C_Team  = new C_Team();
 export let   g_guld: C_Guild = new C_Guild();
 
 
-import { C_GldViewMessage }   from "./C_GldViewMessage";
-export var g_mvm: C_GldViewMessage;
+import { C_OneLineViewMessage }   from "../common/C_OneLineViewMessage";
+export var g_mvm: C_OneLineViewMessage;
 
 import { C_DefaultCtls }      from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
@@ -71,7 +71,7 @@ function init_before_load_games(): void {
 export function init_after_loaded_DOM(): void { 
     init_after_loaded_DOM_in_common(); 
 
-    g_mvm = C_GldViewMessage.get(); 
+    g_mvm = C_OneLineViewMessage.get('gld_view_message'); 
     g_ctls = new C_DefaultCtls(); 
     init_debug_mode(); 
     init_display_menu(); 

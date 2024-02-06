@@ -29,18 +29,20 @@ import {
     g_ctls
 } from "./global_for_maze";
 
-var   UL_idx: number =   0;
-var   UL_bak: number = 999;
-var   save_UL_list_len: number;
-var   save_UL_list:     HTMLUListElement;
-var   UL_to_Data:       {[UL_idx: number]: /* data_idx: */ number}
+let   for_save: boolean  = false;
 
-var   form_id:          HTMLInputElement;
-var   form_time:        HTMLParagraphElement;
-var   form_detail:      HTMLTextAreaElement;
-var   form_point:       HTMLParagraphElement;
+let   UL_idx: number =   0;
+let   UL_bak: number = 999;
+let   save_UL_list_len: number;
+let   save_UL_list:     HTMLUListElement;
+let   UL_to_Data:       {[UL_idx: number]: /* data_idx: */ number}
 
-var   is_kakunin = false;
+let   form_id:          HTMLInputElement;
+let   form_time:        HTMLParagraphElement;
+let   form_detail:      HTMLTextAreaElement;
+let   form_point:       HTMLParagraphElement;
+
+let   is_kakunin = false;
 
 export type T_save_list = {
     save_id:   number,
@@ -68,7 +70,10 @@ const ctls_load_nor = {
     do_L:  do_L,
     do_R:  do_R,
     isOK:  isOK_for_load,
-    isNG:  isNG,
+    cpOK:  isOK_for_load,
+    isNG:  go_back_camp_mode,
+    isRT:  go_back_camp_mode,
+    cpRT:  go_back_camp_mode,
 }
 const ctls_save_nor = {
     name: 'save_nor', 
@@ -77,7 +82,10 @@ const ctls_save_nor = {
     do_L:  do_L,
     do_R:  do_R,
     isOK:  isOK_for_save,
-    isNG:  isNG,
+    cpOK:  isOK_for_save,
+    isNG:  go_back_camp_mode,
+    isRT:  go_back_camp_mode,
+    cpRT:  go_back_camp_mode,
 }
 
 export function set_load_controlles(): void {
@@ -88,6 +96,7 @@ export function set_load_controlles(): void {
     init_ctls();
     g_ctls.act('load_nor');
     __set_controlles(false);
+    check_load();
 }
 
 export function set_save_controlles(): void {
@@ -98,13 +107,14 @@ export function set_save_controlles(): void {
     init_ctls();
     g_ctls.act('save_nor');
     __set_controlles(true);
+    check_save();
 }
 
-function __set_controlles(for_save: boolean): void {
-//    hide_controlles();
+function __set_controlles(_for_save: boolean): void {
+    for_save = _for_save; // true: For Save.
 
     is_kakunin = false;
-    display_save_list(for_save); // true: For Save.
+    display_save_list(); 
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
@@ -135,45 +145,46 @@ function isOK_for_save(): void {
 }
 
 function isNG(): void {
-    g_mvm.clear_message();
     if (!is_kakunin) {
-        set_camp_controlles();
-        g_vsw.view_camp();
-    } else {
         g_mvm.clear_message();
+        go_back_camp_mode();
+    } else {
+//        g_mvm.clear_message();
         is_kakunin = false;
+        display_message();
     }
 }
 
+function go_back_camp_mode(): void {
+    g_mvm.clear_message();
+    set_camp_controlles();
+    g_vsw.view_camp();
+}
 
 function do_U(): void {
-    if (is_kakunin) return;
-
-    g_mvm.clear_message();
+//    g_mvm.clear_message();
+    display_message();
     UL_idx = calc_cursor_pos_U(UL_idx, save_UL_list_len, sl_list_cols);
     list_high_light_on(); form_set();
 }
 
 function do_D(): void { 
-    if (is_kakunin) return;
-
-    g_mvm.clear_message();
+//    g_mvm.clear_message();
+    display_message();
     UL_idx = calc_cursor_pos_D(UL_idx, save_UL_list_len, sl_list_cols);
     list_high_light_on();  form_set();
 }
 
 function do_L(): void {
-    if (is_kakunin) return;
-
-    g_mvm.clear_message();
+//    g_mvm.clear_message();
+    display_message();
     UL_idx = calc_cursor_pos_L(UL_idx, save_UL_list_len, sl_list_cols);
     list_high_light_on();  form_set();
 }
 
 function do_R(): void {
-    if (is_kakunin) return;
-
-    g_mvm.clear_message();
+//    g_mvm.clear_message();
+    display_message();
     UL_idx = calc_cursor_pos_R(UL_idx, save_UL_list_len, sl_list_cols);
     list_high_light_on();  form_set();
 }
@@ -246,14 +257,14 @@ function form_set():void {
     }
 }
 
-export function display_save_list(for_save: boolean): void {
+export function display_save_list(): void {
     const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
     const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
     const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
     const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
 
-    g_mvm.clear_message();
+//    g_mvm.clear_message();
 
     get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
@@ -398,7 +409,8 @@ function check_load(): void { // 入力チェックと既存データ上書き�
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
-    g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
+    display_message();
+//    g_mvm.notice_message('ロードしますか？　ロード:〇　キャンセル:✖');
 }
 
 function check_save(): void { // 入力チェックと既存データ上書きの確認
@@ -410,8 +422,20 @@ function check_save(): void { // 入力チェックと既存データ上書き�
         g_mes.warning_message(`check!! This is Auto Mode!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
-    g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
+    display_message();
+//    g_mvm.notice_message('保存しますか？　保存:〇　キャンセル:✖');
 }
+
+function display_message() {
+    if (for_save) {
+        g_mvm.notice_message('保存しますか？');
+    } else {
+        g_mvm.notice_message('ロードしますか？');
+    }
+}
+
+
+
 
 function load(): void { 
     const data_idx = UL_to_Data[UL_idx];
@@ -436,6 +460,7 @@ function _load_here(data_idx: number): void {
 
     general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
         is_kakunin = false;
+//        display_message();
         decode_all(jsonObj?.save);
         do_load_bottom_half('ロードしました'); 
     });
@@ -458,6 +483,7 @@ async function save(): Promise<void> {
         decode_all(jsonObj);
 
         is_kakunin = false;
+//        display_message();
         g_mvm.notice_message('保存しました');
         set_camp_controlles();
         g_vsw.view_camp();
