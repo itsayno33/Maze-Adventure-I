@@ -1,6 +1,6 @@
-import { _ceil, _floor }     from "../common/F_Math";
-import { _alert }            from "../common/global";
-import { g_ctls }            from "./global_for_maze";
+import { _ceil, _floor, _isNum } from "../common/F_Math";
+import { _alert }                from "../common/global";
+import { g_ctls }                from "./global_for_maze";
 
 
 export function hide_all_menu(): void {
@@ -86,70 +86,86 @@ export function high_light_off(parent: HTMLElement|null): void {
 }
 
 
-
-
-
-export function calc_cursor_pos_U(idx: number, list_length: number, list_col_size: number): number {
-    const list_row_size = _ceil(list_length / list_col_size, 0);
-    const cur_row = idx % list_row_size;
+export function calc_cursor_pos_U(idx: number, list_leng: number, list_cols: number): number {
+    const list_rows = _ceil(list_leng / list_cols, 0);
+    const cur_row = idx % list_rows;
     if (cur_row !== 0) {
         // 最上段(上端)以外
         --idx;
     } else {
         // 最上段(上端)
-        idx += list_row_size - 1;
-        while (idx > list_length - 1) {
+        idx += list_rows - 1;
+        while (idx > list_leng - 1) {
             --idx;
         }
     } 
     return idx;
 }
-export function calc_cursor_pos_D(idx: number, list_length: number, list_col_size: number): number {
-    const list_row_size = _ceil(list_length / list_col_size, 0);
-    const cur_row = idx % list_row_size;
-    if (cur_row !== list_row_size - 1 && idx !== list_length - 1) {
+export function calc_cursor_pos_D(idx: number, list_leng: number, list_cols: number): number {
+    const list_rows = _ceil(list_leng / list_cols, 0);
+    const cur_row = idx % list_rows;
+    if (cur_row !== list_rows - 1 && idx !== list_leng - 1) {
         // 最下段(下端)以外
         ++idx;
     } else {
         // 最下段(下端)
-        idx -= list_row_size - 1;
-        while (idx % list_row_size !== 0 && idx < list_length - 1) {
+        idx -= list_rows - 1;
+        while (idx % list_rows !== 0 && idx < list_leng - 1) {
             ++idx;
         }
     } 
     return idx;
 }
-export function calc_cursor_pos_L(idx: number, list_length: number, list_col_size: number): number {
-    const list_row_size = _ceil(list_length / list_col_size, 0);
-    if (idx  > list_row_size - 1) {
+export function calc_cursor_pos_L(idx: number, list_leng: number, list_cols: number): number {
+    const list_rows = _ceil(list_leng / list_cols, 0);
+    if (idx  > list_rows - 1) {
         // 最前列(左端)以外
-        idx -= list_row_size;
+        idx -= list_rows;
     } else {
         // 最前列(左端)
-        const  vurtual_list_length = list_col_size * list_row_size;
-        idx += vurtual_list_length - list_row_size;
-        while (idx > list_length - 1) {
-            idx -= list_row_size;
+        const  vurtual_list_length = list_cols * list_rows;
+        idx += vurtual_list_length - list_rows;
+        while (idx > list_leng - 1) {
+            idx -= list_rows;
             if (idx < 0) {idx = 0; break;}
         }
     } 
     return idx;
 }
-export function calc_cursor_pos_R(idx: number, list_length: number, list_col_size: number): number {
-    const list_row_size = _ceil(list_length / list_col_size, 0);
-    if (idx  < list_length - list_row_size) { 
+export function calc_cursor_pos_R(idx: number, list_leng: number, list_cols: number): number {
+    const list_rows = _ceil(list_leng / list_cols, 0);
+    if (idx  < list_leng - list_rows) { 
         // 最終列(右端)以外
-        idx += list_row_size;
+        idx += list_rows;
     } else {
         // 最終列(右端)
         const  old_idx = idx;
-        const  vurtual_list_length = list_col_size * list_row_size;
-        idx -= vurtual_list_length  - list_row_size;
+        const  vurtual_list_length = list_cols * list_rows;
+        idx -= vurtual_list_length  - list_rows;
         if (idx < 0) {
-            idx += list_row_size;
-            if (idx < 0 || idx > list_length - 1) idx = _floor((old_idx + 1) / list_col_size, 0);
+            idx += list_rows;
+            if (idx < 0 || idx > list_leng - 1) idx = _floor((old_idx + 1) / list_cols, 0);
         }
     } 
     return idx;
 }
 
+
+// DOMリスト一覧の行数の取得
+export function get_dom_list_leng(dom_list: HTMLElement): number {
+    try {
+        return dom_list.children.length; 
+    } catch(err) {
+        return 1;
+    }
+}
+
+// DOMリスト一覧の列数(CSSから取得)の取得
+export function get_dom_list_cols(dom_list: HTMLElement): number {
+    try {
+        let cols   = window.getComputedStyle(dom_list).columnCount;
+        return _isNum(cols) ? Number(cols) : 1; 
+    } catch(err) {
+        return 1;
+    }
+}

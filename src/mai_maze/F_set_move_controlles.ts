@@ -155,5 +155,7 @@ function do_stairs_motion(kind: T_MzKind): void {
 
 function camp(): void {
     g_vsw.view_camp();
+    g_mvm.clear_message();
+
     set_camp_controlles();
 }

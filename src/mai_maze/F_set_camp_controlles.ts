@@ -5,9 +5,16 @@ import { set_save_controlles, set_load_controlles   } from "./F_set_save_control
 import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
 import { g_ctls, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
 import { g_mes }                     from "../common/global";
+import { _high_light_on, calc_cursor_pos_D, calc_cursor_pos_U, get_dom_list_cols, get_dom_list_leng } from "./F_default_menu";
+import { _isNum } from "../common/F_Math";
 
 const mode:  string[] =  ['Load', 'Save', 'MvPt'];
-var   idx:   number   =   0;
+
+let   dom_camp_list:  HTMLUListElement;
+let   camp_list_rows: number;
+let   camp_list_cols: number;
+
+let   idx:   number   =   0;
 
 
 export function set_camp_controlles(): void {
@@ -42,6 +49,10 @@ function init_view(): boolean {
             const item = menu_list.children[i] as HTMLLIElement;
             item.addEventListener("click", _OK_camp_Fnc, false);
         }
+
+        dom_camp_list  = document.getElementById('camp_list') as HTMLUListElement;
+        camp_list_rows = get_dom_list_leng(dom_camp_list); 
+        camp_list_cols = get_dom_list_cols(dom_camp_list);
     } catch(err) {
         alert('Error: ' + err);
         return false;
@@ -80,16 +91,22 @@ function isNG(): void {
 
 function do_U(): void {
     g_mvm.clear_message();
-    idx = (idx > 0) ? --idx : idx;
+//    idx = (idx > 0) ? --idx : idx;
+    idx = calc_cursor_pos_U(idx, camp_list_rows, camp_list_cols);
     high_light_on(); 
 }
 
 function do_D(): void {
     g_mvm.clear_message();
-    idx = (idx < mode.length - 1) ? ++idx : idx;
+//    idx = (idx < mode.length - 1) ? ++idx : idx;
+    idx = calc_cursor_pos_D(idx, camp_list_rows, camp_list_cols);
     high_light_on(); 
 }
 
+function high_light_on(): void {
+    _high_light_on(dom_camp_list, idx);
+}
+/*
 function high_light_on(): void {
     const camp_list = document.getElementById('camp_list') as HTMLUListElement;
     if (camp_list === null) return;
@@ -117,6 +134,21 @@ function __high_light_on(elm: HTMLElement | null, isOn: boolean): void {
         p.style.setProperty('display', isOn ? 'block' : 'none');
     }
 }
+*/
+
+// キャンプ・メニュー 一覧の列数(CSSから取得)
+/*
+function get_camp_list_cols(): number {
+    try {
+        let __col   = window.getComputedStyle(dom_camp_list).columnCount;
+        alert(__col);
+        if (!_isNum(__col))  {alert(__col + '=>' + _isNum(__col));return 1;}
+        return Number(__col); 
+    } catch(err) {
+        return 1;
+    }
+}
+*/
 
 function do_load(): void {
 //    g_mes.notice_message('Do Load!');

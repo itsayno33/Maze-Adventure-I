@@ -25,15 +25,26 @@ export const g_team = new C_Team();
 import { C_Guild } from "../common/C_Guild";
 export const g_guld = new C_Guild();
 
+import { 
+    general_load, 
+    get_mai_maze, 
+    get_new_maze, 
+    tmp_load 
+} from "../common/F_load_and_save";
+
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
 import { init_controlles }          from "./F_set_controlles";
 import { decode_all, decode_maze }  from "./F_set_save_controlles";
-
-import { general_load, get_mai_maze, get_new_maze, tmp_load }          from "../common/F_load_and_save";
-import { g_mes, g_ready_games, g_start_env, init_after_loaded_DOM_in_common } from "../common/global";
 import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
+
+import { 
+    g_mes, 
+    g_ready_games, 
+    g_start_env, 
+    init_after_loaded_DOM_in_common 
+} from "../common/global";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {

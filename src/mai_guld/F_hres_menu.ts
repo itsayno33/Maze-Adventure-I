@@ -9,7 +9,9 @@ import {
     calc_cursor_pos_L,
     calc_cursor_pos_R,
     calc_cursor_pos_U,
-    calc_cursor_pos_D
+    calc_cursor_pos_D,
+    get_dom_list_leng,
+    get_dom_list_cols
 } from "./F_default_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { high_light_on }                 from "./F_default_menu";
@@ -50,9 +52,13 @@ let menu_list_for_appd: T_menu_list;
 
 let inpt_name_list: {[id: string]: {id: string, label: HTMLLabelElement, input: HTMLInputElement}};
 
+let team_list_leng: number;
 let team_list_cols: number;
+let guld_list_leng: number;
 let guld_list_cols: number;
+let appd_list_leng: number;
 let appd_list_cols: number;
+let menu_list_leng: number;
 let menu_list_cols: number;
 
 const T_TGA_mode: {[kind: string]: number}  = {
@@ -379,6 +385,8 @@ function update_dom_team_list():void {
         li.addEventListener("click", _OK_team_Fnc, false);
         dom_team_list.appendChild(li);
     }
+    team_list_leng = get_dom_list_leng(dom_team_list);
+    team_list_cols = get_dom_list_cols(dom_team_list);
     list_high_light_on();
 }
 function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
@@ -428,6 +436,8 @@ function update_dom_guld_list(): void {
         li.addEventListener("click", _OK_guld_Fnc, false);
         dom_guld_list.appendChild(li);
     }
+    guld_list_leng = get_dom_list_leng(dom_guld_list);
+    guld_list_cols = get_dom_list_cols(dom_guld_list);
     list_high_light_on();
 }
 function _OK_guld_Fnc(this: HTMLLIElement, e: MouseEvent): void {
@@ -477,6 +487,8 @@ function update_dom_appd_list(): void {
         li.addEventListener("click", _OK_appd_Fnc, false);
         dom_appd_list.appendChild(li);
     }
+    appd_list_leng = get_dom_list_leng(dom_appd_list);
+    appd_list_cols = get_dom_list_cols(dom_appd_list);
     list_high_light_on();
 }
 function _OK_appd_Fnc(this: HTMLLIElement, e: MouseEvent): void {
@@ -533,6 +545,8 @@ function update_dom_menu_list(): void {
         li.addEventListener("click", _OK_menu_Fnc, false);
         dom_menu_list.appendChild(li);
     }
+    menu_list_leng = get_dom_list_leng(dom_menu_list);
+    menu_list_cols = get_dom_list_cols(dom_menu_list);
     list_high_light_on();
 }
 function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
@@ -681,7 +695,7 @@ function clear_dom_hero_detail() {
 function init_ctls(): boolean { 
     if (!init_default_ctls())      return false;
     if (!init_cursor())            return false; 
-    if (!get_dom_list_cols())      return false; 
+//    if (!get_dom_list_cols())      return false; 
     if (!subview_hide_all())       return false; 
     if (!subview_act(cursor.kind)) return false; 
     return true;
@@ -887,6 +901,7 @@ function subview_act_ipck() {
 // **************************************************************
 // 各サブ・リスト表示の列数をCSSから取得する(カーソル移動制御に使用)
 // **************************************************************
+/*
 function get_dom_list_cols(): boolean {
     get_dom_team_list_cols();
     get_dom_guld_list_cols();
@@ -937,6 +952,7 @@ function get_dom_menu_list_cols(): number {
     menu_list_cols = Number(__col); 
     return menu_list_cols;
 }
+*/
 
 // 選択されている行のハイライト表示(暫定)
 function list_high_light_on() {
@@ -985,39 +1001,39 @@ function do_R(): void {
 
 // カーソル位置の計算
 function calc_list_cursor_pos_U(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_U(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_U(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_D(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_D(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_D(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_L(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_L(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_L(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_R(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_R(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_R(cursor.idx, list_leng, list_cols);
 }
 
-function _calc_list_length(): number {
+function _calc_list_leng(): number {
     switch (cursor.kind) {
         case T_SubView.Team:
-            return dom_team_list.children.length;
+            return team_list_leng;
         case T_SubView.Guld:
-            return dom_guld_list.children.length;
+            return guld_list_leng;
         case T_SubView.Appd:
-            return dom_appd_list.children.length;
+            return appd_list_leng;
         case T_SubView.Menu:
-            return dom_menu_list.children.length;
+            return menu_list_leng;
     }
     return 0;
 }
@@ -1033,7 +1049,7 @@ function _calc_list_cols(): number {
         case T_SubView.Menu:
             return menu_list_cols;
     }
-    return 0;
+    return 1;
 }
 
 // **************************************

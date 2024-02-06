@@ -1,3 +1,11 @@
+// 数値チェック
+export function _isNum(numVal: string): boolean {
+    // チェック条件パターン
+    let pattern = /^[-]?([1-9]\d*|0)(\.\d+)?$/;
+    // 数値チェック
+    return pattern.test(numVal);
+}
+
 // 四捨五入
 export function _round(num: number, digit: number): number {
     const multiplier = Math.pow(10, digit);

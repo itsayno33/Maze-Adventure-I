@@ -4,12 +4,14 @@ import {
     calc_cursor_pos_R,
     calc_cursor_pos_U,
     calc_cursor_pos_D,
+    get_dom_list_cols,
+    get_dom_list_leng,
 } from "./F_default_menu";
 
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { high_light_on }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
-import { g_mvm, g_guld, g_ctls }         from "./global_for_guild";
+import { g_mvm, g_guld, g_ctls } from "./global_for_guild";
 
 import { C_Hero }                from "../common/C_Hero";
 import { _ceil, _floor, _round } from "../common/F_Math";
@@ -19,14 +21,15 @@ import { _alert, g_mes }         from "../common/global";
 let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
 let dom_info_detail : HTMLUListElement;
-var info_list: HTMLUListElement;
+let info_list: HTMLUListElement;
 
-var new_hres: C_Hero[] = [];
-var info_list_cols: number;
-var idx:  number = 0;
-var info_detail: {[key: string]: HTMLLIElement};
+let new_hres: C_Hero[] = [];
+let info_list_leng: number;
+let info_list_cols: number;
+let idx:  number = 0;
+let info_detail: {[key: string]: HTMLLIElement};
 
-var mode = 'view';
+let mode = 'view';
 
 export function display_appd_menu(): void {
     hide_all_menu();
@@ -43,20 +46,12 @@ export function display_appd_menu(): void {
 
     dom_view_switch.style.display = 'block';
 
-    get_info_list_cols();
+    info_list_leng = get_dom_list_leng(info_list);
+    info_list_cols = get_dom_list_cols(info_list);
     /* await */ init_all();
     /* await */ update_all();
     g_ctls.act('appd_nor');
     display_default_message();
-}
-
-function get_info_list_cols(): number {
-    let __col   = window.getComputedStyle(info_list).columnCount !== '' 
-                ? window.getComputedStyle(info_list).columnCount
-                : '1';
- 
-    info_list_cols = Number(__col); 
-    return info_list_cols;
 }
 
 function init_all() {
@@ -198,25 +193,25 @@ function update_ctls(): void {}
 function do_U(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_U(idx, info_list.children.length, info_list_cols);
+    idx = calc_cursor_pos_U(idx, info_list_leng, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx); 
 }
 function do_D(): void {
     display_default_message()
 
-    idx = calc_cursor_pos_D(idx, info_list.children.length, info_list_cols);
+    idx = calc_cursor_pos_D(idx, info_list_leng, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx);  
 }
 function do_L(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_L(idx, info_list.children.length, info_list_cols);
+    idx = calc_cursor_pos_L(idx, info_list_leng, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx);
 }
 function do_R(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_R(idx, info_list.children.length, info_list_cols);
+    idx = calc_cursor_pos_R(idx, info_list_leng, info_list_cols);
     high_light_on(info_list, idx);  update_info_detail(idx);
 }
 

@@ -5,7 +5,9 @@ import {
     calc_cursor_pos_R,
     calc_cursor_pos_U,
     calc_cursor_pos_D,
-    rmv_all_ctls
+    rmv_all_ctls,
+    get_dom_list_cols,
+    get_dom_list_leng
 } from "./F_default_menu";
 
 import { display_guld_menu }     from "./F_guild_menu";
@@ -30,6 +32,7 @@ import { POST_and_move_page } from "../common/F_POST";
 let data_list:  {[uniq_no: number]:C_SaveData};
 
 let info_list: HTMLUListElement;
+let info_list_leng: number;
 let info_list_cols: number;
 let dom_idx:  number = 0;
 let info_detail: {[key: string]: HTMLLIElement};
@@ -74,8 +77,6 @@ async function _display_SL_menu(): Promise<void> {
     if (info_list       === null) {display_guld_menu();return;}
 
     dom_view_switch.style.display = 'block';
-
-    get_info_list_cols();
 
     await init_all();
     await update_all();
@@ -199,6 +200,8 @@ function update_info_list(): void {
             dom_to_uno[uno] = uno;
         }
     }
+    info_list_leng = get_dom_list_leng(info_list);
+    info_list_cols = get_dom_list_cols(info_list);
 
     high_light_on(info_list, dom_idx); 
     return;
@@ -340,28 +343,28 @@ function do_U(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    dom_idx = calc_cursor_pos_U(dom_idx, info_list.children.length, info_list_cols);
+    dom_idx = calc_cursor_pos_U(dom_idx, info_list_leng, info_list_cols);
     high_light_on(info_list, dom_idx);  update_info_detail(dom_idx); 
 }
 function do_D(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    dom_idx = calc_cursor_pos_D(dom_idx, info_list.children.length, info_list_cols);
+    dom_idx = calc_cursor_pos_D(dom_idx, info_list_leng, info_list_cols);
     high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);  
 }
 function do_L(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    dom_idx = calc_cursor_pos_L(dom_idx, info_list.children.length, info_list_cols);
+    dom_idx = calc_cursor_pos_L(dom_idx, info_list_leng, info_list_cols);
     high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 function do_R(): void {
     if (mode !== 'view') return;
     display_default_message();
 
-    dom_idx = calc_cursor_pos_R(dom_idx, info_list.children.length, info_list_cols);
+    dom_idx = calc_cursor_pos_R(dom_idx, info_list_leng, info_list_cols);
     high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 

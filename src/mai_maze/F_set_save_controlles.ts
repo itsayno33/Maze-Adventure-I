@@ -15,7 +15,9 @@ import {
     calc_cursor_pos_U, 
     calc_cursor_pos_D, 
     calc_cursor_pos_L, 
-    calc_cursor_pos_R, 
+    calc_cursor_pos_R,
+    get_dom_list_cols,
+    get_dom_list_leng, 
 } from "./F_default_menu";
 
 import { 
@@ -33,8 +35,11 @@ let   for_save: boolean  = false;
 
 let   UL_idx: number =   0;
 let   UL_bak: number = 999;
-let   save_UL_list_len: number;
+//let   save_UL_list_len: number;
 let   save_UL_list:     HTMLUListElement;
+let   UL_list_leng:  number;
+let   UL_list_cols:  number;
+
 let   UL_to_Data:       {[UL_idx: number]: /* data_idx: */ number}
 
 let   form_id:          HTMLInputElement;
@@ -58,10 +63,6 @@ export type T_save_list = {
 
 let   save_list:        {[uniq_no: number]: C_SaveData};
 const save_list_max = 20;
-
-let   dom_load_list: HTMLUListElement;
-let   dom_save_list: HTMLUListElement;
-let   sl_list_cols:  number;
 
 const ctls_load_nor = {
     name: 'load_nor', 
@@ -91,7 +92,6 @@ const ctls_save_nor = {
 export function set_load_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Load;
-    sl_list_cols = get_load_data_list_cols();
 
     init_ctls();
     g_ctls.act('load_nor');
@@ -102,7 +102,6 @@ export function set_load_controlles(): void {
 export function set_save_controlles(): void {
     hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Save;
-    sl_list_cols = get_save_data_list_cols();
 
     init_ctls();
     g_ctls.act('save_nor');
@@ -132,14 +131,14 @@ function init_ctls(): void {
 
 function isOK_for_load(): void {
     if (save_UL_list === null) return;
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
     if (!is_kakunin) check_load(); else load();
 }
 
 function isOK_for_save(): void {
     if (save_UL_list === null) return;
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
     if (!is_kakunin) check_save(); else save();
 }
@@ -164,57 +163,29 @@ function go_back_camp_mode(): void {
 function do_U(): void {
 //    g_mvm.clear_message();
     display_message();
-    UL_idx = calc_cursor_pos_U(UL_idx, save_UL_list_len, sl_list_cols);
+    UL_idx = calc_cursor_pos_U(UL_idx, UL_list_leng, UL_list_cols);
     list_high_light_on(); form_set();
 }
 
 function do_D(): void { 
 //    g_mvm.clear_message();
     display_message();
-    UL_idx = calc_cursor_pos_D(UL_idx, save_UL_list_len, sl_list_cols);
+    UL_idx = calc_cursor_pos_D(UL_idx, UL_list_leng, UL_list_cols);
     list_high_light_on();  form_set();
 }
 
 function do_L(): void {
 //    g_mvm.clear_message();
     display_message();
-    UL_idx = calc_cursor_pos_L(UL_idx, save_UL_list_len, sl_list_cols);
+    UL_idx = calc_cursor_pos_L(UL_idx, UL_list_leng, UL_list_cols);
     list_high_light_on();  form_set();
 }
 
 function do_R(): void {
 //    g_mvm.clear_message();
     display_message();
-    UL_idx = calc_cursor_pos_R(UL_idx, save_UL_list_len, sl_list_cols);
+    UL_idx = calc_cursor_pos_R(UL_idx, UL_list_leng, UL_list_cols);
     list_high_light_on();  form_set();
-}
-
-// ロード一覧の列数(CSSから取得)
-function get_load_data_list_cols(): number {
-    try {
-        dom_load_list = document.getElementById('load_data_list') as HTMLUListElement;
-    } catch (err) {
-        return 1;
-    }
-    let __col   = window.getComputedStyle(dom_load_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_load_list).columnCount
-                : '1';
- 
-    return Number(__col); 
-}
-
-// セーブ一覧の列数(CSSから取得)
-function get_save_data_list_cols(): number {
-    try {
-        dom_save_list = document.getElementById('save_data_list') as HTMLUListElement;
-    } catch (err) {
-        return 1;
-    }
-    let __col   = window.getComputedStyle(dom_save_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_save_list).columnCount
-                : '1';
- 
-    return Number(__col); 
 }
 
 
@@ -223,7 +194,7 @@ function list_high_light_on(): void {
 }
 
 function form_clr():void {
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
     form_id   .value      = '-1';
     form_time .innerText  = '';
@@ -239,7 +210,7 @@ function form_clr():void {
 }
 
 function form_set():void {
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) return;
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
     form_clr();
     const data_idx = UL_to_Data[UL_idx];
@@ -304,7 +275,7 @@ export function display_save_list(): void {
                 save_UL_list.removeChild(save_UL_list.firstChild);
             }
 
-            save_UL_list_len = 0; UL_to_Data = {};
+            let save_UL_list_len = 0; UL_to_Data = {};
             for (let data_idx in save_list) {
                 if (save_list[data_idx].auto_mode) {
                     if (for_save) continue;
@@ -340,7 +311,9 @@ export function display_save_list(): void {
                 UL_to_Data[save_UL_list_len] = Number(data_idx);
                 save_UL_list_len++;
             }
-
+            UL_list_leng = get_dom_list_leng(save_UL_list);
+            UL_list_cols = get_dom_list_cols(save_UL_list);
+    
             form_id     = document.getElementById(data_id)     as HTMLInputElement;
             form_time   = document.getElementById(data_time)   as HTMLParagraphElement;
             form_detail = document.getElementById(data_detail) as HTMLTextAreaElement;
@@ -405,7 +378,7 @@ function display_load_fields(): void {
 
 function check_load(): void { // 入力チェックと既存データ上書きの確認
     const data_idx = UL_to_Data[UL_idx];
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
@@ -415,7 +388,7 @@ function check_load(): void { // 入力チェックと既存データ上書き�
 
 function check_save(): void { // 入力チェックと既存データ上書きの確認
     const data_idx = UL_to_Data[UL_idx];
-    if (UL_idx < 0 || UL_idx > save_UL_list_len - 1) {
+    if (UL_idx < 0 || UL_idx > UL_list_leng - 1) {
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     if (save_list[data_idx].auto_mode) {

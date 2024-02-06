@@ -13,7 +13,9 @@ import {
     calc_cursor_pos_R, 
     hide_all_menu, 
     high_light_on, 
-    high_light_off
+    high_light_off,
+    get_dom_list_leng,
+    get_dom_list_cols
 } from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_ctls, g_mvm, g_team } from "./global_for_guild";
@@ -29,7 +31,9 @@ let dom_mvpt_list:    HTMLUListElement;
 let maze_list: C_MazeInfo[];
 let mvpt_list: C_MovablePoint[];
 
+let maze_list_leng: number;
 let maze_list_cols: number;
+let mvpt_list_leng: number;
 let mvpt_list_cols: number;
 
 const T_List_mode: {[kind: string]: number}  = {
@@ -197,6 +201,8 @@ function update_DOM_maze_list(): void {
         li.addEventListener("click", _OK_maze_Fnc, false);
         dom_maze_list.appendChild(li);
     }
+    maze_list_leng = get_dom_list_leng(dom_maze_list);
+    maze_list_cols = get_dom_list_cols(dom_maze_list);
     list_high_light_on();
     dom_maze_fields.style.display = 'block';
 }
@@ -265,6 +271,8 @@ function update_DOM_mvpt_list(): void {
         li.addEventListener("click", _OK_mvpt_Fnc, false);
         dom_mvpt_list.appendChild(li);
     }
+    mvpt_list_leng = get_dom_list_leng(dom_mvpt_list);
+    mvpt_list_cols = get_dom_list_cols(dom_mvpt_list);
     list_high_light_on();
     dom_mvpt_fields.style.display = 'block';
 }
@@ -308,7 +316,7 @@ function clear_dom_mvpt_list(): void {
 function init_ctls(): void { 
     init_default_ctls(); 
     init_cursor(); 
-    get_dom_list_cols(); 
+//    get_dom_list_cols(); 
     subview_show_all(); 
     switch_cursor(cursor.mode); 
 }
@@ -399,7 +407,7 @@ function init_cursor(): boolean {
 // **************************************************************
 // 各サブ・リスト表示の列数をCSSから取得する(カーソル移動制御に使用)
 // **************************************************************
-
+/*
 function get_dom_list_cols(): boolean {
     maze_list_cols = _get_dom_list_cols(dom_maze_list);
     mvpt_list_cols = _get_dom_list_cols(dom_mvpt_list);
@@ -412,7 +420,7 @@ function _get_dom_list_cols(dom_list: HTMLUListElement): number {
 
     return Number(__col);
 }
-
+*/
 // **********************************
 // リスト表示の切り替え関係
 // **********************************
@@ -497,35 +505,35 @@ function do_R(): void {
 
 // カーソル位置の計算
 function calc_list_cursor_pos_U(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_U(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_U(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_D(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_D(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_D(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_L(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_L(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_L(cursor.idx, list_leng, list_cols);
 }
 
 function calc_list_cursor_pos_R(): number {
-    const list_length = _calc_list_length();
-    const list_cols   = _calc_list_cols();
-    return calc_cursor_pos_R(cursor.idx, list_length, list_cols);
+    const list_leng = _calc_list_leng();
+    const list_cols = _calc_list_cols();
+    return calc_cursor_pos_R(cursor.idx, list_leng, list_cols);
 }
 
-function _calc_list_length(): number {
+function _calc_list_leng(): number {
     switch (cursor.mode) {
         case T_List_mode.Maze:
-            return dom_maze_list.children.length;
+            return maze_list_leng;
         case T_List_mode.MvPt:
-            return dom_mvpt_list.children.length;
+            return mvpt_list_leng;
     }
     return 0;
 }
@@ -537,7 +545,7 @@ function _calc_list_cols(): number {
         case T_List_mode.MvPt:
             return mvpt_list_cols;
     }
-    return 0;
+    return 1;
 }
 
 
