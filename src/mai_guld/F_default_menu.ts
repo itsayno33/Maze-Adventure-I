@@ -42,7 +42,6 @@ export function init_display_menu(): void {
 
 
 // メニューのデフォルト操作(ハイライトと詳細表示制御)
-
 export function high_light_on(parent: HTMLElement|null, idx: number): void {
     if (parent === null) return;
 
