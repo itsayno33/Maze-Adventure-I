@@ -28,6 +28,11 @@ export class C_CtlCursor {
         return this.me[id];
     }
 
+    public set_cursor(indx: number): number {
+        this.indx = indx; this.high_light_on();
+        return this.indx;
+    }
+
     public pos_U(): number {
         let   indx = this.indx;
         const rows = this.__get_rows();
