@@ -1,7 +1,7 @@
 import { C_Goods, JSON_Goods }             from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveData";
-import { _get_uuid } from "./F_Rand";
+import { _get_uuid }                       from "../d_utl/F_Rand";
 
 export interface JSON_Hero extends JSON_Any {
     id?:        number, 

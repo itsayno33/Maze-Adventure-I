@@ -3,10 +3,10 @@ import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
 import { g_ctls, g_ctls_mode, g_maze, g_mvm, g_team, g_vsw } from "./global_for_maze";
 
-import { tmp_save }            from "../common/F_load_and_save";
-import { C_UrlOpt }            from "../common/C_UrlOpt";
-import { POST_and_move_page }  from "../common/F_POST";
-import { g_my_url, g_save, g_start_env, g_url, g_url_mai_guld } from "../common/global";
+import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
+import { tmp_save }            from "../d_cmn/F_load_and_save";
+import { POST_and_move_page }  from "../d_cmn/F_POST";
+import { g_my_url, g_save, g_start_env, g_url, g_url_mai_guld } from "../d_cmn/global";
 
 let mode: string;
 

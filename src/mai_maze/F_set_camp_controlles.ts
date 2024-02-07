@@ -1,11 +1,11 @@
+import { _isNum }          from "../d_utl/F_Math";
 import { T_CtlsMode }      from "./T_CtlsMode";
 import { hide_controlles } from "./F_set_controlles";
 import { set_move_controlles, do_move_bottom_half }   from "./F_set_move_controlles";
 import { set_save_controlles, set_load_controlles   } from "./F_set_save_controlles";
 import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
-import { g_ctls, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { _isNum }      from "../common/F_Math";
-import { C_CtlCursor } from "../common/C_CtlCursor";
+import { g_ctls, g_ctls_mode, g_mvm, g_vsw }          from "./global_for_maze";
+import { C_CtlCursor }     from "../d_ctl/C_CtlCursor";
 
 const mode:  string[] =  ['Load', 'Save', 'MvPt'];
 

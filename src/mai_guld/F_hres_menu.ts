@@ -1,9 +1,9 @@
-import { _ceil, _floor, _min, _round }   from "../common/F_Math";
-import { T_MakeEnumType }                from "../common/T_MakeEnumType";
-import { C_Hero }                        from "../common/C_Hero";
-import { C_CtlCursor }                   from "../common/C_CtlCursor";
-import { get_new_hero }                  from '../common/F_load_and_save';
-import { _alert, g_mes }                 from "../common/global";
+import { _ceil, _floor, _min, _round }   from "../d_utl/F_Math";
+import { T_MakeEnumType }                from "../d_utl/T_MakeEnumType";
+import { C_Hero }                        from "../d_mdl/C_Hero";
+import { C_CtlCursor }                   from "../d_ctl/C_CtlCursor";
+import { get_new_hero }                  from '../d_cmn/F_load_and_save';
+import { _alert, g_mes }                 from "../d_cmn/global";
 
 import { hide_all_menu }                 from "./F_default_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";

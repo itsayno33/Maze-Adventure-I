@@ -1,5 +1,3 @@
-
-
 export class C_OneLineViewMessage {
     protected static  me : {[id: string]: C_OneLineViewMessage};
     protected p  : HTMLParagraphElement;

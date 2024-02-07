@@ -1,6 +1,6 @@
-import { C_PointDir, T_Direction }   from "./C_PointDir";
-import { C_Location, JSON_Location } from "./C_Location";
+import { C_PointDir, T_Direction }           from "./C_PointDir";
 import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
+
 
 export interface JSON_Walker extends JSON_MovablePoint {
 }

@@ -1,5 +1,3 @@
-
-
 export class C_DisplayMessage {
     protected static  me: C_DisplayMessage;
     protected id:  string;

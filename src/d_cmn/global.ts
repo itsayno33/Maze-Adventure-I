@@ -41,10 +41,10 @@ export const g_ready_games = new C_ReadyGames();
 
 export const g_start_env = {mode: '', pid: -1, opt: ''};
 
-import { C_DisplayMessage } from "../common/C_DisplayMessage";
+import { C_DisplayMessage } from "../d_vie/C_DisplayMessage";
 export var g_mes: C_DisplayMessage;
 
-import { C_SaveData }         from "../common/C_SaveData";
+import { C_SaveData }         from "../d_mdl/C_SaveData";
 export const g_save = new C_SaveData();
 
 export function init_after_loaded_DOM_in_common(): void {

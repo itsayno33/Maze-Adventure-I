@@ -1,7 +1,7 @@
-import { T_MzKind }                   from "../common/T_MzKind";
-import { I_HopeAction }               from "../common/I_Common";
-import { C_Point }                    from "../common/C_Point";
-import { instant_load, instant_save } from "../common/F_load_and_save";
+import { T_MzKind }                   from "../d_mdl/T_MzKind";
+import { I_HopeAction }               from "../d_mdl/I_Common";
+import { C_Point }                    from "../d_mdl/C_Point";
+import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";

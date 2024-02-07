@@ -1,7 +1,7 @@
 // 一般に使えるユーティリティな呪文
 // オブジェクトを列挙型として型化するのに利用
 import { I_JSON, JSON_Any } from "./C_SaveData";
-import { _round } from "./F_Math";
+import { _round }           from "../d_utl/F_Math";
 
 type T_HeroAbility = {[key: string]: number};
 export interface JSON_Hero_Ability extends JSON_Any {[key: string]: number}

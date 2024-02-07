@@ -1,11 +1,11 @@
-import { T_MakeEnumType }          from "../common/T_MakeEnumType";
-import { C_MovablePoint }          from "../common/C_MovablePoint";
-import { C_MazeInfo }              from "../common/C_MazeInfo";
-import { C_CtlCursor }             from "../common/C_CtlCursor";
-import { C_UrlOpt }                from "../common/C_UrlOpt";
-import { POST_and_move_page }      from "../common/F_POST";
-import { get_maze_info, tmp_save } from "../common/F_load_and_save";
-import { _alert, g_save, g_start_env, g_url, g_url_mai_maze } from "../common/global";
+import { T_MakeEnumType }          from "../d_utl/T_MakeEnumType";
+import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
+import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
+import { C_MazeInfo }              from "../d_mdl/C_MazeInfo";
+import { C_CtlCursor }             from "../d_ctl/C_CtlCursor";
+import { POST_and_move_page }      from "../d_cmn/F_POST";
+import { get_maze_info, tmp_save } from "../d_cmn/F_load_and_save";
+import { _alert, g_save, g_start_env, g_url, g_url_mai_maze } from "../d_cmn/global";
 
 import { hide_all_menu }           from "./F_default_menu";
 import { display_guld_menu }       from "./F_guild_menu";

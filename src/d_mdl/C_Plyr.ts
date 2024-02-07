@@ -1,5 +1,5 @@
 import { C_MovablePoint } from './C_MovablePoint';
-import { _get_uuid }      from './F_Rand';
+import { _get_uuid }      from '../d_utl/F_Rand';
 export class C_Plyr {
     public    pid:      number;
     public    name:     string;

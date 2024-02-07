@@ -1,7 +1,7 @@
-import { C_UrlOpt }                   from "../common/C_UrlOpt";
-import { UD_save, tmp_save }          from "../common/F_load_and_save";
-import { POST_and_move_page }         from "../common/F_POST";
-import { g_start_env, g_url, g_url_mai_guld } from "../common/global";
+import { C_UrlOpt }                   from "../d_utl/C_UrlOpt";
+import { UD_save, tmp_save }          from "../d_cmn/F_load_and_save";
+import { POST_and_move_page }         from "../d_cmn/F_POST";
+import { g_start_env, g_url, g_url_mai_guld } from "../d_cmn/global";
 
 import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";

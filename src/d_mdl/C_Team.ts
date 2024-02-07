@@ -1,4 +1,4 @@
-import { _get_uuid }               from "./F_Rand";
+import { _get_uuid }               from "../d_utl/F_Rand";
 import { C_Point }                 from "./C_Point";
 import { C_PointDir, T_Direction } from './C_PointDir';
 import { I_Locate }                from './C_Location';
@@ -6,8 +6,8 @@ import { C_MovablePoint }          from "./C_MovablePoint";
 import { C_Walker, JSON_Walker }   from "./C_Walker";
 import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
-import { I_Exist, I_HopeAction }   from "./I_Common"
 import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
+import { I_Exist, I_HopeAction }   from "./I_Common"
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 

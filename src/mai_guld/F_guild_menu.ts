@@ -3,8 +3,7 @@ import { display_load_menu, display_save_menu } from "./F_save_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { display_tomz_menu } from "./F_tomz_menu";
 import { g_ctls, g_mvm }     from "./global_for_guild";
-import { C_CtlCursor }       from "../common/C_CtlCursor";
-
+import { C_CtlCursor }       from "../d_ctl/C_CtlCursor";
 
 let dom_view_switch : HTMLDivElement;
 let menu_list: HTMLUListElement;

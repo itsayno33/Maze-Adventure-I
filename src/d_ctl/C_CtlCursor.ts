@@ -1,5 +1,5 @@
-import { _ceil, _floor, _isNum } from "./F_Math";
-import { _alert }                from "./global";
+import { _ceil, _floor, _isNum } from "../d_utl/F_Math";
+import { _alert }                from "../d_cmn/global";
 
 export class C_CtlCursor {
     protected static me: {[id: string]: C_CtlCursor};

@@ -1,20 +1,20 @@
-import { alert_save_detail, alert_save_info } from "./C_SaveData"; 
-import { alert_team_info }     from "./C_Team"; 
-import { alert_maze_info }     from "./C_Maze"; 
-import { alert_guld_info }     from "./C_Guild"; 
-import { alert_mvpt_info }     from "./C_MovablePoint";
-import { alert_hres_info }     from "./C_Hero"; 
-import { alert_PD_info }       from "./C_PointDir";
-import { alert_mazeinfo_info } from './C_MazeInfo';
+import { alert_save_detail, alert_save_info } from "../d_mdl/C_SaveData"; 
+import { alert_team_info }     from "../d_mdl/C_Team"; 
+import { alert_maze_info }     from "../d_mdl/C_Maze"; 
+import { alert_guld_info }     from "../d_mdl/C_Guild"; 
+import { alert_mvpt_info }     from "../d_mdl/C_MovablePoint";
+import { alert_hres_info }     from "../d_mdl/C_Hero"; 
+import { alert_PD_info }       from "../d_mdl/C_PointDir";
+import { alert_mazeinfo_info } from '../d_mdl/C_MazeInfo';
 
-import { _round, _min, _max  } from "./F_Math";
-import { C_UrlOpt }            from "./C_UrlOpt";  
-import { POST_and_get_JSON, POST_and_move_page } from "./F_POST";
+import { _round, _min, _max  } from "../d_utl/F_Math";
+import { C_UrlOpt }            from "../d_utl/C_UrlOpt";  
+import { POST_and_get_JSON, POST_and_move_page } from "../d_cmn/F_POST";
 import { 
     _alert, g_mes, g_start_env, 
     g_url,  g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
     g_save, 
-} from "./global";
+} from "../d_cmn/global";
 
 
 type T_callback = (jsonObj:any)=>(boolean|void);

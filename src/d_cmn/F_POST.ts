@@ -1,6 +1,6 @@
-import { _min }          from "./F_Math";
-import { g_mes, _alert } from "./global";
-import { C_UrlOpt }      from "./C_UrlOpt";
+import { _min }          from "../d_utl/F_Math";
+import { C_UrlOpt }      from "../d_utl/C_UrlOpt";
+import { g_mes, _alert } from "../d_cmn/global";
 
 
 export async function POST_and_get_JSON(

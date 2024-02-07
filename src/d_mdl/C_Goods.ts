@@ -1,5 +1,5 @@
 import { C_GoodsItem, JSON_GoodsItem } from "./C_GoodsItem";
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON, JSON_Any }            from "./C_SaveData";
 
 export interface JSON_Goods extends JSON_Any {
     gold?: number,

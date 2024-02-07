@@ -1,9 +1,9 @@
-import { C_Point }        from "../common/C_Point"
-import { C_Range }        from "../common/C_Range";
-import { T_MzKind }       from "../common/T_MzKind";
-import { T_Direction }    from "../common/T_Direction";
-import { g_mes }          from "../common/global";
-import { _min, _round }   from "../common/F_Math";
+import { C_Point }        from "../d_mdl/C_Point"
+import { C_Range }        from "../d_mdl/C_Range";
+import { T_MzKind }       from "../d_mdl/T_MzKind";
+import { T_Direction }    from "../d_mdl/T_Direction";
+import { g_mes }          from "../d_cmn/global";
+import { _min, _round }   from "../d_utl/F_Math";
 import { C_Wall }         from "./C_Wall";
 import { g_maze, g_team, g_ds, g_debug_mode }  from "./global_for_maze";
 

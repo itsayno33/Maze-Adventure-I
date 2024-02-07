@@ -1,5 +1,5 @@
 import { I_JSON, JSON_Any } from "./C_SaveData";
-import { T_MakeEnumType } from "./T_MakeEnumType";
+import { T_MakeEnumType } from   "../d_utl/T_MakeEnumType";
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,

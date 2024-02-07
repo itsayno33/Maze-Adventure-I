@@ -1,15 +1,16 @@
-import { _round }              from "../common/F_Math";
-import { T_Lckd }              from "../common/C_Location";
-import { C_PointDir }          from "../common/C_PointDir";
-import { C_CtlCursor }         from "../common/C_CtlCursor";
-import { C_SaveData  }         from "../common/C_SaveData";
-import { C_UrlOpt }            from "../common/C_UrlOpt";
-import { POST_and_move_page }  from "../common/F_POST";
-import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
-import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
+import { _round }              from "../d_utl/F_Math";
+import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
+import { T_Lckd }              from "../d_mdl/C_Location";
+import { C_PointDir }          from "../d_mdl/C_PointDir";
+import { C_SaveData  }         from "../d_mdl/C_SaveData";
+import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
+import { POST_and_move_page }  from "../d_cmn/F_POST";
+import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
+import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
+import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
 import { 
     g_ctls_mode, 
     g_mvm, 
@@ -17,10 +18,8 @@ import {
     g_maze, 
     g_team, 
     g_hres, 
-    do_load_bottom_half, 
     g_ctls
 } from "./global_for_maze";
-import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
 
 let   for_save: boolean  = false;
 

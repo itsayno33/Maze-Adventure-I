@@ -1,5 +1,3 @@
-
-
 export class C_GldViewMessage {
     protected static  me : C_GldViewMessage;
     protected p  : HTMLParagraphElement;

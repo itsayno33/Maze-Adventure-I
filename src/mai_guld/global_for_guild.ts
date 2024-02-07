@@ -7,15 +7,18 @@ import {
     g_save, 
     g_start_env, 
     init_after_loaded_DOM_in_common 
-}                         from "../common/global";
+}                         from "../d_cmn/global";
+import { 
+    general_load, 
+    get_mai_guld 
+}                         from "../d_cmn/F_load_and_save";
 
-import { C_Maze }         from "../common/C_Maze";
-import { C_Team }         from "../common/C_Team";
-import { C_Guild }        from "../common/C_Guild";
-import { C_MovablePoint } from '../common/C_MovablePoint';
-import { C_MazeInfo }     from "../common/C_MazeInfo";
+import { C_Maze }         from "../d_mdl/C_Maze";
+import { C_Team }         from "../d_mdl/C_Team";
+import { C_Guild }        from "../d_mdl/C_Guild";
+import { C_MovablePoint } from '../d_mdl/C_MovablePoint';
+import { C_MazeInfo }     from "../d_mdl/C_MazeInfo";
 
-import { general_load, get_mai_guld } from "../common/F_load_and_save";
 import { post_load_function }         from './F_save_menu';
 
 export const g_all_maze: {[uniq_id: string]: C_Maze}  = {};
@@ -28,11 +31,11 @@ export let   g_team: C_Team  = new C_Team();
 export let   g_guld: C_Guild = new C_Guild();
 
 
-import { C_OneLineViewMessage }   from "../common/C_OneLineViewMessage";
+import { C_OneLineViewMessage }   from "../d_vie/C_OneLineViewMessage";
 export var g_mvm: C_OneLineViewMessage;
 
-import { C_DefaultCtls }      from './C_DefaultCtls';
-import { display_guld_menu } from "./F_guild_menu";
+import { C_DefaultCtls }          from './C_DefaultCtls';
+import { display_guld_menu }      from "./F_guild_menu";
 export let g_ctls: C_DefaultCtls;
 
 

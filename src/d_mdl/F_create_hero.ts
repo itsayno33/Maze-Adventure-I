@@ -1,7 +1,7 @@
+import { _round }            from "../d_utl/F_Math";
+import { _irand, _inrand }   from "../d_utl/F_Rand";
 import { C_Hero, JSON_Hero, JSON_Hero_Value  } from "./C_Hero";
 import { C_HeroAbility, JSON_Hero_Ability }    from "./C_HeroAbility";
-import { _round }            from "./F_Math";
-import { _irand, _inrand }   from "./F_Rand";
 
 const make_abi_ave: {[key: string]: number} = {
     xp:   50,

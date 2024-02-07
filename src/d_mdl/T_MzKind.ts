@@ -1,6 +1,6 @@
     // 一般に使えるユーティリティな呪文
     // オブジェクトを列挙型として型化するのに利用
-    import {T_MakeEnumType} from "./T_MakeEnumType";
+    import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
 
     // ダンジョンマップのセルの種類を表す列挙型
     // NoDef: 未定義・不明

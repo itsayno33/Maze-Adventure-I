@@ -2,11 +2,11 @@ import { T_MzKind, T_RvMzKind }  from "./T_MzKind";
 import { C_Point }               from "./C_Point";
 import { I_Locate, T_Lckd }      from "./C_Location";
 import { C_Range }               from "./C_Range";
-import { I_Exist }               from "./I_Common";
 import { C_Team, JSON_Team }     from "./C_Team";
-import { _get_uuid }             from "./F_Rand";
-import { _alert }                from "./global";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { I_Exist }               from "./I_Common";
+import { _get_uuid }             from "../d_utl/F_Rand";
+import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
