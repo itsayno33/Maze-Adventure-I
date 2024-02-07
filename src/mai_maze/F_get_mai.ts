@@ -6,6 +6,7 @@ import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlle
 import { decode_all }          from "./F_set_save_controlles";
 import { init_debug_mode }     from "./global_for_maze";
 
+/*
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
     getJSON_by_POST(url, opt.to_string(), 
         (xhr:XMLHttpRequest)=> {
@@ -50,3 +51,4 @@ export function getJSON_by_POST(url: string, opt: string, callback:(req:XMLHttpR
         //リクエスト送信
         xhr.send(opt);
     }
+*/

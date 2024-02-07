@@ -1,10 +1,10 @@
 import { T_CtlsMode } from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
-import { calc_view2D_width, display_maze2D } from "./F_display_maze";
+import { calc_view2D_width, display_maze2D } from "./F_display_maze2D";
 export var g_debug_mode: boolean = false;
 
-import {T_DrowSet, init_maze3D } from "./F_display_maze";
+import {T_DrowSet, init_maze3D } from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
 import { C_SwitchView }          from "./C_SwitchView";

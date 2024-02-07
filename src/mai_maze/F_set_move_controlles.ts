@@ -6,9 +6,10 @@ import { T_CtlsMode }                 from "./T_CtlsMode";
 import { hide_controlles }            from "./F_set_controlles";
 import { set_camp_controlles }        from "./F_set_camp_controlles";
 import { set_g_save }                 from "./F_set_save_controlles";
-import { display_maze2D, display_maze3D, 
-         maze3D_blink_on_direction, maze3D_blink_off_direction }     from "./F_display_maze";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles }   from "./F_set_UD_controlles";
+import { display_maze2D }             from "./F_display_maze2D"; 
+import { display_maze3D, 
+         maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
+import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { 
     g_ctls_mode, 
     g_mvm, 
