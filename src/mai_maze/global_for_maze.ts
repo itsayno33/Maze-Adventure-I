@@ -97,7 +97,7 @@ export function do_load_bottom_half(msg: string): void{
 
     g_mvm.notice_message(msg); 
     g_mes.notice_message(msg); 
-    set_move_controlles(); 
+    set_move_controlles();  
     g_vsw.view_maze(); 
     do_move_bottom_half('blink_off'); 
 }

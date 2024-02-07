@@ -1,21 +1,15 @@
-import { 
-    calc_cursor_pos_U, 
-    calc_cursor_pos_D, 
-    hide_all_menu, 
-    high_light_on,
-    get_dom_list_leng,
-    get_dom_list_cols, 
-} from "./F_default_menu";
+import { hide_all_menu }     from "./F_default_menu";
 import { display_load_menu, display_save_menu } from "./F_save_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { display_tomz_menu } from "./F_tomz_menu";
 import { g_ctls, g_mvm }     from "./global_for_guild";
+import { C_CtlCursor }       from "../common/C_CtlCursor";
 
 
 let dom_view_switch : HTMLDivElement;
 let menu_list: HTMLUListElement;
-let menu_list_leng: number;
-let menu_list_cols: number;
+let menu_crsr: C_CtlCursor;
+
 let idx_guld: number = 0;
 
 let menu_fnc: {[id: string]: number};
@@ -65,11 +59,10 @@ function init_view() {
         menu_fnc[menu_item.id] = ii;
         menu_item.addEventListener("click",_OK_Fnc, false);
     }
-    menu_list_leng = get_dom_list_leng(menu_list);
-    menu_list_cols = get_dom_list_cols(menu_list);
+    menu_crsr = C_CtlCursor.get(menu_list);
 
     idx_guld = 0;
-    high_light_on(menu_list, 0); 
+    menu_crsr.set_pos(idx_guld); 
 }
 function _OK_Fnc(this: HTMLElement, e: MouseEvent): void {
     idx_guld = menu_fnc[this.id]; 
@@ -105,13 +98,11 @@ const guld_ctls_nor = {
 
 function do_U(): void {
     display_default_message();
-    idx_guld = calc_cursor_pos_U(idx_guld, menu_list_leng, menu_list_cols);
-    high_light_on(menu_list, idx_guld); 
+    idx_guld = menu_crsr.pos_U();
 }
 function do_D(): void {
     display_default_message();
-    idx_guld = calc_cursor_pos_D(idx_guld, menu_list_leng, menu_list_cols);
-    high_light_on(menu_list, idx_guld); 
+    idx_guld = menu_crsr.pos_D();
 }
 
 function isOK(): void {

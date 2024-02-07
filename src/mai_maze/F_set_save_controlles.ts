@@ -1,8 +1,9 @@
 import { _round }              from "../common/F_Math";
-import { C_UrlOpt }            from "../common/C_UrlOpt";
-import { C_SaveData  }         from "../common/C_SaveData";
 import { T_Lckd }              from "../common/C_Location";
 import { C_PointDir }          from "../common/C_PointDir";
+import { C_CtlCursor }         from "../common/C_CtlCursor";
+import { C_SaveData  }         from "../common/C_SaveData";
+import { C_UrlOpt }            from "../common/C_UrlOpt";
 import { POST_and_move_page }  from "../common/F_POST";
 import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
@@ -19,7 +20,7 @@ import {
     do_load_bottom_half, 
     g_ctls
 } from "./global_for_maze";
-import { C_CtlCursor } from "../common/C_CtlCursor";
+import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
 
 let   for_save: boolean  = false;
 
@@ -147,6 +148,12 @@ function go_back_camp_mode(): void {
     g_mvm.clear_message();
     set_camp_controlles();
     g_vsw.view_camp();
+}
+
+function go_back_move_mode(): void {
+    set_move_controlles();
+    g_vsw.view_maze();
+    do_move_bottom_half('blink_off');
 }
 
 function do_U(): void {
@@ -299,7 +306,7 @@ export function display_save_list(): void {
 
             if (!for_save) display_load_fields();
             if (for_save) g_vsw.view_save(); else g_vsw.view_load();
-            UL_idx = 0;  UL_list_crsr.set_cursor(UL_idx); 
+            UL_idx = 0;  UL_list_crsr.set_pos(UL_idx); 
             form_set();
             return;
         } catch (err) {
@@ -317,7 +324,7 @@ function _OK_load_Fnc(this: HTMLLIElement, e: MouseEvent): void {
         is_kakunin = false;
     }
     isOK_for_load();
-    UL_list_crsr.set_cursor(UL_idx); form_set();
+    UL_list_crsr.set_pos(UL_idx); form_set();
 }
 function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     UL_idx = Number(this.id);
@@ -327,7 +334,7 @@ function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
         is_kakunin = false;
     }
     isOK_for_save();
-    UL_list_crsr.set_cursor(UL_idx); form_set();
+    UL_list_crsr.set_pos(UL_idx); form_set();
 }
 
 
@@ -409,7 +416,9 @@ function _load_here(data_idx: number): void {
     general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
         is_kakunin = false;
         decode_all(jsonObj?.save);
-        do_load_bottom_half('ロードしました'); 
+//        do_load_bottom_half('ロードしました'); 
+        g_mvm.notice_message('ロードしました');
+        go_back_move_mode();        
     });
 }
 
@@ -431,9 +440,7 @@ async function save(): Promise<void> {
 
         is_kakunin = false;
         g_mvm.notice_message('保存しました');
-        set_camp_controlles();
-        g_vsw.view_camp();
-        
+        go_back_move_mode();        
     });
 }
 

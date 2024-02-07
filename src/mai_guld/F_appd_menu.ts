@@ -1,15 +1,5 @@
-import { 
-    hide_all_menu,
-    calc_cursor_pos_L,
-    calc_cursor_pos_R,
-    calc_cursor_pos_U,
-    calc_cursor_pos_D,
-    get_dom_list_cols,
-    get_dom_list_leng,
-} from "./F_default_menu";
-
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { high_light_on }         from "./F_default_menu";
+import { hide_all_menu }         from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_mvm, g_guld, g_ctls } from "./global_for_guild";
 
@@ -17,11 +7,13 @@ import { C_Hero }                from "../common/C_Hero";
 import { _ceil, _floor, _round } from "../common/F_Math";
 import { get_new_hero }          from "../common/F_load_and_save";
 import { _alert, g_mes }         from "../common/global";
+import { C_CtlCursor } from "../common/C_CtlCursor";
 
 let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
 let dom_info_detail : HTMLUListElement;
 let info_list: HTMLUListElement;
+let info_crsr: C_CtlCursor;
 
 let new_hres: C_Hero[] = [];
 let info_list_leng: number;
@@ -46,10 +38,10 @@ export function display_appd_menu(): void {
 
     dom_view_switch.style.display = 'block';
 
-    info_list_leng = get_dom_list_leng(info_list);
-    info_list_cols = get_dom_list_cols(info_list);
     /* await */ init_all();
     /* await */ update_all();
+
+    info_list_leng = info_list.children.length;
     g_ctls.act('appd_nor');
     display_default_message();
 }
@@ -119,13 +111,14 @@ function update_info_list(): boolean {
         li.addEventListener("click",_OK_Fnc, false);
         info_list.appendChild(li);
     }
-    high_light_on(info_list, 0);
+    info_crsr = C_CtlCursor.get(info_list);
+    info_crsr.set_pos(0);
     return true;
 }
 let old_idx:number;
 function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     idx = Number(this.id); 
-    high_light_on(info_list, idx); 
+    info_crsr.set_pos(idx); 
     update_info_detail(idx); 
 
     if (idx === old_idx) isOK();
@@ -193,26 +186,26 @@ function update_ctls(): void {}
 function do_U(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_U(idx, info_list_leng, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx); 
+    idx = info_crsr.pos_U();
+    update_info_detail(idx); 
 }
 function do_D(): void {
     display_default_message()
 
-    idx = calc_cursor_pos_D(idx, info_list_leng, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);  
+    idx = info_crsr.pos_D();
+    update_info_detail(idx); 
 }
 function do_L(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_L(idx, info_list_leng, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);
+    idx = info_crsr.pos_D();
+    update_info_detail(idx); 
 }
 function do_R(): void {
     display_default_message();
 
-    idx = calc_cursor_pos_R(idx, info_list_leng, info_list_cols);
-    high_light_on(info_list, idx);  update_info_detail(idx);
+    idx = info_crsr.pos_R();
+    update_info_detail(idx); 
 }
 
 function isOK(): void { 
@@ -246,7 +239,7 @@ function isOK(): void {
 }
 function _after_check(): void {
     update_all();
-    high_light_on(info_list, idx); 
+    info_crsr.set_pos(idx); 
 }
 
 function isNG(): void {

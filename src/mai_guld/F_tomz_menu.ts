@@ -19,6 +19,7 @@ import {
 } from "./F_default_menu";
 import { display_guld_menu }     from "./F_guild_menu";
 import { g_ctls, g_mvm, g_team } from "./global_for_guild";
+import { C_CtlCursor } from "../common/C_CtlCursor";
 
 let dom_view_switch : HTMLDivElement;
 
@@ -31,10 +32,12 @@ let dom_mvpt_list:    HTMLUListElement;
 let maze_list: C_MazeInfo[];
 let mvpt_list: C_MovablePoint[];
 
+/*
 let maze_list_leng: number;
 let maze_list_cols: number;
 let mvpt_list_leng: number;
 let mvpt_list_cols: number;
+*/
 
 const T_List_mode: {[kind: string]: number}  = {
     Hide: 0,
@@ -44,7 +47,7 @@ const T_List_mode: {[kind: string]: number}  = {
 type T_List_mode = T_MakeEnumType<typeof T_List_mode>;
 let list_mode: T_List_mode;
 
-type T_cursor = {mode: T_List_mode, idx: number}
+type T_cursor = {mode: T_List_mode, crsr: C_CtlCursor}
 let cursor: T_cursor; 
 let cursor_hide: T_cursor;
 let cursor_maze: T_cursor;
@@ -137,11 +140,13 @@ function update_view(): void {
     update_dom_view_tomz();
     update_DOM_maze_list();
     update_DOM_mvpt_list();
+    cursor.crsr.high_light_on();
 }
 function clear_view() {
     clear_dom_view_tomz();
     clear_dom_maze_list();
     clear_dom_mvpt_list();
+    cursor.crsr.high_light_off();
 }
 
 
@@ -201,32 +206,31 @@ function update_DOM_maze_list(): void {
         li.addEventListener("click", _OK_maze_Fnc, false);
         dom_maze_list.appendChild(li);
     }
-    maze_list_leng = get_dom_list_leng(dom_maze_list);
-    maze_list_cols = get_dom_list_cols(dom_maze_list);
-    list_high_light_on();
+    const pos = cursor_maze.crsr.pos();
+    cursor_maze.crsr.set(dom_maze_list).set_pos(pos).high_light_off();
+
     dom_maze_fields.style.display = 'block';
 }
 function _OK_maze_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 //    switch_cursor(T_List_mode.Maze);
-    cursor.idx  = Number(this.id); 
-    list_high_light_on(); 
+    cursor.crsr.set_pos(Number(this.id)); 
     switch (mode) {
         case 'tomz_nor_maze': 
             isCK_maze();
-            old_idx = cursor.idx;
+            old_idx = cursor.crsr.pos();
             break;
         case 'tomz_jmp_maze':
-            if (cursor.idx === old_idx) isGO_maze();
+            if (cursor.crsr.pos() === old_idx) isGO_maze();
             else {
                 isCK_maze();
-                old_idx = cursor.idx;
+                old_idx = cursor.crsr.pos();
             }
             break;
         default:
-            cursor_maze.idx = Number(this.id);
+            cursor.crsr.set_pos(Number(this.id)); 
             isSL_mvpt();
             isCK_maze();
-            old_idx = cursor.idx;
+            old_idx = cursor.crsr.pos();
             break;
     }
 //    display_default_message();
@@ -271,32 +275,31 @@ function update_DOM_mvpt_list(): void {
         li.addEventListener("click", _OK_mvpt_Fnc, false);
         dom_mvpt_list.appendChild(li);
     }
-    mvpt_list_leng = get_dom_list_leng(dom_mvpt_list);
-    mvpt_list_cols = get_dom_list_cols(dom_mvpt_list);
-    list_high_light_on();
+    const pos = cursor_mvpt.crsr.pos();
+    cursor_mvpt.crsr.set(dom_mvpt_list).set_pos(pos).high_light_off();
+
     dom_mvpt_fields.style.display = 'block';
 }
 function _OK_mvpt_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 //    switch_cursor(T_List_mode.MvPt);
-    cursor.idx  = Number(this.id); 
-    list_high_light_on(); 
+    cursor.crsr.set_pos(Number(this.id)); 
     switch (mode) {
         case 'tomz_nor_mvpt': 
             isCK_mvpt();
-            old_idx = cursor.idx;
+            old_idx = cursor.crsr.pos();
             break;
         case 'tomz_jmp_mvpt':
-            if (cursor.idx === old_idx) isGO_mvpt();
+            if (cursor.crsr.pos() === old_idx) isGO_mvpt();
             else {
                 isCK_mvpt();
-                old_idx = cursor.idx;
+                old_idx = cursor.crsr.pos();
             }
             break;
         default:
-            cursor_mvpt.idx = Number(this.id);
+            cursor.crsr.set_pos(Number(this.id)); 
             isSL_maze();
             isCK_mvpt();
-            old_idx = cursor.idx;
+            old_idx = cursor.crsr.pos();
         }
 //    display_default_message();
 }
@@ -380,9 +383,9 @@ const ctls_tomz_jmp_mvpt = {
 }
 
 function init_cursor(): boolean { 
-    cursor_hide = {mode: T_List_mode.Hide, idx: 0}; 
-    cursor_maze = {mode: T_List_mode.Maze, idx: 0}; 
-    cursor_mvpt = {mode: T_List_mode.MvPt, idx: 0}; 
+    cursor_hide = {mode: T_List_mode.Hide, crsr: C_CtlCursor.get(undefined)}; 
+    cursor_maze = {mode: T_List_mode.Maze, crsr: C_CtlCursor.get(dom_maze_list)}; 
+    cursor_mvpt = {mode: T_List_mode.MvPt, crsr: C_CtlCursor.get(dom_mvpt_list)}; 
     old_idx     = 999;
 
     if (exist_maze_list()) { 
@@ -400,6 +403,7 @@ function init_cursor(): boolean {
         list_mode = T_List_mode.Hide;
         cursor  = cursor_hide; 
     } 
+    cursor.crsr.set_pos(0);
     return true;
 }
 
@@ -447,6 +451,9 @@ function switch_cursor(sview: T_List_mode): boolean {
 
 function switch_cursor_to_maze(): void {
     if (!exist_maze_list()) return;
+    cursor_maze.crsr.high_light_on();
+    cursor_mvpt.crsr.high_light_off();
+
     cursor  = cursor_maze;
     update_view();
     g_ctls.act('tomz_nor_maze');
@@ -455,99 +462,32 @@ function switch_cursor_to_maze(): void {
 
 function switch_cursor_to_mvpt(): void {
     if (!exist_mvpt_list()) return;
+    cursor_maze.crsr.high_light_off();
+    cursor_mvpt.crsr.high_light_on();
+
     cursor  = cursor_mvpt;
     update_view();
     g_ctls.act('tomz_nor_mvpt');
     dom_mvpt_fields.style.display = 'block';
 }
-    
-
-// 選択されている行のハイライト表示(暫定)
-function list_high_light_on() {
-    switch (cursor.mode) {
-        case T_List_mode.Maze:
-            high_light_on (dom_maze_list, cursor.idx);
-            high_light_off(dom_mvpt_list);
-            break; 
-        case T_List_mode.MvPt:
-            high_light_off(dom_maze_list);
-            high_light_on (dom_mvpt_list, cursor.idx);
-            break; 
-    }
-}
-
 
 // カーソルの移動と決定・解除
 function do_U(): void {
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_U();
-    list_high_light_on(); 
+    cursor.crsr.pos_U();
 }
 function do_D(): void {
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_D();
-    list_high_light_on(); 
+    cursor.crsr.pos_D();
 }
 function do_L(): void {
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_L();
-    list_high_light_on(); 
+    cursor.crsr.pos_L();
 }
 function do_R(): void {
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_R();
-    list_high_light_on(); 
+    cursor.crsr.pos_R();
 }
-
-// カーソル位置の計算
-function calc_list_cursor_pos_U(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_U(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_D(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_D(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_L(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_L(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_R(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_R(cursor.idx, list_leng, list_cols);
-}
-
-function _calc_list_leng(): number {
-    switch (cursor.mode) {
-        case T_List_mode.Maze:
-            return maze_list_leng;
-        case T_List_mode.MvPt:
-            return mvpt_list_leng;
-    }
-    return 0;
-}
-
-function _calc_list_cols(): number {
-    switch (cursor.mode) {
-        case T_List_mode.Maze:
-            return maze_list_cols;
-        case T_List_mode.MvPt:
-            return mvpt_list_cols;
-    }
-    return 1;
-}
-
 
 // **************************************
 // 決定ボタン・キャンセルボタン・切替ボタン
@@ -571,14 +511,14 @@ function isGO_maze(): void {
         const opt = new C_UrlOpt();
         opt.set('mode', 'start');
         opt.set('pid',   g_start_env.pid);
-        opt.set('opt',   maze_list[cursor.idx].name);
+        opt.set('opt',   maze_list[cursor.crsr.pos()].name);
 
         POST_and_move_page(g_url[g_url_mai_maze], opt);
     });
 }
 
 function isGO_mvpt(): void {
-    const loc = mvpt_list[cursor.idx];
+    const loc = mvpt_list[cursor.crsr.pos()];
     g_team.set_loc(loc);
     g_save.mypos = loc;
     delete g_save.all_mvpt[loc.uid()];
@@ -589,7 +529,7 @@ function isGO_mvpt(): void {
         opt.set('pid',   g_start_env.pid);
         opt.set('opt',   '');
 
-        POST_and_move_page(mvpt_list[cursor.idx].url(), opt);
+        POST_and_move_page(mvpt_list[cursor.crsr.pos()].url(), opt);
     });
 }
 

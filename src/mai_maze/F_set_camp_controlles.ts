@@ -4,7 +4,7 @@ import { set_move_controlles, do_move_bottom_half }   from "./F_set_move_control
 import { set_save_controlles, set_load_controlles   } from "./F_set_save_controlles";
 import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
 import { g_ctls, g_ctls_mode, g_mvm, g_vsw } from "./global_for_maze";
-import { _isNum } from "../common/F_Math";
+import { _isNum }      from "../common/F_Math";
 import { C_CtlCursor } from "../common/C_CtlCursor";
 
 const mode:  string[] =  ['Load', 'Save', 'MvPt'];
@@ -22,7 +22,7 @@ export function set_camp_controlles(): void {
     init_view();
 
     idx = 0;
-    camp_list_crsr.set_cursor(idx);
+    camp_list_crsr.set_pos(idx);
 
     const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
     ctl_view?.style.setProperty('display', 'block');
@@ -38,7 +38,7 @@ const ctls_camp_nor = {
 
 function init_view(): boolean {
     try {
-        const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLDivElement;
+        const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLPreElement;
         maze2D_view?.style.setProperty('display', 'none');
 
         const menu_list   = document.getElementById('camp_list') as HTMLUListElement;
@@ -49,8 +49,6 @@ function init_view(): boolean {
 
         dom_camp_list  = document.getElementById('camp_list') as HTMLUListElement;
         camp_list_crsr = C_CtlCursor.get(dom_camp_list);
-//        camp_list_rows = get_dom_list_leng(dom_camp_list); 
-//        camp_list_cols = get_dom_list_cols(dom_camp_list);
     } catch(err) {
         alert('Error: ' + err);
         return false;

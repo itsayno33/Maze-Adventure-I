@@ -1,20 +1,12 @@
 import { _ceil, _floor, _min, _round }   from "../common/F_Math";
 import { T_MakeEnumType }                from "../common/T_MakeEnumType";
 import { C_Hero }                        from "../common/C_Hero";
+import { C_CtlCursor }                   from "../common/C_CtlCursor";
 import { get_new_hero }                  from '../common/F_load_and_save';
 import { _alert, g_mes }                 from "../common/global";
 
-import { 
-    hide_all_menu,
-    calc_cursor_pos_L,
-    calc_cursor_pos_R,
-    calc_cursor_pos_U,
-    calc_cursor_pos_D,
-    get_dom_list_leng,
-    get_dom_list_cols
-} from "./F_default_menu";
+import { hide_all_menu }                 from "./F_default_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { high_light_on }                 from "./F_default_menu";
 import { display_guld_menu }             from "./F_guild_menu";
 import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
 
@@ -52,15 +44,6 @@ let menu_list_for_appd: T_menu_list;
 
 let inpt_name_list: {[id: string]: {id: string, label: HTMLLabelElement, input: HTMLInputElement}};
 
-let team_list_leng: number;
-let team_list_cols: number;
-let guld_list_leng: number;
-let guld_list_cols: number;
-let appd_list_leng: number;
-let appd_list_cols: number;
-let menu_list_leng: number;
-let menu_list_cols: number;
-
 const T_TGA_mode: {[kind: string]: number}  = {
     Hide: 0,
     Team: 1,
@@ -82,7 +65,7 @@ const T_SubView: {[kind: string]: number}  = {
 type T_SubView = T_MakeEnumType<typeof T_SubView>;
 
 
-type T_cursor = {kind: T_SubView, idx: number}
+type T_cursor = {kind: T_SubView, crsr: C_CtlCursor}
 let cursor: T_cursor; 
 let cursor_Hide: T_cursor;
 let cursor_Team: T_cursor;
@@ -385,15 +368,11 @@ function update_dom_team_list():void {
         li.addEventListener("click", _OK_team_Fnc, false);
         dom_team_list.appendChild(li);
     }
-    team_list_leng = get_dom_list_leng(dom_team_list);
-    team_list_cols = get_dom_list_cols(dom_team_list);
-    list_high_light_on();
+    cursor_Team.crsr.set(dom_team_list); 
 }
 function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Team);
-    cursor.idx  = Number(this.id); 
-
-    list_high_light_on(); 
+    cursor.crsr.set_pos(Number(this.id)); 
     update_dom_hero_detail();
 
     isOK();
@@ -436,15 +415,11 @@ function update_dom_guld_list(): void {
         li.addEventListener("click", _OK_guld_Fnc, false);
         dom_guld_list.appendChild(li);
     }
-    guld_list_leng = get_dom_list_leng(dom_guld_list);
-    guld_list_cols = get_dom_list_cols(dom_guld_list);
-    list_high_light_on();
+    cursor_Guld.crsr.set(dom_guld_list);
 }
 function _OK_guld_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Guld);
-    cursor.idx  = Number(this.id); 
-
-    list_high_light_on(); 
+    cursor.crsr.set_pos(Number(this.id)); 
     update_dom_hero_detail();
 
     isOK();
@@ -487,19 +462,14 @@ function update_dom_appd_list(): void {
         li.addEventListener("click", _OK_appd_Fnc, false);
         dom_appd_list.appendChild(li);
     }
-    appd_list_leng = get_dom_list_leng(dom_appd_list);
-    appd_list_cols = get_dom_list_cols(dom_appd_list);
-    list_high_light_on();
+    cursor_Appd.crsr.set(dom_appd_list);
 }
 function _OK_appd_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Appd);
-    cursor.idx  = Number(this.id); 
-
-    list_high_light_on(); 
+    cursor.crsr.set_pos(Number(this.id)); 
     update_dom_hero_detail();
 
     isOK();
-//    display_default_message();
 }
 
 function clear_dom_appd_list():void  {
@@ -545,16 +515,13 @@ function update_dom_menu_list(): void {
         li.addEventListener("click", _OK_menu_Fnc, false);
         dom_menu_list.appendChild(li);
     }
-    menu_list_leng = get_dom_list_leng(dom_menu_list);
-    menu_list_cols = get_dom_list_cols(dom_menu_list);
-    list_high_light_on();
+    cursor_Menu.crsr.set(dom_menu_list);
 }
 function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor = cursor_Menu;
     subview_act(T_SubView.Menu);
-    cursor.idx  = Number(this.id); 
+    cursor.crsr.set_pos(Number(this.id)); 
 
-    list_high_light_on(); 
     do_menu();
 //    update_dom_hero_detail();
 }
@@ -623,13 +590,13 @@ function update_dom_ipnm(): void {
 
     switch (TGA_mode) {
         case T_TGA_mode.Team: 
-            name_input.value = team_list[cursor_Team.idx].name();
+            name_input.value = team_list[cursor_Team.crsr.pos()].name();
             break;
         case T_TGA_mode.Guld: 
-            name_input.value = guld_list[cursor_Guld.idx].name();
+            name_input.value = guld_list[cursor_Guld.crsr.pos()].name();
             break;
         case T_TGA_mode.Appd: 
-            name_input.value = appd_list[cursor_Appd.idx].name();
+            name_input.value = appd_list[cursor_Appd.crsr.pos()].name();
             break;
         default: return;
     }
@@ -671,13 +638,13 @@ function init_dom_hero_detail(): boolean {
 function update_dom_hero_detail() {
     switch (cursor.kind) {
         case T_SubView.Team:
-            hero_info_form_set(team_list, hero_detail, cursor.idx);
+            hero_info_form_set(team_list, hero_detail, cursor.crsr.pos());
             break;
         case T_SubView.Guld:
-            hero_info_form_set(guld_list, hero_detail, cursor.idx);
+            hero_info_form_set(guld_list, hero_detail, cursor.crsr.pos());
             break;
         case T_SubView.Appd:
-            hero_info_form_set(appd_list, hero_detail, cursor.idx);
+            hero_info_form_set(appd_list, hero_detail, cursor.crsr.pos());
             break;
     }
 }
@@ -789,13 +756,13 @@ const hres_ctls_away = {
 function update_ctls(): void {}
 
 function init_cursor(): boolean {
-    cursor_Hide = {kind: T_SubView.Hide, idx: 0}; 
-    cursor_Team = {kind: T_SubView.Team, idx: 0}; 
-    cursor_Guld = {kind: T_SubView.Guld, idx: 0}; 
-    cursor_Appd = {kind: T_SubView.Appd, idx: 0}; 
-    cursor_Menu = {kind: T_SubView.Menu, idx: 0}; 
-    cursor_IpNm = {kind: T_SubView.IpNm, idx: 0}; 
-    cursor_IpCk = {kind: T_SubView.IpCk, idx: 0}; 
+    cursor_Hide = {kind: T_SubView.Hide, crsr: C_CtlCursor.get(undefined)}; 
+    cursor_Team = {kind: T_SubView.Team, crsr: C_CtlCursor.get(dom_team_list)}; 
+    cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.get(dom_guld_list)}; 
+    cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.get(dom_appd_list)}; 
+    cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.get(dom_menu_list)}; 
+    cursor_IpNm = {kind: T_SubView.IpNm, crsr: C_CtlCursor.get(dom_inpt_list)}; 
+    cursor_IpCk = {kind: T_SubView.IpCk, crsr: C_CtlCursor.get(dom_inpt_list)}; 
 
     if (exist_team()) { 
         TGA_mode = T_TGA_mode.Team;
@@ -832,15 +799,17 @@ function subview_act(sview: T_SubView): boolean {
 //    clear_dom_menu_list();
 
     switch (sview) {
-        case T_SubView.Team: subview_act_team();return true;
-        case T_SubView.Guld: subview_act_guld();return true;
-        case T_SubView.Appd: subview_act_appd();return true;
-        case T_SubView.Menu: subview_act_menu();return true;
-        case T_SubView.IpNm: subview_act_ipnm();return true;
-        case T_SubView.IpCk: subview_act_ipck();return true;
-        case T_SubView.Hide: subview_hide_all();return true;
+        case T_SubView.Team: subview_act_team();break;
+        case T_SubView.Guld: subview_act_guld();break;
+        case T_SubView.Appd: subview_act_appd();break;
+        case T_SubView.Menu: subview_act_menu();break;
+        case T_SubView.IpNm: subview_act_ipnm();break;
+        case T_SubView.IpCk: subview_act_ipck();break;
+        case T_SubView.Hide: subview_hide_all();break;
         default:             subview_hide_all();return false;
     }
+    cursor.crsr.high_light_on();
+    return true;
 } 
 
 function subview_act_team() {
@@ -873,7 +842,7 @@ function subview_act_menu() {
     dom_inpt_fields.style.display = 'none';
 
     cursor  = cursor_Menu; 
-    cursor.idx = 0;
+    cursor.crsr.set_pos(0);
 
 //    update_view();
     update_dom_menu_list();
@@ -882,7 +851,7 @@ function subview_act_menu() {
 
 function subview_act_ipnm() {
     cursor  = cursor_IpNm; 
-    cursor.idx = 0;
+    cursor.crsr.set_pos(0);
 
 //    update_view();
     update_dom_inpt_list();
@@ -891,166 +860,36 @@ function subview_act_ipnm() {
 
 function subview_act_ipck() {
     cursor  = cursor_IpCk; 
-    cursor.idx = 0;
+    cursor.crsr.set_pos(0);
 
 //    update_view();
     update_dom_inpt_list();
     dom_inpt_fields.style.display = 'block';
 }    
 
-// **************************************************************
-// 各サブ・リスト表示の列数をCSSから取得する(カーソル移動制御に使用)
-// **************************************************************
-/*
-function get_dom_list_cols(): boolean {
-    get_dom_team_list_cols();
-    get_dom_guld_list_cols();
-    get_dom_appd_list_cols();
-    get_dom_menu_list_cols();
-    return true;
-}
-
-// チーム一覧の列数(CSSから取得)
-function get_dom_team_list_cols(): number {
-    let __col   = window.getComputedStyle(dom_team_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_team_list).columnCount
-                : '1';
- 
-    team_list_cols = Number(__col); 
-    return team_list_cols;
-}
-
-
-// 冒険者一覧の列数(CSSから取得)
-function get_dom_guld_list_cols(): number {
-    let __col   = window.getComputedStyle(dom_guld_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_guld_list).columnCount
-                : '1';
- 
-    guld_list_cols = Number(__col); 
-    return guld_list_cols;
-}
-
-
-// 新人募集一覧の列数(CSSから取得)
-function get_dom_appd_list_cols(): number {
-    let __col   = window.getComputedStyle(dom_appd_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_appd_list).columnCount
-                : '1';
-
-    appd_list_cols = Number(__col); 
-    return appd_list_cols;
-}
-
-
-// メニュー一覧の列数(CSSから取得)
-function get_dom_menu_list_cols(): number {
-    let __col   = window.getComputedStyle(dom_menu_list).columnCount !== '' 
-                ? window.getComputedStyle(dom_menu_list).columnCount
-                : '1';
- 
-    menu_list_cols = Number(__col); 
-    return menu_list_cols;
-}
-*/
-
-// 選択されている行のハイライト表示(暫定)
-function list_high_light_on() {
-    switch (cursor.kind) {
-        case T_SubView.Team:
-            high_light_on(dom_team_list, cursor.idx);
-            break; 
-        case T_SubView.Guld:
-            high_light_on(dom_guld_list, cursor.idx);
-            break; 
-        case T_SubView.Appd:
-            high_light_on(dom_appd_list, cursor.idx);
-            break; 
-        case T_SubView.Menu:
-            high_light_on(dom_menu_list, cursor.idx);
-            break; 
-    }
-}
-
 
 // カーソルの移動と決定・解除
 function do_U(): void {
+    cursor.crsr.pos_U(); 
+    update_dom_hero_detail(); 
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_U();
-    list_high_light_on();  update_dom_hero_detail(); 
 }
 function do_D(): void {
+    cursor.crsr.pos_D(); 
+    update_dom_hero_detail(); 
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_D();
-    list_high_light_on();  update_dom_hero_detail();  
 }
 function do_L(): void {
+    cursor.crsr.pos_L(); 
+    update_dom_hero_detail(); 
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_L();
-    list_high_light_on();  update_dom_hero_detail();
 }
 function do_R(): void {
+    cursor.crsr.pos_R(); 
+    update_dom_hero_detail(); 
     display_default_message();
-
-    cursor.idx = calc_list_cursor_pos_R();
-    list_high_light_on();  update_dom_hero_detail();
 }
 
-// カーソル位置の計算
-function calc_list_cursor_pos_U(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_U(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_D(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_D(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_L(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_L(cursor.idx, list_leng, list_cols);
-}
-
-function calc_list_cursor_pos_R(): number {
-    const list_leng = _calc_list_leng();
-    const list_cols = _calc_list_cols();
-    return calc_cursor_pos_R(cursor.idx, list_leng, list_cols);
-}
-
-function _calc_list_leng(): number {
-    switch (cursor.kind) {
-        case T_SubView.Team:
-            return team_list_leng;
-        case T_SubView.Guld:
-            return guld_list_leng;
-        case T_SubView.Appd:
-            return appd_list_leng;
-        case T_SubView.Menu:
-            return menu_list_leng;
-    }
-    return 0;
-}
-
-function _calc_list_cols(): number {
-    switch (cursor.kind) {
-        case T_SubView.Team:
-            return team_list_cols;
-        case T_SubView.Guld:
-            return guld_list_cols;
-        case T_SubView.Appd:
-            return appd_list_cols;
-        case T_SubView.Menu:
-            return menu_list_cols;
-    }
-    return 1;
-}
 
 // **************************************
 // 決定ボタン・キャンセルボタン・切替ボタン
@@ -1087,7 +926,7 @@ function do_menu(): void {
         case T_TGA_mode.Appd: menu_list = menu_list_for_appd; break;
         default: return;
     }
-    menu_list[cursor_Menu.idx].fnc();
+    menu_list[cursor_Menu.crsr.pos()].fnc();
 }
 
 
@@ -1101,15 +940,15 @@ function isOK_ipnm(): void {
 function isOK_cknm(): void {
     switch (TGA_mode) {
         case T_TGA_mode.Team: 
-            change_hero_name(team_list[cursor_Team.idx]); 
+            change_hero_name(team_list[cursor_Team.crsr.pos()]); 
             subview_act(T_SubView.Team);
             break;
         case T_TGA_mode.Guld: 
-            change_hero_name(guld_list[cursor_Guld.idx]); 
+            change_hero_name(guld_list[cursor_Guld.crsr.pos()]); 
             subview_act(T_SubView.Guld);
             break;
         case T_TGA_mode.Appd: 
-            change_hero_name(appd_list[cursor_Appd.idx]); 
+            change_hero_name(appd_list[cursor_Appd.crsr.pos()]); 
             subview_act(T_SubView.Appd);
             break;
     };
@@ -1118,58 +957,58 @@ function isOK_cknm(): void {
 }
 
 function isOK_leav(): void {
-    const hero = team_list[cursor_Team.idx];
+    const hero = team_list[cursor_Team.crsr.pos()];
 
     g_guld.add_hero(hero);
     g_team.rmv_hero(hero);
     update_data_list().then(()=>{
         if (!exist_team()) isSL();
 
-        cursor_Team.idx = 0;
+        cursor_Team.crsr.set_pos(0);
         go_back_view_mode('チームから外しました');
     });
 }
 
 function isOK_join(): void {
-    const hero = guld_list[cursor_Guld.idx];
+    const hero = guld_list[cursor_Guld.crsr.pos()];
 
     g_team.add_hero(hero);
     g_guld.rmv_hero(hero);
     update_data_list().then(()=>{
         if (!exist_guld()) isSL();
 
-        cursor_Guld.idx = 0;
+        cursor_Guld.crsr.set_pos(0);
         go_back_view_mode('チームに入れました');
     });
 }
 
 function isOK_fire(): void {
-    g_guld.rmv_hero(guld_list[cursor_Guld.idx]);
+    g_guld.rmv_hero(guld_list[cursor_Guld.crsr.pos()]);
     update_data_list().then(()=>{
         if (!exist_guld()) isSL();
 
-        cursor_Guld.idx = 0;
+        cursor_Guld.crsr.set_pos(0);
         go_back_view_mode('クビにしました。。。');
     });
 }
 
 function isOK_adpt(): void {
-    const hero = appd_list[cursor_Appd.idx];
+    const hero = appd_list[cursor_Appd.crsr.pos()];
 
     g_guld.add_hero(hero);
-    appd_list.splice(cursor_Appd.idx, 1);
+    appd_list.splice(cursor_Appd.crsr.pos(), 1);
     update_data_list().then(()=>{
-        cursor_Appd.idx = 0;
+        cursor_Appd.crsr.set_pos(0);
         go_back_view_mode('ギルドに採用しました');
     });
 }
 
 function isOK_away(): void {
-    const hero = appd_list[cursor_Appd.idx];
+    const hero = appd_list[cursor_Appd.crsr.pos()];
 
-    appd_list.splice(cursor_Appd.idx, 1);
+    appd_list.splice(cursor_Appd.crsr.pos(), 1);
     update_data_list().then(()=>{
-        cursor_Appd.idx = 0;
+        cursor_Appd.crsr.set_pos(0);
         go_back_view_mode('叩き出しました。。。');
     });
 }
