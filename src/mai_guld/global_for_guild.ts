@@ -16,7 +16,6 @@ import { C_MovablePoint } from '../common/C_MovablePoint';
 import { C_MazeInfo }     from "../common/C_MazeInfo";
 
 import { general_load, get_mai_guld } from "../common/F_load_and_save";
-import { init_display_menu }          from "./F_default_menu";
 import { post_load_function }         from './F_save_menu';
 
 export const g_all_maze: {[uniq_id: string]: C_Maze}  = {};
@@ -33,6 +32,7 @@ import { C_OneLineViewMessage }   from "../common/C_OneLineViewMessage";
 export var g_mvm: C_OneLineViewMessage;
 
 import { C_DefaultCtls }      from './C_DefaultCtls';
+import { display_guld_menu } from "./F_guild_menu";
 export let g_ctls: C_DefaultCtls;
 
 
@@ -74,7 +74,7 @@ export function init_after_loaded_DOM(): void {
     g_mvm = C_OneLineViewMessage.get('gld_view_message'); 
     g_ctls = new C_DefaultCtls(); 
     init_debug_mode(); 
-    init_display_menu(); 
+    display_guld_menu(); 
     stop_double_click(); 
 
     g_ready_games.setFunction(init_before_games);

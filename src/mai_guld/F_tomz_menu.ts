@@ -1,25 +1,15 @@
-import { C_UrlOpt }                from "../common/C_UrlOpt";
+import { T_MakeEnumType }          from "../common/T_MakeEnumType";
 import { C_MovablePoint }          from "../common/C_MovablePoint";
 import { C_MazeInfo }              from "../common/C_MazeInfo";
-import { T_MakeEnumType }          from "../common/T_MakeEnumType";
+import { C_CtlCursor }             from "../common/C_CtlCursor";
+import { C_UrlOpt }                from "../common/C_UrlOpt";
 import { POST_and_move_page }      from "../common/F_POST";
 import { get_maze_info, tmp_save } from "../common/F_load_and_save";
 import { _alert, g_save, g_start_env, g_url, g_url_mai_maze } from "../common/global";
 
-import { 
-    calc_cursor_pos_U, 
-    calc_cursor_pos_D, 
-    calc_cursor_pos_L, 
-    calc_cursor_pos_R, 
-    hide_all_menu, 
-    high_light_on, 
-    high_light_off,
-    get_dom_list_leng,
-    get_dom_list_cols
-} from "./F_default_menu";
-import { display_guld_menu }     from "./F_guild_menu";
-import { g_ctls, g_mvm, g_team } from "./global_for_guild";
-import { C_CtlCursor } from "../common/C_CtlCursor";
+import { hide_all_menu }           from "./F_default_menu";
+import { display_guld_menu }       from "./F_guild_menu";
+import { g_ctls, g_mvm, g_team }   from "./global_for_guild";
 
 let dom_view_switch : HTMLDivElement;
 
