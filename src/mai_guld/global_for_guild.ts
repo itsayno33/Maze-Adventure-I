@@ -74,8 +74,8 @@ function init_before_load_games(): void {
 export function init_after_loaded_DOM(): void { 
     init_after_loaded_DOM_in_common(); 
 
-    g_mvm = C_OneLineViewMessage.get('gld_view_message'); 
-    g_ctls = new C_DefaultCtls(); 
+    g_mvm  = C_OneLineViewMessage.get('gld_view_message'); 
+    g_ctls = C_DefaultCtls.get(); 
     init_debug_mode(); 
     display_guld_menu(); 
     stop_double_click(); 

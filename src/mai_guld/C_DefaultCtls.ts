@@ -1,5 +1,5 @@
 export type T_Ctls = {
-    name?: string,
+    name:  string,
     do_U?: T_marg, 
     do_D?: T_marg, 
     do_L?: T_marg, 
@@ -12,7 +12,7 @@ export type T_Ctls = {
     cpNG?: T_marg, 
     cpSL?: T_marg, 
     cpRT?: T_marg, 
-    keyEvent?: T_karg,
+    keyEvent?: T_karg, 
 }
 type T_mfnc = (e?: MouseEvent)=>(void|boolean);
 type T_marg = T_mfnc | undefined;
@@ -21,6 +21,7 @@ type T_kfnc = (e: KeyboardEvent)=>(void|boolean);
 type T_karg = T_kfnc | undefined;
 
 export class C_DefaultCtls {
+    protected static me: C_DefaultCtls;
     protected ctls: {[name: string]: T_Ctls};
     protected flgs: {[name: string]: boolean};
 
@@ -37,7 +38,7 @@ export class C_DefaultCtls {
     protected s_cp1: HTMLButtonElement;
     protected r_cp1: HTMLButtonElement;
 
-    public constructor() {
+    protected constructor() {
         this.ctls = {};
         this.flgs = {};
 
@@ -66,24 +67,34 @@ export class C_DefaultCtls {
         this.n_cp1.style.display = 'none';
         this.s_cp1.style.display = 'none';
         this.r_cp1.style.display = 'none';
-}
+    }
+    public static get(): C_DefaultCtls {
+        this.me ??=  new C_DefaultCtls();
+        return this.me;
+    }
     public clr(): boolean {
         this.ctls = {};
         this.flgs = {};
         return true;
     }
-    public add(name: string, ctls: T_Ctls): boolean {
+    public add(name: string|T_Ctls, ctls?:T_Ctls): boolean {
         try {
-            ctls.name = name;
-            this.ctls[name] = ctls;
-            this.flgs[name] = false;
+            if (typeof name === 'string' && ctls !== undefined) {
+                this.ctls[name] = ctls;
+                this.flgs[name] = false;
+            } else {
+                const c = name as T_Ctls;
+                this.ctls[c.name] = c;
+                this.flgs[c.name] = false;
+            }
             return true;
         } catch (err) {
             return false;
         }
     }
-    public rmv(name: string): boolean {
+    public rmv(ctls: string|T_Ctls): boolean {
         try {
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
             delete this.ctls[name];
             delete this.flgs[name];
             return true;
@@ -93,19 +104,30 @@ export class C_DefaultCtls {
     }
     public deact(): boolean {
         for (const ii in this.ctls) {
-            if (this.ctls[ii]?.name === undefined) continue;
+            if (this.ctls[ii].name === undefined) continue;
             if (!this._rmv_default_ctls(this.ctls[ii].name as string)) return false;
         }
         return true;
     }
-    public act(name: string, add: boolean = false): boolean {
-        if(!add && !this.deact()) return false;
-        return this._add_default_ctls(name);
+    public act(ctls: string|T_Ctls): boolean {
+        try {
+            if(!this.deact()) return false;
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
+            return this._add_default_ctls(name);
+        } catch(err) {
+            return false;
+        }
     }
 
-    public is_act(name: string): boolean {
-        return  this.flgs[name] ?? false;
+    public is_act(ctls: string|T_Ctls): boolean {
+        try {
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
+            return  this.flgs[name] ?? false;
+        } catch(err) {
+            return false;
+        }
     }
+
 /*
     public is_act_fnc(name: string, func: string): boolean {
         if (!(func in Object.keys(this.ctls))) return false;
