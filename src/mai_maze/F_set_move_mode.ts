@@ -9,7 +9,6 @@ import { display_maze2D }                        from "./F_display_maze2D";
 import { display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
 import { 
-    g_ctls_mode, 
     g_mvm, 
     g_vsw, 
     g_maze, 
@@ -28,12 +27,11 @@ const ctls_move_nor = {
 }
 
 export function init_move_mode(): void {
-    g_ctls.add('move_nor', ctls_move_nor);
+    g_ctls.add(ctls_move_nor);
 }
 
 export function act_move_mode(): void {
-//    g_ctls_mode[0] = T_CtlsMode.Move;
-    g_ctls.act('move_nor');
+    g_ctls.act(ctls_move_nor);
     g_vsw.view(g_vsw.Move());
 }
 

@@ -112,7 +112,7 @@ export function init_after_loaded_DOM(): void {
 
     g_mvm  = C_OneLineViewMessage.get('maze_mesg'); 
     g_cvm  = C_OneLineViewMessage.get('camp_mesg'); 
-    g_ctls = new C_DefaultCtls(); 
+    g_ctls = C_DefaultCtls.get(); 
     g_vsw  = C_SwitchView.get(); 
     g_ds   = init_maze3D(); 
     stop_double_click(); 

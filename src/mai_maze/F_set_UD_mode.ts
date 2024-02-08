@@ -4,7 +4,6 @@ import { POST_and_move_page }         from "../d_cmn/F_POST";
 import { g_start_env, g_url, g_url_mai_guld } from "../d_cmn/global";
 
 import { set_g_save } from "./F_set_save_mode";
-import { T_ViewMode } from "./C_SwitchView";
 import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
     g_mvm, 
@@ -50,10 +49,10 @@ const ctls_updn_ud_hpdn = {
 }
 
 export function init_UD_mode(): void {
-    g_ctls.add('updn_up', ctls_updn_up);
-    g_ctls.add('updn_dn', ctls_updn_dn);
-    g_ctls.add('updn_ud_hpup', ctls_updn_ud_hpup);
-    g_ctls.add('updn_ud_hpdn', ctls_updn_ud_hpdn);
+    g_ctls.add(ctls_updn_up);
+    g_ctls.add(ctls_updn_dn);
+    g_ctls.add(ctls_updn_ud_hpup);
+    g_ctls.add(ctls_updn_ud_hpdn);
 }
 
 export function act_Up_mode(): void {
@@ -65,7 +64,7 @@ export function act_Up_mode(): void {
 
     canUp = true;
     canDn = false;
-    g_ctls.act('updn_up');
+    g_ctls.act(ctls_updn_up);
     g_vsw.view(g_vsw.Move());
 }
 
@@ -74,7 +73,7 @@ export function act_Dn_mode(): void {
 
     canUp = false;
     canDn = true;
-    g_ctls.act('updn_dn');
+    g_ctls.act(ctls_updn_dn);
     g_vsw.view(g_vsw.Move());
 }
 
@@ -83,13 +82,9 @@ export function act_UD_mode(): void {
 
     canUp = true;
     canDn = true;
-    if (!isUp)  g_ctls.act('updn_ud_hpup');
-    else        g_ctls.act('updn_ud_hpdn');
+    if (!isUp)  g_ctls.act(ctls_updn_ud_hpup);
+    else        g_ctls.act(ctls_updn_ud_hpdn);
     g_vsw.view(g_vsw.Move());
-}
-
-function __set_UD_controlles(): void {
-//    g_ctls_mode[0] = T_CtlsMode.UD;
 }
 
 function do_cancel(): void {
@@ -158,7 +153,7 @@ function do_UD(): void {
 function hope_Up(): void {
     if (!canUp || !canDn) return;
     isUp = true;
-    g_ctls.act('updn_ud_hpdn');
+    g_ctls.act(ctls_updn_ud_hpdn);
 
     if (g_team.get_z() > 0) {
         g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
@@ -169,7 +164,7 @@ function hope_Up(): void {
 function hope_Down(): void {
     if (!canUp || !canDn) return;
     isUp = false;
-    g_ctls.act('updn_ud_hpup');
+    g_ctls.act(ctls_updn_ud_hpup);
 
     g_mvm.notice_message('降りますか？降りる⇒ 〇 登る ⇒ (↑キー) 移動しない ⇒ ✖');
 }

@@ -19,13 +19,13 @@ const ctls_camp_nor = {
 }
 
 export function init_camp_mode(): void {
-    g_ctls.add('camp_nor', ctls_camp_nor);
+    g_ctls.add(ctls_camp_nor);
     init_view();
 }
 export function act_camp_mode(): void {
     idx = 0;
     camp_list_crsr.set_pos(idx);
-    g_ctls.act('camp_nor');
+    g_ctls.act(ctls_camp_nor);
     g_vsw.view(g_vsw.Camp()); 
 }
 

@@ -26,6 +26,7 @@ type T_kfnc = (e: KeyboardEvent)=>(void|boolean);
 type T_karg = T_kfnc | undefined;
 
 export class C_DefaultCtls {
+    protected static me: C_DefaultCtls;
     protected ctls: {[name: string]: T_Ctls};
     protected flgs: {[name: string]: boolean};
 
@@ -43,7 +44,7 @@ export class C_DefaultCtls {
     protected s_cp1: HTMLButtonElement;
     protected r_cp1: HTMLButtonElement;
 
-    public constructor() {
+    protected constructor() {
         this.ctls = {};
         this.flgs = {};
 
@@ -74,6 +75,10 @@ export class C_DefaultCtls {
         this.n_cp1.style.display = 'none';
         this.s_cp1.style.display = 'none';
         this.r_cp1.style.display = 'none';
+    }
+    public static get(): C_DefaultCtls {
+        this.me ??=  new C_DefaultCtls();
+        return this.me;
     }
     public clr(): boolean {
         this.ctls = {};

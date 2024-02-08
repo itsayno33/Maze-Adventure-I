@@ -7,7 +7,6 @@ import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
-import { T_ViewMode }          from "./C_SwitchView";
 import { act_camp_mode }       from "./F_set_camp_mode";
 import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
@@ -89,29 +88,25 @@ export function init_SL_mode(): void {
 }
 
 export function act_load_mode(): void {
-//    g_ctls_mode[0] = T_CtlsMode.Load;
-
     __set_data(false).then(()=>{
         if (!exist_save_list()) {
             hide_load_fields();
             g_cvm.notice_message('ロードできるデータが有りません');
-            g_ctls.act('load_rtn');
+            g_ctls.act(ctls_load_rtn);
             g_vsw.view(g_vsw.Move());
             return;
         } else {
             show_load_fields();
             check_load();
-            g_ctls.act('load_nor');
+            g_ctls.act(ctls_load_nor);
             g_vsw.view(g_vsw.Load());
         }
     });
 }
 export function act_save_mode(): void {
-//    g_ctls_mode[0] = T_CtlsMode.Save;
-
    __set_data(true).then(()=>{
         check_save();
-        g_ctls.act('save_nor');
+        g_ctls.act(ctls_save_nor);
         g_vsw.view(g_vsw.Save());
     });
 }
@@ -141,9 +136,9 @@ function init_ctls(): void {
     is_kakunin = false;
     UL_bak = 999;
 
-    g_ctls.add('load_rtn', ctls_load_rtn);
-    g_ctls.add('load_nor', ctls_load_nor);
-    g_ctls.add('save_nor', ctls_save_nor);
+    g_ctls.add(ctls_load_rtn);
+    g_ctls.add(ctls_load_nor);
+    g_ctls.add(ctls_save_nor);
 }
 
 function isOK_for_load(): void {

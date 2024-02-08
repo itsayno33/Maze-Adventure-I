@@ -1,4 +1,4 @@
-import { _alert } from "../d_cmn/global";
+import { _alert }       from "../d_cmn/global";
 import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
 export const T_ViewMode:{[mode: string]: string} = {
     Move:     'move',

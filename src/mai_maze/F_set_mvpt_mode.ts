@@ -17,17 +17,13 @@ const ctls_mvpt_nor = {
 }
 
 export function init_mvpt_mode(): void {
-//    g_ctls_mode[0] = T_CtlsMode.MvPt;
-    g_ctls.add('mvpt_nor', ctls_mvpt_nor);
+    g_ctls.add(ctls_mvpt_nor);
 }
 
 export function act_mvpt_mode(): void {
-//    mode = 'view';
-//    g_ctls_mode[0] = T_CtlsMode.MvPt;
-
     mode = 'chek';
     g_cvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
-    g_ctls.act('mvpt_nor');
+    g_ctls.act(ctls_mvpt_nor);
     g_vsw.view(g_vsw.Camp());
 }
 
