@@ -8,17 +8,16 @@ import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 import { T_CtlsMode }          from "./T_CtlsMode";
-import { hide_controlles }     from "./F_set_controlles";
-import { set_camp_controlles } from "./F_set_camp_controlles";
-import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
+import { do_move_bottom_half } from "./F_set_move_controlles";
 import { 
     g_ctls_mode, 
+    g_ctls,
+    g_cvm, 
     g_mvm, 
     g_vsw, 
     g_maze, 
     g_team, 
     g_hres, 
-    g_ctls
 } from "./global_for_maze";
 
 let   for_save: boolean  = false;
@@ -54,6 +53,12 @@ export type T_save_list = {
 let   save_list:        {[uniq_no: number]: C_SaveData};
 const save_list_max = 20;
 
+const ctls_load_rtn = {
+    name: 'load_rtn', 
+    isNG:  go_back_camp_mode,
+    isRT:  go_back_camp_mode,
+    cpRT:  go_back_camp_mode,
+}
 const ctls_load_nor = {
     name: 'load_nor', 
     do_U:  do_U,
@@ -80,34 +85,51 @@ const ctls_save_nor = {
 }
 
 export function set_load_controlles(): void {
-    hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Load;
 
     init_ctls();
     g_ctls.act('load_nor');
-    __set_controlles(false);
-    check_load();
+    __set_controlles(false).then(()=>{
+        if (!exist_save_list()) {
+            hide_load_fields();
+            g_cvm.notice_message('ロードできるデータが有りません');
+            g_ctls.act('load_rtn');
+            return;
+        } else {
+            show_load_fields();
+            check_load();
+        }
+    });
 }
 
 export function set_save_controlles(): void {
-    hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Save;
 
     init_ctls();
     g_ctls.act('save_nor');
-    __set_controlles(true);
-    check_save();
+    __set_controlles(true).then(()=>{
+        check_save();
+    });
 }
 
-function __set_controlles(_for_save: boolean): void {
+async function __set_controlles(_for_save: boolean): Promise<void> {
     for_save = _for_save; // true: For Save.
 
+    g_cvm.clear_message();
     is_kakunin = false;
-    display_save_list(); 
-
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view?.style.setProperty('display', 'block');
+    await display_save_list(); 
 }
+
+function hide_load_fields(): void {
+    document.getElementById('load_data_list')  ?.style.setProperty('display', 'none');
+    document.getElementById('load_data_fields')?.style.setProperty('display', 'none');
+}
+
+function show_load_fields(): void {
+    document.getElementById('load_data_list')  ?.style.setProperty('display', 'block');
+    document.getElementById('load_data_fields')?.style.setProperty('display', 'block');
+}
+
 
 function init_data(): void {}
 function init_view(): void {}
@@ -115,6 +137,7 @@ function init_ctls(): void {
     is_kakunin = false;
     UL_bak = 999;
 
+    g_ctls.add('load_rtn', ctls_load_rtn);
     g_ctls.add('load_nor', ctls_load_nor);
     g_ctls.add('save_nor', ctls_save_nor);
 }
@@ -135,7 +158,7 @@ function isOK_for_save(): void {
 
 function isNG(): void {
     if (!is_kakunin) {
-        g_mvm.clear_message();
+        g_cvm.clear_message();
         go_back_camp_mode();
     } else {
         is_kakunin = false;
@@ -144,14 +167,12 @@ function isNG(): void {
 }
 
 function go_back_camp_mode(): void {
-    g_mvm.clear_message();
-    set_camp_controlles();
+    g_cvm.clear_message();
     g_vsw.view_camp();
 }
 
 function go_back_move_mode(): void {
-    set_move_controlles();
-    g_vsw.view_maze();
+    g_vsw.view_move();
     do_move_bottom_half('blink_off');
 }
 
@@ -214,14 +235,14 @@ function form_set():void {
     }
 }
 
-export function display_save_list(): void {
+export async function display_save_list(): Promise<void> {
     const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
     const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
     const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
     const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
 
-    get_save_info()?.then(jsonObj => {
+    await get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
             g_mes.warning_message('セーブ情報の受信に失敗しました。【受信データ無し】');
             return undefined;
@@ -243,7 +264,7 @@ export function display_save_list(): void {
                     save_list[uniq_no_cnt] = new C_SaveData({
                         save_id:    -1,
                         uniq_no:     uniq_no_cnt,
-                        title:      `保存データ`,
+                        title:      `新規保存#${uniq_no_cnt.toString().padStart(2, '0')}`,
                         detail:    '',
                         point:     '',
                         save_time: '',
@@ -253,7 +274,7 @@ export function display_save_list(): void {
             }
 
             save_UL_list = document.getElementById(data_list) as HTMLUListElement;
-            if (save_UL_list === null) return;
+            if (save_UL_list === null) {alert('Can not find the Dom of Save List!');return;}
         
             while (save_UL_list.firstChild !== null) {
                 save_UL_list.removeChild(save_UL_list.firstChild);
@@ -303,8 +324,7 @@ export function display_save_list(): void {
             form_detail = document.getElementById(data_detail) as HTMLTextAreaElement;
             form_point  = document.getElementById(data_point)  as HTMLParagraphElement; 
 
-            if (!for_save) display_load_fields();
-            if (for_save) g_vsw.view_save(); else g_vsw.view_load();
+            if (!exist_save_list()) return;
             UL_idx = 0;  UL_list_crsr.set_pos(UL_idx); 
             form_set();
             return;
@@ -335,28 +355,8 @@ function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     isOK_for_save();
     UL_list_crsr.set_pos(UL_idx); form_set();
 }
-
-
-function display_load_fields(): void {
-    if (Object.keys(save_list).length > 0) {
-        // ロードできるデータ有り
-        // ロードデータリストと詳細パネルを表示
-        const ul = document.getElementById('load_data_list')   as HTMLUListElement;
-        const fs = document.getElementById('load_data_fields') as HTMLFieldSetElement;
-
-        ul.style.setProperty('display', 'block');
-        fs.style.setProperty('display', 'block');
-    } else {
-        // ロードできるデータ無し
-        // ロードデータリストと詳細パネルを非表示にして
-        // その旨を表示する
-        const ul = document.getElementById('load_data_list')   as HTMLUListElement;
-        const fs = document.getElementById('load_data_fields') as HTMLFieldSetElement;
-
-        ul.style.setProperty('display', 'none');
-        fs.style.setProperty('display', 'none');
-        g_mvm.notice_message('ロードできる保存データが有りません。✖ボタンで戻って下さい。');
-    }
+function exist_save_list(): boolean {
+    return save_UL_list.children.length > 0;
 }
 
 function check_load(): void { // 入力チェックと既存データ上書きの確認
@@ -382,9 +382,9 @@ function check_save(): void { // 入力チェックと既存データ上書き�
 
 function display_message() {
     if (for_save) {
-        g_mvm.notice_message('保存しますか？');
+        g_cvm.notice_message('保存しますか？');
     } else {
-        g_mvm.notice_message('ロードしますか？');
+        g_cvm.notice_message('ロードしますか？');
     }
 }
 

@@ -1,7 +1,7 @@
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { hide_controlles }     from "./F_set_controlles";
 import { set_camp_controlles } from "./F_set_camp_controlles";
-import { g_ctls, g_ctls_mode, g_maze, g_mvm, g_team, g_vsw } from "./global_for_maze";
+import { g_ctls, g_ctls_mode, g_maze, g_cvm, g_team, g_vsw } from "./global_for_maze";
 
 import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
 import { tmp_save }            from "../d_cmn/F_load_and_save";
@@ -12,16 +12,12 @@ let mode: string;
 
 
 export function set_mvpt_controlles(): void {
-    hide_controlles();
     mode = 'view';
     g_ctls_mode[0] = T_CtlsMode.MvPt;
     g_ctls.add('mvpt_nor', ctls_mvpt_nor);
     g_ctls.act('mvpt_nor');
 
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view?.style.setProperty('display', 'block');
-
-    g_mvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
+    g_cvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
     mode = 'chek';
 }
 const ctls_mvpt_nor = {
@@ -35,11 +31,11 @@ const ctls_mvpt_nor = {
 function isOK(): void {
     switch(mode) {
         case 'view':
-            g_mvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
+            g_cvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
             mode = 'chek';
             break;
         case 'chek':
-            g_mvm.notice_message('街へ戻りました');
+            g_cvm.notice_message('街へ戻りました');
             mode = 'view';
 
             const mvpt = g_team.get_loc().clone();
@@ -66,8 +62,7 @@ function isOK(): void {
 function isNG(): void {
     switch(mode) {
         case 'chek':
-            g_mvm.clear_message();
-            set_camp_controlles();
+            g_cvm.clear_message();
             g_vsw.view_camp();
             break;
     }

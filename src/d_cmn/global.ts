@@ -48,7 +48,7 @@ import { C_SaveData }         from "../d_mdl/C_SaveData";
 export const g_save = new C_SaveData();
 
 export function init_after_loaded_DOM_in_common(): void {
-    const  con = document.getElementById('message_pane');
+    const  con = document.getElementById('pane_sytm_logs');
     g_mes  = C_DisplayMessage.get(con, 'client_message');
 }
 
@@ -89,12 +89,12 @@ const tsCaller: I_TsCall = (() => {
         },
         // 暫定版開始処理
         start_game: (mode: string, my_url: string, player_id: number, opt: string): void => {
-            tsCaller.get_init_data(my_url);
-            g_start_env.mode = mode;
-            g_start_env.pid  = player_id;
-            g_start_env.opt  = opt;
+            tsCaller.get_init_data(my_url); 
+            g_start_env.mode = mode; 
+            g_start_env.pid  = player_id; 
+            g_start_env.opt  = opt; 
 
-            g_ready_games.setGetWindow();
+            g_ready_games.setGetWindow(); 
         } 
     };
 })();

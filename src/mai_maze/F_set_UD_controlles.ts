@@ -58,7 +58,6 @@ export function set_Up_controlles(): void {
         g_mvm.notice_message('街に戻りますか？戻る ⇒ 〇 戻らない ⇒ ✖');
     }
 
-    hide_controlles();
     canUp = true;
     canDn = false;
     g_ctls.add('updn_up', ctls_updn_up);
@@ -69,7 +68,6 @@ export function set_Up_controlles(): void {
 export function set_Dn_controlles(): void {
     g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
 
-    hide_controlles();
     canUp = false;
     canDn = true;
     g_ctls.add('updn_dn', ctls_updn_dn);
@@ -80,7 +78,6 @@ export function set_Dn_controlles(): void {
 export function set_UD_controlles(): void {
     g_mvm.notice_message('上下テレポーターが有ります。登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
 
-    hide_controlles();
     canUp = true;
     canDn = true;
     g_ctls.add('updn_ud_hpup', ctls_updn_ud_hpup);
@@ -92,9 +89,6 @@ export function set_UD_controlles(): void {
 
 function __set_UD_controlles(): void {
     g_ctls_mode[0] = T_CtlsMode.UD;
-
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view.style.setProperty('display', 'block');
 }
 
 function do_cancel(): void {

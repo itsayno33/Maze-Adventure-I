@@ -12,6 +12,7 @@ export var g_vsw: C_SwitchView;
 
 import { C_OneLineViewMessage }  from "../d_vie/C_OneLineViewMessage";
 export var g_mvm: C_OneLineViewMessage;
+export var g_cvm: C_OneLineViewMessage;
 
 import { C_Hero } from "../d_mdl/C_Hero";
 export const g_hres: C_Hero[] = [];
@@ -97,7 +98,7 @@ export function do_load_bottom_half(msg: string): void{
     g_mvm.notice_message(msg); 
     g_mes.notice_message(msg); 
     set_move_controlles();  
-    g_vsw.view_maze(); 
+    g_vsw.view_move(); 
     do_move_bottom_half('blink_off'); 
 }
 function _init_before_game(): void {
@@ -106,16 +107,18 @@ function _init_before_game(): void {
     set_move_controlles();
 }
 
-export function init_after_loaded_DOM(): void {
-    init_after_loaded_DOM_in_common();
-    g_ready_games.setFunction(init_before_games);
-    g_ready_games.setLoadedDOM();
+export function init_after_loaded_DOM(): void { 
+    init_after_loaded_DOM_in_common(); 
 
-    g_mvm  = C_OneLineViewMessage.get('Maze_view_message');
+    g_mvm  = C_OneLineViewMessage.get('maze_mesg'); 
+    g_cvm  = C_OneLineViewMessage.get('camp_mesg'); 
     g_ctls = new C_DefaultCtls(); 
-    g_vsw  = C_SwitchView.get();g_vsw.view_maze();
-    g_ds   = init_maze3D();
-    stop_double_click();
+    g_vsw  = C_SwitchView.get(); 
+    g_ds   = init_maze3D(); 
+    stop_double_click(); 
+
+    g_ready_games.setFunction(init_before_games); 
+    g_ready_games.setLoadedDOM(); 
 }
 
 export function init_debug_mode(): void {

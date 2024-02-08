@@ -22,16 +22,10 @@ import {
 
 
 export function set_move_controlles(): void {
-    hide_controlles();
     g_ctls_mode[0] = T_CtlsMode.Move;
     g_ctls.add('move_nor', ctls_move_nor);
     g_ctls.act('move_nor');
 
-    const maze2D_view = document.getElementById('Maze_view2D_pre') as HTMLPreElement;
-    maze2D_view?.style.setProperty('display', 'block');
-
-    const ctl_view = document.getElementById('move_ctl_view') as HTMLDivElement;
-    ctl_view?.style.setProperty('display', 'block');
 }
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -155,8 +149,6 @@ function do_stairs_motion(kind: T_MzKind): void {
 
 
 function camp(): void {
-    g_vsw.view_camp();
     g_mvm.clear_message();
-
-    set_camp_controlles();
+    g_vsw.view_camp();
 }

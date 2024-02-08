@@ -4,8 +4,8 @@ import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { g_mes }          from "../d_cmn/global";
-import { C_Wall }         from "./C_Wall";
-import { g_maze, g_team, g_ds, g_debug_mode }  from "./global_for_maze";
+import { C_Wall }                from "./C_Wall";
+import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -19,7 +19,7 @@ type T_Rect = {tl: T_xy, tr: T_xy, bl: T_xy, br: T_xy};
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
-    const canvas = document.getElementById('Maze_view3D_canvas') as HTMLCanvasElement;
+    const canvas = document.getElementById('maze_view3D_canvas') as HTMLCanvasElement;
     if (canvas === null) {
         g_mes.warning_message('Canvas isnt found! id=Maze_view3D_canvas');
         return {canvas: null, con: null, depth: 0, wall: null};
@@ -327,7 +327,7 @@ function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
 
 
 export function displey_mase3D_direction(): void {
-    const p_dir = document.getElementById('Maze_view3D_direction_info') as HTMLParagraphElement;
+    const p_dir = document.getElementById('maze_view3D_direction_info') as HTMLParagraphElement;
     if (p_dir === null) {
         g_mes.warning_message('P element isnt found! id=Maze_view3D_direction_info');
         return;
