@@ -1,9 +1,9 @@
-import { do_instant_load, do_instant_save, do_move_bottom_half } from "./F_set_move_controlles";
+import { do_instant_load, do_instant_save, do_move_bottom_half } from "./F_set_move_mode";
 import { g_debug_mode, g_maze, g_team } from "./global_for_maze";
 
 
-export type T_Ctls = {
-    name?: string,
+export type T_Ctls= {
+    name:  string,
     do_U?: T_marg, 
     do_D?: T_marg, 
     do_L?: T_marg, 
@@ -74,24 +74,30 @@ export class C_DefaultCtls {
         this.n_cp1.style.display = 'none';
         this.s_cp1.style.display = 'none';
         this.r_cp1.style.display = 'none';
-}
+    }
     public clr(): boolean {
         this.ctls = {};
         this.flgs = {};
         return true;
     }
-    public add(name: string, ctls: T_Ctls): boolean {
+    public add(name: string|T_Ctls, ctls?:T_Ctls): boolean {
         try {
-            ctls.name = name;
-            this.ctls[name] = ctls;
-            this.flgs[name] = false;
+            if (typeof name === 'string' && ctls !== undefined) {
+                this.ctls[name] = ctls;
+                this.flgs[name] = false;
+            } else {
+                const c = name as T_Ctls;
+                this.ctls[c.name] = c;
+                this.flgs[c.name] = false;
+            }
             return true;
         } catch (err) {
             return false;
         }
     }
-    public rmv(name: string): boolean {
+    public rmv(ctls: string|T_Ctls): boolean {
         try {
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
             delete this.ctls[name];
             delete this.flgs[name];
             return true;
@@ -101,18 +107,28 @@ export class C_DefaultCtls {
     }
     public deact(): boolean {
         for (const ii in this.ctls) {
-            if (this.ctls[ii]?.name === undefined) continue;
+            if (this.ctls[ii].name === undefined) continue;
             if (!this._rmv_default_ctls(this.ctls[ii].name as string)) return false;
         }
         return true;
     }
-    public act(name: string, add: boolean = false): boolean {
-        if(!add && !this.deact()) return false;
-        return this._add_default_ctls(name);
+    public act(ctls: string|T_Ctls): boolean {
+        try {
+            if(!this.deact()) return false;
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
+            return this._add_default_ctls(name);
+        } catch(err) {
+            return false;
+        }
     }
 
-    public is_act(name: string): boolean {
-        return  this.flgs[name] ?? false;
+    public is_act(ctls: string|T_Ctls): boolean {
+        try {
+            const name = typeof ctls === 'string' ? ctls : ctls.name;
+            return  this.flgs[name] ?? false;
+        } catch(err) {
+            return false;
+        }
     }
 
     public keys_of_add(): string[] {

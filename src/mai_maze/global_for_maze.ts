@@ -29,8 +29,8 @@ export const g_guld = new C_Guild();
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
-import { decode_all, decode_maze }  from "./F_set_save_controlles";
-import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
+import { decode_all, decode_maze }  from "./F_set_save_mode";
+import { do_move_bottom_half, act_move_mode } from "./F_set_move_mode";
 
 import { 
     general_load, 
@@ -45,6 +45,7 @@ import {
     g_start_env, 
     init_after_loaded_DOM_in_common 
 } from "../d_cmn/global";
+import { init_all_mode } from "./F_set_mode";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -97,14 +98,13 @@ export function do_load_bottom_half(msg: string): void{
 
     g_mvm.notice_message(msg); 
     g_mes.notice_message(msg); 
-    set_move_controlles();  
-    g_vsw.view_move(); 
+    act_move_mode();  
     do_move_bottom_half('blink_off'); 
 }
 function _init_before_game(): void {
     calc_view2D_width();
     init_debug_mode();
-    set_move_controlles();
+    act_move_mode();
 }
 
 export function init_after_loaded_DOM(): void { 
@@ -117,6 +117,7 @@ export function init_after_loaded_DOM(): void {
     g_ds   = init_maze3D(); 
     stop_double_click(); 
 
+    init_all_mode();
     g_ready_games.setFunction(init_before_games); 
     g_ready_games.setLoadedDOM(); 
 }

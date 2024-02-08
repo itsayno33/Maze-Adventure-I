@@ -1,35 +1,29 @@
 import { _alert } from "../d_cmn/global";
-import { set_camp_controlles } from "./F_set_camp_controlles";
-import { set_move_controlles } from "./F_set_move_controlles";
-import { set_mvpt_controlles } from "./F_set_mvpt_controlles";
-import { set_load_controlles, set_save_controlles } from "./F_set_save_controlles";
+import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
+export const T_ViewMode:{[mode: string]: string} = {
+    Move:     'move',
+    Batt:     'batt',
+    Camp:     'camp',
+    Load:     'load',
+    Save:     'save',
+} as const;
+export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
 
 export class C_SwitchView {
     protected static me:   C_SwitchView;
     protected static body: HTMLElement;
-    protected static article: {[name: string]: HTMLElement|null} = {
-        view3d: null, 
-        view2d: null, 
-        camp_l: null, 
-        load_l: null, 
-        load_d: null, 
-        save_l: null, 
-        save_d: null, 
-        camp_m: null, 
-        game_m: null, 
-        contls: null, 
-        messag: null, 
-    };
+    protected static article:   {[name: string]: HTMLElement|null};
+    protected static all_class: string[];
 
-    protected static all_class: string[] = [
-        'move',
-        'camp',
-        'load',
-        'save',
-    ]
+    public Move(): string {return T_ViewMode.Move;}
+    public Batt(): string {return T_ViewMode.Batt;}
+    public Camp(): string {return T_ViewMode.Camp;}
+    public Load(): string {return T_ViewMode.Load;}
+    public Save(): string {return T_ViewMode.Save;}
 
     protected constructor() {
-//        C_SwitchView.article = {};
+        C_SwitchView.all_class = Object.values(T_ViewMode);
+        C_SwitchView.article = {};
         try {
             C_SwitchView.body = document.body;
 
@@ -47,34 +41,15 @@ export class C_SwitchView {
         } catch (err) {
             _alert('Layout Get Error: ' + err);
         }
-        this.init_all();
+        this.view('move');
     }
     public static get(): C_SwitchView {
         this.me ??=  new C_SwitchView();
         return this.me;
     }
-    public init_all(): void {
-        this.view_move();
-    }
-    public view_move(): void {
-        set_move_controlles();
-        this.__set_class('move');
-    }
-    public view_camp(): void {
-        set_camp_controlles();
-        this.__set_class('camp');
-    }
-    public view_load(): void {
-        set_load_controlles();
-        this.__set_class('load');
-    }
-    public view_save(): void { 
-        set_save_controlles();
-        this.__set_class('save');
-    }
-    public view_mvpt(): void { 
-        set_mvpt_controlles();
-        this.__set_class('camp');
+    public view(mode: string): boolean {
+        this.__set_class(mode);
+        return true;
     }
     protected __set_class(c: string): void { 
         try {

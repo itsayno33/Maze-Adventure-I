@@ -7,10 +7,10 @@ import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
-import { T_CtlsMode }          from "./T_CtlsMode";
-import { do_move_bottom_half } from "./F_set_move_controlles";
+import { T_ViewMode }          from "./C_SwitchView";
+import { act_camp_mode }       from "./F_set_camp_mode";
+import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
-    g_ctls_mode, 
     g_ctls,
     g_cvm, 
     g_mvm, 
@@ -84,35 +84,39 @@ const ctls_save_nor = {
     cpRT:  go_back_camp_mode,
 }
 
-export function set_load_controlles(): void {
-    g_ctls_mode[0] = T_CtlsMode.Load;
-
+export function init_SL_mode(): void {
     init_ctls();
-    g_ctls.act('load_nor');
-    __set_controlles(false).then(()=>{
+}
+
+export function act_load_mode(): void {
+//    g_ctls_mode[0] = T_CtlsMode.Load;
+
+    __set_data(false).then(()=>{
         if (!exist_save_list()) {
             hide_load_fields();
             g_cvm.notice_message('ロードできるデータが有りません');
             g_ctls.act('load_rtn');
+            g_vsw.view(g_vsw.Move());
             return;
         } else {
             show_load_fields();
             check_load();
+            g_ctls.act('load_nor');
+            g_vsw.view(g_vsw.Load());
         }
     });
 }
+export function act_save_mode(): void {
+//    g_ctls_mode[0] = T_CtlsMode.Save;
 
-export function set_save_controlles(): void {
-    g_ctls_mode[0] = T_CtlsMode.Save;
-
-    init_ctls();
-    g_ctls.act('save_nor');
-    __set_controlles(true).then(()=>{
+   __set_data(true).then(()=>{
         check_save();
+        g_ctls.act('save_nor');
+        g_vsw.view(g_vsw.Save());
     });
 }
 
-async function __set_controlles(_for_save: boolean): Promise<void> {
+async function __set_data(_for_save: boolean): Promise<void> {
     for_save = _for_save; // true: For Save.
 
     g_cvm.clear_message();
@@ -168,11 +172,11 @@ function isNG(): void {
 
 function go_back_camp_mode(): void {
     g_cvm.clear_message();
-    g_vsw.view_camp();
+    act_camp_mode();
 }
 
 function go_back_move_mode(): void {
-    g_vsw.view_move();
+    act_move_mode();
     do_move_bottom_half('blink_off');
 }
 

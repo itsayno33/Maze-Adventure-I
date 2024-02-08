@@ -3,16 +3,15 @@ import { UD_save, tmp_save }          from "../d_cmn/F_load_and_save";
 import { POST_and_move_page }         from "../d_cmn/F_POST";
 import { g_start_env, g_url, g_url_mai_guld } from "../d_cmn/global";
 
-import { T_CtlsMode }                 from "./T_CtlsMode";
-import { hide_controlles }            from "./F_set_controlles";
-import { set_g_save }                 from "./F_set_save_controlles";
-import { set_move_controlles, do_move_bottom_half } from "./F_set_move_controlles";
+import { set_g_save } from "./F_set_save_mode";
+import { T_ViewMode } from "./C_SwitchView";
+import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
-    g_ctls_mode, 
     g_mvm, 
     g_maze, 
     g_team,
-    g_ctls, 
+    g_ctls,
+    g_vsw, 
 }   from "./global_for_maze";
 
 
@@ -50,8 +49,14 @@ const ctls_updn_ud_hpdn = {
     isNG:  do_cancel,
 }
 
+export function init_UD_mode(): void {
+    g_ctls.add('updn_up', ctls_updn_up);
+    g_ctls.add('updn_dn', ctls_updn_dn);
+    g_ctls.add('updn_ud_hpup', ctls_updn_ud_hpup);
+    g_ctls.add('updn_ud_hpdn', ctls_updn_ud_hpdn);
+}
 
-export function set_Up_controlles(): void {
+export function act_Up_mode(): void {
     if (g_team.get_z() > 0) {
         g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
     } else {
@@ -60,40 +65,36 @@ export function set_Up_controlles(): void {
 
     canUp = true;
     canDn = false;
-    g_ctls.add('updn_up', ctls_updn_up);
     g_ctls.act('updn_up');
-    __set_UD_controlles();
+    g_vsw.view(g_vsw.Move());
 }
 
-export function set_Dn_controlles(): void {
+export function act_Dn_mode(): void {
     g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
 
     canUp = false;
     canDn = true;
-    g_ctls.add('updn_dn', ctls_updn_dn);
     g_ctls.act('updn_dn');
-    __set_UD_controlles();
+    g_vsw.view(g_vsw.Move());
 }
 
-export function set_UD_controlles(): void {
+export function act_UD_mode(): void {
     g_mvm.notice_message('上下テレポーターが有ります。登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
 
     canUp = true;
     canDn = true;
-    g_ctls.add('updn_ud_hpup', ctls_updn_ud_hpup);
-    g_ctls.add('updn_ud_hpdn', ctls_updn_ud_hpdn);
     if (!isUp)  g_ctls.act('updn_ud_hpup');
     else        g_ctls.act('updn_ud_hpdn');
-    __set_UD_controlles();
+    g_vsw.view(g_vsw.Move());
 }
 
 function __set_UD_controlles(): void {
-    g_ctls_mode[0] = T_CtlsMode.UD;
+//    g_ctls_mode[0] = T_CtlsMode.UD;
 }
 
 function do_cancel(): void {
     g_mvm.clear_message();
-    set_move_controlles();
+    act_move_mode();
 }
 
 function do_up(): void {
@@ -118,13 +119,13 @@ function do_up(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
         g_mvm.clear_message();
-        set_move_controlles();
+        act_move_mode();
         do_move_bottom_half('blink_off');
     } else {
         do_UD_save().then(()=>{
             rslt.doOK();
             g_mvm.clear_message();
-            set_move_controlles();
+            act_move_mode();
             do_move_bottom_half('blink_off');
         });
     }
@@ -135,13 +136,13 @@ function do_down(): void {
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
         g_mvm.clear_message();
-        set_move_controlles();
+        act_move_mode();
         do_move_bottom_half('blink_off');
     } else {
         do_UD_save().then(()=>{
             rslt.doOK();
             g_mvm.clear_message();
-            set_move_controlles();
+            act_move_mode();
             do_move_bottom_half('blink_off');
         });
     }

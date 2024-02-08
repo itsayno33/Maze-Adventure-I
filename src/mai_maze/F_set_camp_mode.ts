@@ -1,28 +1,14 @@
 import { _isNum }          from "../d_utl/F_Math";
-import { T_CtlsMode }      from "./T_CtlsMode";
-import { hide_controlles } from "./F_set_controlles";
-import { set_move_controlles, do_move_bottom_half }   from "./F_set_move_controlles";
-import { set_save_controlles, set_load_controlles   } from "./F_set_save_controlles";
-import { set_mvpt_controlles }                        from "./F_set_mvpt_controlles";
-import { g_ctls, g_ctls_mode, g_cvm, g_vsw }          from "./global_for_maze";
 import { C_CtlCursor }     from "../d_ctl/C_CtlCursor";
-
-const mode:  string[] =  ['Load', 'Save', 'MvPt'];
+import { do_move_bottom_half, act_move_mode } from "./F_set_move_mode";
+import { act_load_mode, act_save_mode   }     from "./F_set_save_mode";
+import { act_mvpt_mode}                       from "./F_set_mvpt_mode";
+import { g_ctls, g_cvm, g_vsw }               from "./global_for_maze";
 
 let   dom_camp_list:  HTMLUListElement;
 let   camp_list_crsr: C_CtlCursor;
 let   idx:   number   =   0;
 
-export function set_camp_controlles(): void {
-    g_ctls_mode[0] = T_CtlsMode.Camp;
-
-    g_ctls.add('camp_nor', ctls_camp_nor);
-    g_ctls.act('camp_nor');
-    init_view();
-
-    idx = 0;
-    camp_list_crsr.set_pos(idx);
-}
 const ctls_camp_nor = {
     name: 'camp_nor', 
     do_U:  do_U,
@@ -30,6 +16,17 @@ const ctls_camp_nor = {
     isOK:  isOK,
     isNG:  isNG,
     cpRT:  isNG,
+}
+
+export function init_camp_mode(): void {
+    g_ctls.add('camp_nor', ctls_camp_nor);
+    init_view();
+}
+export function act_camp_mode(): void {
+    idx = 0;
+    camp_list_crsr.set_pos(idx);
+    g_ctls.act('camp_nor');
+    g_vsw.view(g_vsw.Camp()); 
 }
 
 function init_view(): boolean {
@@ -72,7 +69,7 @@ function __isOK(id: string): void {
 
 function isNG(): void {
     g_cvm.clear_message();
-    g_vsw.view_move();
+    act_move_mode();
     do_move_bottom_half('blink_off');
 }
 
@@ -88,13 +85,13 @@ function do_D(): void {
 }
 
 function do_load(): void {
-    g_vsw.view_load();
+    act_load_mode();
 }
 
 function do_save(): void {
-    g_vsw.view_save();
+    act_save_mode();
 }
 
 function do_mvpt(): void {
-    g_vsw.view_mvpt();
+    act_mvpt_mode();
 }

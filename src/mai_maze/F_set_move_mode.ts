@@ -2,14 +2,12 @@ import { T_MzKind }                   from "../d_mdl/T_MzKind";
 import { I_HopeAction }               from "../d_mdl/I_Common";
 import { C_Point }                    from "../d_mdl/C_Point";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
-import { T_CtlsMode }                 from "./T_CtlsMode";
-import { hide_controlles }            from "./F_set_controlles";
-import { set_camp_controlles }        from "./F_set_camp_controlles";
-import { set_g_save }                 from "./F_set_save_controlles";
-import { display_maze2D }             from "./F_display_maze2D"; 
+import { act_camp_mode }                         from "./F_set_camp_mode";
+import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
+import { set_g_save }                            from "./F_set_save_mode";
+import { display_maze2D }                        from "./F_display_maze2D"; 
 import { display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
-import { set_Up_controlles, set_Dn_controlles, set_UD_controlles } from "./F_set_UD_controlles";
 import { 
     g_ctls_mode, 
     g_mvm, 
@@ -20,13 +18,6 @@ import {
     g_ctls, 
 } from "./global_for_maze";
 
-
-export function set_move_controlles(): void {
-    g_ctls_mode[0] = T_CtlsMode.Move;
-    g_ctls.add('move_nor', ctls_move_nor);
-    g_ctls.act('move_nor');
-
-}
 const ctls_move_nor = {
     name: 'move_nor', 
     do_U:  go_F,
@@ -34,6 +25,16 @@ const ctls_move_nor = {
     do_L:  tr_L,
     do_R:  tr_R,
     camp:  camp,
+}
+
+export function init_move_mode(): void {
+    g_ctls.add('move_nor', ctls_move_nor);
+}
+
+export function act_move_mode(): void {
+//    g_ctls_mode[0] = T_CtlsMode.Move;
+    g_ctls.act('move_nor');
+    g_vsw.view(g_vsw.Move());
 }
 
 
@@ -136,13 +137,13 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
 function do_stairs_motion(kind: T_MzKind): void {
     switch (kind) {
         case T_MzKind.StrUp:
-            set_Up_controlles();
+            act_Up_mode();
             break;
         case T_MzKind.StrDn:
-            set_Dn_controlles();
+            act_Dn_mode();
             break;
         case T_MzKind.StrUD:
-            set_UD_controlles();
+            act_UD_mode();
             break;
     }
 }
@@ -150,5 +151,5 @@ function do_stairs_motion(kind: T_MzKind): void {
 
 function camp(): void {
     g_mvm.clear_message();
-    g_vsw.view_camp();
+    act_camp_mode();
 }

@@ -1,12 +1,12 @@
+/*
 import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
 import { alert_maze_info }     from "../d_mdl/C_Maze"; // 通常時はコメントアウトされている関数
 import { alert_team_info }     from "../d_mdl/C_Team"; // 通常時はコメントアウトされている関数
 import { alert_hres_info }     from "../d_mdl/C_Hero"; // 通常時はコメントアウトされている関数
-import { do_move_bottom_half, set_move_controlles } from "./F_set_move_controlles";
-import { decode_all }          from "./F_set_save_controlles";
+import { do_move_bottom_half, set_move_controlles } from "./F_set_move_mode";
+import { decode_all }          from "./F_set_save_mode";
 import { init_debug_mode }     from "./global_for_maze";
 
-/*
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
     getJSON_by_POST(url, opt.to_string(), 
         (xhr:XMLHttpRequest)=> {
