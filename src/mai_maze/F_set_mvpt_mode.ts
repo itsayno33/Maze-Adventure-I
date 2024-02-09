@@ -24,7 +24,7 @@ export function act_mvpt_mode(): void {
     mode = 'chek';
     g_cvm.notice_message('本当に街へ戻りますか？この場所にはギルドから復帰できます');
     g_ctls.act(ctls_mvpt_nor);
-    g_vsw.view(g_vsw.Camp());
+    g_vsw.view(g_vsw.MvPt());
 }
 
 function isOK(): void {

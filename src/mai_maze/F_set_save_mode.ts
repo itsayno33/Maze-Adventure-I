@@ -99,7 +99,7 @@ export function act_load_mode(): void {
             show_load_fields();
             check_load();
             g_ctls.act(ctls_load_nor);
-            g_vsw.view(g_vsw.Load());
+            g_vsw.view(g_vsw.LdSv());
         }
     });
 }
@@ -107,7 +107,7 @@ export function act_save_mode(): void {
    __set_data(true).then(()=>{
         check_save();
         g_ctls.act(ctls_save_nor);
-        g_vsw.view(g_vsw.Save());
+        g_vsw.view(g_vsw.LdSv());
     });
 }
 
@@ -120,13 +120,13 @@ async function __set_data(_for_save: boolean): Promise<void> {
 }
 
 function hide_load_fields(): void {
-    document.getElementById('load_data_list')  ?.style.setProperty('display', 'none');
-    document.getElementById('load_data_fields')?.style.setProperty('display', 'none');
+    document.getElementById('ldsv_data_list')  ?.style.setProperty('display', 'none');
+    document.getElementById('ldsv_data_fields')?.style.setProperty('display', 'none');
 }
 
 function show_load_fields(): void {
-    document.getElementById('load_data_list')  ?.style.setProperty('display', 'block');
-    document.getElementById('load_data_fields')?.style.setProperty('display', 'block');
+    document.getElementById('ldsv_data_list')  ?.style.setProperty('display', 'block');
+    document.getElementById('ldsv_data_fields')?.style.setProperty('display', 'block');
 }
 
 
@@ -222,7 +222,7 @@ function form_set():void {
     const data_idx = UL_to_Data[UL_idx];
 
     form_id   .value      = save_list[data_idx].save_id.toString();
-    form_time .innerText  = save_list[data_idx].save_time.toISOString();
+    form_time .innerText  = save_list[data_idx].save_time?.toISOString();
     form_point.innerText  = save_list[data_idx].point;
 
     if (form_detail.hasAttribute('readonly')) {
@@ -235,12 +235,18 @@ function form_set():void {
 }
 
 export async function display_save_list(): Promise<void> {
+    const data_list   = 'ldsv_data_list';
+    const data_id     = 'ldsv_data_id';
+    const data_time   = 'ldsv_data_time';
+    const data_detail = 'ldsv_data_detail';
+    const data_point  = 'ldsv_data_point';
+/*
     const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
     const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
     const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
     const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
     const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
-
+*/
     await get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
             g_mes.warning_message('セーブ情報の受信に失敗しました。【受信データ無し】');
@@ -266,7 +272,7 @@ export async function display_save_list(): Promise<void> {
                         title:      `新規保存#${uniq_no_cnt.toString().padStart(2, '0')}`,
                         detail:    '',
                         point:     '',
-                        save_time: '',
+                        save_time: undefined,
                         auto_mode: '0',
                     });
                 }
@@ -279,7 +285,7 @@ export async function display_save_list(): Promise<void> {
                 save_UL_list.removeChild(save_UL_list.firstChild);
             }
 
-            let save_UL_list_len = 0; UL_to_Data = {};
+            let UL_list_idx = 0; UL_to_Data = {};
             for (let data_idx in save_list) {
                 if (save_list[data_idx].auto_mode) {
                     if (for_save) continue;
@@ -308,12 +314,11 @@ export async function display_save_list(): Promise<void> {
                 const li = document.createElement('li') as HTMLLIElement;
                 li.innerHTML = `『${save_list[data_idx].title}』`;
 
-                li.id = save_UL_list_len.toString();
+                li.id = UL_list_idx.toString();
                 li.addEventListener("click", for_save?_OK_save_Fnc:_OK_load_Fnc, false);
 
                 save_UL_list.appendChild(li);
-                UL_to_Data[save_UL_list_len] = Number(data_idx);
-                save_UL_list_len++;
+                UL_to_Data[UL_list_idx++] = Number(data_idx);
             }
             UL_list_crsr = C_CtlCursor.getObj(save_UL_list);
             UL_list_leng = save_UL_list.children.length;

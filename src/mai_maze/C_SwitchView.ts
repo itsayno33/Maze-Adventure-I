@@ -4,8 +4,7 @@ export const T_ViewMode:{[mode: string]: string} = {
     Move:     'move',
     Batt:     'batt',
     Camp:     'camp',
-    Load:     'load',
-    Save:     'save',
+    LdSv:     'ldsv',
 } as const;
 export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
 
@@ -18,8 +17,8 @@ export class C_SwitchView {
     public Move(): string {return T_ViewMode.Move;}
     public Batt(): string {return T_ViewMode.Batt;}
     public Camp(): string {return T_ViewMode.Camp;}
-    public Load(): string {return T_ViewMode.Load;}
-    public Save(): string {return T_ViewMode.Save;}
+    public MvPt(): string {return T_ViewMode.Camp;}
+    public LdSv(): string {return T_ViewMode.LdSv;}
 
     protected constructor() {
         C_SwitchView.all_class = Object.values(T_ViewMode);
@@ -30,10 +29,8 @@ export class C_SwitchView {
             C_SwitchView.article.view3d = document.getElementById('pane_maze_vw3D') as HTMLElement;
             C_SwitchView.article.view2d = document.getElementById('pane_maze_vw2D') as HTMLElement;
             C_SwitchView.article.camp_l = document.getElementById('pane_camp_list') as HTMLElement;
-            C_SwitchView.article.load_l = document.getElementById('pane_load_list') as HTMLElement;
-            C_SwitchView.article.load_d = document.getElementById('pane_load_data') as HTMLElement;
-            C_SwitchView.article.save_l = document.getElementById('pane_save_list') as HTMLElement;
-            C_SwitchView.article.save_d = document.getElementById('pane_save_data') as HTMLElement;
+            C_SwitchView.article.ldsv_l = document.getElementById('pane_ldsv_list') as HTMLElement;
+            C_SwitchView.article.ldsv_d = document.getElementById('pane_ldsv_data') as HTMLElement;
             C_SwitchView.article.camp_m = document.getElementById('pane_camp_mesg') as HTMLElement;
             C_SwitchView.article.game_m = document.getElementById('pane_maze_mesg') as HTMLElement;
             C_SwitchView.article.contls = document.getElementById('pane_ctls_boad') as HTMLElement;
