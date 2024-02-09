@@ -49,7 +49,7 @@ export const g_save = new C_SaveData();
 
 export function init_after_loaded_DOM_in_common(): void {
     const  con = document.getElementById('pane_sytm_logs');
-    g_mes  = C_DisplayMessage.get(con, 'client_message');
+    g_mes  = C_DisplayMessage.getObj(con, 'client_message');
 }
 
 export function _alert(txt: string, page_size = 250): void {

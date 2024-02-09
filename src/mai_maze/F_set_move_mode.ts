@@ -27,7 +27,7 @@ const ctls_move_nor = {
 }
 
 export function init_move_mode(): void {
-    g_ctls.add(ctls_move_nor);
+    g_ctls.set(ctls_move_nor);
 }
 
 export function act_move_mode(): void {

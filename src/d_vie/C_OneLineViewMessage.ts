@@ -16,7 +16,7 @@ export class C_OneLineViewMessage {
         }
         C_OneLineViewMessage.me[id].clear_message();
     }
-    public static get(id: string, parent?: HTMLElement): C_OneLineViewMessage  {
+    public static getObj(id: string, parent?: HTMLElement): C_OneLineViewMessage  {
         C_OneLineViewMessage.me ??= {}
         this.me[id] ??= new C_OneLineViewMessage(id, parent);
         return this.me[id];

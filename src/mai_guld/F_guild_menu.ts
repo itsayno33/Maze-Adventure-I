@@ -58,7 +58,7 @@ function init_view() {
         menu_fnc[menu_item.id] = ii;
         menu_item.addEventListener("click",_OK_Fnc, false);
     }
-    menu_crsr = C_CtlCursor.get(menu_list);
+    menu_crsr = C_CtlCursor.getObj(menu_list);
 
     idx_guld = 0;
     menu_crsr.set_pos(idx_guld); 
@@ -80,8 +80,8 @@ function init_ctls(): boolean {
 }
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('guld_nor',  guld_ctls_nor))  return false;
-        if (!g_ctls.act('guld_nor')) return false;
+        if (!g_ctls.set(guld_ctls_nor))  return false;
+        if (!g_ctls.act(guld_ctls_nor)) return false;
         return true;
     } catch (err) {
         return false;

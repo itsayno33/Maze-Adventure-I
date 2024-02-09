@@ -2,8 +2,12 @@ import { g_mes }          from "../d_cmn/global";
 import { _min, _round }   from "../d_utl/F_Math";
 import { g_maze, g_team, g_debug_mode }  from "./global_for_maze";
 
+export function init_maze2D(): void {
+    calc_view2D_width();
+}
+
 // 【初期設定】View2Dの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
-export function calc_view2D_width(): void {
+function calc_view2D_width(): void {
     const pre = document.getElementById('maze_view2D_pre') as HTMLPreElement;
     if (pre === null) return;
 

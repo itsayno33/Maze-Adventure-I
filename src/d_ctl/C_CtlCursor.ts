@@ -21,7 +21,7 @@ export class C_CtlCursor {
         if (list !== undefined) this.set(list);
         C_CtlCursor.me[this._id] = this;
     }
-    public static get(list?: HTMLElement): C_CtlCursor  {
+    public static getObj(list?: HTMLElement): C_CtlCursor  {
         this.me ??= {}
 
         const id = list !== undefined ? list.id : '__dmy__';

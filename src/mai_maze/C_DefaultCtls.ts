@@ -76,7 +76,7 @@ export class C_DefaultCtls {
         this.s_cp1.style.display = 'none';
         this.r_cp1.style.display = 'none';
     }
-    public static get(): C_DefaultCtls {
+    public static getObj(): C_DefaultCtls {
         this.me ??=  new C_DefaultCtls();
         return this.me;
     }
@@ -85,7 +85,7 @@ export class C_DefaultCtls {
         this.flgs = {};
         return true;
     }
-    public add(name: string|T_Ctls, ctls?:T_Ctls): boolean {
+    public set(name: string|T_Ctls, ctls?:T_Ctls): boolean {
         try {
             if (typeof name === 'string' && ctls !== undefined) {
                 this.ctls[name] = ctls;

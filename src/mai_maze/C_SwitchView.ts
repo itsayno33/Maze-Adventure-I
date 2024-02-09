@@ -43,7 +43,7 @@ export class C_SwitchView {
         }
         this.view('move');
     }
-    public static get(): C_SwitchView {
+    public static getObj(): C_SwitchView {
         this.me ??=  new C_SwitchView();
         return this.me;
     }

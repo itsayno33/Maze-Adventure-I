@@ -1,10 +1,10 @@
 import { T_CtlsMode } from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
-import { calc_view2D_width, display_maze2D } from "./F_display_maze2D";
+import { init_maze2D, display_maze2D } from "./F_display_maze2D";
 export var g_debug_mode: boolean = false;
 
-import {T_DrowSet, init_maze3D } from "./F_display_maze3D";
+import { init_maze3D, T_DrowSet }      from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
 import { C_SwitchView }          from "./C_SwitchView";
@@ -94,27 +94,25 @@ function init_before_mvpt_games(): void {
 }
 
 export function do_load_bottom_half(msg: string): void{
-    _init_before_game();
+    init_maze2D();
+    g_ds = init_maze3D(); 
 
     g_mvm.notice_message(msg); 
     g_mes.notice_message(msg); 
     act_move_mode();  
     do_move_bottom_half('blink_off'); 
 }
-function _init_before_game(): void {
-    calc_view2D_width();
-    init_debug_mode();
-    act_move_mode();
-}
 
 export function init_after_loaded_DOM(): void { 
     init_after_loaded_DOM_in_common(); 
 
-    g_mvm  = C_OneLineViewMessage.get('maze_mesg'); 
-    g_cvm  = C_OneLineViewMessage.get('camp_mesg'); 
-    g_ctls = C_DefaultCtls.get(); 
-    g_vsw  = C_SwitchView.get(); 
-    g_ds   = init_maze3D(); 
+    g_mvm  = C_OneLineViewMessage.getObj('maze_mesg'); 
+    g_cvm  = C_OneLineViewMessage.getObj('camp_mesg'); 
+    g_ctls = C_DefaultCtls.getObj(); 
+    g_vsw  = C_SwitchView.getObj(); 
+
+
+    init_debug_mode();
     stop_double_click(); 
 
     init_all_mode();

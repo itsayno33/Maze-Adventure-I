@@ -13,7 +13,7 @@ export class C_GldViewMessage {
         }
         C_GldViewMessage.me.clear_message();
     }
-    public static get(): C_GldViewMessage  {
+    public static getObj(): C_GldViewMessage  {
         if (typeof this.me !== "object" || !(this.me instanceof C_GldViewMessage)) 
             this.me = new C_GldViewMessage();
         return this.me;

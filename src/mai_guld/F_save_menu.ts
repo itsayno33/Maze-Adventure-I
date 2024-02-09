@@ -77,11 +77,11 @@ async function _display_SL_menu(): Promise<void> {
         dom_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
-        g_ctls.act('svld_rtn');
+        g_ctls.act(ctls_svld_rtn);
     } else {
         info_list.style.display = 'block';
         dom_info_fields.style.display = 'block';
-        g_ctls.act('svld_nor');
+        g_ctls.act(ctls_svld_nor);
     }
     display_default_message();
 }
@@ -182,7 +182,7 @@ function update_info_list(): void {
             dom_to_uno[uno] = uno;
         }
     }
-    info_crsr = C_CtlCursor.get(info_list);
+    info_crsr = C_CtlCursor.getObj(info_list);
     info_crsr.set_pos(dom_idx);
 
     return;
@@ -257,15 +257,15 @@ function init_ctls(): void {
 
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('svld_rtn', _svld_rtn_ctls))  return false;
-        if (!g_ctls.add('svld_nor', _svld_nor_ctls))  return false;
-        if (!g_ctls.add('svld_chk', _svld_chk_ctls))  return false;
+        if (!g_ctls.set(ctls_svld_rtn))  return false;
+        if (!g_ctls.set(ctls_svld_nor))  return false;
+        if (!g_ctls.set(ctls_svld_chk))  return false;
     } catch (err) {
         return false;
     }
     return true;
 }
-const _svld_nor_ctls = {
+const ctls_svld_nor = {
     name: 'svld_nor', 
     do_U:  do_U,
     do_D:  do_D,
@@ -276,7 +276,7 @@ const _svld_nor_ctls = {
     isRT:  isRT,
     cpRT:  isRT,
 }
-const _svld_chk_ctls = {
+const ctls_svld_chk = {
     name: 'svld_chk', 
     isOK:  isOK,
     isNG:  isNG,
@@ -285,7 +285,7 @@ const _svld_chk_ctls = {
     cpNG:  isNG,
     cpRT:  isRT,
 }
-const _svld_rtn_ctls = {
+const ctls_svld_rtn = {
     name: 'svld_rtn', 
     isNG:  go_back_guld_menu_for_first,
     isRT:  go_back_guld_menu_for_first,
@@ -340,7 +340,7 @@ async function _isOK_for_save(): Promise<void> {
             if (dom_to_uno[dom_idx] in data_list) {
                 mode = 'rewrite_OK';
                 display_default_message();
-                g_ctls.act('svld_chk');
+                g_ctls.act(ctls_svld_chk);
                 break;
             }
             try {
@@ -353,7 +353,7 @@ async function _isOK_for_save(): Promise<void> {
                             g_mvm.warning_message('新規保存に失敗しました');
                         }; 
                         mode = 'view'; 
-                        g_ctls.act('svld_nor');
+                        g_ctls.act(ctls_svld_nor);
                         go_back_guld_menu();
                     } catch (err) {
                         _alert('write_OK6: ' + err);
@@ -467,7 +467,7 @@ function _isNG_for_load(): void {
         case 'read_OK':
             mode = 'view';
             display_default_message();
-            g_ctls.act('svld_nor');
+            g_ctls.act(ctls_svld_nor);
             break;
     }
 }
@@ -480,7 +480,7 @@ function _isNG_for_save(): void {
         case 'rewrite_OK':
             mode = 'view';
             display_default_message();
-            g_ctls.act('svld_nor');
+            g_ctls.act(ctls_svld_nor);
             break;
     }
 }
@@ -523,5 +523,5 @@ function go_back_guld_menu(): void {
 }
 function _do_check(): void {
     g_mvm.clear_message();
-    g_ctls.act("svld_nor");
+    g_ctls.act(ctls_svld_nor);
 }

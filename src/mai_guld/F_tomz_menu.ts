@@ -54,7 +54,7 @@ export function display_tomz_menu(): void {
         if (!exist_hero()) { 
             subview_hide_all(); 
             g_mvm.notice_message('出発の前にチームを編成してください'); 
-            g_ctls.act('tomz_rtn'); 
+            g_ctls.act(ctls_tomz_rtn); 
             display_guld_menu(); 
             return;
         } 
@@ -316,11 +316,11 @@ function init_ctls(): void {
 
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('tomz_nor_maze',  ctls_tomz_nor_maze))  return false;
-        if (!g_ctls.add('tomz_nor_mvpt',  ctls_tomz_nor_mvpt))  return false;
-        if (!g_ctls.add('tomz_jmp_maze',  ctls_tomz_jmp_maze))  return false;
-        if (!g_ctls.add('tomz_jmp_mvpt',  ctls_tomz_jmp_mvpt))  return false;
-        if (!g_ctls.add('tomz_rtn',       ctls_tomz_rtn))  return false;
+        if (!g_ctls.set(ctls_tomz_nor_maze))  return false;
+        if (!g_ctls.set(ctls_tomz_nor_mvpt))  return false;
+        if (!g_ctls.set(ctls_tomz_jmp_maze))  return false;
+        if (!g_ctls.set(ctls_tomz_jmp_mvpt))  return false;
+        if (!g_ctls.set(ctls_tomz_rtn))       return false;
     } catch (err) {
         return false;
     }
@@ -373,9 +373,9 @@ const ctls_tomz_jmp_mvpt = {
 }
 
 function init_cursor(): boolean { 
-    cursor_hide = {mode: T_List_mode.Hide, crsr: C_CtlCursor.get(undefined)}; 
-    cursor_maze = {mode: T_List_mode.Maze, crsr: C_CtlCursor.get(dom_maze_list)}; 
-    cursor_mvpt = {mode: T_List_mode.MvPt, crsr: C_CtlCursor.get(dom_mvpt_list)}; 
+    cursor_hide = {mode: T_List_mode.Hide, crsr: C_CtlCursor.getObj(undefined)}; 
+    cursor_maze = {mode: T_List_mode.Maze, crsr: C_CtlCursor.getObj(dom_maze_list)}; 
+    cursor_mvpt = {mode: T_List_mode.MvPt, crsr: C_CtlCursor.getObj(dom_mvpt_list)}; 
     old_idx     = 999;
 
     if (exist_maze_list()) { 
@@ -446,7 +446,7 @@ function switch_cursor_to_maze(): void {
 
     cursor  = cursor_maze;
     update_view();
-    g_ctls.act('tomz_nor_maze');
+    g_ctls.act(ctls_tomz_nor_maze);
     dom_maze_fields.style.display = 'block';
 }
 
@@ -457,7 +457,7 @@ function switch_cursor_to_mvpt(): void {
 
     cursor  = cursor_mvpt;
     update_view();
-    g_ctls.act('tomz_nor_mvpt');
+    g_ctls.act(ctls_tomz_nor_mvpt);
     dom_mvpt_fields.style.display = 'block';
 }
 
@@ -485,13 +485,13 @@ function do_R(): void {
 
 function isCK_maze(): void {
     mode = 'tomz_jmp_maze';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_jmp_maze);
     display_default_message();
 }
 
 function isCK_mvpt(): void {
     mode = 'tomz_jmp_mvpt';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_jmp_maze);
     display_default_message();
 }
 
@@ -526,7 +526,7 @@ function isGO_mvpt(): void {
 
 function isNG_maze(): void {
     mode = 'tomz_nor_maze';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_nor_maze);
 
     list_mode = T_List_mode.Maze;
     switch_cursor(list_mode);
@@ -536,7 +536,7 @@ function isNG_maze(): void {
 
 function isNG_mvpt(): void {
     mode = 'tomz_nor_mvpt';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_nor_mvpt);
 
     list_mode = T_List_mode.MvPt;
     switch_cursor(list_mode);
@@ -548,7 +548,7 @@ function isSL_maze(): void {
     if (!exist_mvpt_list()) return;
 
     mode = 'tomz_nor_mvpt';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_nor_mvpt);
 
     list_mode = T_List_mode.MvPt;
     switch_cursor(list_mode);
@@ -560,7 +560,7 @@ function isSL_mvpt(): void {
     if (!exist_maze_list()) return;
 
     mode = 'tomz_nor_maze';
-    g_ctls.act(mode);
+    g_ctls.act(ctls_tomz_nor_maze);
 
     list_mode = T_List_mode.Maze;
     switch_cursor(list_mode);

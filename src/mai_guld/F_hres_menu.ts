@@ -83,7 +83,7 @@ export function display_hres_menu(): void {
     init_all().then((yn:boolean)=>{ 
         if (yn) {
             update_all().then(()=>{ 
-                g_ctls.act("hres_nor");
+                g_ctls.act(ctls_hres_nor);
                 display_default_message(); 
                 dom_view_switch.style.display = 'block'; 
             }); 
@@ -165,7 +165,7 @@ function _go_ipnm(): void {
     subview_act(T_SubView.IpNm);
     mode = 'ipnm';
     display_default_message();
-    g_ctls.act("hres_ipnm");
+    g_ctls.act(ctls_hres_ipnm);
 
     inpt_name_list['hres_name_li'].input.focus({preventScroll: false});
 }
@@ -178,7 +178,7 @@ function _go_leav(): void {
     subview_act(T_SubView.IpCk);
     mode = 'leav';
     display_default_message();
-    g_ctls.act("hres_leav");
+    g_ctls.act(ctls_hres_leav);
 }
 function _go_join(): void {
     if (!exist_guld()) return;
@@ -189,7 +189,7 @@ function _go_join(): void {
     subview_act(T_SubView.IpCk);
     mode = 'join';
     display_default_message();
-    g_ctls.act("hres_join");
+    g_ctls.act(ctls_hres_join);
 }
 function _go_fire(): void {
     if (!exist_guld()) return;
@@ -197,7 +197,7 @@ function _go_fire(): void {
     subview_act(T_SubView.IpCk);
     mode = 'fire';
     display_default_message();
-    g_ctls.act("hres_fire");
+    g_ctls.act(ctls_hres_fire);
 }
 function _go_adpt(): void {
     if (!exist_appd()) return;
@@ -209,7 +209,7 @@ function _go_adpt(): void {
     subview_act(T_SubView.IpCk);
     mode = 'adpt';
     display_default_message();
-    g_ctls.act("hres_adpt");
+    g_ctls.act(ctls_hres_adpt);
 }
 function _go_away(): void {
     if (!exist_appd()) return;
@@ -217,7 +217,7 @@ function _go_away(): void {
     subview_act(T_SubView.IpCk);
     mode = 'away';
     display_default_message();
-    g_ctls.act("hres_away");
+    g_ctls.act(ctls_hres_away);
 }
 
 
@@ -669,28 +669,28 @@ function init_ctls(): boolean {
 }
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('hres_nor',  hres_ctls_nor))  return false;
-        if (!g_ctls.add('hres_rtn',  hres_ctls_rtn))  return false;
-        if (!g_ctls.add('hres_ipnm', hres_ctls_ipnm)) return false;
-        if (!g_ctls.add('hres_cknm', hres_ctls_cknm)) return false;
-        if (!g_ctls.add('hres_leav', hres_ctls_leav)) return false;
-        if (!g_ctls.add('hres_join', hres_ctls_join)) return false;
-        if (!g_ctls.add('hres_fire', hres_ctls_fire)) return false;
-        if (!g_ctls.add('hres_adpt', hres_ctls_adpt)) return false;
-        if (!g_ctls.add('hres_away', hres_ctls_away)) return false;
+        if (!g_ctls.set(ctls_hres_nor))  return false;
+        if (!g_ctls.set(ctls_hres_rtn))  return false;
+        if (!g_ctls.set(ctls_hres_ipnm)) return false;
+        if (!g_ctls.set(ctls_hres_cknm)) return false;
+        if (!g_ctls.set(ctls_hres_leav)) return false;
+        if (!g_ctls.set(ctls_hres_join)) return false;
+        if (!g_ctls.set(ctls_hres_fire)) return false;
+        if (!g_ctls.set(ctls_hres_adpt)) return false;
+        if (!g_ctls.set(ctls_hres_away)) return false;
     } catch (err) {
         return false;
     }
     return true;
 }
-const hres_ctls_rtn = {
+const ctls_hres_rtn = {
     name: 'hres_rtn', 
     isOK:  isRT,
     isNG:  isRT,
     isRT:  isRT,
     cpRT:  isRT,
 }
-const hres_ctls_nor = {
+const ctls_hres_nor = {
     name: 'hres_nor', 
     do_U:  do_U,
     do_D:  do_D,
@@ -703,49 +703,49 @@ const hres_ctls_nor = {
     cpSL:  isSL,
     cpRT:  isRT,
 }
-const hres_ctls_ipnm = {
+const ctls_hres_ipnm = {
     name: 'hres_ipnm', 
     isOK:  isOK_ipnm,
     isNG:  isNG_chek,
     cpOK:  isOK_ipnm,
     cpNG:  isNG_chek,
 }
-const hres_ctls_cknm = {
+const ctls_hres_cknm = {
     name: 'hres_cknm', 
     isOK:  isOK_cknm,
     isNG:  isNG_cknm,
     cpOK:  isOK_cknm,
     cpNG:  isNG_cknm,
 }
-const hres_ctls_leav = {
+const ctls_hres_leav = {
     name: 'hres_leav', 
     isOK:  isOK_leav,
     isNG:  isNG_chek,
     cpOK:  isOK_leav,
     cpNG:  isNG_chek,
 }
-const hres_ctls_join = {
+const ctls_hres_join = {
     name: 'hres_join', 
     isOK:  isOK_join,
     isNG:  isNG_chek,
     cpOK:  isOK_join,
     cpNG:  isNG_chek,
 }
-const hres_ctls_fire = {
+const ctls_hres_fire = {
     name: 'hres_fire', 
     isOK:  isOK_fire,
     isNG:  isNG_chek,
     cpOK:  isOK_fire,
     cpNG:  isNG_chek,
 }
-const hres_ctls_adpt = {
+const ctls_hres_adpt = {
     name: 'hres_adpt', 
     isOK:  isOK_adpt,
     isNG:  isNG_chek,
     cpOK:  isOK_adpt,
     cpNG:  isNG_chek,
 }
-const hres_ctls_away = {
+const ctls_hres_away = {
     name: 'hres_away', 
     isOK:  isOK_away,
     isNG:  isNG_chek,
@@ -756,13 +756,13 @@ const hres_ctls_away = {
 function update_ctls(): void {}
 
 function init_cursor(): boolean {
-    cursor_Hide = {kind: T_SubView.Hide, crsr: C_CtlCursor.get(undefined)}; 
-    cursor_Team = {kind: T_SubView.Team, crsr: C_CtlCursor.get(dom_team_list)}; 
-    cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.get(dom_guld_list)}; 
-    cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.get(dom_appd_list)}; 
-    cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.get(dom_menu_list)}; 
-    cursor_IpNm = {kind: T_SubView.IpNm, crsr: C_CtlCursor.get(dom_inpt_list)}; 
-    cursor_IpCk = {kind: T_SubView.IpCk, crsr: C_CtlCursor.get(dom_inpt_list)}; 
+    cursor_Hide = {kind: T_SubView.Hide, crsr: C_CtlCursor.getObj(undefined)}; 
+    cursor_Team = {kind: T_SubView.Team, crsr: C_CtlCursor.getObj(dom_team_list)}; 
+    cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.getObj(dom_guld_list)}; 
+    cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.getObj(dom_appd_list)}; 
+    cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.getObj(dom_menu_list)}; 
+    cursor_IpNm = {kind: T_SubView.IpNm, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
+    cursor_IpCk = {kind: T_SubView.IpCk, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
 
     if (exist_team()) { 
         TGA_mode = T_TGA_mode.Team;
@@ -933,7 +933,7 @@ function do_menu(): void {
 function isOK_ipnm(): void {
     mode = 'cknm';
 
-    g_ctls.act("hres_cknm");
+    g_ctls.act(ctls_hres_cknm);
     display_default_message();
 }
 
@@ -1026,7 +1026,7 @@ function go_back_view_mode(msg: string): void {
             subview_act(T_SubView.Appd);
             break;
     }
-    g_ctls.act("hres_nor");
+    g_ctls.act(ctls_hres_nor);
     update_view();
     g_mvm.normal_message(msg);
 }
@@ -1070,7 +1070,7 @@ function isNG(): void {
 function isNG_chek(): void {
     mode = 'menu';
     subview_act(T_SubView.Menu);
-    g_ctls.act("hres_nor");
+    g_ctls.act(ctls_hres_nor);
     display_default_message();
 }
 function isNG_cknm(): void {

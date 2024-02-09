@@ -49,10 +49,10 @@ const ctls_updn_ud_hpdn = {
 }
 
 export function init_UD_mode(): void {
-    g_ctls.add(ctls_updn_up);
-    g_ctls.add(ctls_updn_dn);
-    g_ctls.add(ctls_updn_ud_hpup);
-    g_ctls.add(ctls_updn_ud_hpdn);
+    g_ctls.set(ctls_updn_up);
+    g_ctls.set(ctls_updn_dn);
+    g_ctls.set(ctls_updn_ud_hpup);
+    g_ctls.set(ctls_updn_ud_hpdn);
 }
 
 export function act_Up_mode(): void {

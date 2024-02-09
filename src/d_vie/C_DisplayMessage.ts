@@ -14,7 +14,7 @@ export class C_DisplayMessage {
         con.insertBefore(this.div, con.firstChild);
         C_DisplayMessage.me.clear_message();
     }
-    public static get(con: HTMLElement|null = null, id: string = 'client_message')
+    public static getObj(con: HTMLElement|null = null, id: string = 'client_message')
                 : C_DisplayMessage  {
         if (typeof this.me !== "object" || !(this.me instanceof C_DisplayMessage)) { 
             if (con === null) {

@@ -17,7 +17,7 @@ const ctls_mvpt_nor = {
 }
 
 export function init_mvpt_mode(): void {
-    g_ctls.add(ctls_mvpt_nor);
+    g_ctls.set(ctls_mvpt_nor);
 }
 
 export function act_mvpt_mode(): void {

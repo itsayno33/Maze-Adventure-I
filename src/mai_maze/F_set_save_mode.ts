@@ -136,9 +136,9 @@ function init_ctls(): void {
     is_kakunin = false;
     UL_bak = 999;
 
-    g_ctls.add(ctls_load_rtn);
-    g_ctls.add(ctls_load_nor);
-    g_ctls.add(ctls_save_nor);
+    g_ctls.set(ctls_load_rtn);
+    g_ctls.set(ctls_load_nor);
+    g_ctls.set(ctls_save_nor);
 }
 
 function isOK_for_load(): void {
@@ -315,7 +315,7 @@ export async function display_save_list(): Promise<void> {
                 UL_to_Data[save_UL_list_len] = Number(data_idx);
                 save_UL_list_len++;
             }
-            UL_list_crsr = C_CtlCursor.get(save_UL_list);
+            UL_list_crsr = C_CtlCursor.getObj(save_UL_list);
             UL_list_leng = save_UL_list.children.length;
     
             form_id     = document.getElementById(data_id)     as HTMLInputElement;

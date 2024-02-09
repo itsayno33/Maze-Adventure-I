@@ -19,7 +19,7 @@ const ctls_camp_nor = {
 }
 
 export function init_camp_mode(): void {
-    g_ctls.add(ctls_camp_nor);
+    g_ctls.set(ctls_camp_nor);
     init_view();
 }
 export function act_camp_mode(): void {
@@ -38,7 +38,7 @@ function init_view(): boolean {
         }
 
         dom_camp_list  = document.getElementById('camp_list') as HTMLUListElement;
-        camp_list_crsr = C_CtlCursor.get(dom_camp_list);
+        camp_list_crsr = C_CtlCursor.getObj(dom_camp_list);
     } catch(err) {
         alert('Error: ' + err);
         return false;
