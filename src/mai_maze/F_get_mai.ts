@@ -1,10 +1,10 @@
-import { C_UrlOpt }            from "../common/C_UrlOpt";
-import { alert_maze_info }     from "../common/C_Maze"; // 通常時はコメントアウトされている関数
-import { alert_team_info }     from "../common/C_Team"; // 通常時はコメントアウトされている関数
-import { alert_hres_info }     from "../common/C_Hero"; // 通常時はコメントアウトされている関数
-import { init_controlles }     from "./F_set_controlles";
-import { do_move_bottom_half } from "./F_set_move_controlles";
-import { decode_all }          from "./F_set_save_controlles";
+/*
+import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
+import { alert_maze_info }     from "../d_mdl/C_Maze"; // 通常時はコメントアウトされている関数
+import { alert_team_info }     from "../d_mdl/C_Team"; // 通常時はコメントアウトされている関数
+import { alert_hres_info }     from "../d_mdl/C_Hero"; // 通常時はコメントアウトされている関数
+import { do_move_bottom_half, set_move_controlles } from "./F_set_move_mode";
+import { decode_all }          from "./F_set_save_mode";
 import { init_debug_mode }     from "./global_for_maze";
 
 export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
@@ -18,7 +18,7 @@ export function get_mai_maze_0(url: string, opt: C_UrlOpt): void {
 
             decode_all(jsonObj);
             init_debug_mode();
-            init_controlles();
+            set_move_controlles();
             do_move_bottom_half('blink_off');
     });
 }
@@ -51,3 +51,4 @@ export function getJSON_by_POST(url: string, opt: string, callback:(req:XMLHttpR
         //リクエスト送信
         xhr.send(opt);
     }
+*/

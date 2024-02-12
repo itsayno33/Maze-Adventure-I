@@ -1,4 +1,4 @@
-import { C_Hero } from '../common/C_Hero';
+import { C_Hero } from '../d_mdl/C_Hero';
 
 type T_Detail = {[key: string]: HTMLLIElement}
 

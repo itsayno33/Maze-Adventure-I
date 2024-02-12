@@ -1,4 +1,8 @@
-export type T_Ctls = {
+import { do_instant_load, do_instant_save, do_move_bottom_half } from "./F_set_move_mode";
+import { g_debug_mode, g_maze, g_team } from "./global_for_maze";
+
+
+export type T_Ctls= {
     name:  string,
     do_U?: T_marg, 
     do_D?: T_marg, 
@@ -8,15 +12,16 @@ export type T_Ctls = {
     isNG?: T_marg, 
     isSL?: T_marg, 
     isRT?: T_marg, 
+    camp?: T_marg, 
     cpOK?: T_marg, 
     cpNG?: T_marg, 
     cpSL?: T_marg, 
     cpRT?: T_marg, 
-    keyEvent?: T_karg, 
+    keyEvent?: T_karg,
 }
 type T_mfnc = (e?: MouseEvent)=>(void|boolean);
 type T_marg = T_mfnc | undefined;
-
+ 
 type T_kfnc = (e: KeyboardEvent)=>(void|boolean);
 type T_karg = T_kfnc | undefined;
 
@@ -33,6 +38,7 @@ export class C_DefaultCtls {
     protected n_btn: HTMLButtonElement;
     protected s_btn: HTMLButtonElement;
     protected r_btn: HTMLButtonElement;
+    protected c_btn: HTMLButtonElement;
     protected y_cp1: HTMLButtonElement;
     protected n_cp1: HTMLButtonElement;
     protected s_cp1: HTMLButtonElement;
@@ -50,11 +56,12 @@ export class C_DefaultCtls {
         this.n_btn = document.getElementById('n_btn') as HTMLButtonElement;
         this.s_btn = document.getElementById('s_btn') as HTMLButtonElement;
         this.r_btn = document.getElementById('r_btn') as HTMLButtonElement;
+        this.c_btn = document.getElementById('c_btn') as HTMLButtonElement;
         this.y_cp1 = document.getElementById('y_cp1') as HTMLButtonElement;
         this.n_cp1 = document.getElementById('n_cp1') as HTMLButtonElement;
         this.s_cp1 = document.getElementById('s_cp1') as HTMLButtonElement;
         this.r_cp1 = document.getElementById('r_cp1') as HTMLButtonElement;
-        
+
         this.u_arr.style.display = 'none';
         this.d_arr.style.display = 'none';
         this.l_arr.style.display = 'none';
@@ -63,6 +70,7 @@ export class C_DefaultCtls {
         this.n_btn.style.display = 'none';
         this.s_btn.style.display = 'none';
         this.r_btn.style.display = 'none';
+        this.c_btn.style.display = 'none';
         this.y_cp1.style.display = 'none';
         this.n_cp1.style.display = 'none';
         this.s_cp1.style.display = 'none';
@@ -128,15 +136,6 @@ export class C_DefaultCtls {
         }
     }
 
-/*
-    public is_act_fnc(name: string, func: string): boolean {
-        if (!(func in Object.keys(this.ctls))) return false;
-        if (!this.is_act(name)) return false; 
-        return  _c(this.ctls[name][func]);
-    }
-*/
-
-
     public keys_of_add(): string[] {
         const key_list = [] as string[];
         for (const name in this.ctls) key_list.push(name);
@@ -170,6 +169,7 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.removeEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.removeEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.removeEventListener("click", c.isRT as T_mfnc, false);
+            if (_c(c?.camp)) this.c_btn.removeEventListener("click", c.camp as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.removeEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.removeEventListener("click", c.cpNG as T_mfnc, false);
             if (_c(c?.cpSL)) this.s_cp1.removeEventListener("click", c.cpSL as T_mfnc, false);
@@ -189,6 +189,7 @@ export class C_DefaultCtls {
             this.n_btn.style.display = 'none';
             this.s_btn.style.display = 'none';
             this.r_btn.style.display = 'none';
+            this.c_btn.style.display = 'none';
             this.y_cp1.style.display = 'none';
             this.n_cp1.style.display = 'none';
             this.s_cp1.style.display = 'none';
@@ -217,6 +218,7 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.addEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.addEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.addEventListener("click", c.isRT as T_mfnc, false);
+            if (_c(c?.camp)) this.c_btn.addEventListener("click", c.camp as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.addEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.addEventListener("click", c.cpNG as T_mfnc, false);
             if (_c(c?.cpSL)) this.s_cp1.addEventListener("click", c.cpSL as T_mfnc, false);
@@ -236,6 +238,7 @@ export class C_DefaultCtls {
             this.n_btn.style.display = _c(c?.isNG) ? 'block' : 'none';
             this.s_btn.style.display = _c(c?.isSL) ? 'block' : 'none';
             this.r_btn.style.display = _c(c?.isRT) ? 'block' : 'none';
+            this.c_btn.style.display = _c(c?.camp) ? 'block' : 'none';
             this.y_cp1.style.display = _c(c?.cpOK) ? 'block' : 'none';
             this.n_cp1.style.display = _c(c?.cpNG) ? 'block' : 'none';
             this.s_cp1.style.display = _c(c?.cpSL) ? 'block' : 'none';
@@ -273,9 +276,21 @@ function key_press_function(e: KeyboardEvent):void  {
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
-        case 'KeyL':
         case  'Numpad3': 
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                break;
+        case 'KeyL':
+            if (g_debug_mode) {
+                do_instant_load();
+            } else {
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+            }
+            break;
+        case 'KeyC':
+                (document.getElementById('c_btn')   as HTMLButtonElement)?.click();
+                break;
+        case 'KeyR':
+                (document.getElementById('r_btn')   as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyZ':
@@ -290,11 +305,36 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'NumpadAdd':
                 (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyS':
         case 'Numpad7':
         case 'Space':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
+        case 'KeyS':
+            if (g_debug_mode) {
+                do_instant_save();
+                do_move_bottom_half('blink_off');
+            } else {
+                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+            }
+            break;
+        case 'KeyU':
+            if (g_debug_mode) {
+                const z = g_team.get_z();
+                if (z > 0) g_team.set_z(z - 1);
+                do_move_bottom_half('blink_off');
+            } else {
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+            }
+            break;
+        case 'KeyD':
+            if (g_debug_mode) {
+                const z = g_team.get_z();
+                if (z < g_maze.get_z_max() - 1) g_team.set_z(z + 1);
+                do_move_bottom_half('blink_off');
+            } else {
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
+            }
+            break;
         case 'KeyQ':
         case 'Numpad9':
                 (document.getElementById('r_btn') as HTMLButtonElement)?.click();

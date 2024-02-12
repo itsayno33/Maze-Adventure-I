@@ -1,42 +1,64 @@
+import { _alert }       from "../d_cmn/global";
+import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
+export const T_ViewMode:{[mode: string]: string} = {
+    Move:     'move',
+    Batt:     'batt',
+    Camp:     'camp',
+    LdSv:     'ldsv',
+} as const;
+export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
+
 export class C_SwitchView {
     protected static me:   C_SwitchView;
-    protected _maze: HTMLDivElement;
-    protected _camp: HTMLDivElement;
-    protected _load: HTMLDivElement;
-    protected _save: HTMLDivElement;
+    protected static body: HTMLElement;
+    protected static article:   {[name: string]: HTMLElement|null};
+    protected static all_class: string[];
+
+    public Move(): string {return T_ViewMode.Move;}
+    public Batt(): string {return T_ViewMode.Batt;}
+    public Camp(): string {return T_ViewMode.Camp;}
+    public MvPt(): string {return T_ViewMode.Camp;}
+    public LdSv(): string {return T_ViewMode.LdSv;}
+
     protected constructor() {
-        this._maze = document.getElementById('Maze_view_switch_maze') as HTMLDivElement;
-        this._camp = document.getElementById('Maze_view_switch_camp') as HTMLDivElement;
-        this._load = document.getElementById('Maze_view_switch_load') as HTMLDivElement;
-        this._save = document.getElementById('Maze_view_switch_save') as HTMLDivElement;
-        this.hide_all();
+        C_SwitchView.all_class = Object.values(T_ViewMode);
+        C_SwitchView.article = {};
+        try {
+            C_SwitchView.body = document.body;
+
+            C_SwitchView.article.view3d = document.getElementById('pane_maze_vw3D') as HTMLElement;
+            C_SwitchView.article.view2d = document.getElementById('pane_maze_vw2D') as HTMLElement;
+            C_SwitchView.article.camp_l = document.getElementById('pane_camp_list') as HTMLElement;
+            C_SwitchView.article.ldsv_l = document.getElementById('pane_ldsv_list') as HTMLElement;
+            C_SwitchView.article.ldsv_d = document.getElementById('pane_ldsv_data') as HTMLElement;
+            C_SwitchView.article.camp_m = document.getElementById('pane_camp_mesg') as HTMLElement;
+            C_SwitchView.article.game_m = document.getElementById('pane_maze_mesg') as HTMLElement;
+            C_SwitchView.article.contls = document.getElementById('pane_ctls_boad') as HTMLElement;
+            C_SwitchView.article.messag = document.getElementById('pane_sytm_mesg') as HTMLElement;
+        } catch (err) {
+            _alert('Layout Get Error: ' + err);
+        }
+        this.view('move');
     }
-    public static get(): C_SwitchView {
-        if (typeof this.me !== "object" || !(this.me instanceof C_SwitchView)) {
-            this.me = new C_SwitchView();
-        } 
+    public static getObj(): C_SwitchView {
+        this.me ??=  new C_SwitchView();
         return this.me;
     }
-    public hide_all(): void {
-        this._maze.style.setProperty('display', 'none');
-        this._camp.style.setProperty('display', 'none');
-        this._load.style.setProperty('display', 'none');
-        this._save.style.setProperty('display', 'none');
+    public view(mode: string): boolean {
+        this.__set_class(mode);
+        return true;
     }
-    public view_maze(): void {
-        this.hide_all();
-        this._maze.style.setProperty('display', 'block');
-    }
-    public view_camp(): void {
-        this.hide_all();
-        this._camp.style.setProperty('display', 'block');
-    }
-    public view_load(): void {
-        this.hide_all();
-        this._load.style.setProperty('display', 'block');
-    }
-    public view_save(): void { 
-        this.hide_all();
-        this._save.style.setProperty('display', 'block');
+    protected __set_class(c: string): void { 
+        try {
+            C_SwitchView.body?.classList.remove(...C_SwitchView.all_class);
+            C_SwitchView.body?.classList.add(c);
+            for (const ii in C_SwitchView.article) {
+                if (C_SwitchView.article[ii] === null) continue;
+                C_SwitchView.article[ii]?.classList.remove(...C_SwitchView.all_class);
+                C_SwitchView.article[ii]?.classList.add(c);
+            }
+        } catch (err) {
+            _alert('Layout Set Error: ' + err);
+        }
     }
 }

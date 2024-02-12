@@ -1,36 +1,30 @@
 import { 
     hide_all_menu,
-    high_light_on, 
-    calc_cursor_pos_L,
-    calc_cursor_pos_R,
-    calc_cursor_pos_U,
-    calc_cursor_pos_D,
-    rmv_all_ctls
 } from "./F_default_menu";
 
-import { display_guld_menu }     from "./F_guild_menu";
-import { _ceil, _floor, _round } from "../common/F_Math";
-import { C_UrlOpt }              from "../common/C_UrlOpt";
-import { C_SaveData, I_JSON_Uniq, alert_save_info }     from "../common/C_SaveData";
-import { general_load, general_save, get_save_info }    from "../common/F_load_and_save";
-import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../common/global";
+import { _ceil, _floor, _round }   from "../d_utl/F_Math";
+import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
+import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
+import { C_SaveData, I_JSON_Uniq } from "../d_mdl/C_SaveData";
+import { C_CtlCursor }             from "../d_ctl/C_CtlCursor";
+import { POST_and_move_page }      from "../d_cmn/F_POST";
+import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
+import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 
+import { display_guld_menu }       from "./F_guild_menu";
 import { 
     g_mvm, g_team, g_guld, g_ctls, 
     g_all_maze, g_all_team, g_all_guld, g_all_mvpt 
 } 
 from "./global_for_guild";
 
-import { alert_team_info }    from "../common/C_Team";
-import { alert_guld_info }    from "../common/C_Guild";
-import { C_MovablePoint }     from "../common/C_MovablePoint";
-import { POST_and_move_page } from "../common/F_POST";
 
 
 let data_list:  {[uniq_no: number]:C_SaveData};
 
 let info_list: HTMLUListElement;
-let info_list_cols: number;
+let info_crsr: C_CtlCursor;
+
 let dom_idx:  number = 0;
 let info_detail: {[key: string]: HTMLLIElement};
 
@@ -75,8 +69,6 @@ async function _display_SL_menu(): Promise<void> {
 
     dom_view_switch.style.display = 'block';
 
-    get_info_list_cols();
-
     await init_all();
     await update_all();
 
@@ -85,22 +77,13 @@ async function _display_SL_menu(): Promise<void> {
         dom_info_fields.style.display = 'none';
 
         g_mvm.notice_message('現在、冒険の記録は有りません。戻る＝＞✖');
-        g_ctls.act('svld_rtn');
+        g_ctls.act(ctls_svld_rtn);
     } else {
         info_list.style.display = 'block';
         dom_info_fields.style.display = 'block';
-        g_ctls.act('svld_nor');
+        g_ctls.act(ctls_svld_nor);
     }
     display_default_message();
-}
-
-function get_info_list_cols(): number {
-    let __col   = window.getComputedStyle(info_list).columnCount !== '' 
-                ? window.getComputedStyle(info_list).columnCount
-                : '1';
- 
-    info_list_cols = Number(__col); 
-    return info_list_cols;
 }
 
 async function init_all() {
@@ -199,38 +182,22 @@ function update_info_list(): void {
             dom_to_uno[uno] = uno;
         }
     }
+    info_crsr = C_CtlCursor.getObj(info_list);
+    info_crsr.set_pos(dom_idx);
 
-    high_light_on(info_list, dom_idx); 
     return;
 }
 let old_dom_idx:number;
 function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     dom_idx = Number(this.id); 
-    high_light_on(info_list, dom_idx); 
+    info_crsr.set_pos(dom_idx); 
     update_info_detail(dom_idx);
 
     if (dom_idx === old_dom_idx) {
         isOK();
     } else {
         old_dom_idx = dom_idx;
-        mode = 'view';
-        isOK();
     }
-
-/*
-    if (mode === 'view') {
-        old_dom_idx = dom_idx;
-        isOK();
-    } else {
-        if (dom_idx === old_dom_idx) {
-            isOK();
-        } else {
-            mode = 'view';
-            old_dom_idx = dom_idx;
-            isOK();
-        }
-    }
-*/
     display_default_message();
 }
 
@@ -290,18 +257,15 @@ function init_ctls(): void {
 
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('svld_rtn', _svld_rtn_ctls))  return false;
-        if (!g_ctls.add('svld_nor', _svld_nor_ctls))  return false;
-        if (!g_ctls.add('svld_chk', _svld_chk_ctls))  return false;
-        if (!g_ctls.add('svld_bak', _svld_bak_ctls))  return false;
+        if (!g_ctls.set(ctls_svld_rtn))  return false;
+        if (!g_ctls.set(ctls_svld_nor))  return false;
+        if (!g_ctls.set(ctls_svld_chk))  return false;
     } catch (err) {
         return false;
     }
     return true;
 }
-
-
-const _svld_nor_ctls = {
+const ctls_svld_nor = {
     name: 'svld_nor', 
     do_U:  do_U,
     do_D:  do_D,
@@ -312,7 +276,7 @@ const _svld_nor_ctls = {
     isRT:  isRT,
     cpRT:  isRT,
 }
-const _svld_chk_ctls = {
+const ctls_svld_chk = {
     name: 'svld_chk', 
     isOK:  isOK,
     isNG:  isNG,
@@ -321,48 +285,33 @@ const _svld_chk_ctls = {
     cpNG:  isNG,
     cpRT:  isRT,
 }
-const _svld_rtn_ctls = {
+const ctls_svld_rtn = {
     name: 'svld_rtn', 
     isNG:  go_back_guld_menu_for_first,
     isRT:  go_back_guld_menu_for_first,
     cpRT:  go_back_guld_menu_for_first,
 }
-const _svld_bak_ctls = {
-    name: 'svld_bak', 
-    isOK:  _do_check,
-    isNG:  _do_check,
-    cpNG:  _do_check,
-}
-
 
 
 function do_U(): void {
-    if (mode !== 'view') return;
+    dom_idx = info_crsr.pos_U();
+    update_info_detail(dom_idx); 
     display_default_message();
-
-    dom_idx = calc_cursor_pos_U(dom_idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx); 
 }
 function do_D(): void {
-    if (mode !== 'view') return;
+    dom_idx = info_crsr.pos_D();
+    update_info_detail(dom_idx); 
     display_default_message();
-
-    dom_idx = calc_cursor_pos_D(dom_idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);  
 }
 function do_L(): void {
-    if (mode !== 'view') return;
+    dom_idx = info_crsr.pos_L();
+    update_info_detail(dom_idx); 
     display_default_message();
-
-    dom_idx = calc_cursor_pos_L(dom_idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 function do_R(): void {
-    if (mode !== 'view') return;
+    dom_idx = info_crsr.pos_R();
+    update_info_detail(dom_idx); 
     display_default_message();
-
-    dom_idx = calc_cursor_pos_R(dom_idx, info_list.children.length, info_list_cols);
-    high_light_on(info_list, dom_idx);  update_info_detail(dom_idx);
 }
 
 function isOK(): void { 
@@ -371,36 +320,29 @@ function isOK(): void {
 async function _isOK_for_load(): Promise<void> { 
     switch (mode) {
         case 'view':
-            if (dom_to_uno[dom_idx] in data_list) {
-                mode = 'read_OK';
-                display_default_message();
-                g_ctls.act('svld_chk');
-            } else {
-                g_mvm.notice_message('保存されていない項目です。戻る＝＞✖');
-                g_ctls.act('svld_bak');
-            }
-            break;
-        case 'read_OK': 
             await post_load_data().then(result => {
                 if (result) {
                     g_mvm.notice_message('読み込みました!!');
                 } else {
                     g_mvm.notice_message('ページを移動しました。あるいは読み込みに失敗しました');
                 }
-                mode = 'view';
-                g_ctls.act('svld_nor');
+                go_back_guld_menu();
             });
+            break;
+        default:
+            alert('Load mode error: ' + mode);
             break;
     }
 }
 async function _isOK_for_save(): Promise<void> { 
     switch (mode) {
         case 'view':
-            mode = dom_to_uno[dom_idx] in data_list ? 'rewrite_OK' : 'write_OK';
-            display_default_message();
-            g_ctls.act('svld_chk');
-            break;
-        case 'write_OK': 
+            if (dom_to_uno[dom_idx] in data_list) {
+                mode = 'rewrite_OK';
+                display_default_message();
+                g_ctls.act(ctls_svld_chk);
+                break;
+            }
             try {
                 await post_save_data().then(result => { 
                     try {
@@ -411,7 +353,8 @@ async function _isOK_for_save(): Promise<void> {
                             g_mvm.warning_message('新規保存に失敗しました');
                         }; 
                         mode = 'view'; 
-                        g_ctls.act('svld_nor');
+                        g_ctls.act(ctls_svld_nor);
+                        go_back_guld_menu();
                     } catch (err) {
                         _alert('write_OK6: ' + err);
                     }
@@ -428,10 +371,13 @@ async function _isOK_for_save(): Promise<void> {
                 } else {
                     g_mvm.warning_message('上書き保存に失敗しました');
                 }
-                g_ctls.act('svld_nor');
-                mode = 'view';
+                go_back_guld_menu();
             });
             break;
+        default:
+            alert('Load mode error: ' + mode);
+            break;
+
     }
 }
 
@@ -521,7 +467,7 @@ function _isNG_for_load(): void {
         case 'read_OK':
             mode = 'view';
             display_default_message();
-            g_ctls.act('svld_nor');
+            g_ctls.act(ctls_svld_nor);
             break;
     }
 }
@@ -534,7 +480,7 @@ function _isNG_for_save(): void {
         case 'rewrite_OK':
             mode = 'view';
             display_default_message();
-            g_ctls.act('svld_nor');
+            g_ctls.act(ctls_svld_nor);
             break;
     }
 }
@@ -550,20 +496,14 @@ function display_default_message(): void {
 function _display_default_message_for_load(): void {
     switch (mode) {
         case 'view':
-            g_mvm.normal_message('どれを読み込みますか？意思決定＝＞〇　メニューに戻る＝＞✖');
-            break;
-        case 'read_OK':
-            g_mvm.normal_message('これでいいですか？ＯＫ＝＞〇　やめる＝＞✖');
+            g_mvm.normal_message('どれを読み込みますか？読込＝＞〇');
             break;
     }
 }
 function _display_default_message_for_save(): void {
     switch (mode) {
         case 'view':
-            g_mvm.normal_message('どれに保存しますか？意思決定＝＞〇　メニューに戻る＝＞✖');
-            break;
-        case 'write_OK':
-            g_mvm.normal_message('これに新規保存しますか？ＯＫ＝＞〇　やめる＝＞✖');
+            g_mvm.normal_message('どれに保存しますか？保存＝＞〇');
             break;
         case 'rewrite_OK':
             g_mvm.notice_message('過去のデータが消えます。上書きしますか？ＯＫ＝＞〇　やめる＝＞✖');
@@ -573,7 +513,7 @@ function _display_default_message_for_save(): void {
 
 
 function go_back_guld_menu_for_first(): void {
-    rmv_all_ctls();
+    g_ctls.deact();
     display_guld_menu();
 }
 
@@ -583,5 +523,5 @@ function go_back_guld_menu(): void {
 }
 function _do_check(): void {
     g_mvm.clear_message();
-    g_ctls.act("svld_nor");
+    g_ctls.act(ctls_svld_nor);
 }

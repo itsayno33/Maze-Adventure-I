@@ -1,22 +1,17 @@
-import { 
-    calc_cursor_pos_U, 
-    calc_cursor_pos_D, 
-    hide_all_menu, 
-    high_light_on, 
-} from "./F_default_menu";
+import { hide_all_menu }     from "./F_default_menu";
 import { display_load_menu, display_save_menu } from "./F_save_menu";
 import { display_hres_menu } from "./F_hres_menu";
 import { display_tomz_menu } from "./F_tomz_menu";
 import { g_ctls, g_mvm }     from "./global_for_guild";
-
+import { C_CtlCursor }       from "../d_ctl/C_CtlCursor";
 
 let dom_view_switch : HTMLDivElement;
 let menu_list: HTMLUListElement;
+let menu_crsr: C_CtlCursor;
+
 let idx_guld: number = 0;
 
 let menu_fnc: {[id: string]: number};
-
-let mode = '';
 
 export function display_guld_menu(): void { 
     hide_all_menu(); 
@@ -38,7 +33,6 @@ export function display_guld_menu(): void {
 }
 
 function init_all() {
-    mode = 'view';
     init_data_list(); 
     init_view(); 
     init_ctls(); 
@@ -64,8 +58,10 @@ function init_view() {
         menu_fnc[menu_item.id] = ii;
         menu_item.addEventListener("click",_OK_Fnc, false);
     }
+    menu_crsr = C_CtlCursor.getObj(menu_list);
+
     idx_guld = 0;
-    high_light_on(menu_list, 0); 
+    menu_crsr.set_pos(idx_guld); 
 }
 function _OK_Fnc(this: HTMLElement, e: MouseEvent): void {
     idx_guld = menu_fnc[this.id]; 
@@ -84,8 +80,8 @@ function init_ctls(): boolean {
 }
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.add('guld_nor',  guld_ctls_nor))  return false;
-        if (!g_ctls.act('guld_nor')) return false;
+        if (!g_ctls.set(guld_ctls_nor))  return false;
+        if (!g_ctls.act(guld_ctls_nor)) return false;
         return true;
     } catch (err) {
         return false;
@@ -101,13 +97,11 @@ const guld_ctls_nor = {
 
 function do_U(): void {
     display_default_message();
-    idx_guld = calc_cursor_pos_U(idx_guld, menu_list.children.length, 1);
-    high_light_on(menu_list, idx_guld); 
+    idx_guld = menu_crsr.pos_U();
 }
 function do_D(): void {
     display_default_message();
-    idx_guld = calc_cursor_pos_D(idx_guld, menu_list.children.length, 1);
-    high_light_on(menu_list, idx_guld); 
+    idx_guld = menu_crsr.pos_D();
 }
 
 function isOK(): void {

@@ -1,5 +1,5 @@
-import { C_Range } from "../common/C_Range";
-import { _round }  from "../common/F_Math";
+import { _round }  from "../d_utl/F_Math";
+import { C_Range } from "../d_mdl/C_Range";
 
 export type T_Wall = {
     min_x: number,
