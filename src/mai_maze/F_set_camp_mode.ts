@@ -19,8 +19,8 @@ const ctls_camp_nor = {
 }
 
 export function init_camp_mode(): void {
-    g_ctls.set(ctls_camp_nor);
     init_view();
+    init_ctls();
 }
 export function act_camp_mode(): void {
     idx = 0;
@@ -48,6 +48,11 @@ function init_view(): boolean {
 function _OK_camp_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     __isOK(this.id);
 }
+
+function init_ctls(): void {
+    g_ctls.set(ctls_camp_nor);
+}
+
 
 function isOK(): void {
     const camp_list = document.getElementById('camp_list') as HTMLUListElement;

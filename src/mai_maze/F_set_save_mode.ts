@@ -18,6 +18,7 @@ import {
     g_team, 
     g_hres, 
 } from "./global_for_maze";
+import { T_Ctls } from "./C_DefaultCtls";
 
 let   for_save: boolean  = false;
 
@@ -64,9 +65,22 @@ const ctls_load_nor = {
     do_D:  do_D,
     do_L:  do_L,
     do_R:  do_R,
+    isOK:  check_load,
+    cpOK:  check_load,
+    isNG:  go_back_camp_mode,
+    isRT:  go_back_camp_mode,
+    cpRT:  go_back_camp_mode,
+}
+const ctls_load_chk = {
+    name: 'load_chk', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
     isOK:  isOK_for_load,
     cpOK:  isOK_for_load,
-    isNG:  go_back_camp_mode,
+    isNG:  isNG_for_load,
+    cpNG:  isNG_for_load,
     isRT:  go_back_camp_mode,
     cpRT:  go_back_camp_mode,
 }
@@ -76,14 +90,28 @@ const ctls_save_nor = {
     do_D:  do_D,
     do_L:  do_L,
     do_R:  do_R,
+    isOK:  check_save,
+    cpOK:  check_save,
+    isNG:  go_back_camp_mode,
+    isRT:  go_back_camp_mode,
+    cpRT:  go_back_camp_mode,
+}
+const ctls_save_chk = {
+    name: 'save_chk', 
+    do_U:  do_U,
+    do_D:  do_D,
+    do_L:  do_L,
+    do_R:  do_R,
     isOK:  isOK_for_save,
     cpOK:  isOK_for_save,
-    isNG:  go_back_camp_mode,
+    isNG:  isNG_for_save,
+    cpNG:  isNG_for_save,
     isRT:  go_back_camp_mode,
     cpRT:  go_back_camp_mode,
 }
 
 export function init_SL_mode(): void {
+    init_view();
     init_ctls();
 }
 
@@ -97,7 +125,7 @@ export function act_load_mode(): void {
             return;
         } else {
             show_load_fields();
-            check_load();
+            display_message();
             g_ctls.act(ctls_load_nor);
             g_vsw.view(g_vsw.LdSv());
         }
@@ -105,7 +133,7 @@ export function act_load_mode(): void {
 }
 export function act_save_mode(): void {
    __set_data(true).then(()=>{
-        check_save();
+        display_message();
         g_ctls.act(ctls_save_nor);
         g_vsw.view(g_vsw.LdSv());
     });
@@ -138,29 +166,40 @@ function init_ctls(): void {
 
     g_ctls.set(ctls_load_rtn);
     g_ctls.set(ctls_load_nor);
+    g_ctls.set(ctls_load_chk);
     g_ctls.set(ctls_save_nor);
+    g_ctls.set(ctls_save_chk);
 }
 
 function isOK_for_load(): void {
     if (save_UL_list === null) return;
     if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
-    if (!is_kakunin) check_load(); else load();
+//    if (!is_kakunin) check_load(); else load();
+    load();
 }
 
 function isOK_for_save(): void {
     if (save_UL_list === null) return;
     if (UL_idx < 0 || UL_idx > UL_list_leng - 1) return;
 
-    if (!is_kakunin) check_save(); else save();
+//    if (!is_kakunin) check_save(); else save();
+    save();
 }
 
-function isNG(): void {
+function isNG_for_load(): void {
+    _isNG_(ctls_load_nor);
+}
+function isNG_for_save(): void {
+    _isNG_(ctls_save_nor);
+}
+function _isNG_(ctls: T_Ctls): void {
     if (!is_kakunin) {
         g_cvm.clear_message();
         go_back_camp_mode();
     } else {
         is_kakunin = false;
+        g_ctls.act(ctls);
         display_message();
     }
 }
@@ -240,13 +279,7 @@ export async function display_save_list(): Promise<void> {
     const data_time   = 'ldsv_data_time';
     const data_detail = 'ldsv_data_detail';
     const data_point  = 'ldsv_data_point';
-/*
-    const data_list   = (for_save) ? 'save_data_list'   : 'load_data_list';
-    const data_id     = (for_save) ? 'save_data_id'     : 'load_data_id';
-    const data_time   = (for_save) ? 'save_data_time'   : 'load_data_time';
-    const data_detail = (for_save) ? 'save_data_detail' : 'load_data_detail';
-    const data_point  = (for_save) ? 'save_data_point'  : 'load_data_point';
-*/
+
     await get_save_info()?.then(jsonObj => {
         if (jsonObj === null || jsonObj === undefined) {
             g_mes.warning_message('セーブ情報の受信に失敗しました。【受信データ無し】');
@@ -346,7 +379,7 @@ function _OK_load_Fnc(this: HTMLLIElement, e: MouseEvent): void {
         UL_bak =   UL_idx;
         is_kakunin = false;
     }
-    isOK_for_load();
+    if (is_kakunin) isOK_for_load(); else check_load();
     UL_list_crsr.set_pos(UL_idx); form_set();
 }
 function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
@@ -356,7 +389,7 @@ function _OK_save_Fnc(this: HTMLLIElement, e: MouseEvent): void {
         UL_bak =   UL_idx;
         is_kakunin = false;
     }
-    isOK_for_save();
+    if (is_kakunin) isOK_for_save(); else check_save();
     UL_list_crsr.set_pos(UL_idx); form_set();
 }
 function exist_save_list(): boolean {
@@ -369,6 +402,7 @@ function check_load(): void { // 入力チェックと既存データ上書き�
         g_mes.warning_message(`check!! No longer access idx!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
+    g_ctls.act(ctls_load_chk);
     display_message();
 }
 
@@ -381,14 +415,27 @@ function check_save(): void { // 入力チェックと既存データ上書き�
         g_mes.warning_message(`check!! This is Auto Mode!『${save_list[data_idx].title}』(save_id: ${save_list[data_idx].save_id})`);
     }
     is_kakunin = true;
+    g_ctls.act(ctls_save_chk);
     display_message();
 }
 
 function display_message() {
     if (for_save) {
-        g_cvm.notice_message('保存しますか？');
+        if (is_kakunin) {
+            if (UL_to_Data[UL_idx] === undefined) {
+                g_cvm.notice_message('これに保存しますか？');
+            } else {
+                g_cvm.notice_message('これに上書保存しますか？以前のデータは消去されます');
+            }
+        } else {
+            g_cvm.normal_message('どれに保存しますか？');
+        }
     } else {
-        g_cvm.notice_message('ロードしますか？');
+        if (is_kakunin) {
+            g_cvm.notice_message('ロードしますか？');
+        } else {
+            g_cvm.normal_message('どれをロードしますか？');
+        }
     }
 }
 
@@ -419,7 +466,6 @@ function _load_here(data_idx: number): void {
     general_load(save_list[data_idx].uniq_no).then((jsonObj:any)=>{  
         is_kakunin = false;
         decode_all(jsonObj?.save);
-//        do_load_bottom_half('ロードしました'); 
         g_mvm.notice_message('ロードしました');
         go_back_move_mode();        
     });

@@ -143,13 +143,13 @@ function toggle_debug_mode(): void {
     if (g_debug_mode) {
         g_debug_mode = false;
         btn.setAttribute('value', 'false');
-        btn.innerHTML = '通常モード中';
+        btn.innerHTML = '通常';
         btn.style.setProperty('background-color', '#f0f8ff');
         btn.style.setProperty('color', '#008000');
     } else {
         g_debug_mode = true;
         btn.setAttribute('value', 'true');
-        btn.innerHTML = 'デバッグモード中';
+        btn.innerHTML = 'デバッグ';
         btn.style.setProperty('background-color', '#ff0000');
         btn.style.setProperty('color', '#ffffff');
     }
