@@ -209,7 +209,6 @@ function update_DOM_maze_list(): void {
         li.addEventListener("click", _OK_maze_Fnc, false);
         dom_maze_list.appendChild(li);
     }
-//    dom_maze_fields.style.display = 'block';
 }
 function _OK_maze_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 //    switch_cursor(T_List_mode.Maze);
@@ -275,7 +274,6 @@ function update_DOM_mvpt_list(): void {
         li.addEventListener("click", _OK_mvpt_Fnc, false);
         dom_mvpt_list.appendChild(li);
     }
-//    dom_mvpt_fields.style.display = 'block';
 }
 function _OK_mvpt_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 //    switch_cursor(T_List_mode.MvPt);

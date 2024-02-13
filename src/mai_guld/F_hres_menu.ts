@@ -73,8 +73,6 @@ let cursor_Team: T_cursor;
 let cursor_Guld: T_cursor;
 let cursor_Appd: T_cursor;
 let cursor_Menu: T_cursor;
-let cursor_IpNm: T_cursor;
-let cursor_IpCk: T_cursor;
 
 let mode    = 'view';
 
@@ -434,7 +432,6 @@ function update_dom_guld_list(): void {
         li.addEventListener("click", _OK_guld_Fnc, false);
         dom_guld_list.appendChild(li);
     }
-//    cursor_Guld.crsr.set(dom_guld_list);
 }
 function _OK_guld_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Guld);
@@ -481,7 +478,6 @@ function update_dom_appd_list(): void {
         li.addEventListener("click", _OK_appd_Fnc, false);
         dom_appd_list.appendChild(li);
     }
-//    cursor_Appd.crsr.set(dom_appd_list);
 }
 function _OK_appd_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Appd);
@@ -534,7 +530,6 @@ function update_dom_menu_list(): void {
         li.addEventListener("click", _OK_menu_Fnc, false);
         dom_menu_list.appendChild(li);
     }
-//    cursor_Menu.crsr.set(dom_menu_list);
 }
 function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor = cursor_Menu;
@@ -542,7 +537,6 @@ function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor.crsr.set_pos(Number(this.id)); 
 
     do_menu();
-//    update_dom_hero_detail();
 }
 
 function clear_dom_menu_list(): void {
@@ -597,11 +591,7 @@ function _init_dom_ipnm(): boolean {
 
 function update_dom_inpt_list(): void {
     clear_dom_inpt_list();
-    switch (cursor.kind) {
-        case T_SubView.IpNm:
-            update_dom_ipnm();
-            break;
-    }
+    update_dom_ipnm();
 }
 function update_dom_ipnm(): void {
     const name_label = inpt_name_list['hres_name_li'].label;
@@ -625,6 +615,7 @@ function update_dom_ipnm(): void {
     li.appendChild(name_input);
     dom_inpt_list.appendChild(li);
 
+    name_input.setAttribute('autocomplete', 'name');
     name_input.focus({preventScroll: false});
 }
 
@@ -683,8 +674,6 @@ function init_cursor(): boolean {
     cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.getObj(dom_guld_list)}; 
     cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.getObj(dom_appd_list)}; 
     cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.getObj(dom_menu_list)}; 
-    cursor_IpNm = {kind: T_SubView.IpNm, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
-    cursor_IpCk = {kind: T_SubView.IpCk, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
     return true;
 }
 
@@ -869,41 +858,26 @@ function subview_act_appd() {
 }
 
 function subview_act_menu() {
-//    subview_hide_all();
     clear_dom_inpt_list();
     dom_inpt_fields.style.display = 'none';
 
     cursor  = cursor_Menu; 
     cursor.crsr.set_pos(0);
 
-//    update_view();
     update_dom_menu_list();
     dom_menu_fields.style.display = 'block';
 }    
 
 function subview_act_mnck() {
-//    cursor  = cursor_Menu; 
-//    cursor.crsr.set_pos(0);
-
-//    update_view();
-//    update_dom_inpt_list();
     dom_inpt_fields.style.display = 'none';
 }    
 
 function subview_act_ipnm() {
-    cursor  = cursor_IpNm; 
-    cursor.crsr.set_pos(0);
-
-//    update_view();
     update_dom_inpt_list();
     dom_inpt_fields.style.display = 'block';
 }    
 
 function subview_act_ipck() {
-    cursor  = cursor_IpCk; 
-    cursor.crsr.set_pos(0);
-
-//    update_view();
     update_dom_inpt_list();
     dom_inpt_fields.style.display = 'block';
 }    
@@ -1068,7 +1042,6 @@ function go_back_view_mode(msg: string): void {
             break;
     }
     g_ctls.act(ctls_hres_nor);
-//    update_view();
     g_mvm.normal_message(msg);
 }
 
