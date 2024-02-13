@@ -1,9 +1,9 @@
-import { hide_all_menu }     from "./F_default_menu";
-import { display_load_menu, display_save_menu } from "./F_save_menu";
-import { display_hres_menu } from "./F_hres_menu";
-import { display_tomz_menu } from "./F_tomz_menu";
-import { g_ctls, g_mvm }     from "./global_for_guild";
-import { C_CtlCursor }       from "../d_ctl/C_CtlCursor";
+import { hide_all_menu } from "./F_default_menu";
+import { act_load_menu, act_save_menu } from "./F_save_menu";
+import { act_hres_menu } from "./F_hres_menu";
+import { act_tomz_menu } from "./F_tomz_menu";
+import { g_ctls, g_mvm } from "./global_for_guild";
+import { C_CtlCursor }   from "../d_ctl/C_CtlCursor";
 
 let dom_view_switch : HTMLDivElement;
 let menu_list: HTMLUListElement;
@@ -13,29 +13,23 @@ let idx_guld: number = 0;
 
 let menu_fnc: {[id: string]: number};
 
-export function display_guld_menu(): void { 
+export function init_guld_menu(): void {
+}
+
+export function act_guld_menu(): void { 
     hide_all_menu(); 
-    try { 
-        dom_view_switch = document.getElementById('gld_view_switch_guld') as HTMLDivElement; 
-        menu_list       = document.getElementById('guld_menu_list') as HTMLUListElement; 
-    } catch (err) { 
-        alert('Guild Menu Get Element Error. ' + err);
-        return;
-    } 
 
-    if (dom_view_switch === null) return; 
-    if (menu_list === null) return; 
-
+    if (!init_all()) return; 
     dom_view_switch.style.display = 'block'; 
 
-    init_all(); 
     update_all(); 
 }
 
-function init_all() {
-    init_data_list(); 
-    init_view(); 
-    init_ctls(); 
+function init_all(): boolean {
+    if (!init_data_list()) return false; 
+    if (!init_view()) return false; 
+    if (!init_ctls()) return false;
+    return true; 
 }
 
 function update_all() {
@@ -43,13 +37,32 @@ function update_all() {
     update_view(idx_guld);
 }
 
-function init_data_list(){}
+function init_data_list(): boolean {return true;}
 function update_data_list(){}
 function exist_data(): boolean {
     return (idx_guld >= 0) && (idx_guld < menu_list.children.length);
 }
 
-function init_view() {
+function init_view(): boolean {
+    if (!init_DOM())  return false;
+    if (!init_menu()) return false;
+    return true;
+}
+
+function init_DOM(): boolean {
+    try { 
+        dom_view_switch = document.getElementById('gld_view_switch_guld') as HTMLDivElement; 
+        menu_list       = document.getElementById('guld_menu_list') as HTMLUListElement; 
+    } catch (err) { 
+        alert('Guild Menu Get Element Error. ' + err);
+        return false;
+    } 
+    if (dom_view_switch === null) return false; 
+    if (menu_list === null) return false;
+    return true; 
+}
+
+function init_menu(): boolean {
     clear_view();
     menu_fnc = {};
     for (let ii = 0; ii < menu_list.children.length; ii++) {
@@ -62,11 +75,13 @@ function init_view() {
 
     idx_guld = 0;
     menu_crsr.set_pos(idx_guld); 
+    return menu_crsr.leng() > 0;
 }
 function _OK_Fnc(this: HTMLElement, e: MouseEvent): void {
     idx_guld = menu_fnc[this.id]; 
     isOK();
 }
+
 function update_view(idx: number) {
 }
 
@@ -111,19 +126,19 @@ function isOK(): void {
     switch ((menu_list.children.item(idx_guld) as HTMLLIElement).id) {
         case 'guld_hres': 
             g_ctls.deact();
-            display_hres_menu();
+            act_hres_menu();
             break;
         case 'guld_load': 
             g_ctls.deact();
-            display_load_menu();
+            act_load_menu();
             break;
         case 'guld_save': 
             g_ctls.deact();
-            display_save_menu();
+            act_save_menu();
             break;
         case 'guld_tomz': 
             g_ctls.deact();
-            display_tomz_menu();
+            act_tomz_menu();
             break;
     }
 }
