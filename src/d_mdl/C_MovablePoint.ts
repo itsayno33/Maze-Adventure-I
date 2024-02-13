@@ -81,4 +81,20 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         if (this.team_uid == '') this.team_uid = undefined;
         return this;
     }
+    
+    public alert(): void {
+        alert("MvPt Info:" 
+            + "\nuniq_id:  "  + (this.uniq_id    ?? '?')
+            + "\ncur_url:  "  + (this.cur_url    ?? '?')
+            + "\nteam_uid: "  + (this.team_uid   ?? '?')
+            + "\nlckd: "      + (this.loc_kind   ?? '?')
+            + "\nlcnm: "      + (this.loc_name   ?? '?')
+            + "\nlcid: "      + (this.loc_uid    ?? '?')
+            + "\ncur_x: "     + (this.loc_pos?.x ?? '?')
+            + "\ncur_y: "     + (this.loc_pos?.y ?? '?')
+            + "\ncur_z: "     + (this.loc_pos?.z ?? '?')
+            + "\ncur_d: "     + (this.loc_pos?.d ?? '?')
+            + "\n"
+        );
+    }
 }

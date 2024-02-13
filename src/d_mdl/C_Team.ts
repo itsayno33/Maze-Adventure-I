@@ -127,12 +127,6 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
     }
     public set_loc(loc: C_MovablePoint): void {
         this.walker.decode(loc.encode());
-        /*
-        this.walker.set_uid (loc.get_uid());
-        this.walker.set_lckd(loc.get_lckd());
-        this.walker.set_name(loc.get_name());
-        this.walker.set_pd  (loc.get_pd());
-        */
     }
 
 
@@ -279,5 +273,29 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
             all_team.push((new C_Team()).decode(team_data));
         }
         return all_team;
+    }
+    
+    public alert(): void {
+        alert("Team Info:" 
+            + "\nid:    "     + (this.my_id            ?? '?')
+            + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
+            + "\nname:  "     + (this.my_name          ?? '?')
+            + "\nsave_id: "   + (this.save_id          ?? '?')
+            + "\nurl:  "      + (this.walker.url()     ?? '?')
+            + "\nlckd: "      + (this.walker.get_lckd_str() ?? '?')
+            + "\nlcnm: "      + (this.walker.get_name()     ?? '?')
+            + "\nlcid: "      + (this.walker.get_uid()      ?? '?')
+            + "\ncur_x: "     + (this.walker.get_p().x ?? '?')
+            + "\ncur_y: "     + (this.walker.get_p().y ?? '?')
+            + "\ncur_z: "     + (this.walker.get_p().z ?? '?')
+            + "\ncur_d: "     + (this.walker.get_d()   ?? '?')
+            + "\ngoods: "     + (Object.keys(this.goods??{}).length)
+            + "\nheroes: "    + (this.heroes?.length ?? '?')
+            + "\n"
+        );
+    }
+    public alert_hres(): void {
+//        alert("Team Info:");
+        for (const ii in this.heroes) this.heroes[ii].alert();
     }
 }

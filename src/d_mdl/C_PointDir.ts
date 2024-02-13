@@ -100,4 +100,14 @@ export class  C_PointDir extends C_Point {
         this.d = j.d as T_Direction;
         return this;
     }
+    
+    public alert(): void {
+        alert("PointData Info:" 
+            + "\nx: "     + (this.x ?? '?')
+            + "\ny: "     + (this.y ?? '?')
+            + "\nz: "     + (this.z ?? '?')
+            + "\nd: "     + (this.d ?? '?')
+            + "\n"
+        );
+    }
 }

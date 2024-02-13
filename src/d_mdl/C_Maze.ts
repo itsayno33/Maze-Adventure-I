@@ -464,6 +464,32 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         }
         return all_maze;
     }
+    
+    public alert(): void {
+        _alert("Maze Info:"
+            + "\nmaze id :" + (this.maze_id ?? '?')
+            + "\nfloor: "   + (this.floor   ?? '?')
+            + "\nuniq id :" + (this.uniq_id ?? '?')
+            + "\nsave id :" + (this.save_id ?? '?')
+            + "\nname:   "  + (this.name    ?? '?')
+            + "\nsize_x: "  + (this.size.size_x() ?? '?')
+            + "\nsize_y: "  + (this.size.size_y() ?? '?')
+            + "\nsize_z: "  + (this.size.size_z() ?? '?')
+            + "\n"
+        );
+    }
+    public alert_maze(floor: number = 0): void {
+        _alert("Maze Map:"
+            + "maze:\n"     + (this.to_string(floor, true)  ?? '?')
+            + "\n"
+        );
+    }
+    public alert_mask(floor: number = 0): void {
+        _alert("Mask Map:"
+            + "mask:\n"     + (this.to_string(floor, false) ?? '?')
+            + "\n"
+        );
+    }
 }
 function  _min(a: number, b: number): number {
     return (a <= b) ? a : b;

@@ -185,4 +185,20 @@ export class C_Hero implements I_JSON_Uniq {
         }
         return heroes;
     }
+
+    public alert(): void { 
+        alert("Hero Info:\n" 
+            + "\nid:       "     + (this.id        ?? '?')
+            + "\nuniq_id   "     + (this.uniq_id   ?? '?')
+            + "\nname:     "     + (this.name      ?? '?')
+            + "\nsave_id:  "     + (this.save_id   ?? '?')
+            + "\nis_alive: "     + (this.is_alive  ?? '?')
+            + "\n"
+        );
+    }
+    public static alert_hres(a: (C_Hero|undefined)[]|undefined): void { 
+        if (a === undefined) return;
+        alert('Number of Hero = ' + a.length.toString());
+        for (var i in a) a[i]?.alert();
+    }
 }

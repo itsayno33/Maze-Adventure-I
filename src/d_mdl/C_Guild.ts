@@ -108,4 +108,16 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
         }
         return all_guld;
     }
+    
+    public alert(): void {
+        alert("Guild Info:" 
+        + "\nid:       " + (this.id             ?? '?')
+        + "\nuniq_id:  " + (this.uniq_id        ?? '?')
+        + "\nsave_id:  " + (this.save_id        ?? '?')
+        + "\nname:     " + (this.name           ?? '?')
+        + "\ngoods:    " + (Object.keys(this.goods??0).length)
+        + "\nheroes:   " + (this.heroes?.length ?? '?')
+        + "\n"
+        );
+    }
 }
