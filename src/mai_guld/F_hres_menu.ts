@@ -5,12 +5,9 @@ import { C_CtlCursor }                   from "../d_ctl/C_CtlCursor";
 import { get_new_hero }                  from '../d_cmn/F_load_and_save';
 import { _alert, g_mes }                 from "../d_cmn/global";
 
-import { hide_all_menu }                 from "./F_default_menu";
+import { act_guld_menu }                 from "./F_guild_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { display_guld_menu }             from "./F_guild_menu";
-import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
-
-let dom_view_switch : HTMLDivElement;
+import { g_mvm, g_team, g_guld, g_ctls, g_vsw } from "./global_for_guild";
 
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
@@ -59,8 +56,9 @@ const T_SubView: {[kind: string]: number}  = {
     Guld: 2,
     Appd: 3,
     Menu: 5,
-    IpNm: 6,
-    IpCk: 7,
+    MnCk: 6,
+    IpNm: 7,
+    IpCk: 8,
 } as const;
 type T_SubView = T_MakeEnumType<typeof T_SubView>;
 
@@ -72,23 +70,23 @@ let cursor_Team: T_cursor;
 let cursor_Guld: T_cursor;
 let cursor_Appd: T_cursor;
 let cursor_Menu: T_cursor;
-let cursor_IpNm: T_cursor;
-let cursor_IpCk: T_cursor;
 
 let mode    = 'view';
 
-export function display_hres_menu(): void {
-    hide_all_menu(); 
+export function init_hres_menu(): void {
+    init_all(); 
+    return;
+}
 
-    init_all().then((yn:boolean)=>{ 
-        if (yn) {
-            update_all().then(()=>{ 
-                g_ctls.act(ctls_hres_nor);
-                display_default_message(); 
-                dom_view_switch.style.display = 'block'; 
-            }); 
+export function act_hres_menu(): void {
+    mode    = 'view';
+    update_all().then(()=>{ 
+        if (exist_data()) {
+            g_ctls.act(ctls_hres_nor);
+            g_vsw.view(g_vsw.Hres());
+            display_default_message(); 
         } else {
-            display_guld_menu();
+            act_guld_menu();
         }
     }); 
     return;
@@ -101,47 +99,58 @@ function exist_data(): boolean {
 
 async function init_all(): Promise<boolean> { 
     mode = 'view'; 
-    return await init_data_list().then((yn: boolean)=>{ 
-        if (!yn) return false; 
-        if (!init_view()) return false; 
-        if (!init_ctls()) return false; 
-        return true; 
-    }); 
+    if (!init_data()) return false; 
+    if (!init_view()) return false; 
+    if (!init_ctls()) return false; 
+    return true; 
 }
 
 async function update_all(): Promise<void> {
     return await update_data_list().then(()=>{
+        start_TGA();
         update_view();
         update_ctls();
     });
+}
+
+function start_TGA(): boolean {
+    if (exist_team()) { 
+        TGA_mode = T_TGA_mode.Team;
+    }
+    else if (exist_guld()) { 
+        TGA_mode = T_TGA_mode.Guld;
+    }
+    else if (exist_appd()) { 
+        TGA_mode = T_TGA_mode.Appd;
+    }
+    else { 
+        TGA_mode = T_TGA_mode.Hide;
+    } 
+    return true;
 }
 
 // ******************************
 // モデル関係
 // ******************************
 
-function init_data_list(): Promise<boolean> { 
-    return init_appd_list().then((yn:boolean)=>{ 
-        if (!yn) return false; 
-        if (!init_team_list()) return false; 
-        if (!init_guld_list()) return false; 
-        if (!init_menu_list()) return false; 
-        return true;
-    })
+function init_data(): boolean { 
+    if (!init_team_list()) return false; 
+    if (!init_guld_list()) return false; 
+    if (!init_appd_list()) return false; 
+    if (!init_menu_list()) return false; 
+    return true;
 }
 
 function init_team_list(): boolean { 
-    update_team_list(); 
+    team_list = [];
     return true;
 }
 function init_guld_list(): boolean { 
-    update_guld_list(); 
+    guld_list = [];
     return true;
 }
-async function init_appd_list(): Promise<boolean> { 
+function init_appd_list(): boolean { 
     appd_list = [];
-    await update_appd_list()
-//    update_appd_list(); 
     return true;
 }
 function init_menu_list():boolean { 
@@ -175,7 +184,7 @@ function _go_leav(): void {
         g_mvm.notice_message('ギルドが満員です。誰かクビにしてください');
         return;
     }
-    subview_act(T_SubView.IpCk);
+    subview_act(T_SubView.MnCk);
     mode = 'leav';
     display_default_message();
     g_ctls.act(ctls_hres_leav);
@@ -186,7 +195,7 @@ function _go_join(): void {
         g_mvm.notice_message('チームが満員です。誰か外してください');
         return;
     }
-    subview_act(T_SubView.IpCk);
+    subview_act(T_SubView.MnCk);
     mode = 'join';
     display_default_message();
     g_ctls.act(ctls_hres_join);
@@ -194,7 +203,7 @@ function _go_join(): void {
 function _go_fire(): void {
     if (!exist_guld()) return;
 
-    subview_act(T_SubView.IpCk);
+    subview_act(T_SubView.MnCk);
     mode = 'fire';
     display_default_message();
     g_ctls.act(ctls_hres_fire);
@@ -206,7 +215,7 @@ function _go_adpt(): void {
         return;
     }
 
-    subview_act(T_SubView.IpCk);
+    subview_act(T_SubView.MnCk);
     mode = 'adpt';
     display_default_message();
     g_ctls.act(ctls_hres_adpt);
@@ -214,7 +223,7 @@ function _go_adpt(): void {
 function _go_away(): void {
     if (!exist_appd()) return;
 
-    subview_act(T_SubView.IpCk);
+    subview_act(T_SubView.MnCk);
     mode = 'away';
     display_default_message();
     g_ctls.act(ctls_hres_away);
@@ -287,57 +296,35 @@ function exist_menu(): boolean {
 // ******************************
 
 function init_view(): boolean { 
-    if (!init_dom_view_hres()) return false; 
     if (!init_dom_team_list()) return false; 
     if (!init_dom_guld_list()) return false; 
     if (!init_dom_appd_list()) return false; 
     if (!init_dom_menu_list()) return false; 
     if (!init_dom_inpt_list()) return false; 
+
+    if (!init_cursor())          return false; 
     if (!init_dom_hero_detail()) return false; 
     return true;
 }
 
 function update_view() {
-    update_dom_view_hres();
     update_dom_team_list();
     update_dom_guld_list();
     update_dom_appd_list();
     update_dom_menu_list();
 //    update_dom_inpt_list();
+
+    update_cursor();
     update_dom_hero_detail();
 }
 
 function clear_view() {
-    clear_dom_view_hres();
     clear_dom_team_list();
     clear_dom_guld_list();
     clear_dom_appd_list();
     clear_dom_menu_list();
     clear_dom_inpt_list();
     clear_dom_hero_detail();
-}
-
-// ******************************
-// 全体表示　関係
-// ******************************
-
-function init_dom_view_hres(): boolean {
-
-    try {
-        dom_view_switch = document.getElementById('gld_view_switch_hres') as HTMLDivElement;
-    } catch (err) {
-        return false;
-    }
-    if (dom_view_switch === null) return false;
-
-    clear_dom_view_hres(); 
-    return true;
-}
-function update_dom_view_hres(): void {
-    dom_view_switch.style.display = 'block'; 
-}
-function clear_dom_view_hres(): void {
-    dom_view_switch.style.display = 'none'; 
 }
 
 // ******************************
@@ -368,7 +355,7 @@ function update_dom_team_list():void {
         li.addEventListener("click", _OK_team_Fnc, false);
         dom_team_list.appendChild(li);
     }
-    cursor_Team.crsr.set(dom_team_list); 
+//    cursor_Team.crsr.set(dom_team_list); 
 }
 function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Team);
@@ -415,7 +402,6 @@ function update_dom_guld_list(): void {
         li.addEventListener("click", _OK_guld_Fnc, false);
         dom_guld_list.appendChild(li);
     }
-    cursor_Guld.crsr.set(dom_guld_list);
 }
 function _OK_guld_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Guld);
@@ -462,7 +448,6 @@ function update_dom_appd_list(): void {
         li.addEventListener("click", _OK_appd_Fnc, false);
         dom_appd_list.appendChild(li);
     }
-    cursor_Appd.crsr.set(dom_appd_list);
 }
 function _OK_appd_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     subview_act(T_SubView.Appd);
@@ -515,7 +500,6 @@ function update_dom_menu_list(): void {
         li.addEventListener("click", _OK_menu_Fnc, false);
         dom_menu_list.appendChild(li);
     }
-    cursor_Menu.crsr.set(dom_menu_list);
 }
 function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor = cursor_Menu;
@@ -523,7 +507,6 @@ function _OK_menu_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     cursor.crsr.set_pos(Number(this.id)); 
 
     do_menu();
-//    update_dom_hero_detail();
 }
 
 function clear_dom_menu_list(): void {
@@ -578,11 +561,7 @@ function _init_dom_ipnm(): boolean {
 
 function update_dom_inpt_list(): void {
     clear_dom_inpt_list();
-    switch (cursor.kind) {
-        case T_SubView.IpNm:
-            update_dom_ipnm();
-            break;
-    }
+    update_dom_ipnm();
 }
 function update_dom_ipnm(): void {
     const name_label = inpt_name_list['hres_name_li'].label;
@@ -606,6 +585,7 @@ function update_dom_ipnm(): void {
     li.appendChild(name_input);
     dom_inpt_list.appendChild(li);
 
+    name_input.setAttribute('autocomplete', 'name');
     name_input.focus({preventScroll: false});
 }
 
@@ -631,20 +611,20 @@ function init_dom_hero_detail(): boolean {
     if (dom_hero_fields === null) return false;
     if (dom_hero_detail === null) return false;
 
-    hero_detail = hero_info_create(dom_hero_detail);
     return true;
 }
 
 function update_dom_hero_detail() {
-    switch (cursor.kind) {
-        case T_SubView.Team:
-            hero_info_form_set(team_list, hero_detail, cursor.crsr.pos());
+    hero_detail = hero_info_create(dom_hero_detail);
+    switch (TGA_mode) {
+        case T_TGA_mode.Team:
+            hero_info_form_set(team_list, hero_detail, cursor_Team.crsr.pos());
             break;
-        case T_SubView.Guld:
-            hero_info_form_set(guld_list, hero_detail, cursor.crsr.pos());
+        case T_TGA_mode.Guld:
+            hero_info_form_set(guld_list, hero_detail, cursor_Guld.crsr.pos());
             break;
-        case T_SubView.Appd:
-            hero_info_form_set(appd_list, hero_detail, cursor.crsr.pos());
+        case T_TGA_mode.Appd:
+            hero_info_form_set(appd_list, hero_detail, cursor_Appd.crsr.pos());
             break;
     }
 }
@@ -655,16 +635,49 @@ function clear_dom_hero_detail() {
 
 
 // ******************************
+// リスト表示のカーソル　関係
+// ******************************
+
+function init_cursor(): boolean {
+    cursor_Hide = {kind: T_SubView.Hide, crsr: C_CtlCursor.getObj(undefined)}; 
+    cursor_Team = {kind: T_SubView.Team, crsr: C_CtlCursor.getObj(dom_team_list)}; 
+    cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.getObj(dom_guld_list)}; 
+    cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.getObj(dom_appd_list)}; 
+    cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.getObj(dom_menu_list)}; 
+    return true;
+}
+
+function update_cursor(): boolean {
+    if (!reset_cursor())           return false; 
+    if (!start_cursor())           return false; 
+    return true;
+}
+
+function reset_cursor(): boolean {
+    cursor_Team.crsr.set(dom_team_list);
+    cursor_Guld.crsr.set(dom_guld_list);
+    cursor_Appd.crsr.set(dom_appd_list);
+    cursor_Menu.crsr.set(dom_menu_list);
+    return true;
+}
+function start_cursor(): boolean {
+    switch (TGA_mode) { 
+        case T_TGA_mode.Team: cursor  = cursor_Team; break;
+        case T_TGA_mode.Guld: cursor  = cursor_Guld; break;
+        case T_TGA_mode.Appd: cursor  = cursor_Appd; break;
+        default:              cursor  = cursor_Hide; return false;
+    }
+    return true;
+}
+
+
+// ******************************
 // コントロール　関係
 // ******************************
 
 // カーソルやイベントの初期化
 function init_ctls(): boolean { 
-    if (!init_default_ctls())      return false;
-    if (!init_cursor())            return false; 
-//    if (!get_dom_list_cols())      return false; 
-    if (!subview_hide_all())       return false; 
-    if (!subview_act(cursor.kind)) return false; 
+    if (!init_default_ctls()) return false;
     return true;
 }
 function init_default_ctls(): boolean {
@@ -753,33 +766,10 @@ const ctls_hres_away = {
     cpNG:  isNG_chek,
 }
 
-function update_ctls(): void {}
 
-function init_cursor(): boolean {
-    cursor_Hide = {kind: T_SubView.Hide, crsr: C_CtlCursor.getObj(undefined)}; 
-    cursor_Team = {kind: T_SubView.Team, crsr: C_CtlCursor.getObj(dom_team_list)}; 
-    cursor_Guld = {kind: T_SubView.Guld, crsr: C_CtlCursor.getObj(dom_guld_list)}; 
-    cursor_Appd = {kind: T_SubView.Appd, crsr: C_CtlCursor.getObj(dom_appd_list)}; 
-    cursor_Menu = {kind: T_SubView.Menu, crsr: C_CtlCursor.getObj(dom_menu_list)}; 
-    cursor_IpNm = {kind: T_SubView.IpNm, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
-    cursor_IpCk = {kind: T_SubView.IpCk, crsr: C_CtlCursor.getObj(dom_inpt_list)}; 
-
-    if (exist_team()) { 
-        TGA_mode = T_TGA_mode.Team;
-        cursor  = cursor_Team; 
-    }
-    else if (exist_guld()) { 
-        TGA_mode = T_TGA_mode.Guld;
-        cursor  = cursor_Guld; 
-    }
-    else if (exist_appd()) { 
-        TGA_mode = T_TGA_mode.Appd;
-        cursor  = cursor_Appd; 
-    }
-    else { 
-        TGA_mode = T_TGA_mode.Hide;
-        cursor  = cursor_Hide; 
-    } 
+function update_ctls(): boolean { 
+    if (!subview_hide_all())       return false; 
+    if (!subview_act(cursor.kind)) return false; 
     return true;
 }
 
@@ -803,6 +793,7 @@ function subview_act(sview: T_SubView): boolean {
         case T_SubView.Guld: subview_act_guld();break;
         case T_SubView.Appd: subview_act_appd();break;
         case T_SubView.Menu: subview_act_menu();break;
+        case T_SubView.MnCk: subview_act_mnck();break;
         case T_SubView.IpNm: subview_act_ipnm();break;
         case T_SubView.IpCk: subview_act_ipck();break;
         case T_SubView.Hide: subview_hide_all();break;
@@ -837,32 +828,26 @@ function subview_act_appd() {
 }
 
 function subview_act_menu() {
-//    subview_hide_all();
     clear_dom_inpt_list();
     dom_inpt_fields.style.display = 'none';
 
     cursor  = cursor_Menu; 
     cursor.crsr.set_pos(0);
 
-//    update_view();
     update_dom_menu_list();
     dom_menu_fields.style.display = 'block';
 }    
 
-function subview_act_ipnm() {
-    cursor  = cursor_IpNm; 
-    cursor.crsr.set_pos(0);
+function subview_act_mnck() {
+    dom_inpt_fields.style.display = 'none';
+}    
 
-//    update_view();
+function subview_act_ipnm() {
     update_dom_inpt_list();
     dom_inpt_fields.style.display = 'block';
 }    
 
 function subview_act_ipck() {
-    cursor  = cursor_IpCk; 
-    cursor.crsr.set_pos(0);
-
-//    update_view();
     update_dom_inpt_list();
     dom_inpt_fields.style.display = 'block';
 }    
@@ -1027,7 +1012,6 @@ function go_back_view_mode(msg: string): void {
             break;
     }
     g_ctls.act(ctls_hres_nor);
-    update_view();
     g_mvm.normal_message(msg);
 }
 
@@ -1149,5 +1133,5 @@ function display_default_message(): void {
 function go_back_guld_menu() {
     clear_view();
     g_ctls.deact();
-    display_guld_menu();
+    act_guld_menu();
 }

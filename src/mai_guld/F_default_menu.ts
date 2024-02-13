@@ -1,4 +1,8 @@
-import { g_ctls }                from "./global_for_guild";
+import { init_guld_menu, act_guld_menu }  from "./F_guild_menu";
+import { init_hres_menu }                 from "./F_hres_menu";
+import { init_load_menu, init_save_menu } from "./F_save_menu";
+import { init_tomz_menu }                 from "./F_tomz_menu";
+import { g_ctls }                         from "./global_for_guild";
 
 export function hide_all_menu(): void {
     // 各ペインの表示をすべて非表示にする
@@ -26,3 +30,14 @@ export function hide_all_menu(): void {
     } catch (err) {}
 }
 
+export function init_menu() { 
+    g_ctls.deact();
+
+    init_guld_menu(); 
+    init_hres_menu(); 
+    init_load_menu(); 
+    init_save_menu(); 
+    init_tomz_menu(); 
+
+    act_guld_menu(); 
+}

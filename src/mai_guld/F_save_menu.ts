@@ -1,7 +1,3 @@
-import { 
-    hide_all_menu,
-} from "./F_default_menu";
-
 import { _ceil, _floor, _round }   from "../d_utl/F_Math";
 import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
 import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
@@ -11,10 +7,10 @@ import { POST_and_move_page }      from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 
-import { display_guld_menu }       from "./F_guild_menu";
+import { act_guld_menu }       from "./F_guild_menu";
 import { 
     g_mvm, g_team, g_guld, g_ctls, 
-    g_all_maze, g_all_team, g_all_guld, g_all_mvpt 
+    g_all_maze, g_all_team, g_all_guld, g_all_mvpt, g_vsw 
 } 
 from "./global_for_guild";
 
@@ -35,41 +31,52 @@ let is_save:boolean;
 let dom_to_uno: {[id: number]: number};
 
 
-let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
 let dom_info_detail : HTMLUListElement;
 
-export function display_load_menu(): void {
+export function init_load_menu(): void {
+    if (!_init_dom()) return;
+    _init_all();
+}
+export function init_save_menu(): void {
+    if (!_init_dom()) return;
+    _init_all()
+}
+function _init_dom(): boolean {
+    try {
+        dom_info_detail = document.getElementById('ldsv_info_detail') as HTMLUListElement;
+        dom_info_fields = document.getElementById('ldsv_info_fields') as HTMLFieldSetElement;
+        info_list       = document.getElementById('ldsv_list')        as HTMLUListElement;
+        if (dom_info_detail === null) {return false;}
+        if (dom_info_fields === null) {return false;}
+        if (info_list       === null) {return false;}
+        return true;
+    } catch (err) {
+        return false;
+    }
+}
+function _init_all(): void {
+    mode = 'view';
+    init_data();
+    init_view();
+    init_ctls();
+}
+
+
+export function act_load_menu(): void {
     is_save = false;
-
-    dom_view_switch = document.getElementById('gld_view_switch_load') as HTMLDivElement;
-    dom_info_detail = document.getElementById('load_info_detail') as HTMLUListElement;
-    dom_info_fields = document.getElementById('load_info_fields') as HTMLFieldSetElement;
-    info_list       = document.getElementById('load_list')        as HTMLUListElement;
-
-    _display_SL_menu();
+    _act_SL_menu();
 }
-export function display_save_menu(): void {
+export function act_save_menu(): void {
     is_save = true;
-
-    dom_view_switch = document.getElementById('gld_view_switch_save') as HTMLDivElement;
-    dom_info_detail = document.getElementById('save_info_detail') as HTMLUListElement;
-    dom_info_fields = document.getElementById('save_info_fields') as HTMLFieldSetElement;
-    info_list       = document.getElementById('save_list')        as HTMLUListElement;
-
-    _display_SL_menu();
+    _act_SL_menu();
 }
-async function _display_SL_menu(): Promise<void> {
-    hide_all_menu();
+async function _act_SL_menu(): Promise<void> {
+    if (dom_info_detail === null) {act_guld_menu();return;}
+    if (dom_info_fields === null) {act_guld_menu();return;}
+    if (info_list       === null) {act_guld_menu();return;}
 
-    if (dom_view_switch === null) {display_guld_menu();return;}
-    if (dom_info_detail === null) {display_guld_menu();return;}
-    if (dom_info_fields === null) {display_guld_menu();return;}
-    if (info_list       === null) {display_guld_menu();return;}
-
-    dom_view_switch.style.display = 'block';
-
-    await init_all();
+    mode = 'view';
     await update_all();
 
     if (!is_save && Object.keys(data_list).length < 1) {
@@ -83,24 +90,19 @@ async function _display_SL_menu(): Promise<void> {
         dom_info_fields.style.display = 'block';
         g_ctls.act(ctls_svld_nor);
     }
+    g_vsw.view(g_vsw.LdSv());
     display_default_message();
-}
-
-async function init_all() {
-    mode = 'view';
-    await init_data_list();
-    init_view();
-    init_ctls();
 }
 
 async function update_all(): Promise<void> {
     dom_idx = 0;
     await update_data_list().then(()=>{
-        update_view(dom_idx);
+        update_view();
+        update_ctls();
     });
 }
 
-async function init_data_list() {}
+async function init_data() {}
 
 async function update_data_list(): Promise<void> {
         await get_save_info().then((jsonObj:any) => {
@@ -128,11 +130,11 @@ async function update_data_list(): Promise<void> {
 
 function init_view() {
     init_info_list();
-    init_info_detail();
 }
-function update_view(dom_idx: number) {
+function update_view() {
     update_info_list();
-    update_info_detail(dom_idx);
+    append_info_detail();
+    update_info_detail();
 }
 function clear_view() {
     clear_info_list();
@@ -148,7 +150,7 @@ function update_info_list(): void {
 
     dom_to_uno = {};
     if (!is_save) {
-        let DOM_idx = 0;
+        let _DOM_idx = 0;
         for (let key in data_list) {
             const uno = Number(key);
             let   title: string;
@@ -163,10 +165,10 @@ function update_info_list(): void {
             }
             li.innerHTML = `${title}<p></p>`;
     
-            li.id = DOM_idx.toString();
+            li.id = _DOM_idx.toString();
             li.addEventListener("click",_OK_Fnc, false);
             info_list.appendChild(li);
-            dom_to_uno[DOM_idx++] = uno;
+            dom_to_uno[_DOM_idx++] = uno;
         }
     } else {
         for (let uno = 0; uno < 20; uno++) {
@@ -182,16 +184,13 @@ function update_info_list(): void {
             dom_to_uno[uno] = uno;
         }
     }
-    info_crsr = C_CtlCursor.getObj(info_list);
-    info_crsr.set_pos(dom_idx);
-
     return;
 }
 let old_dom_idx:number;
 function _OK_Fnc(this: HTMLLIElement, e: MouseEvent): void {
     dom_idx = Number(this.id); 
     info_crsr.set_pos(dom_idx); 
-    update_info_detail(dom_idx);
+    update_info_detail();
 
     if (dom_idx === old_dom_idx) {
         isOK();
@@ -208,7 +207,7 @@ function clear_info_list() {
     dom_idx = 0; old_dom_idx=999; 
 }
 
-function init_info_detail(): void {
+function append_info_detail(): void {
     info_detail = {};
 
     clear_info_detail();
@@ -226,7 +225,7 @@ function _append_elm(id: string): void {
     dom_info_detail.appendChild(li);
 }
 
-function update_info_detail(dom_idx: number) {
+function update_info_detail() {
     const uno = dom_to_uno[dom_idx];
 
     if (uno in data_list) {
@@ -251,8 +250,15 @@ function clear_info_detail() {
     }
 }
 
+
+
+
+
+
+
 function init_ctls(): void {
     init_default_ctls();
+    init_cursor();
 }
 
 function init_default_ctls(): boolean {
@@ -292,25 +298,40 @@ const ctls_svld_rtn = {
     cpRT:  go_back_guld_menu_for_first,
 }
 
+function init_cursor(): void {
+    
+    info_crsr = C_CtlCursor.getObj(info_list);
+    info_crsr.set_pos(0); dom_idx = 0; 
+}
+
+
+function update_ctls(): void {
+    reset_cursor();
+}
+
+function reset_cursor(): void {
+    info_crsr.set(info_list);
+    info_crsr.set_pos(0); dom_idx = 0; 
+}
 
 function do_U(): void {
     dom_idx = info_crsr.pos_U();
-    update_info_detail(dom_idx); 
+    update_info_detail(); 
     display_default_message();
 }
 function do_D(): void {
     dom_idx = info_crsr.pos_D();
-    update_info_detail(dom_idx); 
+    update_info_detail(); 
     display_default_message();
 }
 function do_L(): void {
     dom_idx = info_crsr.pos_L();
-    update_info_detail(dom_idx); 
+    update_info_detail(); 
     display_default_message();
 }
 function do_R(): void {
     dom_idx = info_crsr.pos_R();
-    update_info_detail(dom_idx); 
+    update_info_detail(); 
     display_default_message();
 }
 
@@ -514,7 +535,7 @@ function _display_default_message_for_save(): void {
 
 function go_back_guld_menu_for_first(): void {
     g_ctls.deact();
-    display_guld_menu();
+    act_guld_menu();
 }
 
 function go_back_guld_menu(): void {

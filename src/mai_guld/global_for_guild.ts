@@ -19,8 +19,6 @@ import { C_Guild }        from "../d_mdl/C_Guild";
 import { C_MovablePoint } from '../d_mdl/C_MovablePoint';
 import { C_MazeInfo }     from "../d_mdl/C_MazeInfo";
 
-import { post_load_function }         from './F_save_menu';
-
 export const g_all_maze: {[uniq_id: string]: C_Maze}  = {};
 export const g_all_team: {[uniq_id: string]: C_Team}  = {};
 export const g_all_guld: {[uniq_id: string]: C_Guild} = {};
@@ -31,12 +29,17 @@ export let   g_team: C_Team  = new C_Team();
 export let   g_guld: C_Guild = new C_Guild();
 
 
-import { C_OneLineViewMessage }   from "../d_vie/C_OneLineViewMessage";
+import { C_OneLineViewMessage } from "../d_vie/C_OneLineViewMessage";
 export var g_mvm: C_OneLineViewMessage;
 
-import { C_DefaultCtls }          from './C_DefaultCtls';
-import { display_guld_menu }      from "./F_guild_menu";
+import { C_DefaultCtls }        from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
+
+import { C_SwitchView }         from "./C_SwitchView";
+export var g_vsw: C_SwitchView;
+
+import { init_menu }            from "./F_default_menu";
+import { post_load_function }   from './F_save_menu';
 
 
 
@@ -72,12 +75,14 @@ function init_before_load_games(): void {
 }
 
 export function init_after_loaded_DOM(): void { 
-    init_after_loaded_DOM_in_common(); 
+    init_after_loaded_DOM_in_common('sytm_logs_pane'); 
 
-    g_mvm  = C_OneLineViewMessage.getObj('gld_view_message'); 
+    g_mvm  = C_OneLineViewMessage.getObj('guld_head_message'); 
     g_ctls = C_DefaultCtls.getObj(); 
+    g_vsw  = C_SwitchView.getObj(); 
+
     init_debug_mode(); 
-    display_guld_menu(); 
+    init_menu(); 
     stop_double_click(); 
 
     g_ready_games.setFunction(init_before_games);
