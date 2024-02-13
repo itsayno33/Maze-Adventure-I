@@ -104,7 +104,7 @@ export function do_load_bottom_half(msg: string): void{
 }
 
 export function init_after_loaded_DOM(): void { 
-    init_after_loaded_DOM_in_common(); 
+    init_after_loaded_DOM_in_common('pane_sytm_logs'); 
 
     g_mvm  = C_OneLineViewMessage.getObj('maze_mesg'); 
     g_cvm  = C_OneLineViewMessage.getObj('camp_mesg'); 

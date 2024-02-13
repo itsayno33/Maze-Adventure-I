@@ -1,17 +1,14 @@
 import { T_MakeEnumType }          from "../d_utl/T_MakeEnumType";
 import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
 import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
-import { C_MazeInfo, alert_mazeinfo_info } from "../d_mdl/C_MazeInfo";
+import { C_MazeInfo }              from "../d_mdl/C_MazeInfo";
 import { C_CtlCursor }             from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }      from "../d_cmn/F_POST";
 import { get_maze_info, tmp_save } from "../d_cmn/F_load_and_save";
 import { _alert, g_save, g_start_env, g_url, g_url_mai_maze } from "../d_cmn/global";
 
-import { hide_all_menu }           from "./F_default_menu";
 import { act_guld_menu }           from "./F_guild_menu";
-import { g_ctls, g_mvm, g_team }   from "./global_for_guild";
-
-let dom_view_switch : HTMLDivElement;
+import { g_ctls, g_mvm, g_team, g_vsw }   from "./global_for_guild";
 
 let dom_maze_fields : HTMLFieldSetElement;
 let dom_maze_list:    HTMLUListElement;
@@ -45,15 +42,14 @@ export function init_tomz_menu(): void {
 }
 
 export function act_tomz_menu(): void { 
-    hide_all_menu(); 
     update_all().then(()=>{
         if (!exist_hero()) { 
             hide_view_all(); 
             g_mvm.notice_message('出発の前にチームを編成してください'); 
             g_ctls.act(ctls_tomz_rtn); 
-            act_guld_menu(); 
             return;
         } 
+        g_vsw.view(g_vsw.ToMz());
         display_default_message();
         return;
     }); 
@@ -96,7 +92,6 @@ async function update_maze_list(): Promise<void> {
     return await get_maze_info().then((jsonObj:any)=>{
         maze_list = [];
         for (const json_mazeinfo of jsonObj) {
-//            alert_mazeinfo_info(json_mazeinfo);
             maze_list.push(new C_MazeInfo(json_mazeinfo));
         }
     });
@@ -122,13 +117,11 @@ function exist_mvpt_list(): boolean {
  * 
 /***********************/
 function init_view(): void {
-    init_DOM_view_tomz();
     init_DOM_maze_list();
     init_DOM_mvpt_list();
 }
 
 function update_view(): void {
-    update_DOM_view_tomz();
     update_DOM_maze_list();
     update_DOM_mvpt_list();
     show_view_all();
@@ -136,7 +129,6 @@ function update_view(): void {
 
 function clear_view() {
     hide_view_all();
-    clear_DOM_view_tomz();
     clear_DOM_maze_list();
     clear_DOM_mvpt_list();
 }
@@ -151,29 +143,6 @@ function hide_view_all(): boolean {
     dom_maze_fields.style.display = 'none';
     dom_mvpt_fields.style.display = 'none';
     return true;
-}
-
-// ******************************
-// 全体表示　関係
-// ******************************
-
-function init_DOM_view_tomz(): boolean {
-
-    try {
-        dom_view_switch = document.getElementById('gld_view_switch_tomz') as HTMLDivElement;
-    } catch (err) {
-        return false;
-    }
-    if (dom_view_switch === null) return false;
-
-    clear_DOM_view_tomz(); 
-    return true;
-}
-function update_DOM_view_tomz(): void {
-    dom_view_switch.style.display = 'block'; 
-}
-function clear_DOM_view_tomz(): void {
-    dom_view_switch.style.display = 'none'; 
 }
 
 

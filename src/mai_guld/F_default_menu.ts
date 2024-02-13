@@ -31,6 +31,8 @@ export function hide_all_menu(): void {
 }
 
 export function init_menu() { 
+    g_ctls.deact();
+
     init_guld_menu(); 
     init_hres_menu(); 
     init_load_menu(); 

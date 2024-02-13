@@ -1,7 +1,3 @@
-import { 
-    hide_all_menu,
-} from "./F_default_menu";
-
 import { _ceil, _floor, _round }   from "../d_utl/F_Math";
 import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
 import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
@@ -14,7 +10,7 @@ import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 import { act_guld_menu }       from "./F_guild_menu";
 import { 
     g_mvm, g_team, g_guld, g_ctls, 
-    g_all_maze, g_all_team, g_all_guld, g_all_mvpt 
+    g_all_maze, g_all_team, g_all_guld, g_all_mvpt, g_vsw 
 } 
 from "./global_for_guild";
 
@@ -35,40 +31,22 @@ let is_save:boolean;
 let dom_to_uno: {[id: number]: number};
 
 
-let dom_view_switch : HTMLDivElement;
 let dom_info_fields : HTMLFieldSetElement;
 let dom_info_detail : HTMLUListElement;
 
 export function init_load_menu(): void {
-    if (!_init_dom_for_load()) return;
+    if (!_init_dom()) return;
     _init_all();
 }
 export function init_save_menu(): void {
-    if (!_init_dom_for_save()) return;
+    if (!_init_dom()) return;
     _init_all()
 }
-function _init_dom_for_load(): boolean {
+function _init_dom(): boolean {
     try {
-        dom_view_switch = document.getElementById('gld_view_switch_load') as HTMLDivElement;
-        dom_info_detail = document.getElementById('load_info_detail') as HTMLUListElement;
-        dom_info_fields = document.getElementById('load_info_fields') as HTMLFieldSetElement;
-        info_list       = document.getElementById('load_list')        as HTMLUListElement;
-        if (dom_view_switch === null) {return false;}
-        if (dom_info_detail === null) {return false;}
-        if (dom_info_fields === null) {return false;}
-        if (info_list       === null) {return false;}
-        return true;
-    } catch (err) {
-        return false;
-    }
-}
-function _init_dom_for_save(): boolean {
-    try {
-        dom_view_switch = document.getElementById('gld_view_switch_save') as HTMLDivElement;
-        dom_info_detail = document.getElementById('save_info_detail') as HTMLUListElement;
-        dom_info_fields = document.getElementById('save_info_fields') as HTMLFieldSetElement;
-        info_list       = document.getElementById('save_list')        as HTMLUListElement;
-        if (dom_view_switch === null) {return false;}
+        dom_info_detail = document.getElementById('ldsv_info_detail') as HTMLUListElement;
+        dom_info_fields = document.getElementById('ldsv_info_fields') as HTMLFieldSetElement;
+        info_list       = document.getElementById('ldsv_list')        as HTMLUListElement;
         if (dom_info_detail === null) {return false;}
         if (dom_info_fields === null) {return false;}
         if (info_list       === null) {return false;}
@@ -94,15 +72,11 @@ export function act_save_menu(): void {
     _act_SL_menu();
 }
 async function _act_SL_menu(): Promise<void> {
-    hide_all_menu();
-
-    if (dom_view_switch === null) {act_guld_menu();return;}
     if (dom_info_detail === null) {act_guld_menu();return;}
     if (dom_info_fields === null) {act_guld_menu();return;}
     if (info_list       === null) {act_guld_menu();return;}
 
-    dom_view_switch.style.display = 'block';
-
+    mode = 'view';
     await update_all();
 
     if (!is_save && Object.keys(data_list).length < 1) {
@@ -116,6 +90,7 @@ async function _act_SL_menu(): Promise<void> {
         dom_info_fields.style.display = 'block';
         g_ctls.act(ctls_svld_nor);
     }
+    g_vsw.view(g_vsw.LdSv());
     display_default_message();
 }
 

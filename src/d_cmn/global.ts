@@ -47,8 +47,8 @@ export var g_mes: C_DisplayMessage;
 import { C_SaveData }         from "../d_mdl/C_SaveData";
 export const g_save = new C_SaveData();
 
-export function init_after_loaded_DOM_in_common(): void {
-    const  con = document.getElementById('pane_sytm_logs');
+export function init_after_loaded_DOM_in_common(msg_id: string = 'pane_sytm_logs'): void {
+    const  con = document.getElementById(msg_id);
     g_mes  = C_DisplayMessage.getObj(con, 'client_message');
 }
 

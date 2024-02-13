@@ -1,11 +1,9 @@
-import { hide_all_menu } from "./F_default_menu";
+import { C_CtlCursor }                  from "../d_ctl/C_CtlCursor";
 import { act_load_menu, act_save_menu } from "./F_save_menu";
-import { act_hres_menu } from "./F_hres_menu";
-import { act_tomz_menu } from "./F_tomz_menu";
-import { g_ctls, g_mvm } from "./global_for_guild";
-import { C_CtlCursor }   from "../d_ctl/C_CtlCursor";
+import { act_hres_menu }                from "./F_hres_menu";
+import { act_tomz_menu }                from "./F_tomz_menu";
+import { g_ctls, g_mvm, g_vsw }         from "./global_for_guild";
 
-let dom_view_switch : HTMLDivElement;
 let menu_list: HTMLUListElement;
 let menu_crsr: C_CtlCursor;
 
@@ -13,16 +11,13 @@ let idx_guld: number = 0;
 
 let menu_fnc: {[id: string]: number};
 
-export function init_guld_menu(): void {
-}
+export function init_guld_menu(): void {}
 
 export function act_guld_menu(): void { 
-    hide_all_menu(); 
 
     if (!init_all()) return; 
-    dom_view_switch.style.display = 'block'; 
-
     update_all(); 
+    g_vsw.view(g_vsw.Menu());
 }
 
 function init_all(): boolean {
@@ -51,13 +46,11 @@ function init_view(): boolean {
 
 function init_DOM(): boolean {
     try { 
-        dom_view_switch = document.getElementById('gld_view_switch_guld') as HTMLDivElement; 
-        menu_list       = document.getElementById('guld_menu_list') as HTMLUListElement; 
+        menu_list = document.getElementById('guld_menu_list') as HTMLUListElement; 
     } catch (err) { 
         alert('Guild Menu Get Element Error. ' + err);
         return false;
     } 
-    if (dom_view_switch === null) return false; 
     if (menu_list === null) return false;
     return true; 
 }

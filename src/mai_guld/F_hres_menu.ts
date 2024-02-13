@@ -5,12 +5,9 @@ import { C_CtlCursor }                   from "../d_ctl/C_CtlCursor";
 import { get_new_hero }                  from '../d_cmn/F_load_and_save';
 import { _alert, g_mes }                 from "../d_cmn/global";
 
-import { hide_all_menu }                 from "./F_default_menu";
 import { act_guld_menu }                 from "./F_guild_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
-import { g_mvm, g_team, g_guld, g_ctls } from "./global_for_guild";
-
-let dom_view_switch : HTMLDivElement;
+import { g_mvm, g_team, g_guld, g_ctls, g_vsw } from "./global_for_guild";
 
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
@@ -82,13 +79,12 @@ export function init_hres_menu(): void {
 }
 
 export function act_hres_menu(): void {
-    hide_all_menu(); 
-
+    mode    = 'view';
     update_all().then(()=>{ 
         if (exist_data()) {
             g_ctls.act(ctls_hres_nor);
+            g_vsw.view(g_vsw.Hres());
             display_default_message(); 
-            dom_view_switch.style.display = 'block'; 
         } else {
             act_guld_menu();
         }
@@ -300,7 +296,6 @@ function exist_menu(): boolean {
 // ******************************
 
 function init_view(): boolean { 
-    if (!init_dom_view_hres()) return false; 
     if (!init_dom_team_list()) return false; 
     if (!init_dom_guld_list()) return false; 
     if (!init_dom_appd_list()) return false; 
@@ -313,7 +308,6 @@ function init_view(): boolean {
 }
 
 function update_view() {
-    update_dom_view_hres();
     update_dom_team_list();
     update_dom_guld_list();
     update_dom_appd_list();
@@ -325,36 +319,12 @@ function update_view() {
 }
 
 function clear_view() {
-    clear_dom_view_hres();
     clear_dom_team_list();
     clear_dom_guld_list();
     clear_dom_appd_list();
     clear_dom_menu_list();
     clear_dom_inpt_list();
     clear_dom_hero_detail();
-}
-
-// ******************************
-// 全体表示　関係
-// ******************************
-
-function init_dom_view_hres(): boolean {
-
-    try {
-        dom_view_switch = document.getElementById('gld_view_switch_hres') as HTMLDivElement;
-    } catch (err) {
-        return false;
-    }
-    if (dom_view_switch === null) return false;
-
-    clear_dom_view_hres(); 
-    return true;
-}
-function update_dom_view_hres(): void {
-    dom_view_switch.style.display = 'block'; 
-}
-function clear_dom_view_hres(): void {
-    dom_view_switch.style.display = 'none'; 
 }
 
 // ******************************
