@@ -1,6 +1,6 @@
-import { g_mes }          from "../d_cmn/global";
+import { g_debug, g_mes } from "../d_cmn/global";
 import { _min, _round }   from "../d_utl/F_Math";
-import { g_maze, g_team, g_debug }  from "./global_for_maze";
+import { g_maze, g_team } from "./global_for_maze";
 
 export function init_maze2D(): void {
     calc_view2D_width();

@@ -1,5 +1,10 @@
-import { do_instant_load, do_instant_save, do_move_bottom_half } from "./F_set_move_mode";
-import { g_debug, g_maze, g_team } from "./global_for_maze";
+import { g_debug }        from "../d_cmn/global";
+import { g_maze, g_team } from "./global_for_maze";
+import { 
+    do_instant_load, 
+    do_instant_save, 
+    do_move_bottom_half 
+}                         from "./F_set_move_mode";
 
 
 export type T_Ctls= {

@@ -1,8 +1,7 @@
-import { C_OnOffButton } from '../d_vie/C_OnOffButton';
-export var g_debug: C_OnOffButton;
-
 import { 
     _alert, 
+    g_alert, 
+    g_debug, 
     g_my_url, 
     g_ready_games, 
     g_save, 
@@ -76,7 +75,7 @@ function init_before_load_games(): void {
 }
 
 export function init_after_loaded_DOM(): void { 
-    init_after_loaded_DOM_in_common('sytm_logs_pane'); 
+    init_after_loaded_DOM_in_common('debug_mode', 'sytm_logs_pane'); 
 
     g_mvm  = C_OneLineViewMessage.getObj('guld_head_message'); 
     g_ctls = C_DefaultCtls.getObj(); 
@@ -93,17 +92,16 @@ export function init_after_loaded_DOM(): void {
 export function init_debug_mode(): void {
 
     try {
-        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-        if (btn === null) return;
-
-        g_debug = C_OnOffButton.getObj(btn, {
+        g_debug.setObj({
             yn:        false,
             onName:   'DEBUG',
             offName:  '通常',
             onClass:  'debug',
             offClass: 'normal',
         });
-        btn.addEventListener("click", (event)=>{g_debug.toggle();}, false);
+        g_debug.addFnc(toggle_debug_mode);g_debug.setON();
+
+        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
                 case "KeyE":
@@ -119,4 +117,8 @@ export function init_debug_mode(): void {
 
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
+}
+
+function toggle_debug_mode(yn: boolean): void {
+    g_alert.display(yn);
 }

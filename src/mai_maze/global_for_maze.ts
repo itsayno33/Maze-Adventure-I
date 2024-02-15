@@ -1,9 +1,5 @@
-
-import { T_CtlsMode } from "./T_CtlsMode";
+import { T_CtlsMode }    from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
-
-import { C_OnOffButton } from '../d_vie/C_OnOffButton';
-export var g_debug: C_OnOffButton;
 
 import { init_maze2D, display_maze2D } from "./F_display_maze2D";
 import { init_maze3D, T_DrowSet }      from "./F_display_maze3D";
@@ -31,6 +27,7 @@ export const g_guld = new C_Guild();
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
 
+import { init_all_mode }            from "./F_set_mode";
 import { decode_all, decode_maze }  from "./F_set_save_mode";
 import { do_move_bottom_half, act_move_mode } from "./F_set_move_mode";
 
@@ -42,12 +39,13 @@ import {
 } from "../d_cmn/F_load_and_save";
 
 import { 
+    g_alert,
+    g_debug,
     g_mes, 
     g_ready_games, 
     g_start_env, 
     init_after_loaded_DOM_in_common 
 } from "../d_cmn/global";
-import { init_all_mode } from "./F_set_mode";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -106,7 +104,7 @@ export function do_load_bottom_half(msg: string): void{
 }
 
 export function init_after_loaded_DOM(): void { 
-    init_after_loaded_DOM_in_common('pane_sytm_logs'); 
+    init_after_loaded_DOM_in_common('debug_mode', 'pane_sytm_logs'); 
 
     g_mvm  = C_OneLineViewMessage.getObj('maze_mesg'); 
     g_cvm  = C_OneLineViewMessage.getObj('camp_mesg'); 
@@ -123,18 +121,16 @@ export function init_after_loaded_DOM(): void {
 
 export function init_debug_mode(): void {
     try {
-        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-        if (btn === null) return;
-
-        g_debug = C_OnOffButton.getObj(btn, {
+        g_debug.setObj({
             yn:        false,
             onName:   'DEBUG',
             offName:  '通常',
             onClass:  'debug',
             offClass: 'normal',
         });
+        g_debug.addFnc(toggle_debug_mode);g_debug.setON();
 
-        btn.addEventListener("click", (event)=>{toggle_debug_mode(event);}, false);
+        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
                 case "KeyE":
@@ -146,9 +142,9 @@ export function init_debug_mode(): void {
     } catch (err) {return};
 }
 
-function toggle_debug_mode(ev: MouseEvent): void {
-    g_debug.toggle();
+function toggle_debug_mode(yn: boolean): void {
     display_maze2D();
+    g_alert.display(yn);
 }
 
 
