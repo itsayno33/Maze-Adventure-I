@@ -1,5 +1,5 @@
 import { do_instant_load, do_instant_save, do_move_bottom_half } from "./F_set_move_mode";
-import { g_debug_mode, g_maze, g_team } from "./global_for_maze";
+import { g_debug, g_maze, g_team } from "./global_for_maze";
 
 
 export type T_Ctls= {
@@ -280,7 +280,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyL':
-            if (g_debug_mode) {
+            if (g_debug.isON()) {
                 do_instant_load();
             } else {
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
@@ -310,7 +310,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyS':
-            if (g_debug_mode) {
+            if (g_debug.isON()) {
                 do_instant_save();
                 do_move_bottom_half('blink_off');
             } else {
@@ -318,7 +318,7 @@ function key_press_function(e: KeyboardEvent):void  {
             }
             break;
         case 'KeyU':
-            if (g_debug_mode) {
+            if (g_debug.isON()) {
                 const z = g_team.get_z();
                 if (z > 0) g_team.set_z(z - 1);
                 do_move_bottom_half('blink_off');
@@ -327,7 +327,7 @@ function key_press_function(e: KeyboardEvent):void  {
             }
             break;
         case 'KeyD':
-            if (g_debug_mode) {
+            if (g_debug.isON()) {
                 const z = g_team.get_z();
                 if (z < g_maze.get_z_max() - 1) g_team.set_z(z + 1);
                 do_move_bottom_half('blink_off');

@@ -1,3 +1,5 @@
+import { _alert } from "../d_cmn/global";
+
 export interface JSON_MazeInfo {
     name:      string;
     mbname:    string;
@@ -74,7 +76,7 @@ export class C_MazeInfo {
     }
     
     public alert(): void {
-        alert("MazeInfo Data:"
+        _alert("MazeInfo Data:"
             + "\nname : "       + (this.name      ?? '?')
             + "\nmbname: "      + (this.mbname    ?? '?')
             + "\nlv :"          + (this.lv        ?? '?')

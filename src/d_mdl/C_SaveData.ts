@@ -2,6 +2,7 @@ import { C_Maze, JSON_Maze, alert_maze_info  }  from "./C_Maze";
 import { C_Team, JSON_Team, alert_team_info  }  from "./C_Team";
 import { C_Guild, JSON_Guild, alert_guld_info } from "./C_Guild";
 import { C_MovablePoint, JSON_MovablePoint, alert_mvpt_info } from "./C_MovablePoint";
+import { _alert }                               from "../d_cmn/global";
 
 // サーバー側とやりとりするJSON形式データのテンプレート
 export interface JSON_Any {
@@ -223,7 +224,7 @@ export class C_SaveData implements I_JSON {
     }
     
     public alert(): void {
-        alert("Save Info:" 
+        _alert("Save Info:" 
             + "\nsave_id:    " + (this.save_id   ?? '?')
             + "\nplayer_id:  " + (this.player_id ?? '?')
             + "\nuniq_no:    " + (this.uniq_no   ?? '?')

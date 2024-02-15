@@ -1,9 +1,11 @@
+
 import { T_CtlsMode } from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
-import { init_maze2D, display_maze2D } from "./F_display_maze2D";
-export var g_debug_mode: boolean = false;
+import { C_OnOffButton } from '../d_vie/C_OnOffButton';
+export var g_debug: C_OnOffButton;
 
+import { init_maze2D, display_maze2D } from "./F_display_maze2D";
 import { init_maze3D, T_DrowSet }      from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
@@ -111,7 +113,6 @@ export function init_after_loaded_DOM(): void {
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
 
-
     init_debug_mode();
     stop_double_click(); 
 
@@ -121,38 +122,32 @@ export function init_after_loaded_DOM(): void {
 }
 
 export function init_debug_mode(): void {
-    g_debug_mode = true;
+    try {
+        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
+        if (btn === null) return;
 
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    toggle_debug_mode();
-    btn.addEventListener("click", (event)=>{toggle_debug_mode();}, false);
-    window.addEventListener("keydown",(event)=>{
-        switch (event.code) {
-            case "Escape":
-            case "NumpadMultiply":
-            case "F12":
-                btn.click();
-        }
-    })
+        g_debug = C_OnOffButton.getObj(btn, {
+            yn:        false,
+            onName:   'DEBUG',
+            offName:  '通常',
+            onClass:  'debug',
+            offClass: 'normal',
+        });
+
+        btn.addEventListener("click", (event)=>{toggle_debug_mode(event);}, false);
+        window.addEventListener("keydown",(event)=>{
+            switch (event.code) {
+                case "KeyE":
+                case "NumpadMultiply":
+                case "F1":
+                    btn.click();
+            }
+        })
+    } catch (err) {return};
 }
 
-function toggle_debug_mode(): void {
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    if (g_debug_mode) {
-        g_debug_mode = false;
-        btn.setAttribute('value', 'false');
-        btn.innerHTML = '通常';
-        btn.style.setProperty('background-color', '#f0f8ff');
-        btn.style.setProperty('color', '#008000');
-    } else {
-        g_debug_mode = true;
-        btn.setAttribute('value', 'true');
-        btn.innerHTML = 'デバッグ';
-        btn.style.setProperty('background-color', '#ff0000');
-        btn.style.setProperty('color', '#ffffff');
-    }
+function toggle_debug_mode(ev: MouseEvent): void {
+    g_debug.toggle();
     display_maze2D();
 }
 

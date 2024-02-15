@@ -1,6 +1,6 @@
 import { g_mes }          from "../d_cmn/global";
 import { _min, _round }   from "../d_utl/F_Math";
-import { g_maze, g_team, g_debug_mode }  from "./global_for_maze";
+import { g_maze, g_team, g_debug }  from "./global_for_maze";
 
 export function init_maze2D(): void {
     calc_view2D_width();
@@ -31,6 +31,6 @@ function calc_view2D_width(): void {
 
 export function display_maze2D(): void { 
     const pre: HTMLElement|null = document.getElementById('maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_pd().z, g_debug_mode);
+    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_pd().z, g_debug.isON());
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }

@@ -4,7 +4,7 @@ import { C_Point }                    from "../d_mdl/C_Point";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
 import { act_camp_mode }                         from "./F_set_camp_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
-import { set_g_save }                            from "./F_set_save_mode";
+import { decode_all, set_g_save }                            from "./F_set_save_mode";
 import { display_maze2D }                        from "./F_display_maze2D"; 
 import { display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
@@ -45,6 +45,7 @@ export function act_move_mode(): void {
 
 export function do_instant_load(): void {
     instant_load().then((jsonObj:any)=>{  
+        decode_all(jsonObj?.save);
         do_load_bottom_half('ロードしました');  
     });
 }

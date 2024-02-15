@@ -1,6 +1,7 @@
 import { C_Location, JSON_Location } from "./C_Location";
 import { I_JSON_Uniq }               from "./C_SaveData";
 import { _get_uuid }                 from "../d_utl/F_Rand";
+import { _alert }                    from "../d_cmn/global";
 
 export interface JSON_MovablePoint extends JSON_Location {
     uniq_id?:  string,
@@ -83,7 +84,7 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
     }
     
     public alert(): void {
-        alert("MvPt Info:" 
+        _alert("MvPt Info:" 
             + "\nuniq_id:  "  + (this.uniq_id    ?? '?')
             + "\ncur_url:  "  + (this.cur_url    ?? '?')
             + "\nteam_uid: "  + (this.team_uid   ?? '?')

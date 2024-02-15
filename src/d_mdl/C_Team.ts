@@ -1,4 +1,3 @@
-import { _get_uuid }               from "../d_utl/F_Rand";
 import { C_Point }                 from "./C_Point";
 import { C_PointDir, T_Direction } from './C_PointDir';
 import { I_Locate }                from './C_Location';
@@ -8,6 +7,8 @@ import { C_Goods,  JSON_Goods }    from './C_Goods';
 import { C_Hero, JSON_Hero }       from "./C_Hero";
 import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
 import { I_Exist, I_HopeAction }   from "./I_Common"
+import { _get_uuid }               from "../d_utl/F_Rand";
+import { _alert }                  from "../d_cmn/global";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -276,7 +277,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
     }
     
     public alert(): void {
-        alert("Team Info:" 
+        _alert("Team Info:" 
             + "\nid:    "     + (this.my_id            ?? '?')
             + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
             + "\nname:  "     + (this.my_name          ?? '?')

@@ -1,4 +1,5 @@
-export var g_debug_mode: boolean = false;
+import { C_OnOffButton } from '../d_vie/C_OnOffButton';
+export var g_debug: C_OnOffButton;
 
 import { 
     _alert, 
@@ -90,41 +91,31 @@ export function init_after_loaded_DOM(): void {
 }
 
 export function init_debug_mode(): void {
-    g_debug_mode = true;
 
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    toggle_debug_mode();
-    btn.addEventListener("click", (event)=>{toggle_debug_mode();}, false);
-    window.addEventListener("keydown",(event)=>{
-        switch (event.code) {
-            case "Escape":
-            case "NumpadMultiply":
-            case "F12":
-                btn.click();
-                break;
-        }
-    })
+    try {
+        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
+        if (btn === null) return;
+
+        g_debug = C_OnOffButton.getObj(btn, {
+            yn:        false,
+            onName:   'DEBUG',
+            offName:  '通常',
+            onClass:  'debug',
+            offClass: 'normal',
+        });
+        btn.addEventListener("click", (event)=>{g_debug.toggle();}, false);
+        window.addEventListener("keydown",(event)=>{
+            switch (event.code) {
+                case "KeyE":
+                case "NumpadMultiply":
+                case "F1":
+                    btn.click();
+                    break;
+            }
+        })
+        return;
+    } catch (err) {return};
 } 
-
-function toggle_debug_mode(): void {
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    if (g_debug_mode) {
-        g_debug_mode = false;
-        btn.setAttribute('value', 'false');
-        btn.innerHTML = '通常モード中';
-        btn.style.setProperty('background-color', '#f0f8ff');
-        btn.style.setProperty('color', '#008000');
-    } else {
-        g_debug_mode = true;
-        btn.setAttribute('value', 'true');
-        btn.innerHTML = 'デバッグモード中';
-        btn.style.setProperty('background-color', '#ff0000');
-        btn.style.setProperty('color', '#ffffff');
-    }
-//    display_maze2D();
-}
 
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})

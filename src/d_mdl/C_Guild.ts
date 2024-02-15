@@ -3,6 +3,7 @@ import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { C_Goods, JSON_Goods }   from "./C_Goods";
 import { _get_uuid }             from "../d_utl/F_Rand";
+import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,
@@ -110,14 +111,14 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     }
     
     public alert(): void {
-        alert("Guild Info:" 
-        + "\nid:       " + (this.id             ?? '?')
-        + "\nuniq_id:  " + (this.uniq_id        ?? '?')
-        + "\nsave_id:  " + (this.save_id        ?? '?')
-        + "\nname:     " + (this.name           ?? '?')
-        + "\ngoods:    " + (Object.keys(this.goods??0).length)
-        + "\nheroes:   " + (this.heroes?.length ?? '?')
-        + "\n"
+        _alert("Guild Info:" 
+            + "\nid:       " + (this.id             ?? '?')
+            + "\nuniq_id:  " + (this.uniq_id        ?? '?')
+            + "\nsave_id:  " + (this.save_id        ?? '?')
+            + "\nname:     " + (this.name           ?? '?')
+            + "\ngoods:    " + (Object.keys(this.goods??0).length)
+            + "\nheroes:   " + (this.heroes?.length ?? '?')
+            + "\n"
         );
     }
 }
