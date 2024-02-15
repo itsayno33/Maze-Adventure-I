@@ -24,12 +24,35 @@ export class C_AlertLog {
     protected clr:  HTMLButtonElement|undefined;
     protected cls:  HTMLButtonElement|undefined;
 
+    protected mousep: {x: number, y: number} = {x:0, y:0}
+
     protected constructor(target: HTMLDialogElement) {
         this.id  = target.id;
         this.dia = target;
         this.msg = {};
+
         this.__clearDialog();
         this.__makeDialog();
+
+        this.dia.setAttribute('draggable', 'true');
+        this.dia.addEventListener('dragstart', (ev:DragEvent)=>{ 
+            this.mousep = {x:0, y:0};
+            this.mousep.y = this.dia.offsetTop  - ev.pageY;
+            this.mousep.x = this.dia.offsetLeft - ev.pageX;
+            ev.dataTransfer?.setDragImage(document.createElement('div'), 0, 0);
+        });
+        this.dia.addEventListener('drag', (ev:DragEvent)=>{
+            if (ev.x === 0 && ev.y === 0) return;
+            const top  = ev.pageY + this.mousep.y;
+            const left = ev.pageX + this.mousep.x;
+            const right = window.outerWidth - ev.pageX;
+            this.dia.style.top   = top   + 'px';
+            this.dia.style.left  = left  + 'px';
+            this.dia.style.right = right + 'px';
+        });
+        this.dia.addEventListener('dragend', (ev:DragEvent)=>{ 
+            this.mousep = {x:0, y:0};
+        });
     }
     protected __clearDialog(): void {
         while (this.dia.firstChild) this.dia.removeChild(this.dia.firstChild);
@@ -47,6 +70,12 @@ export class C_AlertLog {
             this.upd.addEventListener('click', ()=>{this.update()}, false);
             this.clr.addEventListener('click', ()=>{this.clear ()}, false);
             this.cls.addEventListener('click', ()=>{this.hide  ()}, false);
+
+
+            this.dia.style.setProperty('border', 'none');
+            this.dia.style.setProperty('border-radius', '10px');
+            this.dia.style.setProperty('border', 'none');
+            this.dia.style.setProperty('padding', '20px');
 
             this.logs.style.setProperty('min-height', '3.0rem');
             this.logs.style.setProperty('max-height', '80dvh');
