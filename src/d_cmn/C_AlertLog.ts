@@ -32,11 +32,13 @@ export class C_AlertLog extends C_Dialog {
         this.__makeDialog();
     }
     protected __clearDialog(): void {
-        while (this.ctx.firstChild) this.ctx.removeChild(this.ctx.firstChild);
+        const ctx = super.getWindow();
+        while (ctx.firstChild) ctx.removeChild(ctx.firstChild);
     }
     protected __makeDialog(): void {
+        const ctx = super.getWindow();
         try {
-            this.pane = this.__makePanel ('pane',   this.ctx);
+            this.pane = this.__makePanel ('pane',   ctx);
             this.logs = this.__makePanel ('logs',   this.pane);
             this.btns = this.__makePanel ('btns',   this.pane);
 
@@ -51,7 +53,8 @@ export class C_AlertLog extends C_Dialog {
             this.logs.style.setProperty('user-select', 'text');
             this.logs.style.setProperty('min-height',  '3.0rem');
             this.logs.style.setProperty('max-height',  '80dvh');
-            this.logs.style.setProperty('overflow-y',  'scroll');
+            this.logs.style.setProperty('overflow-x',  'auto');
+            this.logs.style.setProperty('overflow-y',  'auto');
         } catch (err) {}
     }
     protected __makePanel(id: string, parent: HTMLElement): HTMLDivElement {
@@ -82,6 +85,7 @@ export class C_AlertLog extends C_Dialog {
 
     public update(): void {this.__dom_update()}
     protected __dom_update(): void {
+        this.__dom_clear();
         for (const title in this.msg) {
             if (this.msg[title] === undefined) continue;
             if (this.msg[title].length < 1)    continue;

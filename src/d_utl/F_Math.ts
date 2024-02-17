@@ -1,9 +1,19 @@
 // 数値チェック
 export function _isNum(numVal: string): boolean {
     // チェック条件パターン
-    let pattern = /^[-]?([1-9]\d*|0)(\.\d+)?$/;
+    const pattern = /^[-+]?([1-9]\d*|0)(\.\d+)?$/;
     // 数値チェック
     return pattern.test(numVal);
+}
+
+// 数値取り出し
+export function _getNum(numVal: string): number {
+    // チェック条件パターン
+//    const pattern = /[-]?([1-9]\d*|0)(\.\d+)?/;
+    const pattern = /([^0-9])/g;
+    const valstr  = numVal.replace(pattern,'');
+    // 数値チェック
+    return Number(valstr);
 }
 
 // 四捨五入
