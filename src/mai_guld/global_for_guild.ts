@@ -1,3 +1,4 @@
+import { C_Dialog } from './../d_cmn/C_Dialog';
 import { 
     _alert, 
     g_alert, 
@@ -41,7 +42,7 @@ export var g_vsw: C_SwitchView;
 import { init_menu }            from "./F_default_menu";
 import { post_load_function }   from './F_save_menu';
 
-
+export let g_dialog: C_Dialog;
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -92,6 +93,7 @@ export function init_after_loaded_DOM(): void {
 export function init_debug_mode(): void {
 
     try {
+//        g_dialog = new C_Dialog();
         g_debug.setObj({
             yn:        false,
             onName:   'DEBUG',
@@ -120,5 +122,6 @@ function stop_double_click(): void {
 }
 
 function toggle_debug_mode(yn: boolean): void {
+//    g_dialog.display(yn);
     g_alert.display(yn);
 }
