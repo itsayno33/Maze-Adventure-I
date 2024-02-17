@@ -38,7 +38,8 @@ export class C_AlertLog extends C_Dialog {
     protected __makeDialog(): void {
         const ctx = super.getWindow();
         try {
-            this.pane = this.__makePanel ('pane',   ctx);
+            this.pane = this.__makeWindow ('pane');
+
             this.logs = this.__makePanel ('logs',   this.pane);
             this.btns = this.__makePanel ('btns',   this.pane);
 
@@ -56,6 +57,12 @@ export class C_AlertLog extends C_Dialog {
             this.logs.style.setProperty('overflow-x',  'auto');
             this.logs.style.setProperty('overflow-y',  'auto');
         } catch (err) {}
+    }
+    protected __makeWindow(id: string): HTMLDivElement {
+        const div  = document.createElement('div') as HTMLDivElement;
+        div.id     = `${this.id}_${id}`;
+        this.setWindow(div);
+        return div;
     }
     protected __makePanel(id: string, parent: HTMLElement): HTMLDivElement {
         const div  = document.createElement('div') as HTMLDivElement;

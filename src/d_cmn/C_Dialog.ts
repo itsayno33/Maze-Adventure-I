@@ -3,6 +3,28 @@ import { _get_uuid } from "../d_utl/F_Rand";
 
 type xy = {x: number, y: number};
 
+class resizeDom {
+    private __elem: HTMLElement;
+    private __size: xy;
+    public constructor(elem?: HTMLElement) {
+        this.__elem = document.body;
+        this.__size = {x:0, y:0};
+        if (elem !== undefined) this.set(elem);
+    }
+    public set(elem: HTMLElement) {
+        this.__elem = elem;
+        this.__size.x = this.__elem.offsetWidth;  
+        this.__size.y = this.__elem.offsetHeight; 
+    }
+    public reset() {
+        this.__size.x = this.__elem.offsetWidth; 
+        this.__size.y = this.__elem.offsetHeight; 
+    }
+    public resize(x: number, y: number): void {
+        this.__elem.style.width  = this.__size.x + x + 'px';
+        this.__elem.style.height = this.__size.y + y + 'px';
+    }
+}
 export class C_Dialog {
     protected id:  string;
     private   __dia: HTMLDialogElement;
@@ -10,6 +32,7 @@ export class C_Dialog {
     private   __ctx: HTMLDivElement;
     private   __mop: xy = {x:0, y:0};
     private   __siz: xy = {x:0, y:0};
+    private   __rsz: resizeDom;
 
     public constructor(target?: HTMLDialogElement) {
         if (target === undefined) {
@@ -30,7 +53,7 @@ export class C_Dialog {
         this.__ctx = document.createElement('div') as HTMLDivElement;
         this.__ctx.style.gridArea = 'mm';
         this.__pan.appendChild(this.__ctx);
-
+        this.__rsz = new resizeDom(this.__ctx);
 
         this.__set_bar_style('tm');
         this.__set_bar_style('ml');
@@ -46,18 +69,36 @@ export class C_Dialog {
         this.__dia.appendChild(this.__pan);
     } 
     private __set_dialog_style(): void {
-        this.__pan.style.border       = 'none';
-        this.__pan.style.borderRadius = '10px';
-        this.__pan.style.userSelect   = 'auto';
-        this.__pan.style.margin       = '0';
-        this.__pan.style.padding      = '0';
+        this.__dia.style.border       = 'none';
+        this.__dia.style.borderRadius = '10px';
+        this.__dia.style.userSelect   = 'auto';
+        this.__dia.style.margin       = '0';
+        this.__dia.style.padding      = '0';
 
         this.__pan.style.display      = 'grid';
-        this.__pan.style.gridTemplateAreas = '"tl tm tr" "ml mm mr" "bl bm br"';
+        this.__pan.style.gridTemplateColumns = `
+            [tl-start ml-start bl-start]
+            20px
+            [tl-end ml-end bl-end tm-start mm-start bm-start]
+            1fr
+            [tm-end mm-end bm-end tr-start mr-start br-start]
+            20px
+            [tr-end mr-end br-end]
+        `;
+        this.__pan.style.gridTemplateRows = `
+            [tl-start tm-start tr-start]
+            20px
+            [tl-end tm-end tr-end ml-start mm-start mr-start]
+            1fr
+            [ml-end mm-end mr-end bl-start bm-start br-start]
+            20px
+            [bl-end bm-end br-end]
+        `;
+
+//        this.__pan.style.gridTemplateAreas = '"tl tm tr" "ml mm mr" "bl bm br"';
     }
     private __set_bar_style(area: string): HTMLElement {
         const elm = document.createElement('div') as HTMLDivElement;
-        elm.innerHTML = "　";
         elm.style.backgroundColor = 'lightcyan';
         elm.style.userSelect      = 'none';
         elm.style.gridArea = area;
@@ -67,7 +108,6 @@ export class C_Dialog {
     }
     private __set_corner_style(area: string): HTMLElement {
         const elm = document.createElement('div') as HTMLDivElement;
-        elm.innerHTML = "　";
         elm.style.backgroundColor = 'cyan';
         elm.style.userSelect      = 'none';
         elm.style.gridArea = area;
@@ -79,19 +119,24 @@ export class C_Dialog {
         elm.setAttribute('draggable', 'true');
         elm.addEventListener('dragstart', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
-            this.__siz = {x:0, y:0};
+//            this.__siz = {x:0, y:0};
             this.__mop.y = ev.pageY;
             this.__mop.x = ev.pageX;
-            this.__siz.y = this.__ctx.offsetHeight;
-            this.__siz.x = this.__ctx.offsetWidth;
+            this.__rsz.reset();
+
+//            this.__siz.y = this.__ctx.offsetHeight;
+//            this.__siz.x = this.__ctx.offsetWidth;
         });
         elm.addEventListener('drag', (ev:DragEvent)=>{
-            if (ev.x === 0 && ev.y === 0) return;
-            const ctx_sizeY  = this.__siz.y + ev.pageY - this.__mop.y;
-            const ctx_sizeX  = this.__siz.x + ev.pageX - this.__mop.x;
+            if (ev.pageX === this.__mop.x && ev.pageY === this.__mop.y) return;
+            const sizeX  = ev.pageX - this.__mop.x;
+            const sizeY  = ev.pageY - this.__mop.y;
+            this.__rsz.resize(sizeX, sizeY);
 
-            this.__ctx.style.height = ctx_sizeY + 'px';
-            this.__ctx.style.width  = ctx_sizeX + 'px';
+//            const ctx_sizeY  = this.__siz.y + ev.pageY - this.__mop.y;
+//            const ctx_sizeX  = this.__siz.x + ev.pageX - this.__mop.x;
+//            this.__ctx.style.height = ctx_sizeY + 'px';
+//            this.__ctx.style.width  = ctx_sizeX + 'px';
         });
         elm.addEventListener('dragend', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
@@ -119,8 +164,17 @@ export class C_Dialog {
             this.__mop = {x:0, y:0};
         });
     }
-    protected getWindow(): HTMLElement {
+    protected getWindow(): HTMLDivElement {
         return this.__ctx;
+    }
+    protected setWindow(ctx: HTMLDivElement): HTMLDivElement {
+        try {
+            this.__pan.removeChild(this.__ctx);
+            this.__pan.appendChild(ctx);
+            this.__rsz.set(ctx);
+            return this.__ctx = ctx;
+        } catch (err) {}
+        return ctx;
     }
     
     public show(): void { 
