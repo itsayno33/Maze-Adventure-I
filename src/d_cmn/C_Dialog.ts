@@ -31,8 +31,7 @@ export class C_Dialog {
     private   __pan: HTMLDivElement;
     private   __ctx: HTMLDivElement;
     private   __mop: xy = {x:0, y:0};
-    private   __siz: xy = {x:0, y:0};
-    private   __rsz: resizeDom;
+    private   __rsz: {[id: string]: resizeDom};
 
     public constructor(target?: HTMLDialogElement) {
         if (target === undefined) {
@@ -53,7 +52,8 @@ export class C_Dialog {
         this.__ctx = document.createElement('div') as HTMLDivElement;
         this.__ctx.style.gridArea = 'mm';
         this.__pan.appendChild(this.__ctx);
-        this.__rsz = new resizeDom(this.__ctx);
+
+        this.__rsz = {}; this.appendZoom(this.__ctx);
 
         this.__set_bar_style('tm');
         this.__set_bar_style('ml');
@@ -119,28 +119,18 @@ export class C_Dialog {
         elm.setAttribute('draggable', 'true');
         elm.addEventListener('dragstart', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
-//            this.__siz = {x:0, y:0};
             this.__mop.y = ev.pageY;
             this.__mop.x = ev.pageX;
-            this.__rsz.reset();
-
-//            this.__siz.y = this.__ctx.offsetHeight;
-//            this.__siz.x = this.__ctx.offsetWidth;
+            for (const ii in this.__rsz) this.__rsz[ii].reset();
         });
         elm.addEventListener('drag', (ev:DragEvent)=>{
             if (ev.pageX === this.__mop.x && ev.pageY === this.__mop.y) return;
             const sizeX  = ev.pageX - this.__mop.x;
             const sizeY  = ev.pageY - this.__mop.y;
-            this.__rsz.resize(sizeX, sizeY);
-
-//            const ctx_sizeY  = this.__siz.y + ev.pageY - this.__mop.y;
-//            const ctx_sizeX  = this.__siz.x + ev.pageX - this.__mop.x;
-//            this.__ctx.style.height = ctx_sizeY + 'px';
-//            this.__ctx.style.width  = ctx_sizeX + 'px';
+            for (const ii in this.__rsz) this.__rsz[ii].resize(sizeX, sizeY);
         });
         elm.addEventListener('dragend', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
-            this.__siz = {x:0, y:0};
         });
     }
     private __set_move_dialog(elm: HTMLElement): void { 
@@ -170,11 +160,22 @@ export class C_Dialog {
     protected setWindow(ctx: HTMLDivElement): HTMLDivElement {
         try {
             this.__pan.removeChild(this.__ctx);
+            this.removeZoom(this.__ctx);
+
             this.__pan.appendChild(ctx);
-            this.__rsz.set(ctx);
+            this.appendZoom(ctx);
             return this.__ctx = ctx;
         } catch (err) {}
         return ctx;
+    }
+
+    public appendZoom(elm: HTMLElement): void {
+        if (elm.id === undefined || elm.id === '') elm.id = 'dialog_elm_' + _get_uuid();
+        this.__rsz[elm.id] = new resizeDom(elm);
+    }
+    public removeZoom(elm: HTMLElement): void {
+        if (elm.id === undefined || elm.id === '') return;
+        if (elm.id in this.__rsz) delete this.__rsz[elm.id];
     }
     
     public show(): void { 
