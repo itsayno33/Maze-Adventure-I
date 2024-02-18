@@ -56,9 +56,7 @@ export class C_AlertLog extends C_Dialog {
             this.logs.style.setProperty('max-height',  '80dvh');
             this.logs.style.setProperty('overflow-x',  'auto');
             this.logs.style.setProperty('overflow-y',  'auto');
-
-            this.removeZoom(this.pane);
-            this.appendZoom(this.logs);
+            this.setZoomElm(this.logs);
         } catch (err) {}
     }
     protected __makeWindow(id: string): HTMLDivElement {

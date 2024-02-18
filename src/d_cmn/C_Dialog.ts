@@ -1,30 +1,7 @@
 import { _getNum } from "../d_utl/F_Math";
 import { _get_uuid } from "../d_utl/F_Rand";
-
 type xy = {x: number, y: number};
 
-class resizeDom {
-    private __elem: HTMLElement;
-    private __size: xy;
-    public constructor(elem?: HTMLElement) {
-        this.__elem = document.body;
-        this.__size = {x:0, y:0};
-        if (elem !== undefined) this.set(elem);
-    }
-    public set(elem: HTMLElement) {
-        this.__elem = elem;
-        this.__size.x = this.__elem.offsetWidth;  
-        this.__size.y = this.__elem.offsetHeight; 
-    }
-    public reset() {
-        this.__size.x = this.__elem.offsetWidth; 
-        this.__size.y = this.__elem.offsetHeight; 
-    }
-    public resize(x: number, y: number): void {
-        this.__elem.style.width  = this.__size.x + x + 'px';
-        this.__elem.style.height = this.__size.y + y + 'px';
-    }
-}
 export class C_Dialog {
     protected id:  string;
     private   __dia: HTMLDialogElement;
@@ -53,7 +30,7 @@ export class C_Dialog {
         this.__ctx.style.gridArea = 'mm';
         this.__pan.appendChild(this.__ctx);
 
-        this.__rsz = {}; this.appendZoom(this.__ctx);
+        this.__rsz = {};
 
         this.__set_bar_style('tm');
         this.__set_bar_style('ml');
@@ -111,6 +88,10 @@ export class C_Dialog {
         elm.style.backgroundColor = 'cyan';
         elm.style.userSelect      = 'none';
         elm.style.gridArea = area;
+
+        if (elm.id === undefined || elm.id === '') elm.id = area;
+        this.__rsz[elm.id] = new resizeDom(elm, this.__dia);
+
         this.__set_zoom_dialog(elm);
         this.__pan.appendChild(elm);
         return elm;
@@ -119,18 +100,21 @@ export class C_Dialog {
         elm.setAttribute('draggable', 'true');
         elm.addEventListener('dragstart', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
-            this.__mop.y = ev.pageY;
             this.__mop.x = ev.pageX;
-            for (const ii in this.__rsz) this.__rsz[ii].reset();
+            this.__mop.y = ev.pageY;
+            if (elm.id in this.__rsz) this.__rsz[elm.id].reset();
         });
         elm.addEventListener('drag', (ev:DragEvent)=>{
             if (ev.pageX === this.__mop.x && ev.pageY === this.__mop.y) return;
-            const sizeX  = ev.pageX - this.__mop.x;
-            const sizeY  = ev.pageY - this.__mop.y;
-            for (const ii in this.__rsz) this.__rsz[ii].resize(sizeX, sizeY);
+
+            const resizeX  = ev.pageX - this.__mop.x;
+            const resizeY  = ev.pageY - this.__mop.y;
+            if (elm.id in this.__rsz) this.__rsz[elm.id].resize(resizeX, resizeY);
         });
         elm.addEventListener('dragend', (ev:DragEvent)=>{ 
-            this.__mop = {x:0, y:0};
+            const resizeX  = ev.pageX - this.__mop.x;
+            const resizeY  = ev.pageY - this.__mop.y;
+            if (elm.id in this.__rsz) this.__rsz[elm.id].resize(resizeX, resizeY);
         });
     }
     private __set_move_dialog(elm: HTMLElement): void { 
@@ -160,22 +144,17 @@ export class C_Dialog {
     protected setWindow(ctx: HTMLDivElement): HTMLDivElement {
         try {
             this.__pan.removeChild(this.__ctx);
-            this.removeZoom(this.__ctx);
-
             this.__pan.appendChild(ctx);
-            this.appendZoom(ctx);
             return this.__ctx = ctx;
         } catch (err) {}
         return ctx;
     }
 
-    public appendZoom(elm: HTMLElement): void {
-        if (elm.id === undefined || elm.id === '') elm.id = 'dialog_elm_' + _get_uuid();
-        this.__rsz[elm.id] = new resizeDom(elm);
+    public setZoomElm(elm: HTMLElement): void {
+        for (const ii in this.__rsz) this.__rsz[ii].setZoomElm(elm);
     }
-    public removeZoom(elm: HTMLElement): void {
-        if (elm.id === undefined || elm.id === '') return;
-        if (elm.id in this.__rsz) delete this.__rsz[elm.id];
+    public clrZoom(): void {
+        for (const ii in this.__rsz) this.__rsz[ii].clrZoomElm();
     }
     
     public show(): void { 
@@ -186,5 +165,67 @@ export class C_Dialog {
     }
     public display(yn: boolean): void { 
         yn?this.show():this.hide();
+    }
+}
+
+class resizeDom {
+    private __dia:  HTMLElement;
+    private __cnr:  HTMLElement;
+    private __trg:  HTMLElement|undefined;
+    private __can: {x: boolean, y: boolean};
+    private __top:  xy;
+    private __siz:  xy;
+    public constructor(cnr: HTMLElement, dia: HTMLElement) {
+        this.__dia = dia; this.__cnr = cnr;
+        this.__can = {x:false, y: false};
+        this.__top = {x:0, y:0};
+        this.__siz = {x:0, y:0};
+    }
+    public setZoomElm(trg: HTMLElement): void {
+        this.__trg   = trg;
+    }
+    public clrZoomElm(): void {
+        this.__trg   = undefined;
+    }
+    public reset(): void {
+        // Zoom対象が設定されていなければ何もしない
+        if (this.__trg === undefined) return;
+
+        try {
+            // Dialogの左半分に対象コーナーが有ればサイズ変更の際に左辺を動かすのでそのフラグ設定(x)
+            // Dialogの上半分に対象コーナーが有ればサイズ変更の際に上辺を動かすのでそのフラグ設定(y)
+            const parent  =  this.__cnr.offsetParent as HTMLElement;
+            this.__can.x  =  this.__cnr.offsetLeft < (parent?.offsetWidth  / 2);
+            this.__can.y  =  this.__cnr.offsetTop  < (parent?.offsetHeight / 2);
+        } catch (err) {
+            this.__can.x  =  this.__can.y  = false;
+        }
+        // Dialogの左上の座標を保存
+        this.__top.x = this.__dia.offsetLeft; 
+        this.__top.y = this.__dia.offsetTop; 
+
+        // Zoom対象とする要素の幅と高さを保存
+        this.__siz.x = this.__trg.offsetWidth; 
+        this.__siz.y = this.__trg.offsetHeight; 
+    }
+    public resize(resizeX: number, resizeY: number): void {
+        // Zoom対象が設定されていなければ何もしない
+        if (this.__trg === undefined) return;
+
+        // Dialogの左半分に対象コーナーが有れば左辺を動かす
+        // 左辺を伸ばすのでリサイズ量は反転させる
+        if (this.__can.x) {
+            resizeX = -resizeX;
+            this.__dia.style.left  = this.__top.x - resizeX  + 'px';
+        }
+        // Dialogの上半分に対象コーナーが有れば上辺を動かす
+        // 上辺を伸ばすのでリサイズ量は反転させる
+        if (this.__can.y) {
+            resizeY = -resizeY;
+            this.__dia.style.top   = this.__top.y - resizeY   + 'px';
+        }
+        // Zoom対象をサイズ変更する
+        this.__trg.style.width  = this.__siz.x + resizeX + 'px';
+        this.__trg.style.height = this.__siz.y + resizeY + 'px';
     }
 }
