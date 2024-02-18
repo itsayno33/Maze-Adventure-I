@@ -95,23 +95,22 @@ export class C_AlertLog extends C_Dialog {
     protected __dom_update(): void {
         this.__dom_clear();
         for (const title in this.msg) {
-            if (this.msg[title] === undefined) continue;
-            if (this.msg[title].length < 1)    continue;
-
-            const fs = document.createElement('fieldset') as HTMLFieldSetElement;
-
-            const lg = document.createElement('legend')   as HTMLLegendElement;
-            lg.innerHTML = title;
-            fs.appendChild(lg);
-
-            const pr = document.createElement('pre')      as HTMLPreElement;
-            fs.appendChild(pr);
             for (let msg of this.msg[title]) {
+                const fs = document.createElement('fieldset') as HTMLFieldSetElement;
+
+                const lg = document.createElement('legend')   as HTMLLegendElement;
+                lg.innerHTML = `${title} (${Date.now().toString()})`;
+                fs.appendChild(lg);
+
+                const pr = document.createElement('pre')      as HTMLPreElement;
+                fs.appendChild(pr);
+        
                 const pg = document.createElement('p')    as HTMLParagraphElement;
                 pg.innerHTML = msg;
                 pr.appendChild(pg);
+
+                this.logs?.appendChild(fs);
             }
-            this.logs?.appendChild(fs);
         }
     }
 

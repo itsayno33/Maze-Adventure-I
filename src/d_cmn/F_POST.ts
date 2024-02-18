@@ -21,14 +21,14 @@ export async function POST_and_get_JSON(
         return undefined;
     }
 
-    const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
 
     return res.text()
         .then(txt=>{
             const tx = txt.slice();
 
-            if (monitor) _alert(tx);
-            if (g_debug.isON()) g_alert.set_message(`POST DATA(${Date.now().toString()})`, tx);
+//            if (monitor) _alert(tx);
+            if (monitor) g_alert.set_message(`POST DATA`, tx);
 
             try {
                 return JSON.parse(txt);
