@@ -52,6 +52,7 @@ export class C_AlertLog extends C_Dialog {
             this.cls.addEventListener('click', ()=>{this.hide  ()}, false);
 
             this.logs.style.setProperty('user-select', 'text');
+            this.logs.style.setProperty('max-width',   '90dvw');
             this.logs.style.setProperty('min-height',  '3.0rem');
             this.logs.style.setProperty('max-height',  '80dvh');
             this.logs.style.setProperty('overflow-x',  'auto');

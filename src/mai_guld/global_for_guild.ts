@@ -93,7 +93,12 @@ export function init_after_loaded_DOM(): void {
 export function init_debug_mode(): void {
 
     try {
-//        g_dialog = new C_Dialog();
+        const alert = document.getElementById('alert_mode');
+        alert?.style.setProperty('display', 'none');
+        alert?.addEventListener("click",(event:MouseEvent)=>{
+            try{g_alert.show();} catch(err){};
+        });
+
         g_debug.setObj({
             yn:        false,
             onName:   'DEBUG',
@@ -101,7 +106,7 @@ export function init_debug_mode(): void {
             onClass:  'debug',
             offClass: 'normal',
         });
-        g_debug.addFnc(toggle_debug_mode);g_debug.setON();
+        g_debug.addFnc(toggle_debug_mode);//g_debug.setON();
 
         const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
@@ -122,6 +127,7 @@ function stop_double_click(): void {
 }
 
 function toggle_debug_mode(yn: boolean): void {
-//    g_dialog.display(yn);
-    g_alert.display(yn);
+    const alert = document.getElementById('alert_mode');
+    const display = yn ? 'block' : 'none';
+    alert?.style.setProperty('display', display);
 }

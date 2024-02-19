@@ -121,6 +121,12 @@ export function init_after_loaded_DOM(): void {
 
 export function init_debug_mode(): void {
     try {
+        const alert = document.getElementById('alert_mode');
+        alert?.style.setProperty('display', 'none');
+        alert?.addEventListener("click",(event:MouseEvent)=>{
+            try{g_alert.show();} catch(err){};
+        });
+
         g_debug.setObj({
             yn:        false,
             onName:   'DEBUG',
@@ -128,7 +134,7 @@ export function init_debug_mode(): void {
             onClass:  'debug',
             offClass: 'normal',
         });
-        g_debug.addFnc(toggle_debug_mode);g_debug.setON();
+        g_debug.addFnc(toggle_debug_mode);//g_debug.setON();
 
         const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
@@ -144,7 +150,11 @@ export function init_debug_mode(): void {
 
 function toggle_debug_mode(yn: boolean): void {
     display_maze2D();
-    g_alert.display(yn);
+
+    const alert = document.getElementById('alert_mode');
+    const display = yn ? 'block' : 'none';
+    alert?.style.setProperty('display', display);
+
 }
 
 

@@ -129,10 +129,10 @@ export class C_Dialog {
             if (ev.x === 0 && ev.y === 0) return;
             const top  = ev.pageY + this.__mop.y;
             const left = ev.pageX + this.__mop.x;
-            const right = window.outerWidth - ev.pageX;
+//            const right = window.outerWidth - ev.pageX;
             this.__dia.style.top   = top   + 'px';
             this.__dia.style.left  = left  + 'px';
-            this.__dia.style.right = right + 'px';
+//            this.__dia.style.right = right + 'px';
         });
         elm.addEventListener('dragend', (ev:DragEvent)=>{ 
             this.__mop = {x:0, y:0};
