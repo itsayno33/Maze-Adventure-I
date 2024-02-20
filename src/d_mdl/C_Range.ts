@@ -1,21 +1,36 @@
-import { C_Point } from "./C_Point";
+import { _max, _min }           from "../d_utl/F_Math";
+import { C_Point, JSON_Point }  from "./C_Point";
+import { JSON_Any }             from "./C_SaveData";
+
+export interface JSON_Range extends JSON_Any {
+    min?:   JSON_Point, 
+    max?:   JSON_Point, 
+}
 
 export class C_Range {
     protected min: C_Point;
     protected max: C_Point;
     public constructor(p1: C_Point, p2: C_Point) {
-        const min_x = _min(p1.x, p2.x);
-        const max_x = _max(p1.x, p2.x);
+        this.min  = new C_Point(0, 0, 0);
+        this.max  = new C_Point(0, 0, 0);
+        this._init(p1, p2);
+    }
+    protected _init(p1: C_Point, p2: C_Point): C_Range {
+        const min_x = _min([p1.x, p2.x]);
+        const max_x = _max([p1.x, p2.x]);
 
-        const min_y = _min(p1.y, p2.y);
-        const max_y = _max(p1.y, p2.y);
+        const min_y = _min([p1.y, p2.y]);
+        const max_y = _max([p1.y, p2.y]);
 
-        const min_z = _min(p1.z, p2.z);
-        const max_z = _max(p1.z, p2.z);
+        const min_z = _min([p1.z, p2.z]);
+        const max_z = _max([p1.z, p2.z]);
 
         this.min  = new C_Point(min_x, min_y, min_z);
         this.max  = new C_Point(max_x, max_y, max_z);
+
+        return this;
     }
+
     public within(a: C_Range|C_Point): boolean {
         if (typeof a === "object" && a instanceof C_Point) { 
             const p = a as C_Point;
@@ -52,16 +67,42 @@ export class C_Range {
         for (var z = this.min.z; z <= this.max.z; z++ ) {
             for (var y = this.min.y; y <= this.max.y; y++ ) {
                 for (var x = this.min.x; y <= this.max.x; x++ ) {
-                    if (!fn(x, y, x)) return false;
+                    if (!fn(x, y, z)) return false;
                 }
             }
         }
         return true;
     }
+    public do_all_p(fn: (p: C_Point) => boolean) {
+        for (var z = this.min.z; z <= this.max.z; z++ ) {
+            for (var y = this.min.y; y <= this.max.y; y++ ) {
+                for (var x = this.min.x; y <= this.max.x; x++ ) {
+                    if (!fn(new C_Point(x, y, z))) return false;
+                }
+            }
+        }
+        return true;
+    }
+    public encode(): JSON_Range {
+        return {
+            min: this.min.encode(),
+            max: this.min.encode(),
+        }
+    }
+    public decode(j: JSON_Range): C_Range {
+        if (j === undefined)     return this;
+        if (j.min === undefined) return this;
+        if (j.max === undefined) return this;
+        const p1 = new C_Point(j.min);
+        const p2 = new C_Point(j.max);
+        return this._init(p1, p2);
+    }
 }
+/*
 function  _min(a: number, b: number): number {
     return (a <= b) ? a : b;
 }
 function  _max(a: number, b: number): number {
     return (a >= b) ? a : b;
 }
+*/

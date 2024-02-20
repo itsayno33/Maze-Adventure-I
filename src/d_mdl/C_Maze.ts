@@ -1,12 +1,12 @@
-import { T_MzKind, T_RvMzKind }  from "./T_MzKind";
-import { C_Point }               from "./C_Point";
-import { I_Locate, T_Lckd }      from "./C_Location";
-import { C_Range }               from "./C_Range";
-import { C_Team, JSON_Team }     from "./C_Team";
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
-import { I_Exist }               from "./I_Common";
-import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert }                from "../d_cmn/global";
+import { T_MzKind, T_RvMzKind }    from "./T_MzKind";
+import { C_Point }                 from "./C_Point";
+import { I_Locate, T_Lckd }        from "./C_Location";
+import { C_Range }                 from "./C_Range";
+import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { C_Team, JSON_Team }       from "./C_Team";
+import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
+import { _get_uuid }               from "../d_utl/F_Rand";
+import { _alert }                  from "../d_cmn/global";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -20,7 +20,7 @@ export interface JSON_Maze extends JSON_Any {
     maze?:    string, 
     mask?:    string, 
     myteam?:  JSON_Team, 
-    objs?:    string[],
+    objs?:    JSON_MazeObj[],
 }
 
 
@@ -152,7 +152,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
-    protected objs:     {[uid: string]: I_Exist};
+    protected objs:     {[uid: string]: I_MazeObj};
 
     public constructor(a?: _init_arg) {
         this.maze_id = -1;
@@ -213,23 +213,23 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     }
     
     // メイズ内のオブジェクトやモンスター等の配置
-    public add_obj(obj: I_Exist): void {
+    public add_obj(obj: I_MazeObj): void {
         this.objs[obj.uid()] = obj;
     }
-    public remove_obj(obj: I_Exist): void {
+    public rmv_obj(obj: I_MazeObj): void {
         delete this.objs[obj.uid()];
     }
-    public get_obj_xyz(x: number, y: number, z: number): I_Exist|null {
+    public get_obj_xyz(x: number, y: number, z: number): I_MazeObj|null {
         return this.get_obj(new C_Point(x, y, z));
     }
-    public get_obj(p: C_Point): I_Exist|null {
+    public get_obj(p: C_Point): I_MazeObj|null {
         var layer = -1;
-        var obj: I_Exist|null   = null;
+        var obj: I_MazeObj|null   = null;
 
         for (const id in this.objs) {
             const exist = this.objs[id];
 
-            if (exist.within(p)) {
+            if (exist.within(p) && exist.to_letter() !== null) {
                 if (exist.layer() > layer) {
                     layer = exist.layer();
                     obj   = exist;
@@ -324,10 +324,11 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
                 if (!debug_mode && this.masks[floor][y][x]) {
                     ret_str += 'Ｘ';
                 } else {
-                    if (obj === null) {
+                    const obj_c = obj?.to_letter() ?? null;
+                    if (obj === null || obj_c === null) {
                         ret_str += this.cells[floor][y][x].to_letter();
                     } else {
-                        ret_str += obj.to_letter();
+                        ret_str += obj_c;
                     }
                 }
             }
@@ -368,13 +369,16 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         }
         const mask_str = z_array.join('Z');
 
+        let objs = [];
+        for (const ii in this.objs) objs.push(this.objs[ii].encode());
+
         return {
             id:      this.maze_id,
             uniq_id: this.uniq_id,
             save_id: this.save_id,
             floor:   this.floor,
             name:    this.name,
-//            objs:    this.objs.encode(),
+            objs:    objs,
             size_x:  this.size.size_x(),
             size_y:  this.size.size_y(),
             size_z:  this.size.size_z(),
@@ -391,7 +395,13 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         if (a.floor   !== undefined) this.floor   = a.floor;
         if (a.name    !== undefined) this.name    = a.name;
 
-//        if (a.objs    !== undefined) this.objs    = a.objs as I_Exist[];
+        if (a.objs    !== undefined) {
+            this.objs = {};
+            for (const json_obj of a.objs) {
+                const new_obj = C_MazeObj.newObj(json_obj);
+                this.objs[new_obj.uid()] = new_obj;
+            }
+        }
 
         if (a.size_x !== undefined && a.size_y !== undefined && a.size_z !== undefined) {
             this.size  = new C_Range(
