@@ -98,8 +98,7 @@ export class C_Team implements I_MazeObj {
 
     pad_t(): number {return 0.0} 
     pad_b(): number {return 0.0} 
-    pad_r(): number {return 0.0} 
-    pad_l(): number {return 0.0} 
+    pad_s(): number {return 0.0} 
     col_f(): string|null {return null} 
     col_s(): string|null {return null} 
     col_t(): string|null {return null} 
