@@ -2,6 +2,7 @@ import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
+import { I_MazeObj }      from "../d_mdl/C_MazeObj";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { g_mes }          from "../d_cmn/global";
 import { C_Wall }                from "./C_Wall";
@@ -113,7 +114,8 @@ export function display_maze3D(): void {
     for (var j = g_ds.depth - 1; j >= 0; j--) {
         // 右側が見えている壁の描写 (左側から描写)
         for (var k = -H_depth; k < 0; k++) {
-            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
+            const around_j_k = g_team.get_around(j, k, 0);
+            switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
                     drow_right_side_stone(j, k);
                     break;
@@ -130,10 +132,15 @@ export function display_maze3D(): void {
                     drow_floor(j ,k);
                     break;
             }
+            if (g_maze.exist_obj(around_j_k)) {
+                const obj = g_maze.get_obj(around_j_k);
+                if (obj !== null) drow_right_side_obj(obj, j, k);
+            }
         }
         // 　左側が見えている壁の描写 (右側から描写)
         for (var k = H_depth; k > 0; k--) {
-            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
+            const around_j_k = g_team.get_around(j, k, 0);
+            switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
                     drow_left_side_stone(j, k);
                     break;
@@ -150,9 +157,14 @@ export function display_maze3D(): void {
                     drow_floor(j ,k);
                     break;
             }
+            if (g_maze.exist_obj(around_j_k)) {
+                const obj = g_maze.get_obj(around_j_k);
+                if (obj !== null) drow_left_side_obj(obj, j, k);
+            }
         }
         // 正面の壁の描写
-        switch (g_maze.get_cell(g_team.get_around(j, 0, 0))) {
+        const around_j_0 = g_team.get_around(j, 0, 0);
+        switch (g_maze.get_cell(around_j_0)) {
             case T_MzKind.Stone:
                 drow_front_stone(j, 0);
                 break;
@@ -168,6 +180,10 @@ export function display_maze3D(): void {
             default:
                 drow_floor(j ,0);
                 break;
+        }
+        if (g_maze.exist_obj(around_j_0)) {
+            const obj = g_maze.get_obj(around_j_0);
+            if (obj !== null) drow_front_obj(obj, j, 0);
         }
     }
 }
@@ -304,6 +320,124 @@ function drow_right_side(
 }
 
 function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
+    if (g_ds.con === null || g_ds.wall === null) return;
+    const con = g_ds.con;
+
+    con.beginPath();
+    con.moveTo(r.tl.x, r.tl.y);
+    con.lineTo(r.tr.x, r.tr.y);
+    con.lineTo(r.br.x, r.br.y);
+    con.lineTo(r.bl.x, r.bl.y);
+    con.closePath();
+
+    if (fill != null) {
+        con.fillStyle   = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 1;
+        con.stroke();
+    }
+}
+
+
+function drow_floor_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+    fill:  string  = '#6666ff', 
+    line:  string  = '#9999ff', 
+): void {
+    if (g_ds.wall === null) return;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const tl = {x: rect_front.min_x, y: rect_front.max_y};
+    const tr = {x: rect_front.max_x, y: rect_front.max_y};
+    const br = {x: rect_back .max_x, y: rect_back .max_y};
+    const bl = {x: rect_back .min_x, y: rect_back .max_y};
+
+    drow_cell_ex({tl:tl, tr:tr, br:br, bl:bl} as T_Rect, obj.col_t(), obj.col_l());
+}
+function drow_ceiling_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+    fill:  string  = '#aaaaaa', 
+    line:  string  = '#9999ff', 
+): void {
+    if (g_ds.wall === null) return;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const tl = {x: rect_front.min_x, y: rect_front.min_y};
+    const tr = {x: rect_front.max_x, y: rect_front.min_y};
+    const br = {x: rect_back .max_x, y: rect_back .min_y};
+    const bl = {x: rect_back .min_x, y: rect_back .min_y};
+
+    drow_cell_ex({tl:tl, tr:tr, br:br, bl:bl}, obj.col_b(), obj.col_l());
+}
+function drow_front_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+    fill:  string|null = '#00ff00', 
+    line:  string|null = '#0000ff', 
+): void {
+
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d, w);
+
+    const tl = {x: rect_front.min_x, y: rect_front.min_y};
+    const tr = {x: rect_front.max_x, y: rect_front.min_y};
+    const br = {x: rect_front.max_x, y: rect_front.max_y};
+    const bl = {x: rect_front.min_x, y: rect_front.max_y};
+
+    drow_cell_ex({tl:tl, tr:tr, br:br, bl:bl}, obj.col_f(), obj.col_l());
+}
+function drow_left_side_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+    fill:  string|null = '#00cc00', 
+    line:  string|null = '#0000ff', 
+): void {
+
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const tl = {x: rect_front.min_x, y: rect_front.min_y};
+    const tr = {x: rect_back .min_x, y: rect_back .min_y};
+    const br = {x: rect_back .min_x, y: rect_back .max_y};
+    const bl = {x: rect_front.min_x, y: rect_front.max_y};
+
+    drow_cell_ex({tl:tl, tr:tr, br:br, bl:bl}, obj.col_s(), obj.col_l());
+}
+function drow_right_side_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+    fill:  string|null = '#00cc00', 
+    line:  string|null = '#0000ff', 
+): void {
+
+    if (g_ds.wall === null) return;
+    const con = g_ds.con;
+    const rect_front = g_ds.wall.get(d,     w);
+    const rect_back  = g_ds.wall.get(d + 1, w);
+
+    const tl = {x: rect_front.max_x, y: rect_front.min_y};
+    const tr = {x: rect_back .max_x, y: rect_back .min_y};
+    const br = {x: rect_back .max_x, y: rect_back .max_y};
+    const bl = {x: rect_front.max_x, y: rect_front.max_y};
+    drow_cell_ex({tl:tl, tr:tr, br:br, bl:bl}, obj.col_s(), obj.col_l());
+}
+
+function drow_cell_ex(r: T_Rect, fill: string|null, line: string|null): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 

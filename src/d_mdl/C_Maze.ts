@@ -238,6 +238,13 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         } 
         return obj;
     }
+    public exist_obj(p: C_Point): boolean {
+        for (const id in this.objs) {
+            const exist = this.objs[id];
+            if (exist.within(p) && exist.to_letter() !== null) return true;
+        }
+        return false;
+    }
 
     // Teamが来たポイントが未踏地だったらただの床に変える
     public change_unexp_to_floor(p: C_Point) {

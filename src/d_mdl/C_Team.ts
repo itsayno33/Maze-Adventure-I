@@ -95,6 +95,18 @@ export class C_Team implements I_MazeObj {
         }
     }
 
+
+    pad_t(): number {return 0.0} 
+    pad_b(): number {return 0.0} 
+    pad_r(): number {return 0.0} 
+    pad_l(): number {return 0.0} 
+    col_f(): string|null {return null} 
+    col_s(): string|null {return null} 
+    col_t(): string|null {return null} 
+    col_b(): string|null {return null} 
+    col_l(): string|null {return null} 
+
+
     public hres():  C_Hero[] {
         const hres: C_Hero[] = [];
         for (let ii in this.heroes) hres.push(this.heroes[ii]);

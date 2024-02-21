@@ -24,13 +24,4 @@ export interface I_Battle  extends I_HasHope {
     is_alive():  boolean;
     drop_item(): void;
 }
-/*
-export interface I_Exist {
-    // 表示関係
-    uid:   ()=>string;
-    layer: ()=>number;
-    set_layer: (layer: number)=>void;
-    within:    (p: C_Point)=>boolean;
-    to_letter: ()=>string|null; // null: 見えない、何もない
-}
-*/
+

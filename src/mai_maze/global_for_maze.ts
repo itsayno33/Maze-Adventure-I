@@ -46,6 +46,8 @@ import {
     g_start_env, 
     init_after_loaded_DOM_in_common 
 } from "../d_cmn/global";
+import { C_MazeObj } from "../d_mdl/C_MazeObj";
+import { _irand } from "../d_utl/F_Rand";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -66,6 +68,7 @@ export function init_before_games(): void {
 export function init_before_new_games(): void {
     get_mai_maze().then((jsonObj:any)=>{
         decode_all(jsonObj?.save);
+        install_objs(5);                   // 暫定(C_objsのテスト用)
         do_load_bottom_half('');
     });
 }
@@ -160,4 +163,19 @@ function toggle_debug_mode(yn: boolean): void {
 
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
+}
+
+
+// 暫定(C_MazeObjのテスト用)
+function install_objs(num: number = 1): void {
+    for (let i = 0; i < num; i++) {
+        const x = _irand(1, g_maze.get_x_max() / 2) * 2; 
+        const y = _irand(1, g_maze.get_y_max() / 2) * 2; 
+        const obj = new C_MazeObj({
+            pos:    {x:x, y:y, z:0, d:0},
+            layer:   2,
+            letter: '物',
+        });
+        g_maze.add_obj(obj);
+    }
 }
