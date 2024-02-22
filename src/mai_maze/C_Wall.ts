@@ -35,7 +35,7 @@ export class C_Wall {
         const front_wall_H_size_x: number[] = new Array(depth + 1);
     
         front_wall_H_size_x[depth] = front_wall_size_x / 2;
-        for (var i = depth - 1; i >= 0; i--) {
+        for (let i = depth - 1; i >= 0; i--) {
             front_wall_H_size_x[i] = front_wall_H_size_x[i + 1] + side_wall_size_x;
         }
 
@@ -54,9 +54,9 @@ export class C_Wall {
         // 以上の値を用いて各距離(depth)の正面壁の位置決めをする
         // wallの第一引数は距離、第二引数は左右の位置（一番左が0、一番右がdepth-1)
         const wall: T_Wall[][] = new Array(depth + 1);
-        for (var j = 0; j < depth + 1; j++) {
+        for (let j = 0; j < depth + 1; j++) {
             wall[j] = new Array(depth + 1);
-            for (var k = 0; k < depth + 1; k++) {
+            for (let k = 0; k < depth + 1; k++) {
                 const wk_x = center_x - front_wall_H_size_x[j] * (depth - 2 * k);
                 wall[j][k] = {
                     min_x: _round(wk_x, 0),
