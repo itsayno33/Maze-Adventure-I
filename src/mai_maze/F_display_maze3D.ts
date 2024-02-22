@@ -4,7 +4,7 @@ import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { I_MazeObj }      from "../d_mdl/C_MazeObj";
 import { T_Direction }    from "../d_mdl/T_Direction";
-import { g_mes }          from "../d_cmn/global";
+import { g_alert, g_mes }          from "../d_cmn/global";
 import { C_Wall }                from "./C_Wall";
 import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
@@ -379,47 +379,73 @@ function __calc_padding_obj(
     const rect_frot = g_ds.wall.get(d,     w);
     const rect_back = g_ds.wall.get(d + 1, w);
 
+
     //水平分のパディング計算
     const deff_fr_x_1 = (rect_frot.max_x - rect_frot.min_x) * obj.pad_s() / 2.0;
     const deff_bk_x_1 = (rect_back.max_x - rect_back.min_x) * obj.pad_s() / 2.0;
-    //奥行分の調整
+    //水平奥行分の調整(X軸)
     const deff_fr_x_2 = deff_fr_x_1 - (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
-    const deff_bk_x_2 = deff_bk_x_1 + (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
+    const deff_bk_x_2 = deff_bk_x_1 - (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
+    //水平奥行分の調整(Y軸上辺)
+    const deff_fr_Y_0 = (rect_back.min_y - rect_frot.min_y) * obj.pad_s() / 2.0;   
+    const deff_bk_Y_0 = (rect_back.min_y - rect_frot.min_y) * obj.pad_s() / 2.0;   
+    //水平奥行分の調整(y軸下辺)
+    const deff_fr_y_0 = (rect_frot.max_y - rect_back.max_y) * obj.pad_s() / 2.0;   
+    const deff_bk_y_0 = (rect_frot.max_y - rect_back.max_y) * obj.pad_s() / 2.0;   
+
 
     //上辺分のパディング計算
     const deff_fr_Y_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_t() / 2.0;
     const deff_bk_Y_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_t() / 2.0;
-    //奥行分の調整
-    const deff_fr_Y_2 = deff_fr_Y_1 - (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
-    const deff_bk_Y_2 = deff_bk_Y_1 + (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
+    //奥行分の調整(Y軸上辺)
+    const deff_fr_Y_2 = deff_fr_Y_1 + (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
+    const deff_bk_Y_2 = deff_bk_Y_1 - (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
+
 
     //下辺分のパディング計算
     const deff_fr_y_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_b() / 2.0;
     const deff_bk_y_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_b() / 2.0;
-    //奥行分の調整
+    //奥行分の調整(y軸下辺)
     const deff_fr_y_2 = deff_fr_y_1 - (deff_fr_y_1 - deff_bk_y_1) * obj.pad_b() / 2.0;   
     const deff_bk_y_2 = deff_bk_y_1 + (deff_fr_y_1 - deff_bk_y_1) * obj.pad_b() / 2.0;   
 
 
+    //水平分調整(前面)
     const ftl_x = rect_frot.min_x + deff_fr_x_2; 
     const ftr_x = rect_frot.max_x - deff_fr_x_2; 
     const fbr_x = rect_frot.max_x - deff_fr_x_2; 
     const fbl_x = rect_frot.min_x + deff_fr_x_2; 
 
-    const ftl_y = rect_frot.min_y + deff_fr_Y_2;
-    const ftr_y = rect_frot.min_y + deff_fr_Y_2;
-    const fbr_y = rect_frot.max_y - deff_fr_y_2;
-    const fbl_y = rect_frot.max_y - deff_fr_y_2;
-
+    //水平分調整(背面)
     const btl_x = rect_back.min_x + deff_bk_x_2; 
     const btr_x = rect_back.max_x - deff_bk_x_2; 
     const bbr_x = rect_back.max_x - deff_bk_x_2; 
     const bbl_x = rect_back.min_x + deff_bk_x_2; 
 
-    const btl_y = rect_back.min_y + deff_bk_Y_2;
-    const btr_y = rect_back.min_y + deff_bk_Y_2;
-    const bbr_y = rect_back.max_y - deff_bk_y_2;
-    const bbl_y = rect_back.max_y - deff_bk_y_2;
+    //垂直(上辺)調整(前面) 
+    let ftl_y = rect_frot.min_y + deff_fr_Y_2;
+    let ftr_y = rect_frot.min_y + deff_fr_Y_2;
+    let fbr_y = rect_frot.max_y - deff_fr_y_2;
+    let fbl_y = rect_frot.max_y - deff_fr_y_2;
+
+    //垂直(上辺)調整(背面) 
+    let btl_y = rect_back.min_y + deff_bk_Y_2;
+    let btr_y = rect_back.min_y + deff_bk_Y_2;
+    let bbr_y = rect_back.max_y - deff_bk_y_2;
+    let bbl_y = rect_back.max_y - deff_bk_y_2;
+
+    // 水平奥行調整(上面Y軸) 
+    ftl_y += deff_fr_Y_0; 
+    ftr_y += deff_fr_Y_0;
+    btl_y += deff_bk_Y_0;
+    btr_y += deff_bk_Y_0;
+
+    // 水平奥行調整(底面y軸) 
+    fbl_y -= deff_fr_y_0;
+    fbr_y -= deff_fr_y_0;
+    bbl_y -= deff_bk_y_0;
+    bbr_y -= deff_bk_y_0;
+
 
     return {
         ftl: {x: ftl_x, y: ftl_y}, ftr: {x: ftr_x, y: ftr_y},
@@ -434,9 +460,6 @@ function _drow_floor_obj(
     w:     number, 
 ): void {
     if (obj.pad_t() <= 0.5) return;
-    if (g_ds.wall === null) return;
-    const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back = g_ds.wall.get(d + 1, w);
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
@@ -454,10 +477,6 @@ function _drow_ceiling_obj(
     w:     number, 
 ): void {
     if (obj.pad_b() <= 0.5) return;
-    if (g_ds.wall === null) return;
-    const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back = g_ds.wall.get(d + 1, w);
-
     
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
@@ -474,12 +493,6 @@ function _drow_front_obj(
     d:     number, 
     w:     number, 
 ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back = g_ds.wall.get(d + 1, w);
-
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.ftl, 
@@ -495,12 +508,6 @@ function _drow_left_side_obj(
     d:     number, 
     w:     number, 
 ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back = g_ds.wall.get(d + 1, w);
-
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.btl,
@@ -520,7 +527,7 @@ function _drow_right_side_obj(
     if (g_ds.wall === null) return;
     const con = g_ds.con;
     const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
+    const rect_back = g_ds.wall.get(d + 1, w);
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {

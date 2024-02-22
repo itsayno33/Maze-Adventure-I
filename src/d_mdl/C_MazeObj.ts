@@ -68,7 +68,7 @@ export class C_MazeObj implements I_MazeObj {
 */
     public pad_t(): number {return 0.0}
     public pad_b(): number {return 0.0}
-    public pad_s(): number {return 0.2}
+    public pad_s(): number {return 0.43}
 
     public col_f(): string {return '#f8f8f8'} 
     public col_s(): string {return '#dddddd'} 
