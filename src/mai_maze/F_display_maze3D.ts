@@ -359,35 +359,73 @@ function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
     }
 }
 
+type xy = {x: number, y: number}
 function __calc_padding_obj(
     obj:   I_MazeObj,
     d:     number, 
     w:     number, 
 ): {
-    flx:number, blx:number, frx:number, brx:number, 
-    fty:number, bty:number, fby:number, bby:number,
+    // 識別子の意味
+    // 左端：前後の区別　f:前面　b:背面
+    // 中央：上下の区別　t:上辺　b:下辺
+    // 右端：左右の区別　l:左側　r:右側
+    ftl:xy, ftr:xy, fbr:xy, fbl:xy, 
+    btl:xy, btr:xy, bbr:xy, bbl:xy, 
 } {
     if (g_ds.wall === null) return {
-        flx:0.0, blx:0.0, frx:0.0, brx:0.0, 
-        fty:0.0, bty:0.0, fby:0.0, bby:0.0,
-    };
+        ftl:{x:0,y:0}, ftr:{x:0,y:0}, fbr:{x:0,y:0}, fbl:{x:0,y:0}, 
+        btl:{x:0,y:0}, btr:{x:0,y:0}, bbr:{x:0,y:0}, bbl:{x:0,y:0}, 
+        };
     const rect_frot = g_ds.wall.get(d,     w);
     const rect_back = g_ds.wall.get(d + 1, w);
 
+    //水平分のパディング計算
+    const deff_fr_x_1 = (rect_frot.max_x - rect_frot.min_x) * obj.pad_s() / 2.0;
+    const deff_bk_x_1 = (rect_back.max_x - rect_back.min_x) * obj.pad_s() / 2.0;
+    //奥行分の調整
+    const deff_fr_x_2 = deff_fr_x_1 - (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
+    const deff_bk_x_2 = deff_bk_x_1 + (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
 
-    
-    const dflx = (rect_frot.max_x - rect_frot.min_x) * obj.pad_s();
-    const dblx = (rect_back.max_x - rect_back.min_x) * obj.pad_s();
-    const dfrx = (rect_frot.max_x - rect_frot.min_x) * obj.pad_s();
-    const dbrx = (rect_back.max_x - rect_back.min_x) * obj.pad_s();
-    const dfty = (rect_frot.max_y - rect_frot.min_y) * obj.pad_t();
-    const dbty = (rect_back.max_y - rect_back.min_y) * obj.pad_t();
-    const dfby = (rect_frot.max_y - rect_frot.min_y) * obj.pad_b();
-    const dbby = (rect_back.max_y - rect_back.min_y) * obj.pad_b();
+    //上辺分のパディング計算
+    const deff_fr_Y_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_t() / 2.0;
+    const deff_bk_Y_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_t() / 2.0;
+    //奥行分の調整
+    const deff_fr_Y_2 = deff_fr_Y_1 - (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
+    const deff_bk_Y_2 = deff_bk_Y_1 + (deff_fr_Y_1 - deff_bk_Y_1) * obj.pad_s() / 2.0;   
+
+    //下辺分のパディング計算
+    const deff_fr_y_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_b() / 2.0;
+    const deff_bk_y_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_b() / 2.0;
+    //奥行分の調整
+    const deff_fr_y_2 = deff_fr_y_1 - (deff_fr_y_1 - deff_bk_y_1) * obj.pad_b() / 2.0;   
+    const deff_bk_y_2 = deff_bk_y_1 + (deff_fr_y_1 - deff_bk_y_1) * obj.pad_b() / 2.0;   
+
+
+    const ftl_x = rect_frot.min_x + deff_fr_x_2; 
+    const ftr_x = rect_frot.max_x - deff_fr_x_2; 
+    const fbr_x = rect_frot.max_x - deff_fr_x_2; 
+    const fbl_x = rect_frot.min_x + deff_fr_x_2; 
+
+    const ftl_y = rect_frot.min_y + deff_fr_Y_2;
+    const ftr_y = rect_frot.min_y + deff_fr_Y_2;
+    const fbr_y = rect_frot.max_y - deff_fr_y_2;
+    const fbl_y = rect_frot.max_y - deff_fr_y_2;
+
+    const btl_x = rect_back.min_x + deff_bk_x_2; 
+    const btr_x = rect_back.max_x - deff_bk_x_2; 
+    const bbr_x = rect_back.max_x - deff_bk_x_2; 
+    const bbl_x = rect_back.min_x + deff_bk_x_2; 
+
+    const btl_y = rect_back.min_y + deff_bk_Y_2;
+    const btr_y = rect_back.min_y + deff_bk_Y_2;
+    const bbr_y = rect_back.max_y - deff_bk_y_2;
+    const bbl_y = rect_back.max_y - deff_bk_y_2;
 
     return {
-        flx:dflx, blx:dblx, frx:dfrx, brx:dbrx, 
-        fty:dfty, bty:dbty, fby:dfby, bby:dbby,
+        ftl: {x: ftl_x, y: ftl_y}, ftr: {x: ftr_x, y: ftr_y},
+        fbl: {x: fbl_x, y: fbl_y}, fbr: {x: fbr_x, y: fbr_y},
+        btl: {x: btl_x, y: btl_y}, btr: {x: btr_x, y: btr_y},
+        bbl: {x: bbl_x, y: bbl_y}, bbr: {x: bbr_x, y: bbr_y},
     }
 }
 function _drow_floor_obj(
@@ -402,18 +440,12 @@ function _drow_floor_obj(
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        tl: {x: rect_frot.min_x + o.flx, y: rect_frot.max_y - o.fby},
-        tr: {x: rect_frot.max_x - o.frx, y: rect_frot.max_y - o.fby},
-        br: {x: rect_back.max_x - o.brx, y: rect_back.max_y - o.bby},
-        bl: {x: rect_back.min_x + o.blx, y: rect_back.max_y - o.bby},
+        tl: o.fbl,
+        tr: o.fbr,
+        br: o.bbr,
+        bl: o.bbl,
     }
 
-/*
-    const tl = {x: rect_frot.min_x, y: rect_frot.max_y};
-    const tr = {x: rect_frot.max_x, y: rect_frot.max_y};
-    const br = {x: rect_back.max_x, y: rect_back.max_y};
-    const bl = {x: rect_back.min_x, y: rect_back.max_y};
-*/
     drow_cell_ex(rect, obj.col_t(), obj.col_l());
 }
 function _drow_ceiling_obj(
@@ -429,18 +461,12 @@ function _drow_ceiling_obj(
     
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        tl: {x: rect_frot.min_x + o.flx, y: rect_frot.min_y + o.fty},
-        tr: {x: rect_frot.max_x - o.frx, y: rect_frot.min_y + o.fty},
-        br: {x: rect_back.max_x - o.brx, y: rect_back.min_y + o.bby},
-        bl: {x: rect_back.min_x + o.blx, y: rect_back.min_y + o.bby},
+        tl: o.ftl,
+        tr: o.ftr,
+        br: o.btr,
+        bl: o.btl,
     }
 
-/*
-    const tl = {x: rect_frot.min_x, y: rect_frot.min_y};
-    const tr = {x: rect_frot.max_x, y: rect_frot.min_y};
-    const br = {x: rect_back.max_x, y: rect_back.min_y};
-    const bl = {x: rect_back.min_x, y: rect_back.min_y};
-*/
     drow_cell_ex(rect, obj.col_b(), obj.col_l());
 }
 function _drow_front_obj(
@@ -456,18 +482,12 @@ function _drow_front_obj(
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        tl: {x: rect_frot.min_x + o.flx, y: rect_frot.min_y + o.fty},
-        tr: {x: rect_frot.max_x - o.frx, y: rect_frot.min_y + o.fty},
-        br: {x: rect_frot.max_x - o.frx, y: rect_frot.max_y - o.fby},
-        bl: {x: rect_frot.min_x + o.flx, y: rect_frot.max_y - o.fby},
+        tl: o.ftl, 
+        tr: o.ftr, 
+        br: o.fbr, 
+        bl: o.fbl, 
     }
 
-/*
-    const tl = {x: rect_frot.min_x, y: rect_frot.min_y};
-    const tr = {x: rect_frot.max_x, y: rect_frot.min_y};
-    const br = {x: rect_frot.max_x, y: rect_frot.max_y};
-    const bl = {x: rect_frot.min_x, y: rect_frot.max_y};
-*/
     drow_cell_ex(rect, obj.col_f(), obj.col_l());
 }
 function _drow_left_side_obj(
@@ -483,18 +503,12 @@ function _drow_left_side_obj(
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        tl: {x: rect_frot.min_x + o.flx, y: rect_frot.min_y + o.fty},
-        tr: {x: rect_back.min_x + o.blx, y: rect_back.min_y + o.bty},
-        br: {x: rect_back.min_x + o.blx, y: rect_back.max_y - o.bby},
-        bl: {x: rect_frot.min_x + o.flx, y: rect_frot.max_y - o.fby},
+        tl: o.btl,
+        tr: o.ftl,
+        br: o.fbl,
+        bl: o.bbl,
     }
 
-/*
-    const tl = {x: rect_frot.min_x, y: rect_frot.min_y};
-    const tr = {x: rect_back.min_x, y: rect_back.min_y};
-    const br = {x: rect_back.min_x, y: rect_back.max_y};
-    const bl = {x: rect_frot.min_x, y: rect_frot.max_y};
-*/
     drow_cell_ex(rect, obj.col_s(), obj.col_l());
 }
 function _drow_right_side_obj(
@@ -510,18 +524,12 @@ function _drow_right_side_obj(
 
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        tl: {x: rect_frot.max_x - o.frx, y: rect_frot.min_y + o.fty},
-        tr: {x: rect_back.max_x - o.brx, y: rect_back.min_y + o.bty},
-        br: {x: rect_back.max_x - o.brx, y: rect_back.max_y - o.bby},
-        bl: {x: rect_frot.max_x - o.frx, y: rect_frot.max_y - o.fby},
+        tl: o.ftr,
+        tr: o.btr,
+        br: o.bbr,
+        bl: o.fbr,
     }
 
-/*
-    const tl = {x: rect_frot.max_x, y: rect_frot.min_y};
-    const tr = {x: rect_back.max_x, y: rect_back.min_y};
-    const br = {x: rect_back.max_x, y: rect_back.max_y};
-    const bl = {x: rect_frot.max_x, y: rect_frot.max_y};
-*/
     drow_cell_ex(rect, obj.col_s(), obj.col_l());
 }
 
