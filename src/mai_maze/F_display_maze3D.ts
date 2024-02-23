@@ -343,8 +343,8 @@ function drow_obj_down(
     w:     number, 
 ): void {
     if (!obj.isShow())      return;
-    if (obj.pad_b() <= 0.5) return;
-    if (obj.pad_s() <= 0.0) {
+    if (obj.pad_t() <= 0.5) return;
+    if (obj.pad_s() <= 0.0 && obj.pad_t() >= 1.0) {
         drow_cell_floor(d, w, obj.col_t() ?? '#6666ff', obj.col_l() ?? '#9999ff');
         return;
     }
@@ -364,9 +364,9 @@ function drow_obj_top(
     w:     number, 
 ): void {
     if (!obj.isShow())      return;
-    if (obj.pad_t() <= 0.5) return;
-    if (obj.pad_s() <= 0.0) {
-        drow_cell_ceiling(d, w, obj.col_b() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
+    if (obj.pad_d() <= 0.5) return;
+    if (obj.pad_s() <= 0.0 && obj.pad_d() >= 1.0) {
+        drow_cell_ceiling(d, w, obj.col_d() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
         return;
     }
 
@@ -377,7 +377,7 @@ function drow_obj_top(
         dr: o.btr,
         dl: o.btl,
     }
-    drow_cell(rect, obj.col_b(), obj.col_l());
+    drow_cell(rect, obj.col_d(), obj.col_l());
 }
 function drow_obj_front(
     obj:   I_MazeObj,
@@ -385,11 +385,12 @@ function drow_obj_front(
     w:     number, 
 ): void {
     if (!obj.isShow()) return;
+/*
     if (obj.pad_s() <= 0.0) {
         drow_cell_front(d, w, obj.col_t() ?? '#00ff00', obj.col_l() ?? '#0000ff');
         return;
     }
-
+*/
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.ftl, 
@@ -406,11 +407,12 @@ function drow_obj_left_side(
     w:     number, 
 ): void {
     if (!obj.isShow()) return;
+/*
     if (obj.pad_s() <= 0.0) {
         drow_cell_left_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
         return;
     }
-
+*/
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.btl,
@@ -427,11 +429,12 @@ function drow_obj_right_side(
     w:     number, 
 ): void {
     if (!obj.isShow()) return;
+/*
     if (obj.pad_s() <= 0.0) {
         drow_cell_right_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
         return;
     }
-
+*/
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.ftr,
@@ -464,7 +467,7 @@ function __calc_padding_obj(
 
     const ratio_X   = obj.pad_s() / 2.0;
     const ratio_T   = obj.pad_t();
-    const ratio_D   = obj.pad_b();
+    const ratio_D   = obj.pad_d();
 
     const frot_pad_X  = Math.abs(rect_frot.max_x - rect_frot.min_x) * ratio_X;
     const back_pad_X  = Math.abs(rect_back.max_x - rect_back.min_x) * ratio_X;

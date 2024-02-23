@@ -12,12 +12,12 @@ export interface I_MazeObj extends I_JSON_Uniq {
     // 表示関係(3D)
     isShow: ()=>boolean;
     pad_t:  ()=>number; //上側の空き(割合: 0から1) 
-    pad_b:  ()=>number; //床側の空き(割合: 0から1) 
+    pad_d:  ()=>number; //床側の空き(割合: 0から1) 
     pad_s:  ()=>number; //横側の空き(割合: 0から1) 
     col_f:  ()=>string|null; //正面の色(CSSカラー)。nullは透明
     col_s:  ()=>string|null; //横側の色(CSSカラー)。nullは透明
     col_t:  ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
-    col_b:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
+    col_d:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
     col_l:  ()=>string|null; //ラインの色(CSSカラー)
 }
 
@@ -34,11 +34,32 @@ export class C_MazeObj implements I_MazeObj {
     protected my_layer: number;
     protected letter:   string|null;
 
+    protected my_pos_t: number;
+    protected my_pos_d: number;
+    protected my_pos_s: number;
+
+    protected my_col_f: string;
+    protected my_col_s: string;
+    protected my_col_t: string;
+    protected my_col_d: string;
+    protected my_col_l: string;
+
     public constructor(j: JSON_MazeObj|undefined) {
         this.uniq_id    =   'mazeobj_' + _get_uuid();
         this.pos        =   new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_layer   =   -2;
         this.letter     =   null;
+
+        this.my_pos_t   =   0.0;
+        this.my_pos_d   =   0.0;
+        this.my_pos_s   =   0.0;
+
+        this.my_col_f   = '#f8f8f8'; 
+        this.my_col_s   = '#dddddd'; 
+        this.my_col_t   = '#ffffff'; 
+        this.my_col_d   = '#cccccc'; 
+        this.my_col_l   = '#333333'; 
+    
         if (j !== undefined) this.decode(j);
     }
 
@@ -63,15 +84,23 @@ export class C_MazeObj implements I_MazeObj {
     public to_letter(): string|null {return this.letter}
 
     public isShow(): boolean{return this.to_letter() !== null};
-    public pad_t():  number {return 0.493}
-    public pad_b():  number {return 0.493}
-    public pad_s():  number {return 0.73}
+    public pad_t():  number {return this.my_pos_t}
+    public pad_d():  number {return this.my_pos_d}
+    public pad_s():  number {return this.my_pos_s}
+    public set_pad_t(pad_t: number): number {return this.my_pos_t = this.my_pos_d + pad_t < 1.0 ? pad_t : 0.99 - this.my_pos_d}
+    public set_pad_d(pad_d: number): number {return this.my_pos_d = this.my_pos_t + pad_d < 1.0 ? pad_d : 0.99 - this.my_pos_t}
+    public set_pad_s(pad_s: number): number {return this.my_pos_s = pad_s}
 
-    public col_f(): string {return '#f8f8f8'} 
-    public col_s(): string {return '#dddddd'} 
-    public col_t(): string {return '#ffffff'} 
-    public col_b(): string {return '#cccccc'} 
-    public col_l(): string {return '#333333'} 
+    public col_f(): string {return this.my_col_f} 
+    public col_s(): string {return this.my_col_s} 
+    public col_t(): string {return this.my_col_t} 
+    public col_d(): string {return this.my_col_d} 
+    public col_l(): string {return this.my_col_l} 
+    public set_col_f(col_f: string): string {return this.my_col_f = col_f} 
+    public set_col_s(col_s: string): string {return this.my_col_s = col_s} 
+    public set_col_t(col_t: string): string {return this.my_col_t = col_t} 
+    public set_col_d(col_d: string): string {return this.my_col_d = col_d} 
+    public set_col_l(col_l: string): string {return this.my_col_l = col_l} 
 
     public encode(): JSON_MazeObj {
         return {
