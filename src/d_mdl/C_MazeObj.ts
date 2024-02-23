@@ -6,9 +6,8 @@ import { I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
 export interface I_MazeObj extends I_JSON_Uniq {
     within: (p: C_Point)=>boolean;
     // 表示関係(2Dpre)
-    layer:      ()=>number;
-    set_layer?: (layer: number)=>void;
-    to_letter:  ()=>string|null; // null: 見えない、何もない
+    layer:  ()=>number;
+    letter: ()=>string|null; // null: 見えない、何もない
     // 表示関係(3D)
     isShow: ()=>boolean;
     pad_t:  ()=>number; //上側の空き(割合: 0から1) 
@@ -29,30 +28,30 @@ export interface JSON_MazeObj extends JSON_Any {
 }
 
 export class C_MazeObj implements I_MazeObj {
-    protected uniq_id:  string;
-    protected pos:      C_PointDir;
-    protected my_layer: number;
-    protected letter:   string|null;
+    protected uniq_id:   string;
+    protected pos:       C_PointDir;
+    protected my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
+    protected my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
-    protected my_pos_t: number;
-    protected my_pos_d: number;
-    protected my_pos_s: number;
+    protected my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
+    protected my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
+    protected my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
 
-    protected my_col_f: string;
-    protected my_col_s: string;
-    protected my_col_t: string;
-    protected my_col_d: string;
-    protected my_col_l: string;
+    protected my_col_f:  string; // オブジェクト正面のCSSカラー 
+    protected my_col_s:  string; // オブジェクト側面のCSSカラー 
+    protected my_col_t:  string; // オブジェクト上面のCSSカラー 
+    protected my_col_d:  string; // オブジェクト底面のCSSカラー 
+    protected my_col_l:  string; // オブジェクトの線のCSSカラー 
 
     public constructor(j: JSON_MazeObj|undefined) {
         this.uniq_id    =   'mazeobj_' + _get_uuid();
         this.pos        =   new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_layer   =   -2;
-        this.letter     =   null;
+        this.my_letter  =   null;
 
-        this.my_pos_t   =   0.0;
-        this.my_pos_d   =   0.0;
-        this.my_pos_s   =   0.0;
+        this.my_pad_t   =   0.0;
+        this.my_pad_d   =   0.0;
+        this.my_pad_s   =   0.0;
 
         this.my_col_f   = '#f8f8f8'; 
         this.my_col_s   = '#dddddd'; 
@@ -81,15 +80,17 @@ export class C_MazeObj implements I_MazeObj {
 
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
-    public to_letter(): string|null {return this.letter}
 
-    public isShow(): boolean{return this.to_letter() !== null};
-    public pad_t():  number {return this.my_pos_t}
-    public pad_d():  number {return this.my_pos_d}
-    public pad_s():  number {return this.my_pos_s}
-    public set_pad_t(pad_t: number): number {return this.my_pos_t = this.my_pos_d + pad_t < 1.0 ? pad_t : 0.99 - this.my_pos_d}
-    public set_pad_d(pad_d: number): number {return this.my_pos_d = this.my_pos_t + pad_d < 1.0 ? pad_d : 0.99 - this.my_pos_t}
-    public set_pad_s(pad_s: number): number {return this.my_pos_s = pad_s}
+    public letter(): string|null {return this.my_letter}
+    public set_letter(letter: string|null): string|null {return this.my_letter = letter}
+
+    public isShow(): boolean{return this.letter() !== null};
+    public pad_t():  number {return this.my_pad_t}
+    public pad_d():  number {return this.my_pad_d}
+    public pad_s():  number {return this.my_pad_s}
+    public set_pad_t(pad_t: number): number {return this.my_pad_t = this.my_pad_d + pad_t < 1.0 ? pad_t : 0.99 - this.my_pad_d}
+    public set_pad_d(pad_d: number): number {return this.my_pad_d = this.my_pad_t + pad_d < 1.0 ? pad_d : 0.99 - this.my_pad_t}
+    public set_pad_s(pad_s: number): number {return this.my_pad_s = pad_s}
 
     public col_f(): string {return this.my_col_f} 
     public col_s(): string {return this.my_col_s} 
@@ -107,17 +108,33 @@ export class C_MazeObj implements I_MazeObj {
             uniq_id: this.uniq_id,
             pos:     this.pos.encode(),
             layer:   this.my_layer,
-            letter:  this.letter ?? '',
+            letter:  this.my_letter ?? '',
+            pad_t:   this.my_pad_t, 
+            pad_d:   this.my_pad_d, 
+            pad_s:   this.my_pad_s, 
+            col_f:   this.my_col_f,  
+            col_s:   this.my_col_s, 
+            col_t:   this.my_col_t, 
+            col_d:   this.my_col_d, 
+            col_l:   this.my_col_l, 
         }
     }
 
     public decode(j: JSON_MazeObj|undefined): C_MazeObj {
         if (j === undefined) return this;
 
-        if (j.uniq_id !== undefined) this.uniq_id  = j.uniq_id;
+        if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
         if (j.pos     !== undefined) this.pos.decode(j.pos);
-        if (j.layer   !== undefined) this.my_layer = j.layer;
-        if (j.letter  !== undefined) this.letter   = j.letter !== '' ? j.letter : null;
+        if (j.layer   !== undefined) this.my_layer  = j.layer;
+        if (j.letter  !== undefined) this.my_letter = j.letter !== '' ? j.letter : null;
+        if (j.pad_t   !== undefined) this.my_pad_t; 
+        if (j.pad_d   !== undefined) this.my_pad_d; 
+        if (j.pad_s   !== undefined) this.my_pad_s; 
+        if (j.col_f   !== undefined) this.my_col_f;  
+        if (j.col_s   !== undefined) this.my_col_s; 
+        if (j.col_t   !== undefined) this.my_col_t; 
+        if (j.col_d   !== undefined) this.my_col_d; 
+        if (j.col_l   !== undefined) this.my_col_l; 
 
         return this;
     }

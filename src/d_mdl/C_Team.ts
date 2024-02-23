@@ -85,7 +85,7 @@ export class C_Team implements I_MazeObj {
     }
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}
-    public to_letter(): string|null {
+    public letter(): string|null {
         switch (this.walker.get_d()) {
             case T_Direction.N: return '↑';
             case T_Direction.E: return '→';
