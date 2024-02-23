@@ -342,8 +342,8 @@ function drow_obj_down(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow())    return;
-    if (obj.pad_t() <= 0.5) return;
+    if (!obj.isShow())      return;
+    if (obj.pad_b() <= 0.5) return;
     if (obj.pad_s() <= 0.0) {
         drow_cell_floor(d, w, obj.col_t() ?? '#6666ff', obj.col_l() ?? '#9999ff');
         return;
@@ -363,8 +363,8 @@ function drow_obj_top(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow())    return;
-    if (obj.pad_b() <= 0.5) return;
+    if (!obj.isShow())      return;
+    if (obj.pad_t() <= 0.5) return;
     if (obj.pad_s() <= 0.0) {
         drow_cell_ceiling(d, w, obj.col_b() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
         return;
@@ -458,7 +458,7 @@ function __calc_padding_obj(
     if (g_ds.wall === null) return {
         ftl:{x:0,y:0}, ftr:{x:0,y:0}, fdr:{x:0,y:0}, fdl:{x:0,y:0}, 
         btl:{x:0,y:0}, btr:{x:0,y:0}, bdr:{x:0,y:0}, bdl:{x:0,y:0}, 
-        };
+    };
     const rect_frot = g_ds.wall.get(d,     w);
     const rect_back = g_ds.wall.get(d + 1, w);
 
