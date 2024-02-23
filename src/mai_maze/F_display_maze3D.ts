@@ -117,15 +117,15 @@ export function display_maze3D(): void {
             const around_j_k = g_team.get_around(j, k, 0);
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
-                    drow_right_side_stone(j, k);
+                    drow_stone_right_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
+                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
                 case T_MzKind.StrUD:
-                    drow_right_side_stairs(j, k);
+                    drow_stairs_right_side(j, k);
                     break;
                 case T_MzKind.Floor: 
                 default:
@@ -134,7 +134,7 @@ export function display_maze3D(): void {
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_right_side_obj(obj, j, k);
+                if (obj !== null) drow_mazeObj_right_side(obj, j, k);
             }
         }
         // 　左側が見えている壁の描写 (右側から描写)
@@ -142,10 +142,10 @@ export function display_maze3D(): void {
             const around_j_k = g_team.get_around(j, k, 0);
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
-                    drow_left_side_stone(j, k);
+                    drow_stone_left_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
+                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
@@ -159,22 +159,22 @@ export function display_maze3D(): void {
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_left_side_obj(obj, j, k);
+                if (obj !== null) drow_mazeObj_left_side(obj, j, k);
             }
         }
         // 正面の壁の描写
         const around_j_0 = g_team.get_around(j, 0, 0);
         switch (g_maze.get_cell(around_j_0)) {
             case T_MzKind.Stone:
-                drow_front_stone(j, 0);
+                drow_stone_front(j, 0);
                 break;
             case T_MzKind.Unexp: 
-                drow_floor_unexp(j ,0);
+                drow_unexp_floor(j ,0);
                 break;
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
             case T_MzKind.StrUD:
-                drow_front_stairs(j, 0);
+                drow_stairs_front(j, 0);
                 break;
             case T_MzKind.Floor: 
             default:
@@ -183,28 +183,28 @@ export function display_maze3D(): void {
         }
         if (g_maze.exist_obj(around_j_0)) {
             const obj = g_maze.get_obj(around_j_0);
-            if (obj !== null) drow_front_obj(obj, j, 0);
+            if (obj !== null) drow_mazeObj_front(obj, j, 0);
         }
     }
 }
 
-function drow_floor_unexp(d: number, w:number): void {
+function drow_unexp_floor(d: number, w:number): void {
     drow_cell_floor(d, w, '#66ffff');
 }
 
-function drow_front_stone(d: number, w: number): void {
+function drow_stone_front(d: number, w: number): void {
     drow_cell_front(d, w, '#00ff00', '#0000ff');
 }
-function drow_left_side_stone(d: number, w: number): void {
+function drow_stone_left_side(d: number, w: number): void {
     drow_cell_left_side(d, w, '#00ee00', '#0000ff');
     drow_cell_front    (d, w, '#00ff00', '#0000ff');
 }
-function drow_right_side_stone(d: number, w: number): void {
+function drow_stone_right_side(d: number, w: number): void {
     drow_cell_right_side(d, w, '#00ee00', '#0000ff');
     drow_cell_front     (d, w, '#00ff00', '#0000ff');
 }
 
-function drow_front_stairs(d: number, w: number): void {
+function drow_stairs_front(d: number, w: number): void {
     drow_cell_floor  (d, w, '#ffffcc', '#ffff00');
     drow_cell_ceiling(d, w, '#ffffcc', '#ffff00');
     drow_cell_front  (d, w,  null,     '#ffff00');
@@ -215,24 +215,24 @@ function drow_left_side_stairs(d: number, w: number): void {
     drow_cell_left_side(d, w,  null,     '#ffff00');
 
 }
-function drow_right_side_stairs(d: number, w: number): void {
+function drow_stairs_right_side(d: number, w: number): void {
     drow_cell_floor     (d, w, '#ffffcc', '#ffff00');
     drow_cell_ceiling   (d, w, '#ffffcc', '#ffff00');
     drow_cell_right_side(d, w,  null,     '#ffff00');
 }
 
-function drow_front_obj(obj: I_MazeObj, d: number, w: number): void {
+function drow_mazeObj_front(obj: I_MazeObj, d: number, w: number): void {
     drow_obj_down (obj, d, w);
     drow_obj_top  (obj, d, w);
     drow_obj_front(obj, d, w);
 }
-function drow_left_side_obj(obj: I_MazeObj, d: number, w: number): void {
+function drow_mazeObj_left_side(obj: I_MazeObj, d: number, w: number): void {
     drow_obj_down     (obj, d, w);
     drow_obj_top      (obj, d, w);
     drow_obj_left_side(obj, d, w);
     drow_obj_front    (obj, d, w);
 }
-function drow_right_side_obj(obj: I_MazeObj, d: number, w: number): void {
+function drow_mazeObj_right_side(obj: I_MazeObj, d: number, w: number): void {
     drow_obj_down      (obj, d, w);
     drow_obj_top       (obj, d, w);
     drow_obj_right_side(obj, d, w);
