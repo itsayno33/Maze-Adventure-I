@@ -380,15 +380,8 @@ function __calc_padding_obj(
 
     const ratio    = obj.pad_s() / 2.0;
 
-    const frot_wid = Math.abs(rect_frot.max_x - rect_frot.min_x);
-    const back_wid = Math.abs(rect_back.max_x - rect_back.min_x);
-    const frot_pad = frot_wid * ratio;
-    const back_pad = back_wid * ratio;
-
-    const frot_top_Y   = rect_frot.min_y + (rect_frot.max_y - rect_frot.min_y) * ratio;
-    const frot_dwn_Y   = rect_frot.max_y - (rect_frot.max_y - rect_frot.min_y) * ratio;
-    const back_top_Y   = rect_back.min_y + (rect_back.max_y - rect_back.min_y) * ratio;
-    const back_dwn_Y   = rect_back.max_y - (rect_back.max_y - rect_back.min_y) * ratio;
+    const frot_pad = Math.abs(rect_frot.max_x - rect_frot.min_x) * ratio;
+    const back_pad = Math.abs(rect_back.max_x - rect_back.min_x) * ratio;
 
     // パディング設定後のXY座標を計算するために
     // 必要な線分の位置決めをする
@@ -419,119 +412,16 @@ function __calc_padding_obj(
         bdl: bdl, bdr: bdr,
     }
 }
-
 function __calc_padding_xy(frot: T_xy, back: T_xy, ratio: number): T_xy {
         // 線分(Ax + B = y)の方程式の係数を求める
         const A = (frot.y - back.y) / (frot.x - back.x);
         const B =  frot.y - A * frot.x;
     
         // パディング調整後のXY座標の計算
-        const p_frot_x = frot.x + (back.x - frot.x) * ratio / 2.0;
+        const p_frot_x = frot.x + (back.x - frot.x) * ratio;
         const p_frot_y = A * p_frot_x + B;
 
         return {x: p_frot_x, y: p_frot_y};
-}
-
-type xy = {x: number, y: number}
-function __calc_padding_obj_bak(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): {
-    // 識別子の意味
-    // 左端：前後の区別　f:前面　b:背面
-    // 中央：上下の区別　u:上辺　d:下辺
-    // 右端：左右の区別　l:左側　r:右側
-    ful:xy, fur:xy, fdr:xy, fdl:xy, 
-    bul:xy, bur:xy, bdr:xy, bdl:xy, 
-} {
-    if (g_ds.wall === null) return {
-        ful:{x:0,y:0}, fur:{x:0,y:0}, fdr:{x:0,y:0}, fdl:{x:0,y:0}, 
-        bul:{x:0,y:0}, bur:{x:0,y:0}, bdr:{x:0,y:0}, bdl:{x:0,y:0}, 
-        };
-    const rect_frot = g_ds.wall.get(d,     w);
-    const rect_back = g_ds.wall.get(d + 1, w);
-
-
-    //水平分のパディング計算
-    const deff_fr_x_1 = (rect_frot.max_x - rect_frot.min_x) * obj.pad_s() / 2.0;
-    const deff_bk_x_1 = (rect_back.max_x - rect_back.min_x) * obj.pad_s() / 2.0;
-    //水平奥行分の調整(X軸)
-    const deff_fr_x_2 = deff_fr_x_1 - (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
-    const deff_bk_x_2 = deff_bk_x_1 - (deff_fr_x_1 - deff_bk_x_1) * obj.pad_s() / 2.0;   
-    //水平奥行分の調整(Y軸上辺)
-    const deff_fr_U_0 = (rect_back.min_y - rect_frot.min_y) * obj.pad_s() / 2.0;   
-    const deff_bk_U_0 = (rect_back.min_y - rect_frot.min_y) * obj.pad_s() / 2.0;   
-    //水平奥行分の調整(y軸下辺)
-    const deff_fr_D_0 = (rect_frot.max_y - rect_back.max_y) * obj.pad_s() / 2.0;   
-    const deff_bk_D_0 = (rect_frot.max_y - rect_back.max_y) * obj.pad_s() / 2.0;   
-
-
-    //上辺分のパディング計算
-    const deff_fr_U_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_t() / 2.0;
-    const deff_bk_U_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_t() / 2.0;
-    //奥行分の調整(Y軸上辺)
-    const deff_fr_U_2 = deff_fr_U_1 + (deff_fr_U_1 - deff_bk_U_1) * obj.pad_s() / 2.0;   
-    const deff_bk_U_2 = deff_bk_U_1 - (deff_fr_U_1 - deff_bk_U_1) * obj.pad_s() / 2.0;   
-
-
-    //下辺分のパディング計算
-    const deff_fr_D_1 = (rect_frot.max_y - rect_frot.min_y) * obj.pad_b() / 2.0;
-    const deff_bk_D_1 = (rect_back.max_y - rect_back.min_y) * obj.pad_b() / 2.0;
-    //奥行分の調整(y軸下辺)
-    const deff_fr_D_2 = deff_fr_D_1 - (deff_fr_D_1 - deff_bk_D_1) * obj.pad_b() / 2.0;   
-    const deff_bk_D_2 = deff_bk_D_1 + (deff_fr_D_1 - deff_bk_D_1) * obj.pad_b() / 2.0;   
-
-
-    //水平分調整(前面)
-    let ful_x = rect_frot.min_x + deff_fr_x_2; 
-    let fur_x = rect_frot.max_x - deff_fr_x_2; 
-    let fdr_x = rect_frot.max_x - deff_fr_x_2; 
-    let fdl_x = rect_frot.min_x + deff_fr_x_2; 
-
-    //水平分調整(背面)
-    let bul_x = rect_back.min_x + deff_bk_x_2; 
-    let bur_x = rect_back.max_x - deff_bk_x_2; 
-    let bdr_x = rect_back.max_x - deff_bk_x_2; 
-    let bdl_x = rect_back.min_x + deff_bk_x_2; 
-
-    //垂直分調整(前面) 
-    let ful_y = rect_frot.min_y + deff_fr_U_2;
-    let fur_y = rect_frot.min_y + deff_fr_U_2;
-    let fdr_y = rect_frot.max_y - deff_fr_D_2;
-    let fdl_y = rect_frot.max_y - deff_fr_D_2;
-
-    //垂直分調整(背面) 
-    let bul_y = rect_back.min_y + deff_bk_U_2;
-    let bur_y = rect_back.min_y + deff_bk_U_2;
-    let bdr_y = rect_back.max_y - deff_bk_D_2;
-    let bdl_y = rect_back.max_y - deff_bk_D_2;
-
-    // 水平奥行調整(上面Y軸) 
-    ful_y += deff_fr_U_0; 
-    fur_y += deff_fr_U_0;
-    bul_y -= deff_bk_U_0;
-    bur_y -= deff_bk_U_0;
-
-    // 水平奥行調整(底面y軸) 
-    fdl_y -= deff_fr_D_0;
-    fdr_y -= deff_fr_D_0;
-    bdl_y += deff_bk_D_0;
-    bdr_y += deff_bk_D_0;
-
-
-    // 更に奥行分左右調整(前面)
-    ful_x = 0; 
-    fur_x = 0; 
-    fdr_x = 0; 
-    fdl_x = 0; 
-
-    return {
-        ful: {x: ful_x, y: ful_y}, fur: {x: fur_x, y: fur_y},
-        fdl: {x: fdl_x, y: fdl_y}, fdr: {x: fdr_x, y: fdr_y},
-        bul: {x: bul_x, y: bul_y}, bur: {x: bur_x, y: bur_y},
-        bdl: {x: bdl_x, y: bdl_y}, bdr: {x: bdr_x, y: bdr_y},
-    }
 }
 function _drow_floor_obj(
     obj:   I_MazeObj,
