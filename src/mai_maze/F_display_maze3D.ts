@@ -16,7 +16,7 @@ export type T_DrowSet = {
 }
 
 type T_xy   = {x: number, y: number}
-type T_Rect = {ul: T_xy, ur: T_xy, dl: T_xy, dr: T_xy};
+type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
@@ -129,7 +129,7 @@ export function display_maze3D(): void {
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_floor(j ,k);
+                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
@@ -154,7 +154,7 @@ export function display_maze3D(): void {
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_floor(j ,k);
+                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
@@ -178,7 +178,7 @@ export function display_maze3D(): void {
                 break;
             case T_MzKind.Floor: 
             default:
-                drow_floor(j ,0);
+                drow_cell_floor(j ,0);
                 break;
         }
         if (g_maze.exist_obj(around_j_0)) {
@@ -189,57 +189,57 @@ export function display_maze3D(): void {
 }
 
 function drow_floor_unexp(d: number, w:number): void {
-    drow_floor(d, w, '#66ffff');
+    drow_cell_floor(d, w, '#66ffff');
 }
 
 function drow_front_stone(d: number, w: number): void {
-    drow_front(d, w, '#00ff00', '#0000ff');
+    drow_cell_front(d, w, '#00ff00', '#0000ff');
 }
 function drow_left_side_stone(d: number, w: number): void {
-    drow_left_side(d, w, '#00ee00', '#0000ff');
-    drow_front    (d, w, '#00ff00', '#0000ff');
+    drow_cell_left_side(d, w, '#00ee00', '#0000ff');
+    drow_cell_front    (d, w, '#00ff00', '#0000ff');
 }
 function drow_right_side_stone(d: number, w: number): void {
-    drow_right_side(d, w, '#00ee00', '#0000ff');
-    drow_front     (d, w, '#00ff00', '#0000ff');
+    drow_cell_right_side(d, w, '#00ee00', '#0000ff');
+    drow_cell_front     (d, w, '#00ff00', '#0000ff');
 }
 
 function drow_front_stairs(d: number, w: number): void {
-    drow_floor  (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling(d, w, '#ffffcc', '#ffff00');
-    drow_front  (d, w,  null,     '#ffff00');
+    drow_cell_floor  (d, w, '#ffffcc', '#ffff00');
+    drow_cell_ceiling(d, w, '#ffffcc', '#ffff00');
+    drow_cell_front  (d, w,  null,     '#ffff00');
 }
 function drow_left_side_stairs(d: number, w: number): void {
-    drow_floor    (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling  (d, w, '#ffffcc', '#ffff00');
-    drow_left_side(d, w,  null,     '#ffff00');
+    drow_cell_floor    (d, w, '#ffffcc', '#ffff00');
+    drow_cell_ceiling  (d, w, '#ffffcc', '#ffff00');
+    drow_cell_left_side(d, w,  null,     '#ffff00');
 
 }
 function drow_right_side_stairs(d: number, w: number): void {
-    drow_floor     (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling   (d, w, '#ffffcc', '#ffff00');
-    drow_right_side(d, w,  null,     '#ffff00');
+    drow_cell_floor     (d, w, '#ffffcc', '#ffff00');
+    drow_cell_ceiling   (d, w, '#ffffcc', '#ffff00');
+    drow_cell_right_side(d, w,  null,     '#ffff00');
 }
 
 function drow_front_obj(obj: I_MazeObj, d: number, w: number): void {
-    _drow_floor_obj  (obj, d, w);
-    _drow_ceiling_obj(obj, d, w);
-    _drow_front_obj  (obj, d, w);
+    drow_obj_down (obj, d, w);
+    drow_obj_top  (obj, d, w);
+    drow_obj_front(obj, d, w);
 }
 function drow_left_side_obj(obj: I_MazeObj, d: number, w: number): void {
-    _drow_floor_obj    (obj, d, w);
-    _drow_ceiling_obj  (obj, d, w);
-    _drow_left_side_obj(obj, d, w);
-    _drow_front_obj    (obj, d, w);
+    drow_obj_down     (obj, d, w);
+    drow_obj_top      (obj, d, w);
+    drow_obj_left_side(obj, d, w);
+    drow_obj_front    (obj, d, w);
 }
 function drow_right_side_obj(obj: I_MazeObj, d: number, w: number): void {
-    _drow_floor_obj     (obj, d, w);
-    _drow_ceiling_obj   (obj, d, w);
-    _drow_right_side_obj(obj, d, w);
-    _drow_front_obj     (obj, d, w);
+    drow_obj_down      (obj, d, w);
+    drow_obj_top       (obj, d, w);
+    drow_obj_right_side(obj, d, w);
+    drow_obj_front     (obj, d, w);
 }
 
-function drow_floor(
+function drow_cell_floor(
             d:    number, 
             w:    number, 
             fill: string = '#6666ff', 
@@ -251,14 +251,14 @@ function drow_floor(
     const rect_back  = g_ds.wall.get(d + 1, w);
 
     const rect: T_Rect = {
-        ul: {x: rect_front.min_x, y: rect_front.max_y},
-        ur: {x: rect_front.max_x, y: rect_front.max_y},
+        tl: {x: rect_front.min_x, y: rect_front.max_y},
+        tr: {x: rect_front.max_x, y: rect_front.max_y},
         dr: {x: rect_back .max_x, y: rect_back .max_y},
         dl: {x: rect_back .min_x, y: rect_back .max_y}
     }
     drow_cell(rect, fill, line);
 }
-function drow_ceiling(
+function drow_cell_ceiling(
             d: number, 
             w: number, 
             fill: string = '#aaaaaa', 
@@ -270,14 +270,14 @@ function drow_ceiling(
     const rect_back  = g_ds.wall.get(d + 1, w);
 
     const rect: T_Rect = {
-        ul: {x: rect_front.min_x, y: rect_front.min_y},
-        ur: {x: rect_front.max_x, y: rect_front.min_y},
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_front.max_x, y: rect_front.min_y},
         dr: {x: rect_back .max_x, y: rect_back .min_y},
         dl: {x: rect_back .min_x, y: rect_back .min_y}
     }
     drow_cell(rect, fill, line);
 }
-function drow_front(
+function drow_cell_front(
         d: number, 
         w: number, 
         fill: string|null = '#00ff00', 
@@ -289,14 +289,14 @@ function drow_front(
     const rect_front = g_ds.wall.get(d, w);
 
     const rect: T_Rect = {
-        ul: {x: rect_front.min_x, y: rect_front.min_y},
-        ur: {x: rect_front.max_x, y: rect_front.min_y},
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_front.max_x, y: rect_front.min_y},
         dr: {x: rect_front.max_x, y: rect_front.max_y},
         dl: {x: rect_front.min_x, y: rect_front.max_y}
     }
     drow_cell(rect, fill, line);
 }
-function drow_left_side(
+function drow_cell_left_side(
         d: number, 
         w: number, 
         fill: string|null = '#00cc00', 
@@ -309,14 +309,14 @@ function drow_left_side(
     const rect_back  = g_ds.wall.get(d + 1, w);
 
     const rect: T_Rect = {
-        ul: {x: rect_front.min_x, y: rect_front.min_y},
-        ur: {x: rect_back .min_x, y: rect_back .min_y},
+        tl: {x: rect_front.min_x, y: rect_front.min_y},
+        tr: {x: rect_back .min_x, y: rect_back .min_y},
         dr: {x: rect_back .min_x, y: rect_back .max_y},
         dl: {x: rect_front.min_x, y: rect_front.max_y}
     }
     drow_cell(rect, fill, line);
 }
-function drow_right_side(
+function drow_cell_right_side(
         d: number, 
         w: number, 
         fill: string|null = '#00cc00', 
@@ -329,34 +329,118 @@ function drow_right_side(
     const rect_back  = g_ds.wall.get(d + 1, w);
 
     const rect: T_Rect = {
-        ul: {x: rect_front.max_x, y: rect_front.min_y},
-        ur: {x: rect_back .max_x, y: rect_back .min_y},
+        tl: {x: rect_front.max_x, y: rect_front.min_y},
+        tr: {x: rect_back .max_x, y: rect_back .min_y},
         dr: {x: rect_back .max_x, y: rect_back .max_y},
         dl: {x: rect_front.max_x, y: rect_front.max_y}
     }
     drow_cell(rect, fill, line);
 }
 
-function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    con.beginPath();
-    con.moveTo(r.ul.x, r.ul.y);
-    con.lineTo(r.ur.x, r.ur.y);
-    con.lineTo(r.dr.x, r.dr.y);
-    con.lineTo(r.dl.x, r.dl.y);
-    con.closePath();
-
-    if (fill != null) {
-        con.fillStyle   = fill;
-        con.fill();
+function drow_obj_down(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow())    return;
+    if (obj.pad_t() <= 0.5) return;
+    if (obj.pad_s() <= 0.0) {
+        drow_cell_floor(d, w, obj.col_t() ?? '#6666ff', obj.col_l() ?? '#9999ff');
+        return;
     }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 1;
-        con.stroke();
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.fdl,
+        tr: o.fdr,
+        dr: o.bdr,
+        dl: o.bdl,
     }
+    drow_cell(rect, obj.col_t(), obj.col_l());
+}
+function drow_obj_top(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow())    return;
+    if (obj.pad_b() <= 0.5) return;
+    if (obj.pad_s() <= 0.0) {
+        drow_cell_ceiling(d, w, obj.col_b() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
+        return;
+    }
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.ftl,
+        tr: o.ftr,
+        dr: o.btr,
+        dl: o.btl,
+    }
+    drow_cell(rect, obj.col_b(), obj.col_l());
+}
+function drow_obj_front(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow()) return;
+    if (obj.pad_s() <= 0.0) {
+        drow_cell_front(d, w, obj.col_t() ?? '#00ff00', obj.col_l() ?? '#0000ff');
+        return;
+    }
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.ftl, 
+        tr: o.ftr, 
+        dr: o.fdr, 
+        dl: o.fdl, 
+    }
+
+    drow_cell(rect, obj.col_f(), obj.col_l());
+}
+function drow_obj_left_side(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow()) return;
+    if (obj.pad_s() <= 0.0) {
+        drow_cell_left_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
+        return;
+    }
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.btl,
+        tr: o.ftl,
+        dr: o.fdl,
+        dl: o.bdl,
+    }
+
+    drow_cell(rect, obj.col_s(), obj.col_l());
+}
+function drow_obj_right_side(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow()) return;
+    if (obj.pad_s() <= 0.0) {
+        drow_cell_right_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
+        return;
+    }
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.ftr,
+        tr: o.btr,
+        dr: o.bdr,
+        dl: o.fdr,
+    }
+
+    drow_cell(rect, obj.col_s(), obj.col_l());
 }
 
 function __calc_padding_obj(
@@ -423,91 +507,15 @@ function __calc_padding_xy(frot: T_xy, back: T_xy, ratio: number): T_xy {
 
         return {x: p_frot_x, y: p_frot_y};
 }
-function _drow_floor_obj(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): void {
-    if (obj.pad_t() <= 0.5) return;
 
-    const o = __calc_padding_obj(obj, d, w);
-    const rect: T_Rect = {
-        ul: o.fdl,
-        ur: o.fdr,
-        dr: o.bdr,
-        dl: o.bdl,
-    }
-    drow_cell_ex(rect, obj.col_t(), obj.col_l());
-}
-function _drow_ceiling_obj(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): void {
-    if (obj.pad_b() <= 0.5) return;
-    
-    const o = __calc_padding_obj(obj, d, w);
-    const rect: T_Rect = {
-        ul: o.ftl,
-        ur: o.ftr,
-        dr: o.btr,
-        dl: o.btl,
-    }
-    drow_cell_ex(rect, obj.col_b(), obj.col_l());
-}
-function _drow_front_obj(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): void {
-    const o = __calc_padding_obj(obj, d, w);
-    const rect: T_Rect = {
-        ul: o.ftl, 
-        ur: o.ftr, 
-        dr: o.fdr, 
-        dl: o.fdl, 
-    }
 
-    drow_cell_ex(rect, obj.col_f(), obj.col_l());
-}
-function _drow_left_side_obj(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): void {
-    const o = __calc_padding_obj(obj, d, w);
-    const rect: T_Rect = {
-        ul: o.btl,
-        ur: o.ftl,
-        dr: o.fdl,
-        dl: o.bdl,
-    }
-
-    drow_cell_ex(rect, obj.col_s(), obj.col_l());
-}
-function _drow_right_side_obj(
-    obj:   I_MazeObj,
-    d:     number, 
-    w:     number, 
-): void {
-    const o = __calc_padding_obj(obj, d, w);
-    const rect: T_Rect = {
-        ul: o.ftr,
-        ur: o.btr,
-        dr: o.bdr,
-        dl: o.fdr,
-    }
-
-    drow_cell_ex(rect, obj.col_s(), obj.col_l());
-}
-
-function drow_cell_ex(r: T_Rect, fill: string|null, line: string|null): void {
+function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
     if (g_ds.con === null || g_ds.wall === null) return;
     const con = g_ds.con;
 
     con.beginPath();
-    con.moveTo(r.ul.x, r.ul.y);
-    con.lineTo(r.ur.x, r.ur.y);
+    con.moveTo(r.tl.x, r.tl.y);
+    con.lineTo(r.tr.x, r.tr.y);
     con.lineTo(r.dr.x, r.dr.y);
     con.lineTo(r.dl.x, r.dl.y);
     con.closePath();

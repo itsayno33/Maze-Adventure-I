@@ -10,14 +10,15 @@ export interface I_MazeObj extends I_JSON_Uniq {
     set_layer?: (layer: number)=>void;
     to_letter:  ()=>string|null; // null: 見えない、何もない
     // 表示関係(3D)
-    pad_t: ()=>number; //上側の空き(割合: 0から1) 
-    pad_b: ()=>number; //床側の空き(割合: 0から1) 
-    pad_s: ()=>number; //横側の空き(割合: 0から1) 
-    col_f: ()=>string|null; //正面の色(CSSカラー)。nullは透明
-    col_s: ()=>string|null; //横側の色(CSSカラー)。nullは透明
-    col_t: ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
-    col_b: ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
-    col_l: ()=>string|null; //ラインの色(CSSカラー)
+    isShow: ()=>boolean;
+    pad_t:  ()=>number; //上側の空き(割合: 0から1) 
+    pad_b:  ()=>number; //床側の空き(割合: 0から1) 
+    pad_s:  ()=>number; //横側の空き(割合: 0から1) 
+    col_f:  ()=>string|null; //正面の色(CSSカラー)。nullは透明
+    col_s:  ()=>string|null; //横側の色(CSSカラー)。nullは透明
+    col_t:  ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
+    col_b:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
+    col_l:  ()=>string|null; //ラインの色(CSSカラー)
 }
 
 export interface JSON_MazeObj extends JSON_Any {
@@ -60,15 +61,11 @@ export class C_MazeObj implements I_MazeObj {
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
     public to_letter(): string|null {return this.letter}
-/*
-    public pad_t(): number {return 0.0}
-    public pad_b(): number {return 0.0}
-    public pad_l(): number {return 0.0}
-    public pad_r(): number {return 0.0}
-*/
-    public pad_t(): number {return 0.0}
-    public pad_b(): number {return 0.0}
-    public pad_s(): number {return 0.0}
+
+    public isShow(): boolean{return this.to_letter() !== null};
+    public pad_t():  number {return 0.0}
+    public pad_b():  number {return 0.0}
+    public pad_s():  number {return 0.73}
 
     public col_f(): string {return '#f8f8f8'} 
     public col_s(): string {return '#dddddd'} 
