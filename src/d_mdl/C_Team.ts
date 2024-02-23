@@ -100,6 +100,7 @@ export class C_Team implements I_MazeObj {
     public pad_d(): number {return 0.0} 
     public pad_s(): number {return 0.0} 
     public col_f(): string|null {return null} 
+    public col_b(): string|null {return null} 
     public col_s(): string|null {return null} 
     public col_t(): string|null {return null} 
     public col_d(): string|null {return null} 

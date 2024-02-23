@@ -2,10 +2,10 @@ import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
-import { I_MazeObj }      from "../d_mdl/C_MazeObj";
+import { C_MazeObj, I_MazeObj }      from "../d_mdl/C_MazeObj";
 import { T_Direction }    from "../d_mdl/T_Direction";
-import { g_alert, g_mes }          from "../d_cmn/global";
-import { C_Wall }                from "./C_Wall";
+import { g_mes }          from "../d_cmn/global";
+import { C_Wall }         from "./C_Wall";
 import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
@@ -17,6 +17,11 @@ export type T_DrowSet = {
 
 type T_xy   = {x: number, y: number}
 type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
+
+let  floor: C_MazeObj;
+let  unexp: C_MazeObj;
+let  stone: C_MazeObj;
+let  stair: C_MazeObj;
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
@@ -30,6 +35,34 @@ export function init_maze3D(): T_DrowSet {
         g_mes.warning_message('Browser dont surpport 2D graphics!');
         return {canvas: null, con: null, depth: 0, wall: null};
     }
+
+    floor = new C_MazeObj({
+        layer: 0, letter: '　', 
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
+        col_l: '#9999ff', 
+    });
+
+    unexp = new C_MazeObj({
+        layer: 0, letter: 'Ｘ', 
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
+        col_l: '#9999ff', 
+    });
+
+    stone = new C_MazeObj({
+        layer: 0, letter: '＃', 
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
+        col_l: '#0000ff', 
+    });
+
+    stair = new C_MazeObj({
+        layer: 0, letter: '段', 
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+        col_l: '#0000ff', 
+    });
 
     // 3Dメイズを描写するキャンバス要素のサイズをCSS上の『見た目』のサイズに合わせる
     canvas.width  = canvas.clientWidth;
@@ -117,24 +150,28 @@ export function display_maze3D(): void {
             const around_j_k = g_team.get_around(j, k, 0);
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
-                    drow_stone_right_side(j, k);
+                    drow_mazeObj(stone, j, k);
+//                    drow_stone_right_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_unexp_floor(j ,k);
+                    drow_mazeObj(unexp, j, k);
+//                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
                 case T_MzKind.StrUD:
-                    drow_stairs_right_side(j, k);
+                    drow_mazeObj(stair, j, k);
+//                    drow_stairs_right_side(j, k);
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_cell_floor(j ,k);
+                    drow_mazeObj(floor, j, k);
+//                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_mazeObj_right_side(obj, j, k);
+                if (obj !== null) drow_mazeObj(obj, j, k);
             }
         }
         // 　左側が見えている壁の描写 (右側から描写)
@@ -142,48 +179,56 @@ export function display_maze3D(): void {
             const around_j_k = g_team.get_around(j, k, 0);
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
-                    drow_stone_left_side(j, k);
+                    drow_mazeObj(stone, j, k);
+//                    drow_stone_left_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
-                    drow_unexp_floor(j ,k);
+                    drow_mazeObj(unexp, j, k);
+//                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
                 case T_MzKind.StrUD:
-                    drow_left_side_stairs(j, k);
+                    drow_mazeObj(stair, j, k);
+//                    drow_stairs_left_side(j, k);
                     break;
                 case T_MzKind.Floor: 
                 default:
-                    drow_cell_floor(j ,k);
+                    drow_mazeObj(floor, j, k);
+//                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_mazeObj_left_side(obj, j, k);
+                if (obj !== null) drow_mazeObj(obj, j, k);
             }
         }
         // 正面の壁の描写
         const around_j_0 = g_team.get_around(j, 0, 0);
         switch (g_maze.get_cell(around_j_0)) {
             case T_MzKind.Stone:
-                drow_stone_front(j, 0);
+                drow_mazeObj(stone, j, k);
+//                drow_stone_front(j, 0);
                 break;
             case T_MzKind.Unexp: 
-                drow_unexp_floor(j ,0);
+                drow_mazeObj(unexp, j, k);
+//                drow_unexp_floor(j ,0);
                 break;
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
             case T_MzKind.StrUD:
-                drow_stairs_front(j, 0);
+                drow_mazeObj(stair, j, k);
+//                drow_stairs_front(j, 0);
                 break;
             case T_MzKind.Floor: 
             default:
-                drow_cell_floor(j ,0);
+                drow_mazeObj(floor, j, k);
+//                drow_cell_floor(j ,0);
                 break;
         }
         if (g_maze.exist_obj(around_j_0)) {
             const obj = g_maze.get_obj(around_j_0);
-            if (obj !== null) drow_mazeObj_front(obj, j, 0);
+            if (obj !== null) drow_mazeObj(obj, j, 0);
         }
     }
 }
@@ -209,7 +254,7 @@ function drow_stairs_front(d: number, w: number): void {
     drow_cell_ceiling(d, w, '#ffffcc', '#ffff00');
     drow_cell_front  (d, w,  null,     '#ffff00');
 }
-function drow_left_side_stairs(d: number, w: number): void {
+function drow_stairs_left_side(d: number, w: number): void {
     drow_cell_floor    (d, w, '#ffffcc', '#ffff00');
     drow_cell_ceiling  (d, w, '#ffffcc', '#ffff00');
     drow_cell_left_side(d, w,  null,     '#ffff00');
@@ -221,21 +266,12 @@ function drow_stairs_right_side(d: number, w: number): void {
     drow_cell_right_side(d, w,  null,     '#ffff00');
 }
 
-function drow_mazeObj_front(obj: I_MazeObj, d: number, w: number): void {
-    drow_obj_down (obj, d, w);
-    drow_obj_top  (obj, d, w);
-    drow_obj_front(obj, d, w);
-}
-function drow_mazeObj_left_side(obj: I_MazeObj, d: number, w: number): void {
-    drow_obj_down     (obj, d, w);
-    drow_obj_top      (obj, d, w);
-    drow_obj_left_side(obj, d, w);
-    drow_obj_front    (obj, d, w);
-}
-function drow_mazeObj_right_side(obj: I_MazeObj, d: number, w: number): void {
+function drow_mazeObj(obj: I_MazeObj, d: number, w: number): void {
+    drow_obj_back      (obj, d, w);
     drow_obj_down      (obj, d, w);
     drow_obj_top       (obj, d, w);
     drow_obj_right_side(obj, d, w);
+    drow_obj_left_side (obj, d, w);
     drow_obj_front     (obj, d, w);
 }
 
@@ -342,8 +378,8 @@ function drow_obj_down(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow())      return;
-    if (obj.pad_t() <= 0.5) return;
+    if (!obj.isShow() || obj.col_t() === null) return;
+//    if (obj.pad_t() <= 0.5) return;
     if (obj.pad_s() <= 0.0 && obj.pad_t() >= 1.0) {
         drow_cell_floor(d, w, obj.col_t() ?? '#6666ff', obj.col_l() ?? '#9999ff');
         return;
@@ -363,8 +399,8 @@ function drow_obj_top(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow())      return;
-    if (obj.pad_d() <= 0.5) return;
+    if (!obj.isShow() || obj.col_d() === null) return;
+//    if (obj.pad_d() <= 0.5) return;
     if (obj.pad_s() <= 0.0 && obj.pad_d() >= 1.0) {
         drow_cell_ceiling(d, w, obj.col_d() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
         return;
@@ -384,13 +420,8 @@ function drow_obj_front(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow()) return;
-/*
-    if (obj.pad_s() <= 0.0) {
-        drow_cell_front(d, w, obj.col_t() ?? '#00ff00', obj.col_l() ?? '#0000ff');
-        return;
-    }
-*/
+    if (!obj.isShow() || obj.col_f() === null) return;
+
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.ftl, 
@@ -401,18 +432,30 @@ function drow_obj_front(
 
     drow_cell(rect, obj.col_f(), obj.col_l());
 }
+function drow_obj_back(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): void {
+    if (!obj.isShow() || obj.col_b() === null) return;
+
+    const o = __calc_padding_obj(obj, d, w);
+    const rect: T_Rect = {
+        tl: o.btl, 
+        tr: o.btr, 
+        dr: o.bdr, 
+        dl: o.bdl, 
+    }
+
+    drow_cell(rect, obj.col_b(), obj.col_l());
+}
 function drow_obj_left_side(
     obj:   I_MazeObj,
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow()) return;
-/*
-    if (obj.pad_s() <= 0.0) {
-        drow_cell_left_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
-        return;
-    }
-*/
+    if (!obj.isShow() || obj.col_s() === null) return;
+
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.btl,
@@ -428,13 +471,8 @@ function drow_obj_right_side(
     d:     number, 
     w:     number, 
 ): void {
-    if (!obj.isShow()) return;
-/*
-    if (obj.pad_s() <= 0.0) {
-        drow_cell_right_side(d, w, obj.col_t() ?? '#00cc00', obj.col_l() ?? '#0000ff');
-        return;
-    }
-*/
+    if (!obj.isShow() || obj.col_s() === null) return;
+
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
         tl: o.ftr,

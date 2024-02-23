@@ -14,6 +14,7 @@ export interface I_MazeObj extends I_JSON_Uniq {
     pad_d:  ()=>number; //床側の空き(割合: 0から1) 
     pad_s:  ()=>number; //横側の空き(割合: 0から1) 
     col_f:  ()=>string|null; //正面の色(CSSカラー)。nullは透明
+    col_b:  ()=>string|null; //背面の色(CSSカラー)。nullは透明
     col_s:  ()=>string|null; //横側の色(CSSカラー)。nullは透明
     col_t:  ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
     col_d:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
@@ -37,11 +38,12 @@ export class C_MazeObj implements I_MazeObj {
     protected my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
     protected my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
 
-    protected my_col_f:  string; // オブジェクト正面のCSSカラー 
-    protected my_col_s:  string; // オブジェクト側面のCSSカラー 
-    protected my_col_t:  string; // オブジェクト上面のCSSカラー 
-    protected my_col_d:  string; // オブジェクト底面のCSSカラー 
-    protected my_col_l:  string; // オブジェクトの線のCSSカラー 
+    protected my_col_f:  string|null; // オブジェクト正面のCSSカラー 
+    protected my_col_b:  string|null; // オブジェクト正面のCSSカラー 
+    protected my_col_s:  string|null; // オブジェクト側面のCSSカラー 
+    protected my_col_t:  string|null; // オブジェクト上面のCSSカラー 
+    protected my_col_d:  string|null; // オブジェクト底面のCSSカラー 
+    protected my_col_l:  string|null; // オブジェクトの線のCSSカラー 
 
     public constructor(j: JSON_MazeObj|undefined) {
         this.uniq_id    =   'mazeobj_' + _get_uuid();
@@ -54,11 +56,12 @@ export class C_MazeObj implements I_MazeObj {
         this.my_pad_s   =   0.0;
 
         this.my_col_f   = '#f8f8f8'; 
+        this.my_col_b   = '#aaaaaa'; 
         this.my_col_s   = '#dddddd'; 
         this.my_col_t   = '#ffffff'; 
         this.my_col_d   = '#cccccc'; 
         this.my_col_l   = '#333333'; 
-    
+
         if (j !== undefined) this.decode(j);
     }
 
@@ -92,16 +95,18 @@ export class C_MazeObj implements I_MazeObj {
     public set_pad_d(pad_d: number): number {return this.my_pad_d = this.my_pad_t + pad_d < 1.0 ? pad_d : 0.99 - this.my_pad_t}
     public set_pad_s(pad_s: number): number {return this.my_pad_s = pad_s}
 
-    public col_f(): string {return this.my_col_f} 
-    public col_s(): string {return this.my_col_s} 
-    public col_t(): string {return this.my_col_t} 
-    public col_d(): string {return this.my_col_d} 
-    public col_l(): string {return this.my_col_l} 
-    public set_col_f(col_f: string): string {return this.my_col_f = col_f} 
-    public set_col_s(col_s: string): string {return this.my_col_s = col_s} 
-    public set_col_t(col_t: string): string {return this.my_col_t = col_t} 
-    public set_col_d(col_d: string): string {return this.my_col_d = col_d} 
-    public set_col_l(col_l: string): string {return this.my_col_l = col_l} 
+    public col_f(): string|null {return this.my_col_f} 
+    public col_b(): string|null {return this.my_col_b} 
+    public col_s(): string|null {return this.my_col_s} 
+    public col_t(): string|null {return this.my_col_t} 
+    public col_d(): string|null {return this.my_col_d} 
+    public col_l(): string|null {return this.my_col_l} 
+    public set_col_f(col_f: string|null): string|null {return this.my_col_f = col_f} 
+    public set_col_b(col_b: string|null): string|null {return this.my_col_b = col_b} 
+    public set_col_s(col_s: string|null): string|null {return this.my_col_s = col_s} 
+    public set_col_t(col_t: string|null): string|null {return this.my_col_t = col_t} 
+    public set_col_d(col_d: string|null): string|null {return this.my_col_d = col_d} 
+    public set_col_l(col_l: string|null): string|null {return this.my_col_l = col_l} 
 
     public encode(): JSON_MazeObj {
         return {
@@ -112,11 +117,12 @@ export class C_MazeObj implements I_MazeObj {
             pad_t:   this.my_pad_t, 
             pad_d:   this.my_pad_d, 
             pad_s:   this.my_pad_s, 
-            col_f:   this.my_col_f,  
-            col_s:   this.my_col_s, 
-            col_t:   this.my_col_t, 
-            col_d:   this.my_col_d, 
-            col_l:   this.my_col_l, 
+            col_f:   this.my_col_f ?? '',  
+            col_b:   this.my_col_b ?? '',  
+            col_s:   this.my_col_s ?? '', 
+            col_t:   this.my_col_t ?? '', 
+            col_d:   this.my_col_d ?? '', 
+            col_l:   this.my_col_l ?? '', 
         }
     }
 
@@ -126,15 +132,16 @@ export class C_MazeObj implements I_MazeObj {
         if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
         if (j.pos     !== undefined) this.pos.decode(j.pos);
         if (j.layer   !== undefined) this.my_layer  = j.layer;
-        if (j.letter  !== undefined) this.my_letter = j.letter !== '' ? j.letter : null;
-        if (j.pad_t   !== undefined) this.my_pad_t; 
-        if (j.pad_d   !== undefined) this.my_pad_d; 
-        if (j.pad_s   !== undefined) this.my_pad_s; 
-        if (j.col_f   !== undefined) this.my_col_f;  
-        if (j.col_s   !== undefined) this.my_col_s; 
-        if (j.col_t   !== undefined) this.my_col_t; 
-        if (j.col_d   !== undefined) this.my_col_d; 
-        if (j.col_l   !== undefined) this.my_col_l; 
+        if (j.letter  !== undefined) this.my_letter = j.letter !== '' ? j.letter : null; 
+        if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
+        if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
+        if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
+        if (j.col_f   !== undefined) this.my_col_f  = j.col_f  !== '' ? j.col_f  : null; 
+        if (j.col_b   !== undefined) this.my_col_b  = j.col_b  !== '' ? j.col_b  : null; 
+        if (j.col_s   !== undefined) this.my_col_s  = j.col_s  !== '' ? j.col_s  : null; 
+        if (j.col_t   !== undefined) this.my_col_t  = j.col_t  !== '' ? j.col_t  : null; 
+        if (j.col_d   !== undefined) this.my_col_d  = j.col_d  !== '' ? j.col_d  : null; 
+        if (j.col_l   !== undefined) this.my_col_l  = j.col_l  !== '' ? j.col_l  : null; 
 
         return this;
     }
