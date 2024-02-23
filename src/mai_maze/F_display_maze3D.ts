@@ -38,6 +38,7 @@ export function init_maze3D(): T_DrowSet {
 
     floor = new C_MazeObj({
         layer: 0, letter: '　', 
+        show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
         col_l: '#9999ff', 
@@ -45,6 +46,7 @@ export function init_maze3D(): T_DrowSet {
 
     unexp = new C_MazeObj({
         layer: 0, letter: 'Ｘ', 
+        show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
         col_l: '#9999ff', 
@@ -52,6 +54,7 @@ export function init_maze3D(): T_DrowSet {
 
     stone = new C_MazeObj({
         layer: 0, letter: '＃', 
+        show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
         col_l: '#0000ff', 
@@ -59,6 +62,7 @@ export function init_maze3D(): T_DrowSet {
 
     stair = new C_MazeObj({
         layer: 0, letter: '段', 
+        show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
         col_l: '#0000ff', 
@@ -151,22 +155,18 @@ export function display_maze3D(): void {
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
                     drow_mazeObj(stone, j, k);
-//                    drow_stone_right_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
                     drow_mazeObj(unexp, j, k);
-//                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
                 case T_MzKind.StrUD:
                     drow_mazeObj(stair, j, k);
-//                    drow_stairs_right_side(j, k);
                     break;
                 case T_MzKind.Floor: 
                 default:
                     drow_mazeObj(floor, j, k);
-//                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
@@ -180,22 +180,18 @@ export function display_maze3D(): void {
             switch (g_maze.get_cell(around_j_k)) {
                 case T_MzKind.Stone:
                     drow_mazeObj(stone, j, k);
-//                    drow_stone_left_side(j, k);
                     break;
                 case T_MzKind.Unexp: 
                     drow_mazeObj(unexp, j, k);
-//                    drow_unexp_floor(j ,k);
                     break;
                 case T_MzKind.StrUp:
                 case T_MzKind.StrDn:
                 case T_MzKind.StrUD:
                     drow_mazeObj(stair, j, k);
-//                    drow_stairs_left_side(j, k);
                     break;
                 case T_MzKind.Floor: 
                 default:
                     drow_mazeObj(floor, j, k);
-//                    drow_cell_floor(j ,k);
                     break;
             }
             if (g_maze.exist_obj(around_j_k)) {
@@ -208,22 +204,18 @@ export function display_maze3D(): void {
         switch (g_maze.get_cell(around_j_0)) {
             case T_MzKind.Stone:
                 drow_mazeObj(stone, j, k);
-//                drow_stone_front(j, 0);
                 break;
             case T_MzKind.Unexp: 
                 drow_mazeObj(unexp, j, k);
-//                drow_unexp_floor(j ,0);
                 break;
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
             case T_MzKind.StrUD:
                 drow_mazeObj(stair, j, k);
-//                drow_stairs_front(j, 0);
                 break;
             case T_MzKind.Floor: 
             default:
                 drow_mazeObj(floor, j, k);
-//                drow_cell_floor(j ,0);
                 break;
         }
         if (g_maze.exist_obj(around_j_0)) {
@@ -231,39 +223,6 @@ export function display_maze3D(): void {
             if (obj !== null) drow_mazeObj(obj, j, 0);
         }
     }
-}
-
-function drow_unexp_floor(d: number, w:number): void {
-    drow_cell_floor(d, w, '#66ffff');
-}
-
-function drow_stone_front(d: number, w: number): void {
-    drow_cell_front(d, w, '#00ff00', '#0000ff');
-}
-function drow_stone_left_side(d: number, w: number): void {
-    drow_cell_left_side(d, w, '#00ee00', '#0000ff');
-    drow_cell_front    (d, w, '#00ff00', '#0000ff');
-}
-function drow_stone_right_side(d: number, w: number): void {
-    drow_cell_right_side(d, w, '#00ee00', '#0000ff');
-    drow_cell_front     (d, w, '#00ff00', '#0000ff');
-}
-
-function drow_stairs_front(d: number, w: number): void {
-    drow_cell_floor  (d, w, '#ffffcc', '#ffff00');
-    drow_cell_ceiling(d, w, '#ffffcc', '#ffff00');
-    drow_cell_front  (d, w,  null,     '#ffff00');
-}
-function drow_stairs_left_side(d: number, w: number): void {
-    drow_cell_floor    (d, w, '#ffffcc', '#ffff00');
-    drow_cell_ceiling  (d, w, '#ffffcc', '#ffff00');
-    drow_cell_left_side(d, w,  null,     '#ffff00');
-
-}
-function drow_stairs_right_side(d: number, w: number): void {
-    drow_cell_floor     (d, w, '#ffffcc', '#ffff00');
-    drow_cell_ceiling   (d, w, '#ffffcc', '#ffff00');
-    drow_cell_right_side(d, w,  null,     '#ffff00');
 }
 
 function drow_mazeObj(obj: I_MazeObj, d: number, w: number): void {
@@ -313,65 +272,6 @@ function drow_cell_ceiling(
     }
     drow_cell(rect, fill, line);
 }
-function drow_cell_front(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00ff00', 
-        line: string|null = '#0000ff'
-    ): void {
-        
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.min_y},
-        tr: {x: rect_front.max_x, y: rect_front.min_y},
-        dr: {x: rect_front.max_x, y: rect_front.max_y},
-        dl: {x: rect_front.min_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_cell_left_side(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00cc00', 
-        line: string|null = '#0000ff'
-    ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.min_y},
-        tr: {x: rect_back .min_x, y: rect_back .min_y},
-        dr: {x: rect_back .min_x, y: rect_back .max_y},
-        dl: {x: rect_front.min_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_cell_right_side(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00cc00', 
-        line: string|null = '#0000ff'
-    ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.max_x, y: rect_front.min_y},
-        tr: {x: rect_back .max_x, y: rect_back .min_y},
-        dr: {x: rect_back .max_x, y: rect_back .max_y},
-        dl: {x: rect_front.max_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
 
 function drow_obj_down(
     obj:   I_MazeObj,
@@ -379,7 +279,6 @@ function drow_obj_down(
     w:     number, 
 ): void {
     if (!obj.isShow() || obj.col_t() === null) return;
-//    if (obj.pad_t() <= 0.5) return;
     if (obj.pad_s() <= 0.0 && obj.pad_t() >= 1.0) {
         drow_cell_floor(d, w, obj.col_t() ?? '#6666ff', obj.col_l() ?? '#9999ff');
         return;
@@ -400,7 +299,6 @@ function drow_obj_top(
     w:     number, 
 ): void {
     if (!obj.isShow() || obj.col_d() === null) return;
-//    if (obj.pad_d() <= 0.5) return;
     if (obj.pad_s() <= 0.0 && obj.pad_d() >= 1.0) {
         drow_cell_ceiling(d, w, obj.col_d() ?? '#aaaaaa', obj.col_l() ?? '#9999ff');
         return;
