@@ -359,8 +359,81 @@ function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
     }
 }
 
-type xy = {x: number, y: number}
 function __calc_padding_obj(
+    obj:   I_MazeObj,
+    d:     number, 
+    w:     number, 
+): {
+    // 識別子の意味
+    // 左端：前後の区別　f:前面　b:背面
+    // 中央：上下の区別　t:上辺　d:下辺
+    // 右端：左右の区別　l:左側　r:右側
+    ftl:T_xy, ftr:T_xy, fdr:T_xy, fdl:T_xy, 
+    btl:T_xy, btr:T_xy, bdr:T_xy, bdl:T_xy, 
+} {
+    if (g_ds.wall === null) return {
+        ftl:{x:0,y:0}, ftr:{x:0,y:0}, fdr:{x:0,y:0}, fdl:{x:0,y:0}, 
+        btl:{x:0,y:0}, btr:{x:0,y:0}, bdr:{x:0,y:0}, bdl:{x:0,y:0}, 
+        };
+    const rect_frot = g_ds.wall.get(d,     w);
+    const rect_back = g_ds.wall.get(d + 1, w);
+
+    const ratio    = obj.pad_s() / 2.0;
+
+    const frot_wid = Math.abs(rect_frot.max_x - rect_frot.min_x);
+    const back_wid = Math.abs(rect_back.max_x - rect_back.min_x);
+    const frot_pad = frot_wid * ratio;
+    const back_pad = back_wid * ratio;
+
+    const frot_top_Y   = rect_frot.min_y + (rect_frot.max_y - rect_frot.min_y) * ratio;
+    const frot_dwn_Y   = rect_frot.max_y - (rect_frot.max_y - rect_frot.min_y) * ratio;
+    const back_top_Y   = rect_back.min_y + (rect_back.max_y - rect_back.min_y) * ratio;
+    const back_dwn_Y   = rect_back.max_y - (rect_back.max_y - rect_back.min_y) * ratio;
+
+    // パディング設定後のXY座標を計算するために
+    // 必要な線分の位置決めをする
+    const frot_top_lft = {x: rect_frot.min_x + frot_pad, y: rect_frot.min_y}
+    const frot_top_rgt = {x: rect_frot.max_x - frot_pad, y: rect_frot.min_y}
+    const frot_dwn_lft = {x: rect_frot.min_x + frot_pad, y: rect_frot.max_y}
+    const frot_dwn_rgt = {x: rect_frot.max_x - frot_pad, y: rect_frot.max_y}
+
+    const back_top_lft = {x: rect_back.min_x + back_pad, y: rect_back.min_y}
+    const back_top_rgt = {x: rect_back.max_x - back_pad, y: rect_back.min_y}
+    const back_dwn_lft = {x: rect_back.min_x + back_pad, y: rect_back.max_y}
+    const back_dwn_rgt = {x: rect_back.max_x - back_pad, y: rect_back.max_y}
+
+    let ftl = __calc_padding_xy(frot_top_lft, back_top_lft, ratio);
+    let ftr = __calc_padding_xy(frot_top_rgt, back_top_rgt, ratio);
+    let fdl = __calc_padding_xy(frot_dwn_lft, back_dwn_lft, ratio);
+    let fdr = __calc_padding_xy(frot_dwn_rgt, back_dwn_rgt, ratio);
+
+    let btl = __calc_padding_xy(back_top_lft, frot_top_lft, ratio);
+    let btr = __calc_padding_xy(back_top_rgt, frot_top_rgt, ratio);
+    let bdl = __calc_padding_xy(back_dwn_lft, frot_dwn_lft, ratio);
+    let bdr = __calc_padding_xy(back_dwn_rgt, frot_dwn_rgt, ratio);
+
+    return {
+        ftl: ftl, ftr: ftr,
+        fdl: fdl, fdr: fdr,
+        btl: btl, btr: btr,
+        bdl: bdl, bdr: bdr,
+    }
+}
+
+function __calc_padding_xy(frot: T_xy, back: T_xy, ratio: number): T_xy {
+        // 線分(Ax + B = y)の方程式の係数を求める
+        const A = (frot.y - back.y) / (frot.x - back.x);
+        const B =  frot.y - A * frot.x;
+    
+        // パディング調整後のXY座標の計算
+        const p_frot_x = frot.x + (back.x - frot.x) * ratio / 2.0;
+        const p_frot_y = A * p_frot_x + B;
+
+        return {x: p_frot_x, y: p_frot_y};
+}
+
+type xy = {x: number, y: number}
+function __calc_padding_obj_bak(
     obj:   I_MazeObj,
     d:     number, 
     w:     number, 
@@ -446,13 +519,13 @@ function __calc_padding_obj(
     bdl_y += deff_bk_D_0;
     bdr_y += deff_bk_D_0;
 
-/*
+
     // 更に奥行分左右調整(前面)
     ful_x = 0; 
     fur_x = 0; 
     fdr_x = 0; 
     fdl_x = 0; 
-*/
+
     return {
         ful: {x: ful_x, y: ful_y}, fur: {x: fur_x, y: fur_y},
         fdl: {x: fdl_x, y: fdl_y}, fdr: {x: fdr_x, y: fdr_y},
@@ -485,10 +558,10 @@ function _drow_ceiling_obj(
     
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        ul: o.ful,
-        ur: o.fur,
-        dr: o.bur,
-        dl: o.bul,
+        ul: o.ftl,
+        ur: o.ftr,
+        dr: o.btr,
+        dl: o.btl,
     }
     drow_cell_ex(rect, obj.col_b(), obj.col_l());
 }
@@ -499,8 +572,8 @@ function _drow_front_obj(
 ): void {
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        ul: o.ful, 
-        ur: o.fur, 
+        ul: o.ftl, 
+        ur: o.ftr, 
         dr: o.fdr, 
         dl: o.fdl, 
     }
@@ -514,8 +587,8 @@ function _drow_left_side_obj(
 ): void {
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        ul: o.bul,
-        ur: o.ful,
+        ul: o.btl,
+        ur: o.ftl,
         dr: o.fdl,
         dl: o.bdl,
     }
@@ -529,8 +602,8 @@ function _drow_right_side_obj(
 ): void {
     const o = __calc_padding_obj(obj, d, w);
     const rect: T_Rect = {
-        ul: o.fur,
-        ur: o.bur,
+        ul: o.ftr,
+        ur: o.btr,
         dr: o.bdr,
         dl: o.fdr,
     }
