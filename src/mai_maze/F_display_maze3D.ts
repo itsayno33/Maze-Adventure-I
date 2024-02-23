@@ -462,32 +462,40 @@ function __calc_padding_obj(
     const rect_frot = g_ds.wall.get(d,     w);
     const rect_back = g_ds.wall.get(d + 1, w);
 
-    const ratio    = obj.pad_s() / 2.0;
+    const ratio_X   = obj.pad_s() / 2.0;
+    const ratio_T   = obj.pad_t();
+    const ratio_D   = obj.pad_b();
 
-    const frot_pad = Math.abs(rect_frot.max_x - rect_frot.min_x) * ratio;
-    const back_pad = Math.abs(rect_back.max_x - rect_back.min_x) * ratio;
+    const frot_pad_X  = Math.abs(rect_frot.max_x - rect_frot.min_x) * ratio_X;
+    const back_pad_X  = Math.abs(rect_back.max_x - rect_back.min_x) * ratio_X;
+
+    const frot_pad_T  = Math.abs(rect_frot.max_y - rect_frot.min_y) * ratio_T;
+    const back_pad_T  = Math.abs(rect_back.max_y - rect_back.min_y) * ratio_T;
+
+    const frot_pad_D  = Math.abs(rect_frot.max_y - rect_frot.min_y) * ratio_D;
+    const back_pad_D  = Math.abs(rect_back.max_y - rect_back.min_y) * ratio_D;
 
     // パディング設定後のXY座標を計算するために
     // 必要な線分の位置決めをする
-    const frot_top_lft = {x: rect_frot.min_x + frot_pad, y: rect_frot.min_y}
-    const frot_top_rgt = {x: rect_frot.max_x - frot_pad, y: rect_frot.min_y}
-    const frot_dwn_lft = {x: rect_frot.min_x + frot_pad, y: rect_frot.max_y}
-    const frot_dwn_rgt = {x: rect_frot.max_x - frot_pad, y: rect_frot.max_y}
+    const frot_top_lft = {x: rect_frot.min_x + frot_pad_X, y: rect_frot.min_y + frot_pad_T}
+    const frot_top_rgt = {x: rect_frot.max_x - frot_pad_X, y: rect_frot.min_y + frot_pad_T}
+    const frot_dwn_lft = {x: rect_frot.min_x + frot_pad_X, y: rect_frot.max_y - frot_pad_D}
+    const frot_dwn_rgt = {x: rect_frot.max_x - frot_pad_X, y: rect_frot.max_y - frot_pad_D}
 
-    const back_top_lft = {x: rect_back.min_x + back_pad, y: rect_back.min_y}
-    const back_top_rgt = {x: rect_back.max_x - back_pad, y: rect_back.min_y}
-    const back_dwn_lft = {x: rect_back.min_x + back_pad, y: rect_back.max_y}
-    const back_dwn_rgt = {x: rect_back.max_x - back_pad, y: rect_back.max_y}
+    const back_top_lft = {x: rect_back.min_x + back_pad_X, y: rect_back.min_y + back_pad_T}
+    const back_top_rgt = {x: rect_back.max_x - back_pad_X, y: rect_back.min_y + back_pad_T}
+    const back_dwn_lft = {x: rect_back.min_x + back_pad_X, y: rect_back.max_y - back_pad_D}
+    const back_dwn_rgt = {x: rect_back.max_x - back_pad_X, y: rect_back.max_y - back_pad_D}
 
-    let ftl = __calc_padding_xy(frot_top_lft, back_top_lft, ratio);
-    let ftr = __calc_padding_xy(frot_top_rgt, back_top_rgt, ratio);
-    let fdl = __calc_padding_xy(frot_dwn_lft, back_dwn_lft, ratio);
-    let fdr = __calc_padding_xy(frot_dwn_rgt, back_dwn_rgt, ratio);
+    let ftl = __calc_padding_xy(frot_top_lft, back_top_lft, ratio_X);
+    let ftr = __calc_padding_xy(frot_top_rgt, back_top_rgt, ratio_X);
+    let fdl = __calc_padding_xy(frot_dwn_lft, back_dwn_lft, ratio_X);
+    let fdr = __calc_padding_xy(frot_dwn_rgt, back_dwn_rgt, ratio_X);
 
-    let btl = __calc_padding_xy(back_top_lft, frot_top_lft, ratio);
-    let btr = __calc_padding_xy(back_top_rgt, frot_top_rgt, ratio);
-    let bdl = __calc_padding_xy(back_dwn_lft, frot_dwn_lft, ratio);
-    let bdr = __calc_padding_xy(back_dwn_rgt, frot_dwn_rgt, ratio);
+    let btl = __calc_padding_xy(back_top_lft, frot_top_lft, ratio_X);
+    let btr = __calc_padding_xy(back_top_rgt, frot_top_rgt, ratio_X);
+    let bdl = __calc_padding_xy(back_dwn_lft, frot_dwn_lft, ratio_X);
+    let bdr = __calc_padding_xy(back_dwn_rgt, frot_dwn_rgt, ratio_X);
 
     return {
         ftl: ftl, ftr: ftr,

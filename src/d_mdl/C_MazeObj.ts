@@ -63,8 +63,8 @@ export class C_MazeObj implements I_MazeObj {
     public to_letter(): string|null {return this.letter}
 
     public isShow(): boolean{return this.to_letter() !== null};
-    public pad_t():  number {return 0.3}
-    public pad_b():  number {return 0.0}
+    public pad_t():  number {return 0.493}
+    public pad_b():  number {return 0.493}
     public pad_s():  number {return 0.73}
 
     public col_f(): string {return '#f8f8f8'} 
