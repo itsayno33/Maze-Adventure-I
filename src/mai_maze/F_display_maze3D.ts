@@ -2,10 +2,10 @@ import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
-import { C_MazeObjView }  from "../d_mdl/C_MazeObj";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { g_mes }          from "../d_cmn/global";
-import { C_Wall }         from "./C_Wall";
+import { C_Wall }         from "../d_vie/C_Wall";
+import { C_MazeObjView }  from "../d_vie/C_MazeObjView";
 import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
@@ -35,7 +35,7 @@ export function init_maze3D(): T_DrowSet {
 
     MazeCell[T_MzKind.Floor] = new C_MazeObjView({
         layer: 0, letter: '　', 
-        show: '1',
+        show3D:  '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
         col_l: '#9999ff', 
@@ -43,7 +43,7 @@ export function init_maze3D(): T_DrowSet {
 
     MazeCell[T_MzKind.Unexp] = new C_MazeObjView({
         layer: 0, letter: 'Ｘ', 
-        show: '1',
+        show3D:  '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
         col_l: '#9999ff', 
@@ -51,7 +51,7 @@ export function init_maze3D(): T_DrowSet {
 
     MazeCell[T_MzKind.Stone] = new C_MazeObjView({
         layer: 0, letter: '＃', 
-        show: '1',
+        show3D:  '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
         col_l: '#0000ff', 
@@ -61,7 +61,7 @@ export function init_maze3D(): T_DrowSet {
     MazeCell[T_MzKind.StrDn] = 
     MazeCell[T_MzKind.StrUD] = new C_MazeObjView({
         layer: 0, letter: '段', 
-        show: '1',
+        show3D:  '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
         col_l: '#0000ff', 
@@ -71,7 +71,7 @@ export function init_maze3D(): T_DrowSet {
     MazeCell[T_MzKind.Unkwn] = 
     MazeCell[T_MzKind.Empty] = new C_MazeObjView({
         layer: 0, letter: '謎', 
-        show: '0',
+        show3D:  '0',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
         col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
         col_l: '', 
@@ -178,7 +178,7 @@ function drowMazeCell(d: number, w: number): void {
 
     if (g_maze.exist_obj(around_j_k)) {
         const obj = g_maze.get_obj(around_j_k);
-        if (obj !== null) obj.view().drow3D(frot_wall, back_wall);
+        if (obj !== null) obj.view()?.drow3D(frot_wall, back_wall);
     }
 }
 

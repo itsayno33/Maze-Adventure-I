@@ -1,25 +1,29 @@
-import { _get_uuid }                 from "../d_utl/F_Rand";
 import { C_Point }                   from "./C_Point";
 import { C_PointDir, JSON_PointDir } from "./C_PointDir";
 import { I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
-import { T_Wall }                    from "../mai_maze/C_Wall";
+import { _get_uuid }                 from "../d_utl/F_Rand";
+import { 
+    C_MazeObjView, 
+    I_MazeObjView, 
+    JSON_MazeObjView 
+} from "../d_vie/C_MazeObjView";
 
 export interface I_MazeObj extends I_JSON_Uniq {
     get_pd: ()=>C_PointDir;
     within: (p: C_Point)=>boolean;
-    view:   ()=>I_MazeObjView;
+    view:   ()=>I_MazeObjView|undefined;
 }
 
 export interface JSON_MazeObj extends JSON_Any {
     uniq_id?:   string, 
     pos?:       JSON_PointDir,
-    view?:      JSON_MazeObjView,
+    view?:      JSON_MazeObjView|undefined,
 }
 
 export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
-    protected my_view:   C_MazeObjView;
+    protected my_view:   I_MazeObjView|undefined;
 
     public static newObj(j: JSON_MazeObj|undefined): C_MazeObj {
         return new C_MazeObj(j);
@@ -34,7 +38,9 @@ export class C_MazeObj implements I_MazeObj {
     }
 
     public uid(): string {return this.uniq_id}
-    public view(): I_MazeObjView {return this.my_view}
+
+    public view(): I_MazeObjView|undefined {return this.my_view}
+    public set_view(view: I_MazeObjView|undefined): void {this.my_view = view}
 
     public get_pd(): C_PointDir {
         return new C_PointDir(this.pos);
@@ -50,406 +56,22 @@ export class C_MazeObj implements I_MazeObj {
         return {
             uniq_id: this.uniq_id,
             pos:     this.pos.encode(),
-            view:    this.my_view.encode(),
+            view:    this.my_view?.encode() ?? {},
         }
     }
 
     public decode(j: JSON_MazeObj|undefined): C_MazeObj {
         if (j === undefined) return this;
 
-        this.my_view.decode(j);
-
         if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
         if (j.pos     !== undefined) this.pos.decode(j.pos);
-        if (j.view    !== undefined) this.my_view.decode(j.view);
+        if (j.view    !== undefined) {
+            if (Object.keys(j.view).length > 0) {
+                (this.my_view ??= new C_MazeObjView()).decode(j.view); 
+            } else this.my_view  = undefined;
+        }
 
         return this;
     }
 }
 
-export interface I_MazeObjView {
-    // 表示関係(2Dpre)
-    layer:  ()=>number;
-    letter: ()=>string|null; // null: 見えない、何もない
-
-    // 表示関係(3D)
-    isShow: ()=>boolean;
-    drow3D: (frot: T_Wall, back: T_Wall)=>void;
-
-    pad_t:  ()=>number; //上側の空き(割合: 0から1) 
-    pad_d:  ()=>number; //床側の空き(割合: 0から1) 
-    pad_s:  ()=>number; //横側の空き(割合: 0から1) 
-    col_f:  ()=>string|null; //正面の色(CSSカラー)。nullは透明
-    col_b:  ()=>string|null; //背面の色(CSSカラー)。nullは透明
-    col_s:  ()=>string|null; //横側の色(CSSカラー)。nullは透明
-    col_t:  ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
-    col_d:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
-    col_l:  ()=>string|null; //ラインの色(CSSカラー)
-}
-
-export interface JSON_MazeObjView extends JSON_Any {
-    layer?:  number,
-    letter?: string,
-    show3D?: boolean,
-    pad_t?:  number, // オブジェクト上部の隙間の割合(0.0 から 1.0) 
-    pad_d?:  number, // オブジェクト下部の隙間の割合(0.0 から 1.0) 
-    pad_s?:  number, // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
-    col_f?:  string|null, // オブジェクト正面のCSSカラー 
-    col_b?:  string|null, // オブジェクト正面のCSSカラー 
-    col_s?:  string|null, // オブジェクト側面のCSSカラー 
-    col_t?:  string|null, // オブジェクト上面のCSSカラー 
-    col_d?:  string|null, // オブジェクト底面のCSSカラー 
-    col_l?:  string|null, // オブジェクトの線のCSSカラー 
-}
-
-type T_xy   = {x: number, y: number}
-type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
-
-export class C_MazeObjView implements I_MazeObjView {
-    public static con3D?: CanvasRenderingContext2D;
-    public static get_context3D(): CanvasRenderingContext2D|undefined {return this?.con3D}
-    public static set_context3D(con3D?: CanvasRenderingContext2D): void {this.con3D = con3D}
-
-    private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
-    private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
-
-    private my_show3D: boolean;
-    private my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
-    private my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
-    private my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
-
-    private my_col_f:  string|null; // オブジェクト正面のCSSカラー 
-    private my_col_b:  string|null; // オブジェクト正面のCSSカラー 
-    private my_col_s:  string|null; // オブジェクト側面のCSSカラー 
-    private my_col_t:  string|null; // オブジェクト上面のCSSカラー 
-    private my_col_d:  string|null; // オブジェクト底面のCSSカラー 
-    private my_col_l:  string|null; // オブジェクトの線のCSSカラー 
-
-    public constructor(j?: JSON_MazeObjView|undefined) {
-        this.my_layer   =  -2;
-        this.my_letter  =  null;
-
-        this.my_pad_t   =  0.0;
-        this.my_pad_d   =  0.0;
-        this.my_pad_s   =  0.0;
-
-        this.my_show3D  =  true;
-
-        this.my_col_f   = '#f8f8f8'; 
-        this.my_col_b   = '#aaaaaa'; 
-        this.my_col_s   = '#dddddd'; 
-        this.my_col_t   = '#ffffff'; 
-        this.my_col_d   = '#cccccc'; 
-        this.my_col_l   = '#333333'; 
-
-        if (j !== undefined) this.decode(j);
-    }
-
-    public static newObj(j: JSON_MazeObjView|undefined): C_MazeObjView {
-        return new C_MazeObjView(j);
-    }
-
-    public layer(): number {return this.my_layer;}
-    public set_layer(layer: number) {this.my_layer = layer}
-
-    public letter(): string|null {return this.my_letter}
-    public set_letter(letter: string|null): string|null {return this.my_letter = letter}
-
-    public isShow(): boolean {return this.my_show3D};
-    public setShow(is_show: boolean): boolean {return this.my_show3D = is_show};
-
-    public pad_t():  number {return this.my_pad_t}
-    public pad_d():  number {return this.my_pad_d}
-    public pad_s():  number {return this.my_pad_s}
-    public set_pad_t(pad_t: number): number {return this.my_pad_t = this.my_pad_d + pad_t < 1.0 ? pad_t : 0.99 - this.my_pad_d}
-    public set_pad_d(pad_d: number): number {return this.my_pad_d = this.my_pad_t + pad_d < 1.0 ? pad_d : 0.99 - this.my_pad_t}
-    public set_pad_s(pad_s: number): number {return this.my_pad_s = pad_s}
-
-    public col_f(): string|null {return this.my_col_f} 
-    public col_b(): string|null {return this.my_col_b} 
-    public col_s(): string|null {return this.my_col_s} 
-    public col_t(): string|null {return this.my_col_t} 
-    public col_d(): string|null {return this.my_col_d} 
-    public col_l(): string|null {return this.my_col_l} 
-    public set_col_f(col_f: string|null): string|null {return this.my_col_f = col_f} 
-    public set_col_b(col_b: string|null): string|null {return this.my_col_b = col_b} 
-    public set_col_s(col_s: string|null): string|null {return this.my_col_s = col_s} 
-    public set_col_t(col_t: string|null): string|null {return this.my_col_t = col_t} 
-    public set_col_d(col_d: string|null): string|null {return this.my_col_d = col_d} 
-    public set_col_l(col_l: string|null): string|null {return this.my_col_l = col_l} 
-
-
-    public drow3D(frot: T_Wall, back: T_Wall): void {
-        this.drow_obj_back      (frot, back);
-        this.drow_obj_down      (frot, back);
-        this.drow_obj_top       (frot, back);
-        this.drow_obj_right_side(frot, back);
-        this.drow_obj_left_side (frot, back);
-        this.drow_obj_front     (frot, back);
-    }
-    private drow_obj_down(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_t() === null) return;
-        if (this.pad_s() <= 0.0 && this.pad_t() >= 1.0) {
-            drow_cell_floor(frot, back, this.col_t() ?? '#6666ff', this.col_l() ?? '#9999ff');
-            return;
-        }
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.fdl,
-            tr: o.fdr,
-            dr: o.bdr,
-            dl: o.bdl,
-        }
-        drow_cell(rect, this.col_t(), this.col_l());
-    }
-
-    private drow_obj_top(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_d() === null) return;
-        if (this.pad_s() <= 0.0 && this.pad_d() >= 1.0) {
-            drow_cell_ceiling(frot, back, this.col_d() ?? '#aaaaaa', this.col_l() ?? '#9999ff');
-            return;
-        }
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.ftl,
-            tr: o.ftr,
-            dr: o.btr,
-            dl: o.btl,
-        }
-        drow_cell(rect, this.col_d(), this.col_l());
-    }
-    private drow_obj_front(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_f() === null) return;
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.ftl, 
-            tr: o.ftr, 
-            dr: o.fdr, 
-            dl: o.fdl, 
-        }
-    
-        drow_cell(rect, this.col_f(), this.col_l());
-    }
-    private drow_obj_back(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_b() === null) return;
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.btl, 
-            tr: o.btr, 
-            dr: o.bdr, 
-            dl: o.bdl, 
-        }
-    
-        drow_cell(rect, this.col_b(), this.col_l());
-    }
-    private drow_obj_left_side(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_s() === null) return;
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.btl,
-            tr: o.ftl,
-            dr: o.fdl,
-            dl: o.bdl,
-        }
-    
-        drow_cell(rect, this.col_s(), this.col_l());
-    }
-    private drow_obj_right_side(
-        frot:  T_Wall, 
-        back:  T_Wall, 
-    ): void {
-        if (!this.isShow() || this.col_s() === null) return;
-    
-        const o = __calc_padding_obj(this, frot, back);
-        const rect: T_Rect = {
-            tl: o.ftr,
-            tr: o.btr,
-            dr: o.bdr,
-            dl: o.fdr,
-        }
-    
-        drow_cell(rect, this.col_s(), this.col_l());
-    }
-    
-
-    public encode(): JSON_MazeObjView {
-        return {
-            layer:   this.my_layer,
-            letter:  this.my_letter ?? '',
-            pad_t:   this.my_pad_t, 
-            pad_d:   this.my_pad_d, 
-            pad_s:   this.my_pad_s, 
-            show:    this.isShow() ? '1' : '0',
-            col_f:   this.my_col_f ?? '',  
-            col_b:   this.my_col_b ?? '',  
-            col_s:   this.my_col_s ?? '', 
-            col_t:   this.my_col_t ?? '', 
-            col_d:   this.my_col_d ?? '', 
-            col_l:   this.my_col_l ?? '', 
-        }
-    }
-
-    public decode(j: JSON_MazeObjView|undefined): C_MazeObjView {
-        if (j === undefined) return this;
-
-        if (j.layer   !== undefined) this.my_layer  = j.layer;
-        if (j.letter  !== undefined) this.my_letter = j.letter !== ''  ? j.letter : null; 
-        if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
-        if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
-        if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
-        if (j.show    !== undefined) this.my_show3D = j.show   !== '0' ? true     : false; 
-        if (j.col_f   !== undefined) this.my_col_f  = j.col_f  !== ''  ? j.col_f  : null; 
-        if (j.col_b   !== undefined) this.my_col_b  = j.col_b  !== ''  ? j.col_b  : null; 
-        if (j.col_s   !== undefined) this.my_col_s  = j.col_s  !== ''  ? j.col_s  : null; 
-        if (j.col_t   !== undefined) this.my_col_t  = j.col_t  !== ''  ? j.col_t  : null; 
-        if (j.col_d   !== undefined) this.my_col_d  = j.col_d  !== ''  ? j.col_d  : null; 
-        if (j.col_l   !== undefined) this.my_col_l  = j.col_l  !== ''  ? j.col_l  : null; 
-
-        return this;
-    }
-}
-
-
-
-function __calc_padding_obj(
-    obj:   I_MazeObjView,
-    frot:  T_Wall, 
-    back:  T_Wall, 
-): {
-    // 識別子の意味
-    // 左端：前後の区別　f:前面　b:背面
-    // 中央：上下の区別　t:上辺　d:下辺
-    // 右端：左右の区別　l:左側　r:右側
-    ftl:T_xy, ftr:T_xy, fdr:T_xy, fdl:T_xy, 
-    btl:T_xy, btr:T_xy, bdr:T_xy, bdl:T_xy, 
-} {
-    const rect_frot = frot;
-    const rect_back = back;
-
-    const ratio_X   = obj.pad_s() / 2.0;
-    const ratio_T   = obj.pad_t();
-    const ratio_D   = obj.pad_d();
-
-    const frot_pad_X  = Math.abs(rect_frot.max_x - rect_frot.min_x) * ratio_X;
-    const back_pad_X  = Math.abs(rect_back.max_x - rect_back.min_x) * ratio_X;
-
-    const frot_pad_T  = Math.abs(rect_frot.max_y - rect_frot.min_y) * ratio_T;
-    const back_pad_T  = Math.abs(rect_back.max_y - rect_back.min_y) * ratio_T;
-
-    const frot_pad_D  = Math.abs(rect_frot.max_y - rect_frot.min_y) * ratio_D;
-    const back_pad_D  = Math.abs(rect_back.max_y - rect_back.min_y) * ratio_D;
-
-    // パディング設定後のXY座標を計算するために
-    // 必要な線分の位置決めをする
-    const frot_top_lft = {x: rect_frot.min_x + frot_pad_X, y: rect_frot.min_y + frot_pad_T}
-    const frot_top_rgt = {x: rect_frot.max_x - frot_pad_X, y: rect_frot.min_y + frot_pad_T}
-    const frot_dwn_lft = {x: rect_frot.min_x + frot_pad_X, y: rect_frot.max_y - frot_pad_D}
-    const frot_dwn_rgt = {x: rect_frot.max_x - frot_pad_X, y: rect_frot.max_y - frot_pad_D}
-
-    const back_top_lft = {x: rect_back.min_x + back_pad_X, y: rect_back.min_y + back_pad_T}
-    const back_top_rgt = {x: rect_back.max_x - back_pad_X, y: rect_back.min_y + back_pad_T}
-    const back_dwn_lft = {x: rect_back.min_x + back_pad_X, y: rect_back.max_y - back_pad_D}
-    const back_dwn_rgt = {x: rect_back.max_x - back_pad_X, y: rect_back.max_y - back_pad_D}
-
-    let ftl = __calc_padding_xy(frot_top_lft, back_top_lft, ratio_X);
-    let ftr = __calc_padding_xy(frot_top_rgt, back_top_rgt, ratio_X);
-    let fdl = __calc_padding_xy(frot_dwn_lft, back_dwn_lft, ratio_X);
-    let fdr = __calc_padding_xy(frot_dwn_rgt, back_dwn_rgt, ratio_X);
-
-    let btl = __calc_padding_xy(back_top_lft, frot_top_lft, ratio_X);
-    let btr = __calc_padding_xy(back_top_rgt, frot_top_rgt, ratio_X);
-    let bdl = __calc_padding_xy(back_dwn_lft, frot_dwn_lft, ratio_X);
-    let bdr = __calc_padding_xy(back_dwn_rgt, frot_dwn_rgt, ratio_X);
-
-    return {
-        ftl: ftl, ftr: ftr,
-        fdl: fdl, fdr: fdr,
-        btl: btl, btr: btr,
-        bdl: bdl, bdr: bdr,
-    }
-}
-function __calc_padding_xy(frot: T_xy, back: T_xy, ratio: number): T_xy {
-        // 線分(Ax + B = y)の方程式の係数を求める
-        const A = (frot.y - back.y) / (frot.x - back.x);
-        const B =  frot.y - A * frot.x;
-    
-        // パディング調整後のXY座標の計算
-        const p_frot_x = frot.x + (back.x - frot.x) * ratio;
-        const p_frot_y = A * p_frot_x + B;
-
-        return {x: p_frot_x, y: p_frot_y};
-}
-
-
-function drow_cell_floor(
-        rect_frot: T_Wall, 
-        rect_back: T_Wall, 
-        fill: string = '#6666ff', 
-        line: string = '#9999ff'
-    ): void {
-
-    const rect: T_Rect = {
-        tl: {x: rect_frot.min_x, y: rect_frot.max_y},
-        tr: {x: rect_frot.max_x, y: rect_frot.max_y},
-        dr: {x: rect_back.max_x, y: rect_back.max_y},
-        dl: {x: rect_back.min_x, y: rect_back.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_cell_ceiling(
-        rect_frot: T_Wall, 
-        rect_back: T_Wall, 
-        fill: string = '#aaaaaa', 
-        line: string = '#9999ff'
-    ): void {
-
-    const rect: T_Rect = {
-        tl: {x: rect_frot.min_x, y: rect_frot.min_y},
-        tr: {x: rect_frot.max_x, y: rect_frot.min_y},
-        dr: {x: rect_back.max_x, y: rect_back.min_y},
-        dl: {x: rect_back.min_x, y: rect_back.min_y}
-    }
-    drow_cell(rect, fill, line);
-}
-
-function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
-    if (C_MazeObjView.con3D === undefined) return;
-    const con = C_MazeObjView.con3D;
-
-    con.beginPath();
-    con.moveTo(r.tl.x, r.tl.y);
-    con.lineTo(r.tr.x, r.tr.y);
-    con.lineTo(r.dr.x, r.dr.y);
-    con.lineTo(r.dl.x, r.dl.y);
-    con.closePath();
-
-    if (fill != null) {
-        con.fillStyle   = fill;
-        con.fill();
-    }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 1;
-        con.stroke();
-    }
-}

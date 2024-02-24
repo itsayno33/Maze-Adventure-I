@@ -5,12 +5,13 @@ import { C_MovablePoint }           from "./C_MovablePoint";
 import { C_Walker, JSON_Walker }    from "./C_Walker";
 import { C_Goods,  JSON_Goods }     from './C_Goods';
 import { C_Hero, JSON_Hero }        from "./C_Hero";
-import { C_MazeObjView, I_MazeObj, I_MazeObjView } from "./C_MazeObj";
+import { I_MazeObj }                from "./C_MazeObj";
 import { JSON_Any }                 from "./C_SaveData";
 import { I_HopeAction }             from "./I_Common"
+import { C_MazeObjView, I_MazeObjView } from "../d_vie/C_MazeObjView";
+import { T_Wall }                   from "../d_vie/C_Wall";
 import { _get_uuid }                from "../d_utl/F_Rand";
 import { _alert }                   from "../d_cmn/global";
-import { T_Wall } from "../mai_maze/C_Wall";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
