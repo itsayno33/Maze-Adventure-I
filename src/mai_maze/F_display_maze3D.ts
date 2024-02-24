@@ -2,7 +2,7 @@ import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
-import { C_MazeObj, I_MazeObj }      from "../d_mdl/C_MazeObj";
+import { C_MazeObjView, I_MazeObjView }      from "../d_mdl/C_MazeObj";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { g_mes }          from "../d_cmn/global";
 import { C_Wall }         from "./C_Wall";
@@ -18,10 +18,10 @@ export type T_DrowSet = {
 type T_xy   = {x: number, y: number}
 type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
 
-let  floor: C_MazeObj;
-let  unexp: C_MazeObj;
-let  stone: C_MazeObj;
-let  stair: C_MazeObj;
+let  floor: C_MazeObjView;
+let  unexp: C_MazeObjView;
+let  stone: C_MazeObjView;
+let  stair: C_MazeObjView;
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
@@ -36,7 +36,9 @@ export function init_maze3D(): T_DrowSet {
         return {canvas: null, con: null, depth: 0, wall: null};
     }
 
-    floor = new C_MazeObj({
+    C_MazeObjView.set_context3D(con);
+
+    floor = new C_MazeObjView({
         layer: 0, letter: '　', 
         show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -44,7 +46,7 @@ export function init_maze3D(): T_DrowSet {
         col_l: '#9999ff', 
     });
 
-    unexp = new C_MazeObj({
+    unexp = new C_MazeObjView({
         layer: 0, letter: 'Ｘ', 
         show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -52,7 +54,7 @@ export function init_maze3D(): T_DrowSet {
         col_l: '#9999ff', 
     });
 
-    stone = new C_MazeObj({
+    stone = new C_MazeObjView({
         layer: 0, letter: '＃', 
         show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -60,7 +62,7 @@ export function init_maze3D(): T_DrowSet {
         col_l: '#0000ff', 
     });
 
-    stair = new C_MazeObj({
+    stair = new C_MazeObjView({
         layer: 0, letter: '段', 
         show: '1',
         pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -171,7 +173,7 @@ export function display_maze3D(): void {
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_mazeObj(obj, j, k);
+                if (obj !== null) drow_mazeObj(obj.view(), j, k);
             }
         }
         // 　左側が見えている壁の描写 (右側から描写)
@@ -196,7 +198,7 @@ export function display_maze3D(): void {
             }
             if (g_maze.exist_obj(around_j_k)) {
                 const obj = g_maze.get_obj(around_j_k);
-                if (obj !== null) drow_mazeObj(obj, j, k);
+                if (obj !== null) drow_mazeObj(obj.view(), j, k);
             }
         }
         // 正面の壁の描写
@@ -220,12 +222,12 @@ export function display_maze3D(): void {
         }
         if (g_maze.exist_obj(around_j_0)) {
             const obj = g_maze.get_obj(around_j_0);
-            if (obj !== null) drow_mazeObj(obj, j, 0);
+            if (obj !== null) drow_mazeObj(obj.view(), j, 0);
         }
     }
 }
 
-function drow_mazeObj(obj: I_MazeObj, d: number, w: number): void {
+function drow_mazeObj(obj: I_MazeObjView, d: number, w: number): void {
     drow_obj_back      (obj, d, w);
     drow_obj_down      (obj, d, w);
     drow_obj_top       (obj, d, w);
@@ -274,7 +276,7 @@ function drow_cell_ceiling(
 }
 
 function drow_obj_down(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -294,7 +296,7 @@ function drow_obj_down(
     drow_cell(rect, obj.col_t(), obj.col_l());
 }
 function drow_obj_top(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -314,7 +316,7 @@ function drow_obj_top(
     drow_cell(rect, obj.col_d(), obj.col_l());
 }
 function drow_obj_front(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -331,7 +333,7 @@ function drow_obj_front(
     drow_cell(rect, obj.col_f(), obj.col_l());
 }
 function drow_obj_back(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -348,7 +350,7 @@ function drow_obj_back(
     drow_cell(rect, obj.col_b(), obj.col_l());
 }
 function drow_obj_left_side(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -365,7 +367,7 @@ function drow_obj_left_side(
     drow_cell(rect, obj.col_s(), obj.col_l());
 }
 function drow_obj_right_side(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): void {
@@ -383,7 +385,7 @@ function drow_obj_right_side(
 }
 
 function __calc_padding_obj(
-    obj:   I_MazeObj,
+    obj:   I_MazeObjView,
     d:     number, 
     w:     number, 
 ): {

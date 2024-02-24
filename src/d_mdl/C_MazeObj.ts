@@ -2,9 +2,72 @@ import { _get_uuid }                 from "../d_utl/F_Rand";
 import { C_Point }                   from "./C_Point";
 import { C_PointDir, JSON_PointDir } from "./C_PointDir";
 import { I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
+import { C_Wall }                    from "../mai_maze/C_Wall";
 
 export interface I_MazeObj extends I_JSON_Uniq {
+    get_pd: ()=>C_PointDir;
     within: (p: C_Point)=>boolean;
+    view:   ()=>I_MazeObjView;
+}
+
+export interface JSON_MazeObj extends JSON_Any {
+    uniq_id?:   string, 
+    pos?:       JSON_PointDir,
+    view?:      JSON_MazeObjView,
+}
+
+export class C_MazeObj implements I_MazeObj {
+    private   uniq_id:   string;
+    protected pos:       C_PointDir;
+    protected my_view:   C_MazeObjView;
+
+    public static newObj(j: JSON_MazeObj|undefined): C_MazeObj {
+        return new C_MazeObj(j);
+    }
+
+    public constructor(j?: JSON_MazeObj|undefined) {
+        this.uniq_id    = 'mazeobj_' + _get_uuid();
+        this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
+        this.my_view    =  new C_MazeObjView();
+
+        if (j !== undefined) this.decode(j);
+    }
+
+    public uid(): string {return this.uniq_id}
+    public view(): I_MazeObjView {return this.my_view}
+
+    public get_pd(): C_PointDir {
+        return new C_PointDir(this.pos);
+    }
+    public set_pd(p: C_PointDir): void {
+        this.pos = p;
+    }
+    public within(p: C_Point): boolean {
+        return this.pos.within(p);
+    }
+
+    public encode(): JSON_MazeObj {
+        return {
+            uniq_id: this.uniq_id,
+            pos:     this.pos.encode(),
+            view:    this.my_view.encode(),
+        }
+    }
+
+    public decode(j: JSON_MazeObj|undefined): C_MazeObj {
+        if (j === undefined) return this;
+
+        this.my_view.decode(j);
+
+        if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
+        if (j.pos     !== undefined) this.pos.decode(j.pos);
+        if (j.view    !== undefined) this.my_view.decode(j.view);
+
+        return this;
+    }
+}
+
+export interface I_MazeObjView {
     // 表示関係(2Dpre)
     layer:  ()=>number;
     letter: ()=>string|null; // null: 見えない、何もない
@@ -21,16 +84,25 @@ export interface I_MazeObj extends I_JSON_Uniq {
     col_l:  ()=>string|null; //ラインの色(CSSカラー)
 }
 
-export interface JSON_MazeObj extends JSON_Any {
-    uniq_id?:   string, 
-    pos?:       JSON_PointDir,
-    layer?:     number,
-    letter?:    string,
+export interface JSON_MazeObjView extends JSON_Any {
+    layer?:  number,
+    letter?: string,
+    show3D?: boolean,
+    pad_t?:  number, // オブジェクト上部の隙間の割合(0.0 から 1.0) 
+    pad_d?:  number, // オブジェクト下部の隙間の割合(0.0 から 1.0) 
+    pad_s?:  number, // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
+    col_f?:  string|null, // オブジェクト正面のCSSカラー 
+    col_b?:  string|null, // オブジェクト正面のCSSカラー 
+    col_s?:  string|null, // オブジェクト側面のCSSカラー 
+    col_t?:  string|null, // オブジェクト上面のCSSカラー 
+    col_d?:  string|null, // オブジェクト底面のCSSカラー 
+    col_l?:  string|null, // オブジェクトの線のCSSカラー 
 }
 
-export class C_MazeObj implements I_MazeObj {
-    private uniq_id:   string;
-    private pos:       C_PointDir;
+export class C_MazeObjView implements I_MazeObjView {
+    public static con3D?: CanvasRenderingContext2D;
+    public static get_context3D(): CanvasRenderingContext2D|undefined {return this?.con3D}
+    public static set_context3D(con3D?: CanvasRenderingContext2D): void {this.con3D = con3D}
 
     private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
@@ -47,9 +119,7 @@ export class C_MazeObj implements I_MazeObj {
     private my_col_d:  string|null; // オブジェクト底面のCSSカラー 
     private my_col_l:  string|null; // オブジェクトの線のCSSカラー 
 
-    public constructor(j: JSON_MazeObj|undefined) {
-        this.uniq_id    = 'mazeobj_' + _get_uuid();
-        this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
+    public constructor(j?: JSON_MazeObjView|undefined) {
         this.my_layer   =  -2;
         this.my_letter  =  null;
 
@@ -69,20 +139,8 @@ export class C_MazeObj implements I_MazeObj {
         if (j !== undefined) this.decode(j);
     }
 
-    public static newObj(j: JSON_MazeObj|undefined): C_MazeObj {
-        return new C_MazeObj(j);
-    }
-
-    public uid(): string {return this.uniq_id}
-
-    public get_pos(): C_PointDir {
-        return new C_PointDir(this.pos);
-    }
-    public set_pos(p: C_PointDir): void {
-        this.pos = p;
-    }
-    public within(p: C_Point): boolean {
-        return this.pos.within(p);
+    public static newObj(j: JSON_MazeObjView|undefined): C_MazeObjView {
+        return new C_MazeObjView(j);
     }
 
     public layer(): number {return this.my_layer;}
@@ -114,10 +172,8 @@ export class C_MazeObj implements I_MazeObj {
     public set_col_d(col_d: string|null): string|null {return this.my_col_d = col_d} 
     public set_col_l(col_l: string|null): string|null {return this.my_col_l = col_l} 
 
-    public encode(): JSON_MazeObj {
+    public encode(): JSON_MazeObjView {
         return {
-            uniq_id: this.uniq_id,
-            pos:     this.pos.encode(),
             layer:   this.my_layer,
             letter:  this.my_letter ?? '',
             pad_t:   this.my_pad_t, 
@@ -133,11 +189,9 @@ export class C_MazeObj implements I_MazeObj {
         }
     }
 
-    public decode(j: JSON_MazeObj|undefined): C_MazeObj {
+    public decode(j: JSON_MazeObjView|undefined): C_MazeObjView {
         if (j === undefined) return this;
 
-        if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
-        if (j.pos     !== undefined) this.pos.decode(j.pos);
         if (j.layer   !== undefined) this.my_layer  = j.layer;
         if (j.letter  !== undefined) this.my_letter = j.letter !== ''  ? j.letter : null; 
         if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 

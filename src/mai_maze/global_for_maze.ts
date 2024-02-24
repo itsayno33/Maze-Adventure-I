@@ -173,8 +173,10 @@ function install_objs(num: number = 1): void {
         const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
         const obj = new C_MazeObj({
             pos:    {x:x, y:y, z:0, d:0},
-            layer:   2,
-            letter: '物',
+            view: {
+                layer:   2,
+                letter: '物',
+            },
         });
         g_maze.add_obj(obj);
     }

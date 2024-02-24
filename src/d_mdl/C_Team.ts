@@ -1,15 +1,15 @@
-import { C_Point }                 from "./C_Point";
-import { C_PointDir, T_Direction } from './C_PointDir';
-import { I_Locate }                from './C_Location';
-import { C_MovablePoint }          from "./C_MovablePoint";
-import { C_Walker, JSON_Walker }   from "./C_Walker";
-import { C_Goods,  JSON_Goods }    from './C_Goods';
-import { C_Hero, JSON_Hero }       from "./C_Hero";
-import { JSON_Any }                from "./C_SaveData";
-import { I_HopeAction }            from "./I_Common"
-import { _get_uuid }               from "../d_utl/F_Rand";
-import { _alert }                  from "../d_cmn/global";
-import { I_MazeObj } from "./C_MazeObj";
+import { C_Point }                  from "./C_Point";
+import { C_PointDir, T_Direction }  from './C_PointDir';
+import { I_Locate }                 from './C_Location';
+import { C_MovablePoint }           from "./C_MovablePoint";
+import { C_Walker, JSON_Walker }    from "./C_Walker";
+import { C_Goods,  JSON_Goods }     from './C_Goods';
+import { C_Hero, JSON_Hero }        from "./C_Hero";
+import { C_MazeObjView, I_MazeObj, I_MazeObjView } from "./C_MazeObj";
+import { JSON_Any }                 from "./C_SaveData";
+import { I_HopeAction }             from "./I_Common"
+import { _get_uuid }                from "../d_utl/F_Rand";
+import { _alert }                   from "../d_cmn/global";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -46,7 +46,7 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 }
 
 
-export class C_Team implements I_MazeObj {
+export class C_Team implements I_MazeObj, I_MazeObjView {
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
@@ -83,7 +83,9 @@ export class C_Team implements I_MazeObj {
         const here = this.walker.get_p();
         return here.within(p); 
     }
-    public layer(): number {return this.my_layer;}
+
+    public view():  I_MazeObjView  {return this}
+    public layer(): number         {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}
     public letter(): string|null {
         switch (this.walker.get_d()) {
@@ -94,7 +96,6 @@ export class C_Team implements I_MazeObj {
             default: return '🌀';
         }
     }
-
     public isShow(): boolean{return false};
     public pad_t(): number {return 0.0} 
     public pad_d(): number {return 0.0} 
