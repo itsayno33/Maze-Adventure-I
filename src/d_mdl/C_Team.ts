@@ -8,7 +8,8 @@ import { C_Hero, JSON_Hero }        from "./C_Hero";
 import { I_MazeObj }                from "./C_MazeObj";
 import { JSON_Any }                 from "./C_SaveData";
 import { I_HopeAction }             from "./I_Common"
-import { C_MazeObjView, I_MazeObjView } from "../d_vie/C_MazeObjView";
+import { C_CurrentTeamView }        from "../d_vie/C_TeamView";
+import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "../d_vie/C_MazeObjView";
 import { T_Wall }                   from "../d_vie/C_Wall";
 import { _get_uuid }                from "../d_utl/F_Rand";
 import { _alert }                   from "../d_cmn/global";
@@ -22,6 +23,7 @@ export interface JSON_Team extends JSON_Any {
     goods?:     JSON_Goods,
     heroes?:    JSON_Hero[], 
     motion?:    string,
+    view?:      JSON_MazeObjView|undefined,
 }
 
 export function alert_team_info(a: JSON_Team|undefined): void {
@@ -48,16 +50,16 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 }
 
 
-export class C_Team implements I_MazeObj, I_MazeObjView {
+export class C_Team implements I_MazeObj {
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
     protected save_id:   number;
     protected walker:    C_Walker;
-    protected my_layer:  number = 99;
     protected goods:     C_Goods;
     protected heroes:    {[uid: string]: C_Hero};
 
+    protected myView:    I_MazeObjView|undefined;
     protected hope_motion: string;
 
     public constructor(j?: JSON_Team) {
@@ -67,6 +69,7 @@ export class C_Team implements I_MazeObj, I_MazeObjView {
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
 
+        this.myView = new C_CurrentTeamView(this);
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
@@ -86,29 +89,7 @@ export class C_Team implements I_MazeObj, I_MazeObjView {
         return here.within(p); 
     }
 
-    public view():  I_MazeObjView  {return this}
-    public layer(): number         {return this.my_layer;}
-    public set_layer(layer: number): void {this.my_layer = layer;}
-    public letter(): string|null {
-        switch (this.walker.get_d()) {
-            case T_Direction.N: return '↑';
-            case T_Direction.E: return '→';
-            case T_Direction.S: return '↓';
-            case T_Direction.W: return '←';
-            default: return '🌀';
-        }
-    }
-    public isShow(): boolean{return false}
-    public drow3D(frot: T_Wall, back: T_Wall): void {}
-    public pad_t():  number {return 0.0} 
-    public pad_d():  number {return 0.0} 
-    public pad_s():  number {return 0.0} 
-    public col_f():  string|null {return null} 
-    public col_b():  string|null {return null} 
-    public col_s():  string|null {return null} 
-    public col_t():  string|null {return null} 
-    public col_d():  string|null {return null} 
-    public col_l():  string|null {return null} 
+    public view():  I_MazeObjView|undefined {return this.myView}
 
 
     public hres():  C_Hero[] {
@@ -254,6 +235,7 @@ export class C_Team implements I_MazeObj, I_MazeObjView {
             goods:     this.goods.encode(),
             heroes:    json_heroes,
             motion:    this.hope_motion,
+            view:      this.myView?.encode() ?? {},
         };
     }
     public decode(a: JSON_Team|undefined): C_Team {
@@ -275,7 +257,13 @@ export class C_Team implements I_MazeObj, I_MazeObjView {
                 this.heroes[hero.uid()] = hero;
             }
         }
-    
+
+        if (a.view    !== undefined) {
+            if (Object.keys(a.view).length > 0) {
+                (this.myView ??= new C_MazeObjView()).decode(a.view); 
+            } else this.myView = new C_CurrentTeamView(this);
+        }
+
         return this;
     }
     public static encode_all(all_team: C_Team[]): JSON_Team[] {
