@@ -1,27 +1,29 @@
 import { I_JSON, JSON_Any } from "../d_mdl/C_SaveData";
-import { T_Wall }   from "../d_vie/C_Wall";
+import { T_Wall }           from "../d_vie/C_Wall";
+
 
 export interface I_MazeObjView extends I_JSON {
     // 表示関係(2Dpre)./C_Wall
-    layer:  ()=>number;
-    letter: ()=>string|null; // null: 見えない、何もない
+    layer:   ()=>number;
+    letter:  ()=>string|null; // null: 見えない、何もない
 
     // 表示関係(3D)
-    isShow: ()=>boolean;
-    drow3D: (frot: T_Wall, back: T_Wall)=>void;
+    canShow: ()=>boolean;
+    drow3D:  (frot: T_Wall, back: T_Wall)=>void;
 
-    pad_t:  ()=>number; //上側の空き(割合: 0から1) 
-    pad_d:  ()=>number; //床側の空き(割合: 0から1) 
-    pad_s:  ()=>number; //横側の空き(割合: 0から1) 
-    col_f:  ()=>string|null; //正面の色(CSSカラー)。nullは透明
-    col_b:  ()=>string|null; //背面の色(CSSカラー)。nullは透明
-    col_s:  ()=>string|null; //横側の色(CSSカラー)。nullは透明
-    col_t:  ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
-    col_d:  ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
-    col_l:  ()=>string|null; //ラインの色(CSSカラー)
+    pad_t:   ()=>number; //上側の空き(割合: 0から1) 
+    pad_d:   ()=>number; //床側の空き(割合: 0から1) 
+    pad_s:   ()=>number; //横側の空き(割合: 0から1) 
+    col_f:   ()=>string|null; //正面の色(CSSカラー)。nullは透明
+    col_b:   ()=>string|null; //背面の色(CSSカラー)。nullは透明
+    col_s:   ()=>string|null; //横側の色(CSSカラー)。nullは透明
+    col_t:   ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
+    col_d:   ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
+    col_l:   ()=>string|null; //ラインの色(CSSカラー)
 }
 
 export interface JSON_MazeObjView extends JSON_Any {
+    cname?:  string,
     layer?:  number,
     letter?: string,
     show3D?: string,
@@ -79,18 +81,21 @@ export class C_MazeObjView implements I_MazeObjView {
         if (j !== undefined) this.decode(j);
     }
 
-    public static newObj(j: JSON_MazeObjView|undefined): C_MazeObjView {
+    public static newObj(j: JSON_MazeObjView|undefined): I_MazeObjView {
+        switch (j?.cname) {
+            case 'MazeObjView':     return new C_MazeObjView(j);
+        }
         return new C_MazeObjView(j);
     }
 
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
 
-    public letter(): string|null {return this.my_letter}
+    public letter():  string|null {return this.my_letter}
     public set_letter(letter: string|null): string|null {return this.my_letter = letter}
 
-    public isShow(): boolean {return this.my_show3D};
-    public setShow(is_show: boolean): boolean {return this.my_show3D = is_show};
+    public canShow(): boolean {return this.my_show3D};
+    public setShow(can_show: boolean): boolean {return this.my_show3D = can_show};
 
     public pad_t():  number {return this.my_pad_t}
     public pad_d():  number {return this.my_pad_d}
@@ -125,7 +130,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_t() === null) return;
+        if (!this.canShow() || this.col_t() === null) return;
         if (this.pad_s() <= 0.0 && this.pad_t() >= 1.0) {
             drow_cell_floor(frot, back, this.col_t() ?? '#6666ff', this.col_l() ?? '#9999ff');
             return;
@@ -145,7 +150,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_d() === null) return;
+        if (!this.canShow() || this.col_d() === null) return;
         if (this.pad_s() <= 0.0 && this.pad_d() >= 1.0) {
             drow_cell_ceiling(frot, back, this.col_d() ?? '#aaaaaa', this.col_l() ?? '#9999ff');
             return;
@@ -164,7 +169,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_f() === null) return;
+        if (!this.canShow() || this.col_f() === null) return;
     
         const o = __calc_padding_obj(this, frot, back);
         const rect: T_Rect = {
@@ -180,7 +185,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_b() === null) return;
+        if (!this.canShow() || this.col_b() === null) return;
     
         const o = __calc_padding_obj(this, frot, back);
         const rect: T_Rect = {
@@ -196,7 +201,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_s() === null) return;
+        if (!this.canShow() || this.col_s() === null) return;
     
         const o = __calc_padding_obj(this, frot, back);
         const rect: T_Rect = {
@@ -212,7 +217,7 @@ export class C_MazeObjView implements I_MazeObjView {
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
-        if (!this.isShow() || this.col_s() === null) return;
+        if (!this.canShow() || this.col_s() === null) return;
     
         const o = __calc_padding_obj(this, frot, back);
         const rect: T_Rect = {
@@ -228,12 +233,13 @@ export class C_MazeObjView implements I_MazeObjView {
 
     public encode(): JSON_MazeObjView {
         return {
+            cname:   'MazeObjView',
             layer:   this.my_layer,
             letter:  this.my_letter ?? '',
             pad_t:   this.my_pad_t, 
             pad_d:   this.my_pad_d, 
             pad_s:   this.my_pad_s, 
-            show3D:  this.isShow() ? '1' : '0',
+            show3D:  this.canShow() ? '1' : '0',
             col_f:   this.my_col_f ?? '',  
             col_b:   this.my_col_b ?? '',  
             col_s:   this.my_col_s ?? '', 
@@ -243,7 +249,7 @@ export class C_MazeObjView implements I_MazeObjView {
         }
     }
 
-    public decode(j: JSON_MazeObjView|undefined): C_MazeObjView {
+    public decode(j: JSON_MazeObjView|undefined): I_MazeObjView {
         if (j === undefined) return this;
 
         if (j.layer   !== undefined) this.my_layer  = j.layer;

@@ -10,7 +10,6 @@ import { JSON_Any }                 from "./C_SaveData";
 import { I_HopeAction }             from "./I_Common"
 import { C_CurrentTeamView }        from "../d_vie/C_TeamView";
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "../d_vie/C_MazeObjView";
-import { T_Wall }                   from "../d_vie/C_Wall";
 import { _get_uuid }                from "../d_utl/F_Rand";
 import { _alert }                   from "../d_cmn/global";
 
@@ -259,9 +258,8 @@ export class C_Team implements I_MazeObj {
         }
 
         if (a.view    !== undefined) {
-            if (Object.keys(a.view).length > 0) {
-                (this.myView ??= new C_MazeObjView()).decode(a.view); 
-            } else this.myView = new C_CurrentTeamView(this);
+            if (Object.keys(a.view).length > 0) (this.myView ??= C_MazeObjView.newObj(a.view)).decode(a.view); 
+            else this.myView = new C_CurrentTeamView(this);
         }
 
         return this;
