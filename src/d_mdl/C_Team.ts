@@ -10,6 +10,7 @@ import { JSON_Any }                 from "./C_SaveData";
 import { I_HopeAction }             from "./I_Common"
 import { _get_uuid }                from "../d_utl/F_Rand";
 import { _alert }                   from "../d_cmn/global";
+import { T_Wall } from "../mai_maze/C_Wall";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -96,16 +97,17 @@ export class C_Team implements I_MazeObj, I_MazeObjView {
             default: return '🌀';
         }
     }
-    public isShow(): boolean{return false};
-    public pad_t(): number {return 0.0} 
-    public pad_d(): number {return 0.0} 
-    public pad_s(): number {return 0.0} 
-    public col_f(): string|null {return null} 
-    public col_b(): string|null {return null} 
-    public col_s(): string|null {return null} 
-    public col_t(): string|null {return null} 
-    public col_d(): string|null {return null} 
-    public col_l(): string|null {return null} 
+    public isShow(): boolean{return false}
+    public drow3D(frot: T_Wall, back: T_Wall): void {}
+    public pad_t():  number {return 0.0} 
+    public pad_d():  number {return 0.0} 
+    public pad_s():  number {return 0.0} 
+    public col_f():  string|null {return null} 
+    public col_b():  string|null {return null} 
+    public col_s():  string|null {return null} 
+    public col_t():  string|null {return null} 
+    public col_d():  string|null {return null} 
+    public col_l():  string|null {return null} 
 
 
     public hres():  C_Hero[] {
