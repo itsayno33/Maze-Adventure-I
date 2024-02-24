@@ -1,11 +1,11 @@
 import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
+import { C_MazeObjView }  from "../d_mdl/C_MazeObjView";
 import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { T_Direction }    from "../d_mdl/T_Direction";
+import { C_Wall }         from "../d_mdl/C_Wall";
 import { g_mes }          from "../d_cmn/global";
-import { C_Wall }         from "../d_vie/C_Wall";
-import { C_MazeObjView }  from "../d_vie/C_MazeObjView";
 import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
@@ -169,7 +169,7 @@ export function display_maze3D(): void {
 
 function drowMazeCell(d: number, w: number): void {
     if (g_ds.wall === null) return;
-    const around_j_k = g_team.get_around(d, w, 0);
+    const around_j_k = g_team.walk().get_around(d, w, 0);
     const frot_wall  = g_ds.wall.get(d, w);
     const back_wall  = g_ds.wall.get(d + 1, w);
     const mz_kind    = g_maze.get_cell(around_j_k);
@@ -220,7 +220,7 @@ export function maze3D_blink_on_direction(): void {
     const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
     if (dir_y === null) return;
 
-    switch (g_team.get_dir()) {
+    switch (g_team.walk().get_d()) {
         case T_Direction.N:
         case T_Direction.S:
             dir_x.classList.remove('blink');

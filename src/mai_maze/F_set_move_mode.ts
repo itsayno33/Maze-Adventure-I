@@ -65,8 +65,6 @@ export function do_instant_save(): void {
 }
 
 
-
-
 function clear_mask_around_the_team(): void {
     g_maze.clear_mask_around_the_team(g_team);
 }
@@ -76,22 +74,22 @@ function change_unexp_to_floor(p: C_Point): void {
 }
 
 function go_F(): void {
-    const rslt = g_team.hope_p_fwd();
+    const rslt = g_team.walk().hope_p_fwd();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
 function go_B(): void {
-    const rslt = g_team.hope_p_bak();
+    const rslt = g_team.walk().hope_p_bak();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }
 function tr_R(): void {
-    const rslt = g_team.hope_turn_r();
+    const rslt = g_team.walk().hope_turn_r();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }
 function tr_L(): void {
-    const rslt = g_team.hope_turn_l();
+    const rslt = g_team.walk().hope_turn_l();
     move_check(rslt);
     do_move_bottom_half('blink_off');
 }

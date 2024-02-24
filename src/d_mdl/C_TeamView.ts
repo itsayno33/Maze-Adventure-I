@@ -1,7 +1,7 @@
-import { T_Direction } from '../d_mdl/C_PointDir';
-import { C_Team }      from "../d_mdl/C_Team";
-import { T_Wall }      from "../d_vie/C_Wall";
-import { I_MazeObjView, JSON_MazeObjView }  from "../d_vie/C_MazeObjView";
+import { T_Direction } from './C_PointDir';
+import { C_Team }      from "./C_Team";
+import { T_Wall }      from "../d_mdl/C_Wall";
+import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 
 export class C_CurrentTeamView  implements I_MazeObjView {
     private my_team: C_Team;
@@ -13,7 +13,7 @@ export class C_CurrentTeamView  implements I_MazeObjView {
     public layer(): number         {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}
     public letter(): string|null {
-        switch (this.my_team.get_dir()) {
+        switch (this.my_team.walk().get_d()) {
             case T_Direction.N: return '↑';
             case T_Direction.E: return '→';
             case T_Direction.S: return '↓';

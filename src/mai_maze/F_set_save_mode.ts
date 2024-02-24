@@ -530,7 +530,7 @@ export function decode_maze(jsonObj: any): void {
             z: jsonObj.pos?.z, 
             d: jsonObj.pos?.d, 
         }); 
-        g_team.set_place(g_maze, g_my_url, pos);
+        g_team.walk().set_place(g_maze, g_my_url, pos);
         g_save.mypos = g_team.get_loc();
     }
 

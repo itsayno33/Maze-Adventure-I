@@ -8,8 +8,8 @@ import { C_Hero, JSON_Hero }        from "./C_Hero";
 import { I_MazeObj }                from "./C_MazeObj";
 import { JSON_Any }                 from "./C_SaveData";
 import { I_HopeAction }             from "./I_Common"
-import { C_CurrentTeamView }        from "../d_vie/C_TeamView";
-import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "../d_vie/C_MazeObjView";
+import { C_CurrentTeamView }        from "../d_mdl/C_TeamView";
+import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "../d_mdl/C_MazeObjView";
 import { _get_uuid }                from "../d_utl/F_Rand";
 import { _alert }                   from "../d_cmn/global";
 
@@ -89,6 +89,7 @@ export class C_Team implements I_MazeObj {
     }
 
     public view():  I_MazeObjView|undefined {return this.myView}
+    public walk():  C_Walker {return this.walker}
 
 
     public hres():  C_Hero[] {
@@ -106,20 +107,6 @@ export class C_Team implements I_MazeObj {
         delete this.heroes[hero.uid()];
     }
 
-    public set_place(
-        place: I_Locate, 
-        url?:  string, 
-        pos?:  C_PointDir) {
-
-        this.walker.set_uid (place.uid());
-        this.walker.set_lckd(place.get_lckd());
-        this.walker.set_name(place.get_name());
-
-        if (url !== undefined) this.walker.set_url(url);
-        if (pos !== undefined) {
-            this.walker.set_pd(pos);
-        }
-    }
     public get_loc(): C_MovablePoint {
         return this.walker;
     }
@@ -127,10 +114,10 @@ export class C_Team implements I_MazeObj {
         this.walker.decode(loc.encode());
     }
 
-
     public get_pd(): C_PointDir {
         return this.walker.get_pd();
     }
+/*
     public set_pd(p:C_PointDir): void {
         this.walker.set_pd(p);
     }
@@ -218,7 +205,7 @@ export class C_Team implements I_MazeObj {
     public isNG(): void {
         return;
     }
-
+*/
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新
 

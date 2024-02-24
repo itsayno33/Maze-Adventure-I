@@ -1,5 +1,7 @@
 import { C_PointDir, T_Direction }           from "./C_PointDir";
 import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
+import { I_Locate } from "./C_Location";
+import { I_HopeAction } from "./I_Common";
 
 
 export interface JSON_Walker extends JSON_MovablePoint {
@@ -16,6 +18,90 @@ export class C_Walker extends C_MovablePoint {
     public set_x(x: number): void {this.loc_pos.x = x}
     public set_y(y: number): void {this.loc_pos.y = y}
     public set_z(z: number): void {this.loc_pos.z = z}
+
+    public set_place(
+        place: I_Locate, 
+        url?:  string, 
+        pos?:  C_PointDir) {
+
+        this.set_uid (place.uid());
+        this.set_lckd(place.get_lckd());
+        this.set_name(place.get_name());
+
+        if (url !== undefined) this.set_url(url);
+        if (pos !== undefined) {
+            this.set_pd(pos);
+        }
+    }
+
+    
+    public hope_p_fwd(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.get_p_fwd(),
+            doOK: ()=>{this.set_p_fwd();},
+            doNG: ()=>{this.isNG();},
+           };
+    }
+    public hope_p_bak(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.get_p_bak(),
+            doOK: ()=>{this.set_p_bak();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+    public hope_turn_r(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Turn",
+            subj: this.get_pd(),
+            doOK: ()=>{this.turn_r();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+    public hope_turn_l(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Turn",
+            subj: this.get_pd(),
+            doOK: ()=>{this.turn_l();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+
+    public hope_p_up(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Up",
+            subj: this.get_p_up(),
+            doOK: ()=>{this.move_p_up();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+    public hope_p_down(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Down",
+            subj: this.get_p_down(),
+            doOK: ()=>{this.move_p_down();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
+
+    public move_p_up(): void {
+        this.set_p_up();
+    }
+    public move_p_down(): void {
+        this.set_p_down();
+    }
+
+    public isNG(): void {
+        return;
+    }
+
 
     public get_p_fwd(): C_PointDir {
         return this.__get_p_move(1);
@@ -55,7 +141,7 @@ export class C_Walker extends C_MovablePoint {
         }
         return p;
     }
-    public get_around(front: number, right:number, up: number): C_PointDir {
+    public get_around(front: number, right:number, up: number = 0): C_PointDir {
         var target_x  = this.loc_pos.x;
         var target_y  = this.loc_pos.y;
         var target_z  = this.loc_pos.z - up;

@@ -6,7 +6,7 @@ import {
     C_MazeObjView, 
     I_MazeObjView, 
     JSON_MazeObjView 
-} from "../d_vie/C_MazeObjView";
+} from "./C_MazeObjView";
 
 export interface I_MazeObj extends I_JSON_Uniq {
     get_pd: ()=>C_PointDir;
@@ -15,16 +15,18 @@ export interface I_MazeObj extends I_JSON_Uniq {
 }
 
 export interface JSON_MazeObj extends JSON_Any {
-    cname?:  string,
+    cname?:     string,
     uniq_id?:   string, 
     pos?:       JSON_PointDir,
     view?:      JSON_MazeObjView|undefined,
+    thr?:       string, 
 }
 
 export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
+    protected can_thr:   boolean;
 
     public static newObj(j: JSON_MazeObj|undefined): I_MazeObj {
         switch (j?.cname) {
@@ -37,6 +39,7 @@ export class C_MazeObj implements I_MazeObj {
         this.uniq_id    = 'mazeobj_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  new C_MazeObjView();
+        this.can_thr    =  true;
 
         if (j !== undefined) this.decode(j);
     }
@@ -44,7 +47,10 @@ export class C_MazeObj implements I_MazeObj {
     public uid(): string {return this.uniq_id}
 
     public view(): I_MazeObjView|undefined {return this.my_view}
-    public set_view(view: I_MazeObjView|undefined): void {this.my_view = view}
+    public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
+
+    public canThrough(): boolean {return this.can_thr}
+    public setThrough(thr: boolean): boolean {return this.can_thr = thr}
 
     public get_pd(): C_PointDir {
         return new C_PointDir(this.pos);
@@ -62,6 +68,7 @@ export class C_MazeObj implements I_MazeObj {
             uniq_id: this.uniq_id,
             pos:     this.pos.encode(),
             view:    this.my_view?.encode() ?? {},
+            can_thr: this.can_thr ? '1' : '0',
         }
     }
 
@@ -75,6 +82,7 @@ export class C_MazeObj implements I_MazeObj {
                 (this.my_view ??= new C_MazeObjView()).decode(j.view); 
             } else this.my_view  = undefined;
         }
+        if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
 
         return this;
     }

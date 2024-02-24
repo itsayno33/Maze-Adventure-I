@@ -1,5 +1,5 @@
-import { I_JSON, JSON_Any } from "../d_mdl/C_SaveData";
-import { T_Wall }           from "../d_vie/C_Wall";
+import { I_JSON, JSON_Any } from "./C_SaveData";
+import { T_Wall }           from "../d_mdl/C_Wall";
 
 
 export interface I_MazeObjView extends I_JSON {
