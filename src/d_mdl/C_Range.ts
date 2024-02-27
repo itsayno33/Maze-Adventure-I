@@ -31,7 +31,13 @@ export class C_Range {
         return this;
     }
 
-    public within(a: C_Range|C_Point): boolean {
+    public within(a: C_Range|C_Point|number, y?: number, z?: number): boolean {
+        if (typeof a === "number" && typeof y === "number" && typeof z === "number") { 
+            if ( a < this.min.x || a > this.max.x ) return false;
+            if ( y < this.min.y || y > this.max.y ) return false;
+            if ( z < this.min.z || z > this.max.z ) return false;
+            return true;
+        }
         if (typeof a === "object" && a instanceof C_Point) { 
             const p = a as C_Point;
             if ( p.x < this.min.x || p.x > this.max.x ) return false;
@@ -98,11 +104,4 @@ export class C_Range {
         return this._init(p1, p2);
     }
 }
-/*
-function  _min(a: number, b: number): number {
-    return (a <= b) ? a : b;
-}
-function  _max(a: number, b: number): number {
-    return (a >= b) ? a : b;
-}
-*/
+

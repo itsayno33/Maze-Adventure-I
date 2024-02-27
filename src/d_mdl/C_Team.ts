@@ -1,17 +1,15 @@
-import { C_Point }                  from "./C_Point";
-import { C_PointDir, T_Direction }  from './C_PointDir';
-import { I_Locate }                 from './C_Location';
-import { C_MovablePoint }           from "./C_MovablePoint";
-import { C_Walker, JSON_Walker }    from "./C_Walker";
-import { C_Goods,  JSON_Goods }     from './C_Goods';
-import { C_Hero, JSON_Hero }        from "./C_Hero";
-import { I_MazeObj }                from "./C_MazeObj";
-import { JSON_Any }                 from "./C_SaveData";
-import { I_HopeAction }             from "./I_Common"
-import { C_CurrentTeamView }        from "../d_mdl/C_TeamView";
-import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "../d_mdl/C_MazeObjView";
-import { _get_uuid }                from "../d_utl/F_Rand";
-import { _alert }                   from "../d_cmn/global";
+import { C_Point }               from "./C_Point";
+import { C_PointDir }            from './C_PointDir';
+import { C_MovablePoint }        from "./C_MovablePoint";
+import { C_Walker, JSON_Walker } from "./C_Walker";
+import { C_Goods,  JSON_Goods }  from './C_Goods';
+import { C_Hero, JSON_Hero }     from "./C_Hero";
+import { I_MazeObj }             from "./C_MazeObj";
+import { JSON_Any }              from "./C_SaveData";
+import { C_CurrentTeamView }     from "./C_TeamView";
+import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
+import { _get_uuid }             from "../d_utl/F_Rand";
+import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -119,95 +117,8 @@ export class C_Team implements I_MazeObj {
     public get_pd(): C_PointDir {
         return this.walker.get_pd();
     }
-/*
-    public set_pd(p:C_PointDir): void {
-        this.walker.set_pd(p);
-    }
-    public get_z(): number {
-        return this.walker.get_z();
-    }
-    public set_z(z: number): void {
-        if (z < 0) return;
-        this.walker.set_z(z);
-    }
-    public get_dir(): T_Direction {
-        return this.walker.get_d();
-    }
-    public set_dir(d: T_Direction): void {
-        this.walker.set_d(d);
-    }
 
-    public get_around(front: number, right:number, up: number = 0): C_PointDir {
-        return this.walker.get_around(front, right, up);
-    }
-
-    public hope_p_fwd(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Move",
-            subj: this.walker.get_p_fwd(),
-            doOK: ()=>{this.walker.set_p_fwd();},
-            doNG: ()=>{this.isNG();},
-           };
-    }
-    public hope_p_bak(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Move",
-            subj: this.walker.get_p_bak(),
-            doOK: ()=>{this.walker.set_p_bak();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_turn_r(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Turn",
-            subj: this.walker.get_pd(),
-            doOK: ()=>{this.walker.turn_r();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_turn_l(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Turn",
-            subj: this.walker.get_pd(),
-            doOK: ()=>{this.walker.turn_l();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-
-    public hope_p_up(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Up",
-            subj: this.walker.get_p_up(),
-            doOK: ()=>{this.move_p_up();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_p_down(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Down",
-            subj: this.walker.get_p_down(),
-            doOK: ()=>{this.move_p_down();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-
-    public move_p_up(): void {
-        this.walker.set_p_up();
-    }
-    public move_p_down(): void {
-        this.walker.set_p_down();
-    }
-
-    public isNG(): void {
-        return;
-    }
-*/
+    
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新
 

@@ -3,13 +3,13 @@ import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { _min, _round }   from "../d_utl/F_Math";
 import { g_maze, g_team, g_mazeCell } from "./global_for_maze";
 
-export function init_maze2D(): void {
-    calc_view2D_width();
-    init_mazeCell2D();
+export function init_maze2Dpre(): void {
+    calc_view2Dpre_width();
+    init_mazeCell2Dpre();
 }
 
 // 【初期設定】View2Dの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
-function calc_view2D_width(): void {
+function calc_view2Dpre_width(): void {
     const pre = document.getElementById('maze_view2D_pre') as HTMLPreElement;
     if (pre === null) return;
 
@@ -31,13 +31,13 @@ function calc_view2D_width(): void {
     pre.style.setProperty('line-height',`${line_height}px`);
 }
 
-function init_mazeCell2D(): void {
+function init_mazeCell2Dpre(): void {
     g_mazeCell[T_MzKind.Floor].decode({view: {
         layer: 0, letter: '　', 
     }});
 
     g_mazeCell[T_MzKind.Unexp].decode({view: {
-        layer: 0, letter: 'Ｘ', 
+        layer: 0, letter: '・', 
     }});
 
     g_mazeCell[T_MzKind.Stone].decode({view: {
@@ -63,8 +63,36 @@ function init_mazeCell2D(): void {
 
 }
 
-export function display_maze2D(): void { 
+
+export function display_maze2Dpre(): void { 
     const pre: HTMLElement|null = document.getElementById('maze_view2D_pre');
-    if (pre !== null) pre.innerText = g_maze.to_string(g_team.get_pd().z, g_debug.isON());
+    if (pre !== null) pre.innerText = to_string(g_debug.isON());
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
+
+function to_string(debug_mode: boolean = false): string {
+    const size_x = g_maze.get_x_max();
+    const size_y = g_maze.get_y_max();
+    const floor  = g_team.get_pd().z
+
+    let ret_str = '';
+    for (let y = 0; y < size_y; y++) {
+        for (let x = 0; x < size_x; x++) {
+            if (!debug_mode && g_maze.is_masked_xyz(x, y, floor)) {
+                ret_str += 'Ｘ';
+            } else {
+                const obj = g_maze.get_obj_xyz(x, y, floor);
+                if (obj === null || obj.view() === undefined) {
+                    const kind = g_maze.get_cell_xyz(x, y, floor);
+                    ret_str += g_mazeCell[kind].view()?.letter();
+                } else {
+                    const obj_c = obj.view()?.letter() ?? '謎';
+                    ret_str += obj_c;
+                }
+            }
+        }
+        ret_str += "\n";
+    }
+    return ret_str;
+}
+

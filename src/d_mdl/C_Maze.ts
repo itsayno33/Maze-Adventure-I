@@ -76,12 +76,6 @@ class C_MazeCell  {
     public static to_int(kind: T_MzKind): number {
         return kind as number;
     }
-    // 普通にnewすれば良いのでたぶん要らない
-    /*
-    public static from_int(num: number): C_MazeCell {
-        return new C_MazeCell(num);
-    }
-    */
     public to_letter(v?: T_MzKind): string {
         const kind: T_MzKind = v ?? this.cell;
         return C_MazeCell.to_letter(kind);
@@ -286,6 +280,11 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
     }
 
+    public is_masked(p: C_Point): boolean {return this.is_masked_xyz(p.x, p.y, p.z)}
+    public is_masked_xyz(x: number, y: number, z: number): boolean {
+        return this.masks[z][y][x];
+    }
+
     public is_movable(p: C_Point): boolean {
         if (!this.size.within(p)) return false;
         switch (this.get_cell(p)) {
@@ -293,6 +292,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
             case T_MzKind.Unexp:
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
+            case T_MzKind.StrUD:
                 return true;
         }
         return false;
@@ -307,6 +307,10 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     }
     public get_cell (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].get();
+        return T_MzKind.NoDef;
+    }
+    public get_cell_xyz (x: number, y: number, z: number): T_MzKind {
+        if (this.size.within(x, y, z)) return this.cells[z][y][x].get();
         return T_MzKind.NoDef;
     }
     public set_cell (p: C_Point, k: T_MzKind): void {
