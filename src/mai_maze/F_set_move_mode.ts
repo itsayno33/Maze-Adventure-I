@@ -21,6 +21,8 @@ const ctls_move_nor = {
     name: 'move_nor', 
     do_U:  go_F,
     do_D:  go_B,
+    doUL:  go_L,
+    doUR:  go_R,
     do_L:  tr_L,
     do_R:  tr_R,
     camp:  camp,
@@ -80,6 +82,16 @@ function go_F(): void {
 }
 function go_B(): void {
     const rslt = g_team.walk().hope_p_bak();
+    move_check(rslt);
+    do_move_bottom_half('blink_on');
+}
+function go_L(): void {
+    const rslt = g_team.walk().hope_p_lft();
+    move_check(rslt);
+    do_move_bottom_half('blink_on');
+}
+function go_R(): void {
+    const rslt = g_team.walk().hope_p_rgt();
     move_check(rslt);
     do_move_bottom_half('blink_on');
 }

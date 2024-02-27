@@ -8,11 +8,6 @@ import {
     JSON_MazeObjView 
 } from "./C_MazeObjView";
 
-export interface I_MazeObj extends I_JSON_Uniq {
-    get_pd: ()=>C_PointDir;
-    within: (p: C_Point)=>boolean;
-    view:   ()=>I_MazeObjView|undefined;
-}
 
 export interface JSON_MazeObj extends JSON_Any {
     cname?:     string,
@@ -20,6 +15,14 @@ export interface JSON_MazeObj extends JSON_Any {
     pos?:       JSON_PointDir,
     view?:      JSON_MazeObjView|undefined,
     thr?:       string, 
+}
+
+
+export interface I_MazeObj extends I_JSON_Uniq {
+    get_pd:     ()=>C_PointDir;
+    within:     (p: C_Point)=>boolean;
+    view:       ()=>I_MazeObjView|undefined;
+    canThrough: ()=>boolean;
 }
 
 export class C_MazeObj implements I_MazeObj {

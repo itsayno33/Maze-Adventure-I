@@ -1,9 +1,11 @@
 import { g_debug, g_mes } from "../d_cmn/global";
+import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { _min, _round }   from "../d_utl/F_Math";
-import { g_maze, g_team } from "./global_for_maze";
+import { g_maze, g_team, g_mazeCell } from "./global_for_maze";
 
 export function init_maze2D(): void {
     calc_view2D_width();
+    init_mazeCell2D();
 }
 
 // 【初期設定】View2Dの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
@@ -27,6 +29,38 @@ function calc_view2D_width(): void {
     pre.setAttribute('height', view2D_height.toString());
     pre.style.setProperty('font-size',  `${font_size}px`);
     pre.style.setProperty('line-height',`${line_height}px`);
+}
+
+function init_mazeCell2D(): void {
+    g_mazeCell[T_MzKind.Floor].decode({view: {
+        layer: 0, letter: '　', 
+    }});
+
+    g_mazeCell[T_MzKind.Unexp].decode({view: {
+        layer: 0, letter: 'Ｘ', 
+    }});
+
+    g_mazeCell[T_MzKind.Stone].decode({view: {
+        layer: 0, letter: '＃', 
+    }});
+
+    g_mazeCell[T_MzKind.StrUp].decode({view: {
+        layer: 0, letter: '上', 
+    }});
+    g_mazeCell[T_MzKind.StrDn].decode({view: {
+        layer: 0, letter: '下', 
+    }});
+    g_mazeCell[T_MzKind.StrUD].decode({view: {
+        layer: 0, letter: '段', 
+    }});
+
+    const strEmp = {view: {
+        layer: 0, letter: '謎', 
+    }};
+    g_mazeCell[T_MzKind.NoDef].decode(strEmp);
+    g_mazeCell[T_MzKind.Unkwn].decode(strEmp);
+    g_mazeCell[T_MzKind.Empty].decode(strEmp);
+
 }
 
 export function display_maze2D(): void { 

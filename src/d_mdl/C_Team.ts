@@ -90,6 +90,8 @@ export class C_Team implements I_MazeObj {
 
     public view():  I_MazeObjView|undefined {return this.myView}
     public walk():  C_Walker {return this.walker}
+    
+    public canThrough(): boolean {return true}
 
 
     public hres():  C_Hero[] {

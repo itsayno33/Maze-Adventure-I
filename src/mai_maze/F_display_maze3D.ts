@@ -6,7 +6,7 @@ import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { C_Wall }         from "../d_mdl/C_Wall";
 import { g_mes }          from "../d_cmn/global";
-import { g_maze, g_team, g_ds }  from "./global_for_maze";
+import { g_maze, g_team, g_ds, g_mazeCell }  from "./global_for_maze";
 
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -15,7 +15,6 @@ export type T_DrowSet = {
     wall:   C_Wall|null,
 }
 
-let  MazeCell: {[kind: T_MzKind]: C_MazeObjView};
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
@@ -31,51 +30,7 @@ export function init_maze3D(): T_DrowSet {
     }
 
     C_MazeObjView.set_context3D(con);
-    MazeCell = {};
-
-    MazeCell[T_MzKind.Floor] = new C_MazeObjView({
-        layer: 0, letter: '　', 
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
-        col_l: '#9999ff', 
-    });
-
-    MazeCell[T_MzKind.Unexp] = new C_MazeObjView({
-        layer: 0, letter: 'Ｘ', 
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
-        col_l: '#9999ff', 
-    });
-
-    MazeCell[T_MzKind.Stone] = new C_MazeObjView({
-        layer: 0, letter: '＃', 
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
-        col_l: '#0000ff', 
-    });
-
-    MazeCell[T_MzKind.StrUp] = 
-    MazeCell[T_MzKind.StrDn] = 
-    MazeCell[T_MzKind.StrUD] = new C_MazeObjView({
-        layer: 0, letter: '段', 
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
-        col_l: '#0000ff', 
-    });
-
-    MazeCell[T_MzKind.NoDef] = 
-    MazeCell[T_MzKind.Unkwn] = 
-    MazeCell[T_MzKind.Empty] = new C_MazeObjView({
-        layer: 0, letter: '謎', 
-        show3D:  '0',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-        col_l: '', 
-    });
+    init_mazeCell3D();
 
     // 3Dメイズを描写するキャンバス要素のサイズをCSS上の『見た目』のサイズに合わせる
     canvas.width  = canvas.clientWidth;
@@ -88,6 +43,50 @@ export function init_maze3D(): T_DrowSet {
     const wall  = new C_Wall(depth, new C_Range(top_p, btm_p));
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
+
+function init_mazeCell3D(): void {
+    g_mazeCell[T_MzKind.Floor].decode({view: {
+        show3D:  '1',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
+        col_l: '#9999ff', 
+    }});
+
+    g_mazeCell[T_MzKind.Unexp].decode({view: {
+        show3D:  '1',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
+        col_l: '#9999ff', 
+    }});
+
+    g_mazeCell[T_MzKind.Stone].decode({view: {
+        show3D:  '1',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
+        col_l: '#0000ff', 
+    }});
+
+    const strObj = {view: {
+        show3D:  '1',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+        col_l: '#0000ff', 
+    }};
+    g_mazeCell[T_MzKind.StrUp].decode(strObj);
+    g_mazeCell[T_MzKind.StrDn].decode(strObj);
+    g_mazeCell[T_MzKind.StrUD].decode(strObj);
+
+    const strEmp = {view: {
+        show3D:  '0',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+        col_l: '', 
+    }};
+    g_mazeCell[T_MzKind.NoDef].decode(strEmp);
+    g_mazeCell[T_MzKind.Unkwn].decode(strEmp);
+    g_mazeCell[T_MzKind.Empty].decode(strEmp);
+}
+
 
 // 3D描写時の画面初期化。とりあえず天井と床を描く
 function draw_init_maze3D(): void {
@@ -174,7 +173,7 @@ function drowMazeCell(d: number, w: number): void {
     const back_wall  = g_ds.wall.get(d + 1, w);
     const mz_kind    = g_maze.get_cell(around_j_k);
 
-    if (mz_kind in MazeCell) MazeCell[mz_kind].drow3D(frot_wall, back_wall)
+    if (mz_kind in g_mazeCell) g_mazeCell[mz_kind].view()?.drow3D(frot_wall, back_wall)
 
     if (g_maze.exist_obj(around_j_k)) {
         const obj = g_maze.get_obj(around_j_k);

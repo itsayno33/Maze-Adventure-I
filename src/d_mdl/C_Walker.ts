@@ -53,6 +53,25 @@ export class C_Walker extends C_MovablePoint {
             doNG: ()=>{this.isNG();},
         };
     }
+    
+    public hope_p_lft(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.get_p_lft(),
+            doOK: ()=>{this.set_p_lft();},
+            doNG: ()=>{this.isNG();},
+           };
+    }
+    public hope_p_rgt(): I_HopeAction {
+        return {
+            has_hope: true, 
+            hope: "Move",
+            subj: this.get_p_rgt(),
+            doOK: ()=>{this.set_p_rgt();},
+            doNG: ()=>{this.isNG();},
+        };
+    }
     public hope_turn_r(): I_HopeAction {
         return {
             has_hope: true, 
@@ -104,16 +123,28 @@ export class C_Walker extends C_MovablePoint {
 
 
     public get_p_fwd(): C_PointDir {
-        return this.__get_p_move(1);
+        return this.__get_p_move(1, 0);
     }
     public set_p_fwd(): void {
         this.set_pd(this.get_p_fwd());
     }
     public get_p_bak(): C_PointDir {
-        return this.__get_p_move(-1);
+        return this.__get_p_move(-1, 0);
     }
     public set_p_bak(): void {
         this.set_pd(this.get_p_bak());
+    }
+    public get_p_lft(): C_PointDir {
+        return this.__get_p_move(0, -1);
+    }
+    public set_p_lft(): void {
+        this.set_pd(this.get_p_lft());
+    }
+    public get_p_rgt(): C_PointDir {
+        return this.__get_p_move(0, 1);
+    }
+    public set_p_rgt(): void {
+        this.set_pd(this.get_p_rgt());
     }
     public get_p_up(): C_PointDir {
         const p = new C_PointDir(this.loc_pos);
@@ -131,13 +162,23 @@ export class C_Walker extends C_MovablePoint {
     public set_p_down() {
         this.set_pd(this.get_p_down());
     }
-    protected __get_p_move(offset: number): C_PointDir {
+    protected __get_p_move(offsetFB: number, offsetLR: number): C_PointDir {
         const p = new C_PointDir(this.loc_pos);
-        switch (this.loc_pos.d) {
-            case T_Direction.N: p.y -= offset;break;
-            case T_Direction.E: p.x += offset;break;
-            case T_Direction.S: p.y += offset;break;
-            case T_Direction.W: p.x -= offset;break;
+        if (offsetFB !== 0) {
+            switch (this.loc_pos.d) {
+                case T_Direction.N: p.y -= offsetFB;break;
+                case T_Direction.E: p.x += offsetFB;break;
+                case T_Direction.S: p.y += offsetFB;break;
+                case T_Direction.W: p.x -= offsetFB;break;
+            }
+        }
+        if (offsetLR !== 0) {
+            switch (this.loc_pos.d) {
+                case T_Direction.N: p.x += offsetLR;break;
+                case T_Direction.E: p.y += offsetLR;break;
+                case T_Direction.S: p.x -= offsetLR;break;
+                case T_Direction.W: p.y -= offsetLR;break;
+            }
         }
         return p;
     }
