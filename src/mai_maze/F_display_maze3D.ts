@@ -2,11 +2,10 @@ import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
 import { C_MazeObjView }  from "../d_mdl/C_MazeObjView";
-import { T_MzKind }       from "../d_mdl/T_MzKind";
 import { T_Direction }    from "../d_mdl/T_Direction";
 import { C_Wall }         from "../d_mdl/C_Wall";
 import { g_mes }          from "../d_cmn/global";
-import { g_maze, g_team, g_ds, g_mazeCell }  from "./global_for_maze";
+import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
     canvas: HTMLCanvasElement|null,
@@ -44,48 +43,7 @@ export function init_maze3D(): T_DrowSet {
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
 
-function init_mazeCell3D(): void {
-    g_mazeCell[T_MzKind.Floor].decode({view: {
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
-        col_l: '#9999ff', 
-    }});
-
-    g_mazeCell[T_MzKind.Unexp].decode({view: {
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
-        col_l: '#9999ff', 
-    }});
-
-    g_mazeCell[T_MzKind.Stone].decode({view: {
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
-        col_l: '#0000ff', 
-    }});
-
-    const strObj = {view: {
-        show3D:  '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
-        col_l: '#0000ff', 
-    }};
-    g_mazeCell[T_MzKind.StrUp].decode(strObj);
-    g_mazeCell[T_MzKind.StrDn].decode(strObj);
-    g_mazeCell[T_MzKind.StrUD].decode(strObj);
-
-    const strEmp = {view: {
-        show3D:  '0',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-        col_l: '', 
-    }};
-    g_mazeCell[T_MzKind.NoDef].decode(strEmp);
-    g_mazeCell[T_MzKind.Unkwn].decode(strEmp);
-    g_mazeCell[T_MzKind.Empty].decode(strEmp);
-}
+function init_mazeCell3D(): void {}
 
 
 // 3D描写時の画面初期化。とりあえず天井と床を描く
@@ -173,7 +131,6 @@ function drowMazeCell(d: number, w: number): void {
     const back_wall  = g_ds.wall.get(d + 1, w);
     const mz_kind    = g_maze.get_kind(around_j_k);
 
-//    if (mz_kind in g_mazeCell) g_mazeCell[mz_kind].view()?.drow3D(frot_wall, back_wall)
     g_maze?.get_cell(around_j_k)?.drow3D(frot_wall, back_wall);
     if (g_maze.exist_obj(around_j_k)) {
         const obj = g_maze.get_obj(around_j_k);

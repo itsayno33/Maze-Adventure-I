@@ -24,10 +24,6 @@ export const g_team = new C_Team();
 import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
-import { T_MzKind }             from "../d_mdl/T_MzKind";
-import { C_MazeObj, I_MazeObj } from "../d_mdl/C_MazeObj";
-export let  g_mazeCell: {[kind: T_MzKind]: I_MazeObj} = {};
-
 
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
@@ -52,6 +48,7 @@ import {
     init_after_loaded_DOM_in_common 
 } from "../d_cmn/global";
 import { _irand } from "../d_utl/F_Rand";
+import { C_MazeObj } from "../d_mdl/C_MazeObj";
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -101,7 +98,6 @@ function init_before_mvpt_games(): void {
 }
 
 export function do_load_bottom_half(msg: string): void{
-    init_mazeCell();
     init_maze2Dpre();
     g_ds = init_maze3D(); 
 
@@ -168,18 +164,6 @@ function toggle_debug_mode(yn: boolean): void {
 
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
-}
-
-function init_mazeCell(): void {
-    g_mazeCell[T_MzKind.NoDef] = new C_MazeObj({can_thr: '0'}); 
-    g_mazeCell[T_MzKind.Unkwn] = new C_MazeObj({can_thr: '0'}); 
-    g_mazeCell[T_MzKind.Empty] = new C_MazeObj({can_thr: '1'}); 
-    g_mazeCell[T_MzKind.Floor] = new C_MazeObj({can_thr: '1'});
-    g_mazeCell[T_MzKind.Unexp] = new C_MazeObj({can_thr: '1'});
-    g_mazeCell[T_MzKind.Stone] = new C_MazeObj({can_thr: '0'});
-    g_mazeCell[T_MzKind.StrUp] = new C_MazeObj({can_thr: '1'});
-    g_mazeCell[T_MzKind.StrDn] = new C_MazeObj({can_thr: '1'}); 
-    g_mazeCell[T_MzKind.StrUD] = new C_MazeObj({can_thr: '1'});
 }
 
 // 暫定(C_MazeObjのテスト用)

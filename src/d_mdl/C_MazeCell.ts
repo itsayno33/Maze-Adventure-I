@@ -50,7 +50,9 @@ export class C_MazeCell  {
         return T_MzKind.NoDef;
     }
 
-    public drow3D(frot: T_Wall, back: T_Wall): void {this.my_obj.view()?.drow3D(frot, back)}
+    public drow3D(frot: T_Wall, back: T_Wall): void {
+        this.my_obj.view()?.drow3D(frot, back);
+    }
 
     public encode(): string {
         return this.kind.toString(16).padStart(2,"0");

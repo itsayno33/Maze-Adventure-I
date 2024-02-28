@@ -220,10 +220,6 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
     public get_z_max(): number {return this.size.size_z();}
-    public get_cell (p: C_Point): C_MazeCell|undefined { 
-        if (this.size.within(p)) return this.cells[p.z][p.y][p.x];
-        return undefined;
-    }
     public get_kind (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].getKind();
         return T_MzKind.NoDef;
@@ -231,6 +227,15 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public get_kind_xyz (x: number, y: number, z: number): T_MzKind {
         if (this.size.within(x, y, z)) return this.cells[z][y][x].getKind();
         return T_MzKind.NoDef;
+    }
+
+    public get_cell_xyz (x: number, y: number, z: number): C_MazeCell|undefined { 
+        if (this.size.within(x, y, z)) return this.cells[z][y][x];
+        return undefined;
+    }
+    public get_cell (p: C_Point): C_MazeCell|undefined { 
+        if (this.size.within(p)) return this.cells[p.z][p.y][p.x];
+        return undefined;
     }
     public set_cell(p: C_Point, k: T_MzKind): void {
         if (this.size.within(p)) {
