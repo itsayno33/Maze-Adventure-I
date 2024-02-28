@@ -173,8 +173,8 @@ function drowMazeCell(d: number, w: number): void {
     const back_wall  = g_ds.wall.get(d + 1, w);
     const mz_kind    = g_maze.get_kind(around_j_k);
 
-    if (mz_kind in g_mazeCell) g_mazeCell[mz_kind].view()?.drow3D(frot_wall, back_wall)
-
+//    if (mz_kind in g_mazeCell) g_mazeCell[mz_kind].view()?.drow3D(frot_wall, back_wall)
+    g_maze?.get_cell(around_j_k)?.getObj()?.view()?.drow3D(frot_wall, back_wall);
     if (g_maze.exist_obj(around_j_k)) {
         const obj = g_maze.get_obj(around_j_k);
         if (obj !== null) obj.view()?.drow3D(frot_wall, back_wall);

@@ -7,7 +7,7 @@ import { C_Range }               from "./C_Range";
 import { C_Team, JSON_Team }     from "./C_Team";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert, g_alert }                from "../d_cmn/global";
+import { _alert, g_alert }       from "../d_cmn/global";
 import { _min } from "../d_utl/F_Math";
 
 export interface JSON_Maze extends JSON_Any {
@@ -220,9 +220,9 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public get_x_max(): number {return this.size.size_x();}
     public get_y_max(): number {return this.size.size_y();}
     public get_z_max(): number {return this.size.size_z();}
-    public get_maze_cell (p: C_Point): C_MazeCell|null { // たぶん要らないメソッド
+    public get_cell (p: C_Point): C_MazeCell|undefined { 
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x];
-        return null;
+        return undefined;
     }
     public get_kind (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].getKind();

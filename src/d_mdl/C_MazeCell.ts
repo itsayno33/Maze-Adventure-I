@@ -1,15 +1,21 @@
-import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { _get_uuid }            from "../d_utl/F_Rand";
-import { _alert, g_alert }               from "../d_cmn/global";
+import { ClassUtil } from '../d_utl/C_ClassUtil';
+import { _get_uuid } from "../d_utl/F_Rand";
+import { g_alert }   from "../d_cmn/global";
+import { T_MzKind }  from "./T_MzKind";
+import { JSON_Any }  from "./C_SaveData";
 import { C_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { JSON_Point } from "./C_Point";
 
 
+export interface JSON_MazeCell extends JSON_Any {
+    kind?: T_MzKind
+    obj?:  JSON_MazeObj,
+}
 
 export class C_MazeCell  {
     protected kind:   T_MzKind;
     protected my_obj: C_MazeObj;
-    public static newObj(j: JSON_MazeCellObj): C_MazeCell {
+
+    public static newObj(j: JSON_MazeCell): C_MazeCell {
         switch (j.kind) {
             case T_MzKind.NoDef: return new C_MazeCellNoDef(j); 
             case T_MzKind.Unkwn: return new C_MazeCellUnkwn(j); 
@@ -24,35 +30,15 @@ export class C_MazeCell  {
         return new C_MazeCellNoDef(j);
     }
 
-    protected constructor(j: JSON_MazeCellObj) {
-        this.kind = j.kind ?? T_MzKind.NoDef;
-        this.my_obj = new C_MazeObj(j);
+    protected constructor(j: JSON_MazeCell) {
+        this.kind   = j.kind ?? T_MzKind.NoDef;
+        this.my_obj = new C_MazeObj(j.obj);
     }
-    public getObj(): C_MazeObj {return this.my_obj}
-    public getKind():  T_MzKind {
+    public getObj():  C_MazeObj {return this.my_obj}
+    public getKind(): T_MzKind {
         return this.kind;
     }
 
-    public set(v?: T_MzKind): void;
-    public set(n?: number): void;
-    public set(a?: any): void {
-        if (typeof a === "undefined") {
-            this.kind = T_MzKind.NoDef;
-        } else if (typeof a === "number") {
-            this.kind = T_RvMzKind[a];
-        } else if (typeof a === "object") {
-            this.kind = a as T_MzKind;
-        } else {
-            this.kind = T_MzKind.NoDef;
-        }
-    }
-    public to_int(v?: T_MzKind): number {
-        const  kind:  T_MzKind = v ?? this.kind;
-        return kind as number;
-    }
-    public static to_int(kind: T_MzKind): number {
-        return kind as number;
-    }
     public to_letter(): string {
         return this.my_obj.view()?.letter() ?? 'Ｘ';
     }
@@ -66,22 +52,20 @@ export class C_MazeCell  {
     public encode(): string {
         return this.kind.toString(16).padStart(2,"0");
     }
-    public static decode(str: string, j?: JSON_MazeCellObj): C_MazeCell {
+    public static decode(str: string, j?: JSON_MazeCell): C_MazeCell|undefined {
          const kind = parseInt(str, 16) as T_MzKind;
          return C_MazeCell.newObj({kind: kind, pos: j?.pos});
     }
 }
 
-export interface JSON_MazeCellObj extends JSON_MazeObj {
-    kind?: T_MzKind,
-}
-
 class C_MazeCellNoDef extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '0';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.NoDef};
+        j.obj ??= {};
+
+        j.obj.can_thr = '0';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '疑', 
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -93,11 +77,13 @@ class C_MazeCellNoDef extends C_MazeCell {
 }
 
 class C_MazeCellUnkwn extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '0';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.Unkwn};
+        j.obj ??= {};
+
+        j.obj.can_thr = '0';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '謎', 
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -109,11 +95,13 @@ class C_MazeCellUnkwn extends C_MazeCell {
 }
 
 class C_MazeCellEmpty extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.Empty};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '無', 
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -125,11 +113,13 @@ class C_MazeCellEmpty extends C_MazeCell {
 }
 
 class C_MazeCellFloor extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.Floor};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '　', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -141,11 +131,13 @@ class C_MazeCellFloor extends C_MazeCell {
 }
 
 class C_MazeCellUnexp extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.Unexp};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '・', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -157,11 +149,13 @@ class C_MazeCellUnexp extends C_MazeCell {
 }
 
 class C_MazeCellStone extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '0';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.Stone};
+        j.obj ??= {};
+
+        j.obj.can_thr = '0';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '＃', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -173,11 +167,13 @@ class C_MazeCellStone extends C_MazeCell {
 }
 
 class C_MazeCellStrUp extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.StrUp};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '上', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -189,11 +185,13 @@ class C_MazeCellStrUp extends C_MazeCell {
 }
 
 class C_MazeCellStrDn extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.StrDn};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '下', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
@@ -205,11 +203,13 @@ class C_MazeCellStrDn extends C_MazeCell {
 }
 
 class C_MazeCellStrUD extends C_MazeCell {
-    public constructor(j?: JSON_MazeCellObj|undefined) {
-        j ??= {};
-        j.can_thr = '1';
-        j.pos     = {x:j.x, y:j.y, z:j.z};
-        j.view    =  {
+    public constructor(j?: JSON_MazeCell|undefined) {
+        j ??= {kind: T_MzKind.StrUD};
+        j.obj ??= {};
+
+        j.obj.can_thr = '1';
+        j.obj.pos     = {x:j.x, y:j.y, z:j.z};
+        j.obj.view    =  {
             layer: 0, letter: '段', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
