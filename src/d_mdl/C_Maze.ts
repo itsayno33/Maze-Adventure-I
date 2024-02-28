@@ -1,13 +1,13 @@
-import { T_MzKind, T_RvMzKind }    from "./T_MzKind";
-import { C_MazeCell }              from "./C_MazeCell";
-import { C_Point }                 from "./C_Point";
-import { I_Locate, T_Lckd }        from "./C_Location";
-import { C_Range }                 from "./C_Range";
+import { T_MzKind }              from "./T_MzKind";
+import { C_MazeCell }            from "./C_MazeCell";
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { C_Team, JSON_Team }       from "./C_Team";
-import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
-import { _get_uuid }               from "../d_utl/F_Rand";
-import { _alert }                  from "../d_cmn/global";
+import { C_Point }               from "./C_Point";
+import { I_Locate, T_Lckd }      from "./C_Location";
+import { C_Range }               from "./C_Range";
+import { C_Team, JSON_Team }     from "./C_Team";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { _get_uuid }             from "../d_utl/F_Rand";
+import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -93,7 +93,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
             for (var y = 0; y < size_y; y++) {
                 cells[z][y]  = Array(size_x) as C_MazeCell[];
                 for (var x = 0; x < size_x; x++) {
-                    cells[z][y][x] = new C_MazeCell(this, kind);
+                    cells[z][y][x] = C_MazeCell.newObj({kind:kind, pos: {x:x, y:y, z:z}});
                 }
             }
         }

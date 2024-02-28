@@ -1,25 +1,27 @@
-import { T_MzKind, T_RvMzKind }    from "./T_MzKind";
-import { C_Maze }                  from "./C_Maze";
-import { C_Point }                 from "./C_Point";
-import { I_Locate, T_Lckd }        from "./C_Location";
-import { C_Range }                 from "./C_Range";
-import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { C_Team, JSON_Team }       from "./C_Team";
-import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
-import { _get_uuid }               from "../d_utl/F_Rand";
-import { _alert }                  from "../d_cmn/global";
+import { T_MzKind, T_RvMzKind } from "./T_MzKind";
+import { C_Maze }               from "./C_Maze";
+import { _get_uuid }            from "../d_utl/F_Rand";
+import { _alert }               from "../d_cmn/global";
+import { C_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { C_Point, JSON_Point } from "./C_Point";
 
 
 
 export class C_MazeCell  {
     protected cell: T_MzKind;
+/*
     protected maze: C_Maze;
     public constructor(m: C_Maze, v?: T_MzKind);
     public constructor(m: C_Maze, n?: number);
     public constructor(m: C_Maze, a?: any) {
+*/
+    public  static newObj(j: JSON_MazeCellObj): C_MazeCellObj {
+        if (!(j.kind??99 in T_MzKind)) j.kind = T_MzKind.NoDef;
+        return C_MazeCellObj.newObj({kind:j.kind, pos:{x:j.x, y:j.y, z:j.z}});
+    }
+    protected constructor(k?: T_MzKind) {
         this.cell = T_MzKind.NoDef;
-        this.maze = m;
-        this.set(a);
+        this.set(k);
     }
     public get():  T_MzKind {
         return this.cell;
@@ -94,3 +96,178 @@ export class C_MazeCell  {
     }
 }
 
+export interface JSON_MazeCellObj extends JSON_MazeObj {
+    kind?: T_MzKind,
+}
+
+class C_MazeCellObj extends C_MazeCell {
+    protected my_obj: C_MazeObj;
+    public static newObj(j: JSON_MazeCellObj): C_MazeCellObj {
+        switch (j.kind) {
+            case T_MzKind.NoDef: return new C_MazeCellNoDef(j); 
+            case T_MzKind.Unkwn: return new C_MazeCellUnkwn(j); 
+            case T_MzKind.Empty: return new C_MazeCellEmpty(j); 
+            case T_MzKind.Floor: return new C_MazeCellFloor(j);
+            case T_MzKind.Unexp: return new C_MazeCellUnexp(j);
+            case T_MzKind.Stone: return new C_MazeCellStone(j);
+            case T_MzKind.StrUp: return new C_MazeCellStrUp(j);
+            case T_MzKind.StrDn: return new C_MazeCellStrDn(j); 
+            case T_MzKind.StrUD: return new C_MazeCellStrUD(j);
+        }
+        return new C_MazeCellNoDef(j);
+    }
+
+    protected constructor(j: JSON_MazeCellObj) {
+        super(j.kind);
+        this.my_obj = new C_MazeObj({
+            pos: {x:j.x, y:j.y, z:j.z},
+            view: j.view,
+            can_thr: '1', 
+        });
+    }
+    public getObj(): C_MazeObj {return this.my_obj}
+}
+
+class C_MazeCellNoDef extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '0';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '謎', 
+            show3D:  '0',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+            col_l: '', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellUnkwn extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '0';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '謎', 
+            show3D:  '0',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+            col_l: '', 
+            }
+        super(j);
+    }
+}
+
+class C_MazeCellEmpty extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '謎', 
+            show3D:  '0',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+            col_l: '', 
+            }
+        super(j);
+    }
+}
+
+class C_MazeCellFloor extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '　', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
+            col_l: '#9999ff', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellUnexp extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '・', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
+            col_l: '#9999ff', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellStone extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '0';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '＃', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
+            col_l: '#0000ff', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellStrUp extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '上', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+            col_l: '#0000ff', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellStrDn extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '下', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+            col_l: '#0000ff', 
+        }
+        super(j);
+    }
+}
+
+class C_MazeCellStrUD extends C_MazeCellObj {
+    public constructor(j?: JSON_MazeCellObj|undefined) {
+        j ??= {};
+        j.can_thr = '1';
+        j.pos     = {x:j.x, y:j.y, z:j.z};
+        j.view    =  {
+            layer: 0, letter: '段', 
+            show3D:  '1',
+            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+            col_l: '#0000ff', 
+        }
+        super(j);
+    }
+}

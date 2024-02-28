@@ -26,14 +26,16 @@ export interface I_MazeObj extends I_JSON_Uniq {
 }
 
 export class C_MazeObj implements I_MazeObj {
+    protected static cname: string = 'C_MazeObj';
+
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
     protected can_thr:   boolean;
 
-    public static newObj(j: JSON_MazeObj|undefined): I_MazeObj {
+    public static newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
         switch (j?.cname) {
-            case 'MazeObj': return new C_MazeObj(j);
+            case C_MazeObj.cname: return new C_MazeObj(j);
         }
         return new C_MazeObj(j);
     }
@@ -67,7 +69,7 @@ export class C_MazeObj implements I_MazeObj {
 
     public encode(): JSON_MazeObj {
         return {
-            cname:  'MazeObj',
+            cname:   C_MazeObj.cname,
             uniq_id: this.uniq_id,
             pos:     this.pos.encode(),
             view:    this.my_view?.encode() ?? {},
