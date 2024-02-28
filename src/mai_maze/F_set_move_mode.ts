@@ -113,7 +113,7 @@ function move_check(r: I_HopeAction): void {
         return;
     }
     if (r.hope == 'Move') {
-        const kind = g_maze.get_cell(r.subj);
+        const kind = g_maze.get_kind(r.subj);
         switch (kind) {
             case T_MzKind.Floor:
             case T_MzKind.Unexp:

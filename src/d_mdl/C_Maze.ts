@@ -7,7 +7,8 @@ import { C_Range }               from "./C_Range";
 import { C_Team, JSON_Team }     from "./C_Team";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert }                from "../d_cmn/global";
+import { _alert, g_alert }                from "../d_cmn/global";
+import { _min } from "../d_utl/F_Math";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -161,7 +162,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
     // Teamが来たポイントが未踏地だったらただの床に変える
     public change_unexp_to_floor(p: C_Point) {
-        if (this.get_cell(p) == T_MzKind.Unexp) {
+        if (this.get_kind(p) == T_MzKind.Unexp) {
             this.set_cell(p, T_MzKind.Floor);
         }
     }
@@ -205,7 +206,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
     public is_movable(p: C_Point): boolean {
         if (!this.size.within(p)) return false;
-        switch (this.get_cell(p)) {
+        switch (this.get_kind(p)) {
             case T_MzKind.Floor:
             case T_MzKind.Unexp:
             case T_MzKind.StrUp:
@@ -223,16 +224,18 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x];
         return null;
     }
-    public get_cell (p: C_Point): T_MzKind {
-        if (this.size.within(p)) return this.cells[p.z][p.y][p.x].get();
+    public get_kind (p: C_Point): T_MzKind {
+        if (this.size.within(p)) return this.cells[p.z][p.y][p.x].getKind();
         return T_MzKind.NoDef;
     }
-    public get_cell_xyz (x: number, y: number, z: number): T_MzKind {
-        if (this.size.within(x, y, z)) return this.cells[z][y][x].get();
+    public get_kind_xyz (x: number, y: number, z: number): T_MzKind {
+        if (this.size.within(x, y, z)) return this.cells[z][y][x].getKind();
         return T_MzKind.NoDef;
     }
-    public set_cell (p: C_Point, k: T_MzKind): void {
-        if (this.size.within(p)) this.cells[p.z][p.y][p.x].set(k);
+    public set_cell(p: C_Point, k: T_MzKind): void {
+        if (this.size.within(p)) {
+            this.cells[p.z][p.y][p.x] = C_MazeCell.newObj({kind: k, pos: p});
+        }
     }
     public can_move(p: C_Point): boolean {
         return this.size.within(p);
@@ -348,22 +351,24 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
 
         if (a.maze !== undefined) {
+/*
             for (var z = 0; z < size_z; z++)
             for (var y = 0; y < size_y; y++)
             for (var x = 0; x < size_x; x++) {
                 this.cells[z][y][x].set(T_MzKind.Stone);
             }
-
+*/
             const z_array: string[] = a.maze.split('Z');
-            const z_max = _min(size_z, z_array.length);
+            const z_max = _min([size_z, z_array.length]);
             for (var z = 0; z < z_max; z++) {
                 const y_array: string[] = z_array[z].split('Y');
-                const y_max =  _min(size_y, y_array.length); 
+                const y_max =  _min([size_y, y_array.length]); 
                 for (var y = 0; y < y_max; y++) {
                     const x_array: string[] = y_array[y].split('X');
-                    const x_max =  _min(size_x, x_array.length); 
+                    const x_max =  _min([size_x, x_array.length]); 
                     for (var x = 0; x < x_max; x++) {
-                        this.cells[z][y][x].decode(x_array[x]);
+                        let kind = parseInt(x_array[x], 16); 
+                        this.cells[z][y][x] = C_MazeCell.newObj({kind: kind, pos: {x:x, y:y, z:z}});
                     }
                 }
             }  
@@ -371,13 +376,13 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         if (a.mask !== undefined) {
             this.__init_mask(true);
             const z_array: string[] = a.mask.split('Z');
-            const z_max = _min(size_z, z_array.length);
+            const z_max = _min([size_z, z_array.length]);
             for (var z = 0; z < z_max; z++) {
                 const y_array: string[] = z_array[z].split('Y');
-                const y_max =  _min(size_y, y_array.length); 
+                const y_max =  _min([size_y, y_array.length]); 
                 for (var y = 0; y < y_max; y++) {
                     const x_array: string[] = y_array[y].split('X');
-                    const x_max =  _min(size_x, x_array.length); 
+                    const x_max =  _min([size_x, x_array.length]); 
                     for (var x = 0; x < x_max; x++) {
                         if (x_array[x] !== '0') {
                             this.masks[z][y][x] = true;
@@ -431,10 +436,3 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         );
     }
 }
-function  _min(a: number, b: number): number {
-    return (a <= b) ? a : b;
-}
-function  _max(a: number, b: number): number {
-    return (a >= b) ? a : b;
-}
-

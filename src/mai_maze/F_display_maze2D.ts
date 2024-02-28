@@ -83,7 +83,7 @@ function to_string(debug_mode: boolean = false): string {
             } else {
                 const obj = g_maze.get_obj_xyz(x, y, floor);
                 if (obj === null || obj.view() === undefined) {
-                    const kind = g_maze.get_cell_xyz(x, y, floor);
+                    const kind = g_maze.get_kind_xyz(x, y, floor);
                     ret_str += g_mazeCell[kind].view()?.letter();
                 } else {
                     const obj_c = obj.view()?.letter() ?? '謎';

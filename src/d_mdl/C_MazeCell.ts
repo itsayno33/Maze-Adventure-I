@@ -1,108 +1,15 @@
 import { T_MzKind, T_RvMzKind } from "./T_MzKind";
-import { C_Maze }               from "./C_Maze";
 import { _get_uuid }            from "../d_utl/F_Rand";
-import { _alert }               from "../d_cmn/global";
+import { _alert, g_alert }               from "../d_cmn/global";
 import { C_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { C_Point, JSON_Point } from "./C_Point";
+import { JSON_Point } from "./C_Point";
 
 
 
 export class C_MazeCell  {
-    protected cell: T_MzKind;
-/*
-    protected maze: C_Maze;
-    public constructor(m: C_Maze, v?: T_MzKind);
-    public constructor(m: C_Maze, n?: number);
-    public constructor(m: C_Maze, a?: any) {
-*/
-    public  static newObj(j: JSON_MazeCellObj): C_MazeCellObj {
-        if (!(j.kind??99 in T_MzKind)) j.kind = T_MzKind.NoDef;
-        return C_MazeCellObj.newObj({kind:j.kind, pos:{x:j.x, y:j.y, z:j.z}});
-    }
-    protected constructor(k?: T_MzKind) {
-        this.cell = T_MzKind.NoDef;
-        this.set(k);
-    }
-    public get():  T_MzKind {
-        return this.cell;
-    }
-    public set(v?: T_MzKind): void;
-    public set(n?: number): void;
-    public set(a?: any): void {
-        if (typeof a === "undefined") {
-            this.cell = T_MzKind.NoDef;
-        } else if (typeof a === "number") {
-            this.cell = T_RvMzKind[a];
-        } else if (typeof a === "object") {
-            this.cell = a as T_MzKind;
-        } else {
-            this.cell = T_MzKind.NoDef;
-        }
-    }
-    public to_int(v?: T_MzKind): number {
-        const  kind:  T_MzKind = v ?? this.cell;
-        return kind as number;
-    }
-    public static to_int(kind: T_MzKind): number {
-        return kind as number;
-    }
-    public to_letter(v?: T_MzKind): string {
-        const kind: T_MzKind = v ?? this.cell;
-        return C_MazeCell.to_letter(kind);
-    }
-    public static to_letter(kind: T_MzKind): string {
-        switch (kind) {
-            case T_MzKind.Floor: return '　';
-            case T_MzKind.Unexp: return '・';
-            case T_MzKind.Stone: return '＃';
-            case T_MzKind.Unkwn: return '？';
-            case T_MzKind.StrUp: return '上';
-            case T_MzKind.StrDn: return '下';
-            case T_MzKind.StrUD: return '通';
-            case T_MzKind.Empty: return 'Ｏ';
-            case T_MzKind.NoDef: return 'Ｘ';
-            default: return 'Ｘ';
-        }
-    }
-    public from_letter(str: string): T_MzKind {
-        this.cell = C_MazeCell.from_letter(str);
-        return this.cell;
-    }
-    public static from_letter(str: string): T_MzKind {
-        switch (str) {
-            case '　': return T_MzKind.Floor;
-            case '・': return T_MzKind.Unexp;
-            case '＃': return T_MzKind.Stone;
-            case '？': return T_MzKind.Unkwn;
-            case '上': return T_MzKind.StrUp;
-            case '下': return T_MzKind.StrDn;
-            case '通': return T_MzKind.StrUD;
-            case 'Ｏ': return T_MzKind.Empty;
-            case 'Ｘ': return T_MzKind.NoDef;
-            default:   return T_MzKind.NoDef;
-        }
-    }
-    public encode(): string {
-        return C_MazeCell.encode(this.cell);
-    }
-    public static encode(v: T_MzKind): string {
-        return (v as number).toString(16).padStart(2,"0");
-    }
-    public decode(str: string): void {
-        this.cell = C_MazeCell.decode(str);
-    }
-    public static decode(str: string): T_MzKind {
-        return parseInt(str, 16) as T_MzKind;
-    }
-}
-
-export interface JSON_MazeCellObj extends JSON_MazeObj {
-    kind?: T_MzKind,
-}
-
-class C_MazeCellObj extends C_MazeCell {
+    protected kind:   T_MzKind;
     protected my_obj: C_MazeObj;
-    public static newObj(j: JSON_MazeCellObj): C_MazeCellObj {
+    public static newObj(j: JSON_MazeCellObj): C_MazeCell {
         switch (j.kind) {
             case T_MzKind.NoDef: return new C_MazeCellNoDef(j); 
             case T_MzKind.Unkwn: return new C_MazeCellUnkwn(j); 
@@ -118,23 +25,64 @@ class C_MazeCellObj extends C_MazeCell {
     }
 
     protected constructor(j: JSON_MazeCellObj) {
-        super(j.kind);
-        this.my_obj = new C_MazeObj({
-            pos: {x:j.x, y:j.y, z:j.z},
-            view: j.view,
-            can_thr: '1', 
-        });
+        this.kind = j.kind ?? T_MzKind.NoDef;
+        this.my_obj = new C_MazeObj(j);
     }
     public getObj(): C_MazeObj {return this.my_obj}
+    public getKind():  T_MzKind {
+        return this.kind;
+    }
+
+    public set(v?: T_MzKind): void;
+    public set(n?: number): void;
+    public set(a?: any): void {
+        if (typeof a === "undefined") {
+            this.kind = T_MzKind.NoDef;
+        } else if (typeof a === "number") {
+            this.kind = T_RvMzKind[a];
+        } else if (typeof a === "object") {
+            this.kind = a as T_MzKind;
+        } else {
+            this.kind = T_MzKind.NoDef;
+        }
+    }
+    public to_int(v?: T_MzKind): number {
+        const  kind:  T_MzKind = v ?? this.kind;
+        return kind as number;
+    }
+    public static to_int(kind: T_MzKind): number {
+        return kind as number;
+    }
+    public to_letter(): string {
+        return this.my_obj.view()?.letter() ?? 'Ｘ';
+    }
+    public static from_letter(letter: string): number {
+        for (const key of Object.keys(T_MzKind)) {
+            if (letter === key) return T_MzKind[key];
+        }
+        return T_MzKind.NoDef;
+    }
+
+    public encode(): string {
+        return this.kind.toString(16).padStart(2,"0");
+    }
+    public static decode(str: string, j?: JSON_MazeCellObj): C_MazeCell {
+         const kind = parseInt(str, 16) as T_MzKind;
+         return C_MazeCell.newObj({kind: kind, pos: j?.pos});
+    }
 }
 
-class C_MazeCellNoDef extends C_MazeCellObj {
+export interface JSON_MazeCellObj extends JSON_MazeObj {
+    kind?: T_MzKind,
+}
+
+class C_MazeCellNoDef extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '0';
         j.pos     = {x:j.x, y:j.y, z:j.z};
         j.view    =  {
-            layer: 0, letter: '謎', 
+            layer: 0, letter: '疑', 
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
@@ -144,7 +92,7 @@ class C_MazeCellNoDef extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellUnkwn extends C_MazeCellObj {
+class C_MazeCellUnkwn extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '0';
@@ -160,13 +108,13 @@ class C_MazeCellUnkwn extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellEmpty extends C_MazeCellObj {
+class C_MazeCellEmpty extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';
         j.pos     = {x:j.x, y:j.y, z:j.z};
         j.view    =  {
-            layer: 0, letter: '謎', 
+            layer: 0, letter: '無', 
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
@@ -176,7 +124,7 @@ class C_MazeCellEmpty extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellFloor extends C_MazeCellObj {
+class C_MazeCellFloor extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';
@@ -192,7 +140,7 @@ class C_MazeCellFloor extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellUnexp extends C_MazeCellObj {
+class C_MazeCellUnexp extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';
@@ -208,7 +156,7 @@ class C_MazeCellUnexp extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellStone extends C_MazeCellObj {
+class C_MazeCellStone extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '0';
@@ -224,7 +172,7 @@ class C_MazeCellStone extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellStrUp extends C_MazeCellObj {
+class C_MazeCellStrUp extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';
@@ -240,7 +188,7 @@ class C_MazeCellStrUp extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellStrDn extends C_MazeCellObj {
+class C_MazeCellStrDn extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';
@@ -256,7 +204,7 @@ class C_MazeCellStrDn extends C_MazeCellObj {
     }
 }
 
-class C_MazeCellStrUD extends C_MazeCellObj {
+class C_MazeCellStrUD extends C_MazeCell {
     public constructor(j?: JSON_MazeCellObj|undefined) {
         j ??= {};
         j.can_thr = '1';

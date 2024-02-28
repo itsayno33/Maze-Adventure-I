@@ -171,7 +171,7 @@ function drowMazeCell(d: number, w: number): void {
     const around_j_k = g_team.walk().get_around(d, w, 0);
     const frot_wall  = g_ds.wall.get(d, w);
     const back_wall  = g_ds.wall.get(d + 1, w);
-    const mz_kind    = g_maze.get_cell(around_j_k);
+    const mz_kind    = g_maze.get_kind(around_j_k);
 
     if (mz_kind in g_mazeCell) g_mazeCell[mz_kind].view()?.drow3D(frot_wall, back_wall)
 
