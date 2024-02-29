@@ -10,7 +10,7 @@ import {
 
 
 export interface JSON_MazeObj extends JSON_Any {
-    cname?:     string,
+    clname?:    string,
     uniq_id?:   string, 
     pos?:       JSON_PointDir,
     view?:      JSON_MazeObjView|undefined,
@@ -26,7 +26,7 @@ export interface I_MazeObj extends I_JSON_Uniq {
 }
 
 export class C_MazeObj implements I_MazeObj {
-    protected static cname: string = 'C_MazeObj';
+    protected clname:    string = 'C_MazeObj';
 
     private   uniq_id:   string;
     protected pos:       C_PointDir;
@@ -34,20 +34,38 @@ export class C_MazeObj implements I_MazeObj {
     protected can_thr:   boolean;
 
     public static newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
-        switch (j?.cname) {
-            case C_MazeObj.cname: return new C_MazeObj(j);
+        j ??= {};
+        j.clname ??= C_MazeObj.constructor.name;
+        switch (j.clname) {
+            case C_MazeObj.constructor.name: return new C_MazeObj(j);
         }
         return new C_MazeObj(j);
     }
 
-    public constructor(j?: JSON_MazeObj|undefined) {
+    protected constructor(j?: JSON_MazeObj|undefined) {
         this.uniq_id    = 'mazeobj_' + _get_uuid();
+        this.clname     =  C_MazeObj.constructor.name;
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
-        this.my_view    =  new C_MazeObjView();
+        this.my_view    =  undefined;
         this.can_thr    =  true;
 
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
+
+    private __init(j: JSON_MazeObj|undefined): C_MazeObj {
+        if (j === undefined) return this;
+
+        if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
+        if (j.clname  !== undefined) this.clname    = j.clname;
+        if (j.pos     !== undefined) this.pos.decode(j.pos);
+        if (j.view    !== undefined) {
+            if (Object.keys(j.view).length > 0) {
+                this.my_view ??= C_MazeObjView.newObj(j.view); 
+            } else this.my_view  = undefined;
+        }
+        if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
+        return this;
+}
 
     public uid(): string {return this.uniq_id}
 
@@ -69,8 +87,8 @@ export class C_MazeObj implements I_MazeObj {
 
     public encode(): JSON_MazeObj {
         return {
-            cname:   C_MazeObj.cname,
             uniq_id: this.uniq_id,
+            clname:  this.clname,
             pos:     this.pos.encode(),
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
@@ -78,18 +96,10 @@ export class C_MazeObj implements I_MazeObj {
     }
 
     public decode(j: JSON_MazeObj|undefined): I_MazeObj {
-        if (j === undefined) return this;
-
-        if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
-        if (j.pos     !== undefined) this.pos.decode(j.pos);
-        if (j.view    !== undefined) {
-            if (Object.keys(j.view).length > 0) {
-                (this.my_view ??= new C_MazeObjView()).decode(j.view); 
-            } else this.my_view  = undefined;
-        }
-        if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
-
-        return this;
+        return this.__init(j);
+    }
+    public static decode(j: JSON_MazeObj|undefined): I_MazeObj {
+        return C_MazeObj.newObj(j);
     }
 }
 

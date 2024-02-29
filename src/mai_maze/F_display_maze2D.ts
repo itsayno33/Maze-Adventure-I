@@ -32,11 +32,11 @@ function calc_view2Dpre_width(): void {
 
 export function display_maze2Dpre(): void { 
     const pre: HTMLElement|null = document.getElementById('maze_view2D_pre');
-    if (pre !== null) pre.innerText = to_string(g_debug.isON());
+    if (pre !== null) pre.innerText = to_string();
     else g_mes.warning_message('Can not found pre#Maze_view2D_pre!!');
 }
 
-function to_string(debug_mode: boolean = false): string {
+function to_string(): string {
     const size_x = g_maze.get_x_max();
     const size_y = g_maze.get_y_max();
     const floor  = g_team.get_pd().z
@@ -44,7 +44,7 @@ function to_string(debug_mode: boolean = false): string {
     let ret_str = '';
     for (let y = 0; y < size_y; y++) {
         for (let x = 0; x < size_x; x++) {
-            if (!debug_mode && g_maze.is_masked_xyz(x, y, floor)) {
+            if (!g_debug.isON() && g_maze.is_masked_xyz(x, y, floor)) {
                 ret_str += 'Ｘ';
             } else {
                 const obj = g_maze.get_obj_xyz(x, y, floor);

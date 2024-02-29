@@ -23,7 +23,7 @@ export interface I_MazeObjView extends I_JSON {
 }
 
 export interface JSON_MazeObjView extends JSON_Any {
-    cname?:  string,
+    clname?: string,
     layer?:  number,
     letter?: string,
     show3D?: string,
@@ -46,6 +46,18 @@ export class C_MazeObjView implements I_MazeObjView {
     public static get_context3D(): CanvasRenderingContext2D|undefined {return this?.con3D}
     public static set_context3D(con3D?: CanvasRenderingContext2D): void {this.con3D = con3D}
 
+    public static newObj(j?: JSON_MazeObjView|undefined): I_MazeObjView {
+        j ??= {};
+        j.clname ??= C_MazeObjView.constructor.name;
+        switch (j.clname) {
+            case C_MazeObjView.constructor.name:     return new C_MazeObjView(j);
+        } 
+        return new C_MazeObjView(j);
+    }
+
+
+    private clname:    string = 'C_MazeObjView';
+
     private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
@@ -61,7 +73,9 @@ export class C_MazeObjView implements I_MazeObjView {
     private my_col_d:  string|null; // オブジェクト底面のCSSカラー 
     private my_col_l:  string|null; // オブジェクトの線のCSSカラー 
 
-    public constructor(j?: JSON_MazeObjView|undefined) {
+    protected constructor(j?: JSON_MazeObjView|undefined) {
+        this.clname     =  this.constructor.name;
+
         this.my_layer   =  -2;
         this.my_letter  =  null;
 
@@ -78,14 +92,26 @@ export class C_MazeObjView implements I_MazeObjView {
         this.my_col_d   = '#cccccc'; 
         this.my_col_l   = '#333333'; 
 
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
+    private __init(j: JSON_MazeObjView|undefined): I_MazeObjView {
+        if (j === undefined) return this;
 
-    public static newObj(j: JSON_MazeObjView|undefined): I_MazeObjView {
-        switch (j?.cname) {
-            case 'MazeObjView':     return new C_MazeObjView(j);
-        }
-        return new C_MazeObjView(j);
+        if (j.clname  !== undefined) this.clname    = j.clname;
+        if (j.layer   !== undefined) this.my_layer  = j.layer;
+        if (j.letter  !== undefined) this.my_letter = j.letter !== ''  ? j.letter : null; 
+        if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
+        if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
+        if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
+        if (j.show3D  !== undefined) this.my_show3D = j.show3D !== '0' ? true     : false; 
+        if (j.col_f   !== undefined) this.my_col_f  = j.col_f  !== ''  ? j.col_f  : null; 
+        if (j.col_b   !== undefined) this.my_col_b  = j.col_b  !== ''  ? j.col_b  : null; 
+        if (j.col_s   !== undefined) this.my_col_s  = j.col_s  !== ''  ? j.col_s  : null; 
+        if (j.col_t   !== undefined) this.my_col_t  = j.col_t  !== ''  ? j.col_t  : null; 
+        if (j.col_d   !== undefined) this.my_col_d  = j.col_d  !== ''  ? j.col_d  : null; 
+        if (j.col_l   !== undefined) this.my_col_l  = j.col_l  !== ''  ? j.col_l  : null; 
+
+        return this;
     }
 
     public layer(): number {return this.my_layer;}
@@ -233,7 +259,7 @@ export class C_MazeObjView implements I_MazeObjView {
 
     public encode(): JSON_MazeObjView {
         return {
-            cname:   'MazeObjView',
+            cname:   this.clname,
             layer:   this.my_layer,
             letter:  this.my_letter ?? '',
             pad_t:   this.my_pad_t, 
@@ -248,24 +274,11 @@ export class C_MazeObjView implements I_MazeObjView {
             col_l:   this.my_col_l ?? '', 
         }
     }
-
     public decode(j: JSON_MazeObjView|undefined): I_MazeObjView {
-        if (j === undefined) return this;
-
-        if (j.layer   !== undefined) this.my_layer  = j.layer;
-        if (j.letter  !== undefined) this.my_letter = j.letter !== ''  ? j.letter : null; 
-        if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
-        if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
-        if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
-        if (j.show3D  !== undefined) this.my_show3D = j.show3D !== '0' ? true     : false; 
-        if (j.col_f   !== undefined) this.my_col_f  = j.col_f  !== ''  ? j.col_f  : null; 
-        if (j.col_b   !== undefined) this.my_col_b  = j.col_b  !== ''  ? j.col_b  : null; 
-        if (j.col_s   !== undefined) this.my_col_s  = j.col_s  !== ''  ? j.col_s  : null; 
-        if (j.col_t   !== undefined) this.my_col_t  = j.col_t  !== ''  ? j.col_t  : null; 
-        if (j.col_d   !== undefined) this.my_col_d  = j.col_d  !== ''  ? j.col_d  : null; 
-        if (j.col_l   !== undefined) this.my_col_l  = j.col_l  !== ''  ? j.col_l  : null; 
-
-        return this;
+        return this.__init(j);
+    }
+    public static decode(j: JSON_MazeObjView|undefined): I_MazeObjView {
+        return C_MazeObjView.newObj(j);
     }
 }
 

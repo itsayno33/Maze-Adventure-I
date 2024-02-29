@@ -1,10 +1,8 @@
-import { ClassUtil } from '../d_utl/C_ClassUtil';
 import { _get_uuid } from "../d_utl/F_Rand";
-import { g_alert }   from "../d_cmn/global";
 import { T_MzKind }  from "./T_MzKind";
 import { JSON_Any }  from "./C_SaveData";
-import { C_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { T_Wall } from './C_Wall';
+import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { T_Wall }    from './C_Wall';
 
 
 export interface JSON_MazeCell extends JSON_Any {
@@ -14,7 +12,7 @@ export interface JSON_MazeCell extends JSON_Any {
 
 export class C_MazeCell  {
     protected kind:   T_MzKind;
-    protected my_obj: C_MazeObj;
+    protected my_obj: I_MazeObj;
 
     public static newObj(j: JSON_MazeCell): C_MazeCell {
         switch (j.kind) {
@@ -32,10 +30,13 @@ export class C_MazeCell  {
     }
 
     protected constructor(j: JSON_MazeCell) {
+        j.obj ??= {};
+        j.obj.clname ??= this.constructor.name;
+
         this.kind   = j.kind ?? T_MzKind.NoDef;
-        this.my_obj = new C_MazeObj(j.obj);
+        this.my_obj = C_MazeObj.newObj(j.obj);
     }
-    public getObj():  C_MazeObj {return this.my_obj}
+    public getObj():  I_MazeObj {return this.my_obj}
     public getKind(): T_MzKind {
         return this.kind;
     }

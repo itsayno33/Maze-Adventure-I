@@ -16,6 +16,7 @@ import {
     do_load_bottom_half,
     g_ctls, 
 } from "./global_for_maze";
+import { g_debug } from "../d_cmn/global";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -107,29 +108,46 @@ function tr_L(): void {
 }
 function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
+    // 周囲にオブジェが有ればオブジェ接近処理
+    around_obj(r);
+
     if (!r.has_hope) return;
     if (r.hope == 'Turn') {
         r.doOK();
         return;
     }
     if (r.hope == 'Move') {
-        const obj = g_maze.get_obj(r.subj);
-        if (obj !== null) {
-            if (!obj.canThrough()) {
-                dont_move(r);return;
-            }
-        }
         const cell = g_maze.get_cell(r.subj);
+
+        // 進行方向が壁等なら移動不可
         if (!cell?.getObj().canThrough()) {
             dont_move(r);return;
         }
-        r.doOK();
-        const kind = cell.getKind();
+        const obj = g_maze.get_obj(r.subj);
+        if (obj !== null) {
+            if (obj.canThrough()) {
+                // 進行方向にオブジェが有り通り抜け可能なら
+                // 移動してオブジェ処理
+                r.doOK();
+                action_obj();
+            } else {
+                // 進行方向にオブジェが有り通り抜け不能なら
+                // 移動せずにオブジェ接近処理(以降の階段処理等はスルー)
+                dont_move(r);
+                around_obj(r);
+                return;
+            }
+        } else {
+            // 進行方向にオブジェが無ければ移動
+            r.doOK();
+        }
+        // 移動先が階段なら階段の処理
+        const kind = cell?.getKind();
         switch (kind) {
             case T_MzKind.StrUp:
             case T_MzKind.StrDn:
             case T_MzKind.StrUD:
-                 do_stairs_motion(kind);
+                do_stairs_motion(kind);
         }
         return;
     }
@@ -139,6 +157,10 @@ function dont_move(r: I_HopeAction): void {
     r.doNG();
     return;
 }
+// オブジェ接近処理
+function around_obj(r: I_HopeAction): void {} 
+// オブジェ処理
+function action_obj(): void {}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());

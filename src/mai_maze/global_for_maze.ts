@@ -171,7 +171,7 @@ function install_objs(num: number = 1): void {
     for (let i = 0; i < num; i++) {
         const x = _irand(1, (g_maze.get_x_max() - 1) / 2) * 2 + 1; 
         const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
-        const obj = new C_MazeObj({
+        const obj = C_MazeObj.newObj({
             pos:    {x:x, y:y, z:0, d:0},
             view: {
                 layer:   2,
