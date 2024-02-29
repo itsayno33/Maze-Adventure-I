@@ -132,22 +132,6 @@ function move_check(r: I_HopeAction): void {
                  do_stairs_motion(kind);
         }
         return;
-/*
-        const kind = g_maze.get_kind(r.subj);
-        switch (kind) {
-            case T_MzKind.Floor:
-            case T_MzKind.Unexp:
-                 r.doOK();return;
-            case T_MzKind.StrUp:
-            case T_MzKind.StrDn:
-            case T_MzKind.StrUD:
-                 r.doOK();
-                 do_stairs_motion(kind);
-                 return;
-        }
-        dont_move(r);
-        return;
-*/
     }
 } 
 function dont_move(r: I_HopeAction): void {
