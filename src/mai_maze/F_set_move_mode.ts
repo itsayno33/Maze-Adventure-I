@@ -113,6 +113,26 @@ function move_check(r: I_HopeAction): void {
         return;
     }
     if (r.hope == 'Move') {
+        const obj = g_maze.get_obj(r.subj);
+        if (obj !== null) {
+            if (!obj.canThrough()) {
+                dont_move(r);return;
+            }
+        }
+        const cell = g_maze.get_cell(r.subj);
+        if (!cell?.getObj().canThrough()) {
+            dont_move(r);return;
+        }
+        r.doOK();
+        const kind = cell.getKind();
+        switch (kind) {
+            case T_MzKind.StrUp:
+            case T_MzKind.StrDn:
+            case T_MzKind.StrUD:
+                 do_stairs_motion(kind);
+        }
+        return;
+/*
         const kind = g_maze.get_kind(r.subj);
         switch (kind) {
             case T_MzKind.Floor:
@@ -125,12 +145,16 @@ function move_check(r: I_HopeAction): void {
                  do_stairs_motion(kind);
                  return;
         }
-        g_mvm.normal_message('進めない！（笑）');
-        r.doNG();
+        dont_move(r);
         return;
+*/
     }
 } 
-
+function dont_move(r: I_HopeAction): void {
+    g_mvm.normal_message('進めない！（笑）');
+    r.doNG();
+    return;
+}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
