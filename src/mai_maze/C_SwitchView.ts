@@ -3,7 +3,7 @@ import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
 export const T_ViewMode:{[mode: string]: string} = {
     Move:     'move',
     Batt:     'batt',
-    Camp:     'camp',
+    Menu:     'menu',
     LdSv:     'ldsv',
 } as const;
 export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
@@ -16,8 +16,8 @@ export class C_SwitchView {
 
     public Move(): string {return T_ViewMode.Move;}
     public Batt(): string {return T_ViewMode.Batt;}
-    public Camp(): string {return T_ViewMode.Camp;}
-    public MvPt(): string {return T_ViewMode.Camp;}
+    public Menu(): string {return T_ViewMode.Menu;}
+    public MvPt(): string {return T_ViewMode.Menu;}
     public LdSv(): string {return T_ViewMode.LdSv;}
 
     protected constructor() {
@@ -28,10 +28,10 @@ export class C_SwitchView {
 
             C_SwitchView.article.view3d = document.getElementById('pane_maze_vw3D') as HTMLElement;
             C_SwitchView.article.view2d = document.getElementById('pane_maze_vw2D') as HTMLElement;
-            C_SwitchView.article.camp_l = document.getElementById('pane_camp_list') as HTMLElement;
+            C_SwitchView.article.menu_l = document.getElementById('pane_menu_list') as HTMLElement;
             C_SwitchView.article.ldsv_l = document.getElementById('pane_ldsv_list') as HTMLElement;
             C_SwitchView.article.ldsv_d = document.getElementById('pane_ldsv_data') as HTMLElement;
-            C_SwitchView.article.camp_m = document.getElementById('pane_camp_mesg') as HTMLElement;
+            C_SwitchView.article.menu_m = document.getElementById('pane_menu_mesg') as HTMLElement;
             C_SwitchView.article.game_m = document.getElementById('pane_maze_mesg') as HTMLElement;
             C_SwitchView.article.contls = document.getElementById('pane_ctls_boad') as HTMLElement;
             C_SwitchView.article.messag = document.getElementById('pane_sytm_mesg') as HTMLElement;

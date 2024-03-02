@@ -7,7 +7,7 @@ import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
-import { act_camp_mode }       from "./F_set_camp_mode";
+import { act_menu_mode }       from "./F_set_menu_mode";
 import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
     g_ctls,
@@ -55,9 +55,9 @@ const save_list_max = 20;
 
 const ctls_load_rtn = {
     name: 'load_rtn', 
-    isNG:  go_back_camp_mode,
-    isRT:  go_back_camp_mode,
-    cpRT:  go_back_camp_mode,
+    isNG:  go_back_menu_mode,
+    isRT:  go_back_menu_mode,
+    cpRT:  go_back_menu_mode,
 }
 const ctls_load_nor = {
     name: 'load_nor', 
@@ -67,9 +67,9 @@ const ctls_load_nor = {
     do_R:  do_R,
     isOK:  check_load,
     cpOK:  check_load,
-    isNG:  go_back_camp_mode,
-    isRT:  go_back_camp_mode,
-    cpRT:  go_back_camp_mode,
+    isNG:  go_back_menu_mode,
+    isRT:  go_back_menu_mode,
+    cpRT:  go_back_menu_mode,
 }
 const ctls_load_chk = {
     name: 'load_chk', 
@@ -81,8 +81,8 @@ const ctls_load_chk = {
     cpOK:  isOK_for_load,
     isNG:  isNG_for_load,
     cpNG:  isNG_for_load,
-    isRT:  go_back_camp_mode,
-    cpRT:  go_back_camp_mode,
+    isRT:  go_back_menu_mode,
+    cpRT:  go_back_menu_mode,
 }
 const ctls_save_nor = {
     name: 'save_nor', 
@@ -92,9 +92,9 @@ const ctls_save_nor = {
     do_R:  do_R,
     isOK:  check_save,
     cpOK:  check_save,
-    isNG:  go_back_camp_mode,
-    isRT:  go_back_camp_mode,
-    cpRT:  go_back_camp_mode,
+    isNG:  go_back_menu_mode,
+    isRT:  go_back_menu_mode,
+    cpRT:  go_back_menu_mode,
 }
 const ctls_save_chk = {
     name: 'save_chk', 
@@ -106,8 +106,8 @@ const ctls_save_chk = {
     cpOK:  isOK_for_save,
     isNG:  isNG_for_save,
     cpNG:  isNG_for_save,
-    isRT:  go_back_camp_mode,
-    cpRT:  go_back_camp_mode,
+    isRT:  go_back_menu_mode,
+    cpRT:  go_back_menu_mode,
 }
 
 export function init_SL_mode(): void {
@@ -196,7 +196,7 @@ function isNG_for_save(): void {
 function _isNG_(ctls: T_Ctls): void {
     if (!is_kakunin) {
         g_cvm.clear_message();
-        go_back_camp_mode();
+        go_back_menu_mode();
     } else {
         is_kakunin = false;
         g_ctls.act(ctls);
@@ -204,9 +204,9 @@ function _isNG_(ctls: T_Ctls): void {
     }
 }
 
-function go_back_camp_mode(): void {
+function go_back_menu_mode(): void {
     g_cvm.clear_message();
-    act_camp_mode();
+    act_menu_mode();
 }
 
 function go_back_move_mode(): void {

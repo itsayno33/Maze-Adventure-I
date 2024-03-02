@@ -1,4 +1,4 @@
-import { act_camp_mode }       from "./F_set_camp_mode";
+import { act_menu_mode }       from "./F_set_menu_mode";
 import { g_ctls, g_maze, g_cvm, g_team, g_vsw } from "./global_for_maze";
 
 import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
@@ -62,7 +62,7 @@ function isNG(): void {
     switch(mode) {
         case 'chek':
             g_cvm.clear_message();
-            act_camp_mode();
+            act_menu_mode();
             break;
     }
 }

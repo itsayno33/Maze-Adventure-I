@@ -2,7 +2,7 @@ import { T_CtlsMode }    from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
 import { init_maze2Dpre, display_maze2Dpre } from "./F_display_maze2D";
-import { init_maze3D, T_DrowSet }      from "./F_display_maze3D";
+import { init_maze3D, T_DrowSet }            from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
 import { C_SwitchView }          from "./C_SwitchView";
@@ -111,7 +111,7 @@ export function init_after_loaded_DOM(): void {
     init_after_loaded_DOM_in_common('debug_mode', 'pane_sytm_logs'); 
 
     g_mvm  = C_OneLineViewMessage.getObj('maze_mesg'); 
-    g_cvm  = C_OneLineViewMessage.getObj('camp_mesg'); 
+    g_cvm  = C_OneLineViewMessage.getObj('menu_mesg'); 
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
 

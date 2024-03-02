@@ -1,10 +1,11 @@
 import { T_MzKind }                   from "../d_mdl/T_MzKind";
 import { I_HopeAction }               from "../d_mdl/I_Common";
 import { C_Point }                    from "../d_mdl/C_Point";
+import { g_debug }                    from "../d_cmn/global";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
-import { act_camp_mode }                         from "./F_set_camp_mode";
+import { act_menu_mode }                         from "./F_set_menu_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
-import { decode_all, set_g_save }                            from "./F_set_save_mode";
+import { decode_all, set_g_save }                from "./F_set_save_mode";
 import { display_maze2Dpre }                     from "./F_display_maze2D"; 
 import { display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
@@ -16,7 +17,6 @@ import {
     do_load_bottom_half,
     g_ctls, 
 } from "./global_for_maze";
-import { g_debug } from "../d_cmn/global";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -26,7 +26,7 @@ const ctls_move_nor = {
     doUR:  go_R,
     do_L:  tr_L,
     do_R:  tr_R,
-    camp:  camp,
+    menu:  menu,
 }
 
 export function init_move_mode(): void {
@@ -188,7 +188,7 @@ function do_stairs_motion(kind: T_MzKind): void {
 }
 
 
-function camp(): void {
+function menu(): void {
     g_mvm.clear_message();
-    act_camp_mode();
+    act_menu_mode();
 }

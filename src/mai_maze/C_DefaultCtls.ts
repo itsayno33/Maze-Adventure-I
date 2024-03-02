@@ -17,7 +17,7 @@ export type T_Ctls= {
     isNG?: T_marg, 
     isSL?: T_marg, 
     isRT?: T_marg, 
-    camp?: T_marg, 
+    menu?: T_marg, 
     cpOK?: T_marg, 
     cpNG?: T_marg, 
     cpSL?: T_marg, 
@@ -43,7 +43,7 @@ export class C_DefaultCtls {
     protected n_btn: HTMLButtonElement;
     protected s_btn: HTMLButtonElement;
     protected r_btn: HTMLButtonElement;
-    protected c_btn: HTMLButtonElement;
+    protected m_btn: HTMLButtonElement;
     protected y_cp1: HTMLButtonElement;
     protected n_cp1: HTMLButtonElement;
     protected s_cp1: HTMLButtonElement;
@@ -61,7 +61,7 @@ export class C_DefaultCtls {
         this.n_btn = document.getElementById('n_btn') as HTMLButtonElement;
         this.s_btn = document.getElementById('s_btn') as HTMLButtonElement;
         this.r_btn = document.getElementById('r_btn') as HTMLButtonElement;
-        this.c_btn = document.getElementById('c_btn') as HTMLButtonElement;
+        this.m_btn = document.getElementById('m_btn') as HTMLButtonElement;
         this.y_cp1 = document.getElementById('y_cp1') as HTMLButtonElement;
         this.n_cp1 = document.getElementById('n_cp1') as HTMLButtonElement;
         this.s_cp1 = document.getElementById('s_cp1') as HTMLButtonElement;
@@ -75,7 +75,7 @@ export class C_DefaultCtls {
         this.n_btn.style.display = 'none';
         this.s_btn.style.display = 'none';
         this.r_btn.style.display = 'none';
-        this.c_btn.style.display = 'none';
+        this.m_btn.style.display = 'none';
         this.y_cp1.style.display = 'none';
         this.n_cp1.style.display = 'none';
         this.s_cp1.style.display = 'none';
@@ -174,7 +174,7 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.removeEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.removeEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.removeEventListener("click", c.isRT as T_mfnc, false);
-            if (_c(c?.camp)) this.c_btn.removeEventListener("click", c.camp as T_mfnc, false);
+            if (_c(c?.menu)) this.m_btn.removeEventListener("click", c.menu as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.removeEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.removeEventListener("click", c.cpNG as T_mfnc, false);
             if (_c(c?.cpSL)) this.s_cp1.removeEventListener("click", c.cpSL as T_mfnc, false);
@@ -194,7 +194,7 @@ export class C_DefaultCtls {
             this.n_btn.style.display = 'none';
             this.s_btn.style.display = 'none';
             this.r_btn.style.display = 'none';
-            this.c_btn.style.display = 'none';
+            this.m_btn.style.display = 'none';
             this.y_cp1.style.display = 'none';
             this.n_cp1.style.display = 'none';
             this.s_cp1.style.display = 'none';
@@ -223,7 +223,7 @@ export class C_DefaultCtls {
             if (_c(c?.isNG)) this.n_btn.addEventListener("click", c.isNG as T_mfnc, false);
             if (_c(c?.isSL)) this.s_btn.addEventListener("click", c.isSL as T_mfnc, false);
             if (_c(c?.isRT)) this.r_btn.addEventListener("click", c.isRT as T_mfnc, false);
-            if (_c(c?.camp)) this.c_btn.addEventListener("click", c.camp as T_mfnc, false);
+            if (_c(c?.menu)) this.m_btn.addEventListener("click", c.menu as T_mfnc, false);
             if (_c(c?.cpOK)) this.y_cp1.addEventListener("click", c.cpOK as T_mfnc, false);
             if (_c(c?.cpNG)) this.n_cp1.addEventListener("click", c.cpNG as T_mfnc, false);
             if (_c(c?.cpSL)) this.s_cp1.addEventListener("click", c.cpSL as T_mfnc, false);
@@ -243,7 +243,7 @@ export class C_DefaultCtls {
             this.n_btn.style.display = _c(c?.isNG) ? 'block' : 'none';
             this.s_btn.style.display = _c(c?.isSL) ? 'block' : 'none';
             this.r_btn.style.display = _c(c?.isRT) ? 'block' : 'none';
-            this.c_btn.style.display = _c(c?.camp) ? 'block' : 'none';
+            this.m_btn.style.display = _c(c?.menu) ? 'block' : 'none';
             this.y_cp1.style.display = _c(c?.cpOK) ? 'block' : 'none';
             this.n_cp1.style.display = _c(c?.cpNG) ? 'block' : 'none';
             this.s_cp1.style.display = _c(c?.cpSL) ? 'block' : 'none';
@@ -291,8 +291,8 @@ function key_press_function(e: KeyboardEvent):void  {
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
             }
             break;
-        case 'KeyC':
-                (document.getElementById('c_btn')   as HTMLButtonElement)?.click();
+        case 'KeyM':
+                (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
                 break;
         case 'KeyR':
                 (document.getElementById('r_btn')   as HTMLButtonElement)?.click();

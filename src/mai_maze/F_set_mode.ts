@@ -7,7 +7,7 @@
     /************ *************************** **************/
 
 import { init_move_mode } from "./F_set_move_mode";
-import { init_camp_mode } from "./F_set_camp_mode";
+import { init_menu_mode } from "./F_set_menu_mode";
 import { init_mvpt_mode } from "./F_set_mvpt_mode";
 import { init_SL_mode }   from "./F_set_save_mode";
 import { init_UD_mode }   from "./F_set_UD_mode";
@@ -17,7 +17,7 @@ import { g_ctls, g_ctls_mode } from "./global_for_maze";
 export function init_all_mode(): void {
     g_ctls.deact();
     init_move_mode();
-    init_camp_mode();
+    init_menu_mode();
     init_mvpt_mode();
     init_SL_mode();
     init_UD_mode()
