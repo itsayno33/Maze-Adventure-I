@@ -1,3 +1,5 @@
+"use strict";
+
 import { _round }            from "../d_utl/F_Math";
 import { _irand, _inrand }   from "../d_utl/F_Rand";
 import { C_Hero, JSON_Hero, JSON_Hero_Value  } from "./C_Hero";

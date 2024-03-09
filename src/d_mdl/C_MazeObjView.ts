@@ -1,8 +1,10 @@
-import { I_JSON, JSON_Any } from "./C_SaveData";
-import { T_Wall }           from "../d_mdl/C_Wall";
+"use strict";
+
+import { I_Abstract, JSON_Any } from "./C_SaveData";
+import { T_Wall }               from "../d_mdl/C_Wall";
 
 
-export interface I_MazeObjView extends I_JSON {
+export interface I_MazeObjView extends I_Abstract {
     // 表示関係(2Dpre)./C_Wall
     layer:   ()=>number;
     letter:  ()=>string|null; // null: 見えない、何もない
@@ -53,6 +55,9 @@ export class C_MazeObjView implements I_MazeObjView {
             case C_MazeObjView.constructor.name:     return new C_MazeObjView(j);
         } 
         return new C_MazeObjView(j);
+    }
+    public newObj(j?: JSON_MazeObjView|undefined): I_MazeObjView {
+        return C_MazeObjView.newObj(j);
     }
 
 

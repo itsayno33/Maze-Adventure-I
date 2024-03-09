@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Point    } from "./C_Point"
 import { C_PointDir } from "./C_PointDir"
 

@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Location, JSON_Location } from "./C_Location";
 import { I_JSON_Uniq }               from "./C_SaveData";
 import { _get_uuid }                 from "../d_utl/F_Rand";

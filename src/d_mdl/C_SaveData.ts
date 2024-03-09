@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Maze, JSON_Maze, alert_maze_info  }  from "./C_Maze";
 import { C_Team, JSON_Team, alert_team_info  }  from "./C_Team";
 import { C_Guild, JSON_Guild, alert_guld_info } from "./C_Guild";
@@ -17,6 +19,12 @@ export interface I_JSON {
 
 export interface I_JSON_Uniq extends I_JSON {
     uid: ()=>string,
+}
+
+export interface I_Abstract {
+    newObj: (j?:JSON_Any)=>I_Abstract|undefined,
+    encode: ()=>JSON_Any,
+//  static decode: (j:JSON_Any)=>I_JSON,
 }
 
 export interface I_JSON_Class {

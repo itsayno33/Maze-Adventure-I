@@ -1,3 +1,5 @@
+"use strict";
+
 import { T_MzKind }              from "./T_MzKind";
 import { C_MazeCell }            from "./C_MazeCell";
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";

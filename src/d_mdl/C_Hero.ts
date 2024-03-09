@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Goods, JSON_Goods }             from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveData";

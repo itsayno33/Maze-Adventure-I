@@ -1,9 +1,18 @@
-import { T_Direction } from './C_PointDir';
-import { C_Team }      from "./C_Team";
-import { T_Wall }      from "../d_mdl/C_Wall";
+"use strict";
+
+import { T_Direction }       from './C_PointDir';
+import { C_Team, JSON_Team } from "./C_Team";
+import { T_Wall }            from "../d_mdl/C_Wall";
 import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 
 export class C_CurrentTeamView  implements I_MazeObjView {
+    public  static newObj(j?: JSON_Team): I_MazeObjView {
+        const team = new C_Team(j);
+        return new C_CurrentTeamView(team);
+    }
+    public  newObj(j?: JSON_Team): I_MazeObjView {return C_CurrentTeamView.newObj(j)}
+
+    
     private my_team: C_Team;
     private my_layer:  number = 99;
     public  constructor(team: C_Team) {
@@ -34,5 +43,5 @@ export class C_CurrentTeamView  implements I_MazeObjView {
     public col_l():   string|null {return null} 
 
     public encode(): JSON_MazeObjView {return {cname: 'CurrentTeamView'}}
-    public decode(j: JSON_MazeObjView|undefined): I_MazeObjView {return this}
+    public decode(j: JSON_MazeObjView|undefined): I_MazeObjView {return this as I_MazeObjView}
 }

@@ -1,3 +1,5 @@
+"use strict";
+
 import { _alert } from "../d_cmn/global";
 
 export interface JSON_MazeInfo {

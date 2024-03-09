@@ -1,3 +1,5 @@
+"use strict";
+
 import { _get_uuid } from "../d_utl/F_Rand";
 import { T_MzKind }  from "./T_MzKind";
 import { JSON_Any }  from "./C_SaveData";

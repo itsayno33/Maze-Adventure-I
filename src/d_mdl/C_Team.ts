@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Point }               from "./C_Point";
 import { C_PointDir }            from './C_PointDir';
 import { C_MovablePoint }        from "./C_MovablePoint";
@@ -48,6 +50,11 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 
 
 export class C_Team implements I_MazeObj {
+    public static newObj(j?: JSON_Team): C_Team {
+        return new C_Team(j);
+    }
+    public newObj(j?: JSON_Team): C_Team {return C_Team.newObj(j);}
+
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
@@ -66,7 +73,7 @@ export class C_Team implements I_MazeObj {
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
 
-        this.myView = new C_CurrentTeamView(this);
+        this.myView = new C_CurrentTeamView(this) as I_MazeObjView;
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
@@ -158,8 +165,8 @@ export class C_Team implements I_MazeObj {
         }
 
         if (a.view    !== undefined) {
-            if (Object.keys(a.view).length > 0) (this.myView ??= C_MazeObjView.newObj(a.view)).decode(a.view); 
-            else this.myView = new C_CurrentTeamView(this);
+            if (Object.keys(a.view).length > 0) this.myView = C_MazeObjView.newObj(a.view); 
+            else this.myView = new C_CurrentTeamView(this) as I_MazeObjView;
         }
 
         return this;

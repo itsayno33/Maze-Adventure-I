@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Point, JSON_Point } from './C_Point';
 import {T_MakeEnumType}        from "../d_utl/T_MakeEnumType";
 import { _alert }              from '../d_cmn/global';

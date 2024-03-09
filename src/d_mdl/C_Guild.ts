@@ -1,3 +1,5 @@
+"use strict";
+
 import { I_Locate, T_Lckd }      from "./C_Location";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { C_Hero, JSON_Hero }     from "./C_Hero";

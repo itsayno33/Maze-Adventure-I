@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Point }                   from './C_Point';
 import { C_PointDir, JSON_PointDir } from './C_PointDir';
 import { T_Direction }               from './C_PointDir';

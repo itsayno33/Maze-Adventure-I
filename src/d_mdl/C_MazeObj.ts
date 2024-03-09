@@ -1,6 +1,8 @@
+"use strict";
+
 import { C_Point }                   from "./C_Point";
 import { C_PointDir, JSON_PointDir } from "./C_PointDir";
-import { I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
+import { I_Abstract, I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
 import { _get_uuid }                 from "../d_utl/F_Rand";
 import { 
     C_MazeObjView, 
@@ -18,7 +20,7 @@ export interface JSON_MazeObj extends JSON_Any {
 }
 
 
-export interface I_MazeObj extends I_JSON_Uniq {
+export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     get_pd:     ()=>C_PointDir;
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
@@ -40,6 +42,9 @@ export class C_MazeObj implements I_MazeObj {
             case C_MazeObj.constructor.name: return new C_MazeObj(j);
         }
         return new C_MazeObj(j);
+    }
+    public newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
+        return C_MazeObj.newObj(j);
     }
 
     protected constructor(j?: JSON_MazeObj|undefined) {

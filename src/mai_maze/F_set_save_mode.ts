@@ -2,7 +2,8 @@ import { _round }              from "../d_utl/F_Math";
 import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
 import { T_Lckd }              from "../d_mdl/C_Location";
 import { C_PointDir }          from "../d_mdl/C_PointDir";
-import { C_SaveData  }         from "../d_mdl/C_SaveData";
+import { I_MazeObj  }          from "../d_mdl/C_MazeObj";
+import { C_SaveData }          from "../d_mdl/C_SaveData";
 import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
@@ -514,7 +515,7 @@ export function decode_all(jsonObj: any): void {
     for (const hero of g_team.hres())  g_hres.push(hero); 
 
     // MazeにTeamを追加
-    g_maze.add_obj(g_team); 
+    g_maze.add_obj(g_team as I_MazeObj); 
 }
 
 // 新規ゲームの初期データの読み込み(暫定)
@@ -539,7 +540,7 @@ export function decode_maze(jsonObj: any): void {
     for (const hero of g_team.hres()) g_hres.push(hero);
 
     // MazeにTeamを追加
-    g_maze.add_obj(g_team);
+    g_maze.add_obj(g_team as I_MazeObj);
 
     // SaveDataのベースの作成
     g_save.mypos = g_team.get_loc();

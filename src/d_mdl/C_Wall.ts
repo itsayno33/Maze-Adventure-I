@@ -1,3 +1,5 @@
+"use strict";
+
 import { _round }  from "../d_utl/F_Math";
 import { C_Range } from "./C_Range";
 
