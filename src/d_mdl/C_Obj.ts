@@ -4,15 +4,14 @@ import { _get_uuid, _irand, _nrand }        from "../d_utl/F_Rand";
 import { T_MakeEnumType }                   from "../d_utl/T_MakeEnumType";
 import { I_Abstract, JSON_Any }             from "./C_SaveData";
 import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
+import { C_Goods, JSON_Goods }                          from "./C_Goods";
 
 export const T_ObjKind:{[lckd: string]: number}  = {
-    Unkn:  0,
-    Chet:  1,  
-    Gold:  2,
-    Arms:  3,
-    Shld:  5,
-    Drug:  6,
-    Item:  7,
+    Unkwn: 0,
+    Goods: 1,  
+    Equip: 2,
+    Enemy: 3, 
+    Other: 5,
 } as const;
 export type T_ObjKind = T_MakeEnumType<typeof T_ObjKind>;
 
@@ -21,13 +20,11 @@ function T_ObjKind_key(kind: T_ObjKind): string {
 }
 
 const ObjKind_mb_name: {[kind: number]: string} = {
-    0:  'バグ',
-    1:  '宝箱',
-    2:  '金銭',
-    3:  '武器',
-    5:  '装備',
-    6:  '薬',
-    7:  '物品',
+    0:  'バ　グ',
+    1:  '持ち物',
+    2:  '仕掛け',
+    3:  '　敵　',
+    5:  '何　か',
 } as const;
 
 
@@ -46,14 +43,18 @@ export interface JSON_Obj extends JSON_Any {
 }
 
 export class C_Obj implements I_Abstract {
-    public static newObj(j?: JSON_Obj): C_Obj|undefined {
+    public static newObj(j?: JSON_Obj|undefined): C_Obj|undefined {
         if (j      === undefined) return undefined;
-        if (j.kind === undefined) return undefined;
+        if (j.okind === undefined) return undefined;
 
-        if (j.kind in T_ObjKind) return new C_Obj(j);
+//        if (j.kind in T_ObjKind) return new C_Obj(j);
+        switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
+            case T_ObjKind.Goods: return C_Goods.newObj(j as JSON_Goods);
+            case T_ObjKind.Other: return new C_Obj(j); 
+        }
         return undefined;
     }
-    public newObj(j?: JSON_Obj): C_Obj|undefined {
+    public newObj(j?: JSON_Obj|undefined): C_Obj|undefined {
         return C_Obj.newObj(j);
     }
 
@@ -70,7 +71,7 @@ export class C_Obj implements I_Abstract {
     protected abi_p:     C_HeroAbility;
     protected abi_m:     C_HeroAbility;
 
-    public constructor(j?: JSON_Obj) {
+    protected constructor(j?: JSON_Obj|undefined) {
         this.uniq_id     =  'game_obj_' + _get_uuid();
         this.my_okind    = T_ObjKind.Unkn;
  

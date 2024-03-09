@@ -1,7 +1,9 @@
 "use strict";
 
-import { I_JSON, JSON_Any }  from "./C_SaveData";
-import { C_Obj,  JSON_Obj, T_ObjKind }  from "./C_Obj";
+import { JSON_Any }  from "./C_SaveData";
+import { JSON_Obj }  from "./C_Obj";
+import { C_ObjList } from "./C_ObjList";
+import { C_Goods, JSON_Goods, T_GoodsKind } from "./C_Goods";
 
 
 export interface JSON_GoodsList extends JSON_Any {
@@ -12,84 +14,58 @@ export interface JSON_GoodsList extends JSON_Any {
     item?: JSON_Obj[],    
 }
 
-type T_GoodsList = {[uid: string]: C_Obj}
 
-
-export class C_GoodsList implements I_JSON {
-    protected gold: T_GoodsList = {};
-    protected arms: T_GoodsList = {};
-    protected shld: T_GoodsList = {};
-    protected drug: T_GoodsList = {};
-    protected item: T_GoodsList = {};
-
+export class C_GoodsList extends C_ObjList {
     public constructor(j?: JSON_GoodsList) {
-        this.clr_goods();
+        super(j);
         if (j !== undefined) this.decode(j);
     }
-    public clr_goods(): void {
-        this.gold = {};
-        this.arms = {};
-        this.shld = {};
-        this.drug = {};
-        this.item = {};
+
+    public add(obj: C_Goods|undefined): void {
+        if (obj === undefined) return; 
+        if (obj instanceof C_Goods) this.list[obj.uid()] = obj; 
     }
-    public add_goods(goods: C_Obj): void {
-        switch (goods.okind()) {
-            case T_ObjKind.Gold: this.gold[goods.uid()] = goods;
-            case T_ObjKind.Arms: this.arms[goods.uid()] = goods;
-            case T_ObjKind.Shld: this.shld[goods.uid()] = goods;
-            case T_ObjKind.Drug: this.drug[goods.uid()] = goods;
-            case T_ObjKind.Item: this.item[goods.uid()] = goods;
-        }
+
+    public gold(): number {
+        let ttl_gold = 0; 
+        for (const ii in this.list) if ((this.list[ii] as C_Goods).gkind() === T_GoodsKind.Gold) ttl_gold += this.list[ii].gold();
+        return ttl_gold;
     }
-    public rmv_goods(goods: C_Obj): void {
-        switch (goods.okind()) {
-            case T_ObjKind.Gold: delete this.gold[goods.uid()];
-            case T_ObjKind.Arms: delete this.arms[goods.uid()];
-            case T_ObjKind.Shld: delete this.shld[goods.uid()];
-            case T_ObjKind.Drug: delete this.drug[goods.uid()];
-            case T_ObjKind.Item: delete this.item[goods.uid()];
-        }
+
+    public gold_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Gold);}
+    public arms_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Arms);}
+    public shld_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Shld);}
+    public drug_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Drug);}
+    public item_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Item);}
+    private __make_array(gkind: number): C_Goods[] {
+        const make_array:C_Goods[] = []; 
+        for (const ii in this.list) if ((this.list[ii] as C_Goods).gkind() === gkind) make_array.push(this.list[ii] as C_Goods);
+        return make_array;
     }
 
     public encode(): JSON_GoodsList {
         return {
-            gold: this.__encode(this.gold), 
-            arms: this.__encode(this.arms), 
-            shld: this.__encode(this.shld), 
-            drug: this.__encode(this.drug), 
-            item: this.__encode(this.item), 
+            gold: this.__encode(this.gold_array()), 
+            arms: this.__encode(this.arms_array()), 
+            shld: this.__encode(this.shld_array()), 
+            drug: this.__encode(this.drug_array()), 
+            item: this.__encode(this.item_array()), 
         }
     }
-    protected __encode(goods: T_GoodsList): JSON_Obj[] {
-        const goods_JSON: JSON_Obj[] = [];
-        for (let idx in goods) {
-            goods_JSON.push(goods[idx].encode())
-        }
+    protected __encode(goods: C_Goods[]): JSON_Goods[] {
+        const goods_JSON: JSON_Goods[] = [];
+        for (const item of goods) goods_JSON.push(item.encode()); 
         return goods_JSON;
     }
 
     public decode(j: JSON_GoodsList): C_GoodsList {
         if (j === undefined) return this;
 
-        this.gold = this.__decode(this.gold, j.gold);
-        this.arms = this.__decode(this.arms, j.arms);
-        this.shld = this.__decode(this.shld, j.shld);
-        this.drug = this.__decode(this.drug, j.drug);
-        this.item = this.__decode(this.item, j.item);
-        return this;
-    }
-    protected __decode(
-        my_list: T_GoodsList, 
-        list_JSON: (JSON_Obj[])|undefined
-    ): T_GoodsList 
-    {
-        if (list_JSON === undefined) return my_list;
-
-        for (const goods_JSON of list_JSON) {
-            const goods = C_Obj.newObj(goods_JSON);
-            if (goods !== undefined) my_list[goods.uid()] = goods;
+        for (const gkind in j) { 
+            for (const goods_JSON of j[gkind]) {
+                this.add(C_Goods.newObj(goods_JSON));
+            }
         }
-        return my_list;
+        return this;
     }
 }

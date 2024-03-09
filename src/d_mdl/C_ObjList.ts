@@ -17,13 +17,19 @@ export class C_ObjList implements I_JSON {
         this.clr();
         if (j !== undefined) this.decode(j);
     }
+    public keys(): string[] {return Object.keys(this.list)}
+    public get(key: string): C_Obj {return this.list[key]}
+
     public clr(): void {
         this.list = {};
     }
-    public add(obj: C_Obj): void {
+    public add(obj: C_Obj|undefined): void {
+        if (obj === undefined) return; 
         this.list[obj.uid()] = obj;
     }
-    public rmv(obj: C_Obj): void {
+    public rmv(obj: C_Obj|undefined): void {
+        if (obj === undefined)         return; 
+        if (!(obj.uid() in this.list)) return;
         delete this.list[obj.uid()];
     }
 
