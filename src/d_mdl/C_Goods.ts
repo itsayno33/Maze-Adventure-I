@@ -78,15 +78,15 @@ export class C_Goods implements I_JSON{
 
     public decode(j: JSON_Goods): C_Goods {
         if (j === undefined) return this;
-        return this;
-/*
+//        return this;
+
         this.gold = this.__decode(this.gold, j.gold);
         this.arms = this.__decode(this.arms, j.arms);
         this.shld = this.__decode(this.shld, j.shld);
         this.drug = this.__decode(this.drug, j.drug);
         this.item = this.__decode(this.item, j.item);
         return this;
-*/
+
     }
     protected __decode(
         my_list: T_GoodsList, 

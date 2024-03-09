@@ -163,12 +163,12 @@ export class C_Team implements I_MazeObj {
                 this.heroes[hero.uid()] = hero;
             }
         }
-
+/*
         if (a.view    !== undefined) {
             if (Object.keys(a.view).length > 0) this.myView = C_MazeObjView.newObj(a.view); 
-            else this.myView = new C_CurrentTeamView(this) as I_MazeObjView;
+            else this.myView = new C_CurrentTeamView(this) as I_MazeObjView; 
         }
-
+*/
         return this;
     }
     public static encode_all(all_team: C_Team[]): JSON_Team[] {
