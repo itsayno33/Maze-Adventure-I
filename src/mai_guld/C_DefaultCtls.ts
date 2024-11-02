@@ -258,23 +258,23 @@ function _c(c: T_marg): boolean {
 function key_press_function(e: KeyboardEvent):void  {
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
-        case 'KeyK': 
         case 'Numpad5': 
+        case 'KeyO':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
-        case 'KeyJ': 
         case 'Numpad2': 
+        case 'KeyL': 
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
-        case 'KeyH': 
         case 'Numpad1': 
+        case 'KeyK': 
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
-        case 'KeyL':
         case  'Numpad3': 
+        case 'Semicolon':
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
@@ -292,7 +292,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'KeyS':
         case 'Numpad7':
-        case 'Space':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyQ':

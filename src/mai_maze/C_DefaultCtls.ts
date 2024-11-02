@@ -266,31 +266,31 @@ function _c(c: T_marg): boolean {
 function key_press_function(e: KeyboardEvent):void  {
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
-        case 'KeyK': 
         case 'Numpad5': 
+        case 'KeyO':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
-        case 'KeyJ': 
         case 'Numpad2': 
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'ArrowLeft': 
-        case 'KeyH': 
-        case 'Numpad1': 
-                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'ArrowRight': 
-        case  'Numpad3': 
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyL':
             if (g_debug.isON()) {
                 do_instant_load();
             } else {
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
             }
             break;
+        case 'ArrowLeft': 
+        case 'Numpad1': 
+        case 'KeyK':
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+                break;
+        case 'ArrowRight': 
+        case  'Numpad3': 
+        case 'Semicolon':
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                break;
         case 'KeyM':
                 (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
                 break;
@@ -306,12 +306,12 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'KeyN':
         case 'KeyX':
+        case 'Digit9':
         case 'Numpad0':
         case 'NumpadAdd':
                 (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'Numpad7':
-        case 'Space':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyS':

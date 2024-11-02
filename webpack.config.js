@@ -10,7 +10,7 @@ module.exports = (env) => {
 //			filename: 'bundle.js', //まとめた結果出力されるファイル名
 			filename: env.outfile, 
 //			path: path.resolve(__dirname, 'dist')
-			path: 'T:/Apache24Root/mai/js'
+			path: 'D:/Apache24/htdocs/mai/js'
 		},
 		resolve: {
 			extensions: ['.tsx', '.ts', '.js'] //拡張子がtsだったらTypescirptでコンパイルする

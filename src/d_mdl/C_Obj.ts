@@ -4,14 +4,15 @@ import { _get_uuid, _irand, _nrand }        from "../d_utl/F_Rand";
 import { T_MakeEnumType }                   from "../d_utl/T_MakeEnumType";
 import { I_Abstract, JSON_Any }             from "./C_SaveData";
 import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
-import { C_Goods, JSON_Goods }                          from "./C_Goods";
+import { C_Goods, JSON_Goods }              from "./C_Goods";
 
 export const T_ObjKind:{[lckd: string]: number}  = {
     Unkwn: 0,
-    Goods: 1,  
-    Equip: 2,
-    Enemy: 3, 
-    Other: 5,
+    Equip: 1,  // 自立型静止物
+    Goods: 2,  // 非自立型静止物
+    Enemy: 3,  // 自立型移動物 
+    Mover: 5,  // 非自立型移動物 (魔法とか矢とか)
+    Other: 6,
 } as const;
 export type T_ObjKind = T_MakeEnumType<typeof T_ObjKind>;
 
@@ -21,10 +22,11 @@ function T_ObjKind_key(kind: T_ObjKind): string {
 
 const ObjKind_mb_name: {[kind: number]: string} = {
     0:  'バ　グ',
-    1:  '持ち物',
     2:  '仕掛け',
+    1:  '持ち物',
     3:  '　敵　',
-    5:  '何　か',
+    5:  '移動物',
+    6:  '何　か',
 } as const;
 
 
@@ -42,7 +44,25 @@ export interface JSON_Obj extends JSON_Any {
     abi_m?:     JSON_Hero_Ability,
 }
 
-export class C_Obj implements I_Abstract {
+
+export interface I_Obj {
+    uid:     ()=>string, 
+    okind:   ()=>T_ObjKind, 
+    name:    ()=>string, 
+    mb_name: ()=>string, 
+    gold:    ()=>number, 
+    abi_p:   (key: string)=>number, 
+    abi_m:   (key: string)=>number, 
+    
+    try_confirme: (try_seed: number)=>number, 
+
+    set_own_name: (org_name: string)=>string, 
+    set_own_gold: (org_gold: number)=>number, 
+    set_abi_p: (abi: C_HeroAbility)=>void, 
+    set_abi_m: (abi: C_HeroAbility)=>void, 
+}
+
+export class C_Obj implements I_Obj, I_Abstract {
     public static newObj(j?: JSON_Obj|undefined): C_Obj|undefined {
         if (j      === undefined) return undefined;
         if (j.okind === undefined) return undefined;
@@ -68,8 +88,8 @@ export class C_Obj implements I_Abstract {
     protected gen_name:  string;      // 鑑定で確定した名前
     protected org_name:  string|undefined;  // 自分で命名したオリジナルの名前
     protected my_gold:   number;      // 金銭的価値(Gold ならその価格、その他は売買価格の基礎値)
-    protected abi_p:     C_HeroAbility;
-    protected abi_m:     C_HeroAbility;
+    protected my_abi_p:  C_HeroAbility;
+    protected my_abi_m:  C_HeroAbility;
 
     protected constructor(j?: JSON_Obj|undefined) {
         this.uniq_id     =  'game_obj_' + _get_uuid();
@@ -86,8 +106,8 @@ export class C_Obj implements I_Abstract {
 
         this.my_gold     = 0; 
 
-        this.abi_p       = new C_HeroAbility();
-        this.abi_m       = new C_HeroAbility();
+        this.my_abi_p    = new C_HeroAbility();
+        this.my_abi_m    = new C_HeroAbility();
 
         if (j !== undefined) this.decode(j);
     }
@@ -125,21 +145,21 @@ export class C_Obj implements I_Abstract {
         return this.my_gold;
     }
 
-    public get_abi_p(key: string): number {
-        const val = this.abi_p.get(key);
+    public abi_p(key: string): number {
+        const val = this.my_abi_p.get(key);
         if (val === undefined) return 0;
         return Math.round(val * this.amb_ratio);
     }
-    public get_abi_m(key: string): number {
-        const val = this.abi_m.get(key);
+    public abi_m(key: string): number {
+        const val = this.my_abi_m.get(key);
         if (val === undefined) return 0;
         return Math.round(val * this.amb_ratio);
     }
     public set_abi_p(abi: C_HeroAbility): void {
-        this.abi_p = abi;
+        this.my_abi_p = abi;
     }
     public set_abi_m(abi: C_HeroAbility): void {
-        this.abi_m = abi;
+        this.my_abi_m = abi;
     }
 
     public encode(): JSON_Obj {
@@ -152,8 +172,8 @@ export class C_Obj implements I_Abstract {
             gen_name:    this.gen_name,
             org_name:    this.org_name  ?? '',
             gold:        this.my_gold, 
-            abi_p:       this.abi_p.encode(),
-            abi_m:       this.abi_m.encode(),
+            abi_p:       this.my_abi_p.encode(),
+            abi_m:       this.my_abi_m.encode(),
         }
     }
     public decode(j: JSON_Obj): C_Obj {
@@ -170,8 +190,8 @@ export class C_Obj implements I_Abstract {
         if (j.gen_name   !== undefined) this.gen_name  = j.gen_name;
         if (j.org_name   !== undefined) this.org_name  = j.org_name !== '' ? j.org_name : undefined;
         if (j.gold       !== undefined) this.my_gold   = j.gold;
-        if (j.abi_p      !== undefined) this.abi_p.decode(j.abi_p);
-        if (j.abi_m      !== undefined) this.abi_m.decode(j.abi_m);
+        if (j.abi_p      !== undefined) this.my_abi_p.decode(j.abi_p);
+        if (j.abi_m      !== undefined) this.my_abi_m.decode(j.abi_m);
 
         if (this.org_name !== undefined) this.my_name = this.org_name;
         else this.my_name = this.is_gen ? this.gen_name : this.amb_name;

@@ -1,16 +1,13 @@
 "use strict";
 
-import { I_JSON }            from "./C_SaveData";
-import { C_Obj,  JSON_Obj }  from "./C_Obj";
-import { T_MakeEnumType }    from "../d_utl/T_MakeEnumType";
+import { I_JSON }          from "./C_SaveData";
+import { C_Obj, I_Obj, JSON_Obj } from "./C_Obj";
+import { T_MakeEnumType }  from "../d_utl/T_MakeEnumType";
 
 
 export interface JSON_Goods extends JSON_Obj {
     gkind?:  string,
 }
-
-type T_GoodsList = {[uid: string]: C_Obj}
-
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,
@@ -33,11 +30,15 @@ const GoodsKind_mb_name: {[gkind: number]: string} = {
     2:  '金銭',
     3:  '武器',
     5:  '装備',
-    6:  '薬',
+    6:  '薬剤',
     7:  '物品',
 } as const;
 
-export class C_Goods extends C_Obj implements I_JSON {
+export interface I_Goods extends I_Obj {
+    okind:   ()=>T_GoodsKind, 
+}
+
+export class C_Goods extends C_Obj implements I_Goods, I_JSON {
     public static newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
         if (j      === undefined)   return undefined;
         if (j.gkind === undefined)  return undefined;
