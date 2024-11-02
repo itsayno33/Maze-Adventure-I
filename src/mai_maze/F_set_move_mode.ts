@@ -164,7 +164,7 @@ function action_obj(): void {}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
-    clear_mask_around_the_team();
+    clear_mask_around_the_team(); // if (is_mask_clear()) _alert('この階を制覇しました！！') /* **************************** */
     display_maze2Dpre();
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();

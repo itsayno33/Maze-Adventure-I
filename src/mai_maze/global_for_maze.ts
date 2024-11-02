@@ -143,9 +143,8 @@ export function init_debug_mode(): void {
         const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
-                case "KeyE":
                 case "NumpadMultiply":
-                case "F1":
+                case "Escape":
                     btn.click();
             }
         })

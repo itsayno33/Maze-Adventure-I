@@ -15,6 +15,7 @@ const ctls_menu_nor = {
     do_D:  do_D,
     isOK:  isOK,
     isNG:  isNG,
+    isRT:  isNG,
     cpRT:  isNG,
 }
 
