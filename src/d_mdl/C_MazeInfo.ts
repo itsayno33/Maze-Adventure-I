@@ -1,3 +1,7 @@
+"use strict";
+
+import { _alert } from "../d_cmn/global";
+
 export interface JSON_MazeInfo {
     name:      string;
     mbname:    string;
@@ -71,6 +75,20 @@ export class C_MazeInfo {
         if (j.room_size !== undefined) this.room_size = j.room_size;
 
         return this;
+    }
+    
+    public alert(): void {
+        _alert("MazeInfo Data:"
+            + "\nname : "       + (this.name      ?? '?')
+            + "\nmbname: "      + (this.mbname    ?? '?')
+            + "\nlv :"          + (this.lv        ?? '?')
+            + "\nsize_x: "      + (this.size_x    ?? '?')
+            + "\nsize_y: "      + (this.size_y    ?? '?')
+            + "\nsize_z: "      + (this.size_z    ?? '?')
+            + "\nmax_of_room: " + (this.max_room  ?? '?')
+            + "\nroom_size: "   + (this.room_size ?? '?')
+            + "\n"
+        );
     }
 }
 

@@ -1,10 +1,10 @@
 import { _min, _round }   from "../d_utl/F_Math";
 import { C_Point }        from "../d_mdl/C_Point"
 import { C_Range }        from "../d_mdl/C_Range";
-import { T_MzKind }       from "../d_mdl/T_MzKind";
+import { C_MazeObjView }  from "../d_mdl/C_MazeObjView";
 import { T_Direction }    from "../d_mdl/T_Direction";
+import { C_Wall }         from "../d_mdl/C_Wall";
 import { g_mes }          from "../d_cmn/global";
-import { C_Wall }                from "./C_Wall";
 import { g_maze, g_team, g_ds }  from "./global_for_maze";
 
 export type T_DrowSet = {
@@ -14,8 +14,6 @@ export type T_DrowSet = {
     wall:   C_Wall|null,
 }
 
-type T_xy   = {x: number, y: number}
-type T_Rect = {tl: T_xy, tr: T_xy, bl: T_xy, br: T_xy};
 
 // 3D描写時に使用する大域変数の準備
 export function init_maze3D(): T_DrowSet {
@@ -30,6 +28,9 @@ export function init_maze3D(): T_DrowSet {
         return {canvas: null, con: null, depth: 0, wall: null};
     }
 
+    C_MazeObjView.set_context3D(con);
+    init_mazeCell3D();
+
     // 3Dメイズを描写するキャンバス要素のサイズをCSS上の『見た目』のサイズに合わせる
     canvas.width  = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
@@ -41,6 +42,9 @@ export function init_maze3D(): T_DrowSet {
     const wall  = new C_Wall(depth, new C_Range(top_p, btm_p));
     return {canvas: canvas, con: con, depth: depth, wall: wall};
 }
+
+function init_mazeCell3D(): void {}
+
 
 // 3D描写時の画面初期化。とりあえず天井と床を描く
 function draw_init_maze3D(): void {
@@ -112,219 +116,27 @@ export function display_maze3D(): void {
     const H_depth = (depth - 1) / 2;
     for (var j = g_ds.depth - 1; j >= 0; j--) {
         // 右側が見えている壁の描写 (左側から描写)
-        for (var k = -H_depth; k < 0; k++) {
-            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
-                case T_MzKind.Stone:
-                    drow_right_side_stone(j, k);
-                    break;
-                case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
-                    break;
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                case T_MzKind.StrUD:
-                    drow_right_side_stairs(j, k);
-                    break;
-                case T_MzKind.Floor: 
-                default:
-                    drow_floor(j ,k);
-                    break;
-            }
-        }
-        // 　左側が見えている壁の描写 (右側から描写)
-        for (var k = H_depth; k > 0; k--) {
-            switch (g_maze.get_cell(g_team.get_around(j, k, 0))) {
-                case T_MzKind.Stone:
-                    drow_left_side_stone(j, k);
-                    break;
-                case T_MzKind.Unexp: 
-                    drow_floor_unexp(j ,k);
-                    break;
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                case T_MzKind.StrUD:
-                    drow_left_side_stairs(j, k);
-                    break;
-                case T_MzKind.Floor: 
-                default:
-                    drow_floor(j ,k);
-                    break;
-            }
-        }
+        for (var k = -H_depth; k < 0; k++) drowMazeCell(j, k);
+        // 左側が見えている壁の描写 (右側から描写)
+        for (var k = H_depth; k > 0; k--)  drowMazeCell(j, k);
         // 正面の壁の描写
-        switch (g_maze.get_cell(g_team.get_around(j, 0, 0))) {
-            case T_MzKind.Stone:
-                drow_front_stone(j, 0);
-                break;
-            case T_MzKind.Unexp: 
-                drow_floor_unexp(j ,0);
-                break;
-            case T_MzKind.StrUp:
-            case T_MzKind.StrDn:
-            case T_MzKind.StrUD:
-                drow_front_stairs(j, 0);
-                break;
-            case T_MzKind.Floor: 
-            default:
-                drow_floor(j ,0);
-                break;
-        }
+        drowMazeCell(j, 0);
     }
 }
 
-function drow_floor_unexp(d: number, w:number): void {
-    drow_floor(d, w, '#66ffff');
-}
-
-function drow_front_stone(d: number, w: number): void {
-    drow_front(d, w, '#00ff00', '#0000ff');
-}
-function drow_left_side_stone(d: number, w: number): void {
-    drow_left_side(d, w, '#00ff00', '#0000ff');
-    drow_front    (d, w, '#00ff00', '#0000ff');
-}
-function drow_right_side_stone(d: number, w: number): void {
-    drow_right_side(d, w, '#00ff00', '#0000ff');
-    drow_front     (d, w, '#00ff00', '#0000ff');
-}
-
-function drow_front_stairs(d: number, w: number): void {
-    drow_floor  (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling(d, w, '#ffffcc', '#ffff00');
-    drow_front  (d, w,  null,     '#ffff00');
-}
-function drow_left_side_stairs(d: number, w: number): void {
-    drow_floor    (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling  (d, w, '#ffffcc', '#ffff00');
-    drow_left_side(d, w,  null,     '#ffff00');
-
-}
-function drow_right_side_stairs(d: number, w: number): void {
-    drow_floor     (d, w, '#ffffcc', '#ffff00');
-    drow_ceiling   (d, w, '#ffffcc', '#ffff00');
-    drow_right_side(d, w,  null,     '#ffff00');
-}
-
-function drow_floor(
-            d:    number, 
-            w:    number, 
-            fill: string = '#6666ff', 
-            line: string = '#9999ff'
-            ): void {
-
+function drowMazeCell(d: number, w: number): void {
     if (g_ds.wall === null) return;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
+    const around_j_k = g_team.walk().get_around(d, w, 0);
+    const frot_wall  = g_ds.wall.get(d, w);
+    const back_wall  = g_ds.wall.get(d + 1, w);
+    const mz_kind    = g_maze.get_kind(around_j_k);
 
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.max_y},
-        tr: {x: rect_front.max_x, y: rect_front.max_y},
-        br: {x: rect_back .max_x, y: rect_back .max_y},
-        bl: {x: rect_back .min_x, y: rect_back .max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_ceiling(
-            d: number, 
-            w: number, 
-            fill: string = '#aaaaaa', 
-            line: string = '#9999ff'
-    ): void {
-
-    if (g_ds.wall === null) return;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.min_y},
-        tr: {x: rect_front.max_x, y: rect_front.min_y},
-        br: {x: rect_back .max_x, y: rect_back .min_y},
-        bl: {x: rect_back .min_x, y: rect_back .min_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_front(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00ff00', 
-        line: string|null = '#0000ff'
-    ): void {
-        
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.min_y},
-        tr: {x: rect_front.max_x, y: rect_front.min_y},
-        br: {x: rect_front.max_x, y: rect_front.max_y},
-        bl: {x: rect_front.min_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_left_side(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00cc00', 
-        line: string|null = '#0000ff'
-    ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.min_x, y: rect_front.min_y},
-        tr: {x: rect_back .min_x, y: rect_back .min_y},
-        br: {x: rect_back .min_x, y: rect_back .max_y},
-        bl: {x: rect_front.min_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-function drow_right_side(
-        d: number, 
-        w: number, 
-        fill: string|null = '#00cc00', 
-        line: string|null = '#0000ff'
-    ): void {
-
-    if (g_ds.wall === null) return;
-    const con = g_ds.con;
-    const rect_front = g_ds.wall.get(d,     w);
-    const rect_back  = g_ds.wall.get(d + 1, w);
-
-    const rect: T_Rect = {
-        tl: {x: rect_front.max_x, y: rect_front.min_y},
-        tr: {x: rect_back .max_x, y: rect_back .min_y},
-        br: {x: rect_back .max_x, y: rect_back .max_y},
-        bl: {x: rect_front.max_x, y: rect_front.max_y}
-    }
-    drow_cell(rect, fill, line);
-}
-
-function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
-    if (g_ds.con === null || g_ds.wall === null) return;
-    const con = g_ds.con;
-
-    con.beginPath();
-    con.moveTo(r.tl.x, r.tl.y);
-    con.lineTo(r.tr.x, r.tr.y);
-    con.lineTo(r.br.x, r.br.y);
-    con.lineTo(r.bl.x, r.bl.y);
-    con.closePath();
-
-    if (fill != null) {
-        con.fillStyle   = fill;
-        con.fill();
-    }
-    if (line !== null) {
-        con.strokeStyle = line;
-        con.lineWidth   = 1;
-        con.stroke();
+    g_maze?.get_cell(around_j_k)?.drow3D(frot_wall, back_wall);
+    if (g_maze.exist_obj(around_j_k)) {
+        const obj = g_maze.get_obj(around_j_k);
+        if (obj !== null) obj.view()?.drow3D(frot_wall, back_wall);
     }
 }
-
 
 export function displey_mase3D_direction(): void {
     const p_dir = document.getElementById('maze_view3D_direction_info') as HTMLParagraphElement;
@@ -364,7 +176,7 @@ export function maze3D_blink_on_direction(): void {
     const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
     if (dir_y === null) return;
 
-    switch (g_team.get_dir()) {
+    switch (g_team.walk().get_d()) {
         case T_Direction.N:
         case T_Direction.S:
             dir_x.classList.remove('blink');

@@ -1,7 +1,10 @@
+"use strict";
+
 import { C_Maze, JSON_Maze, alert_maze_info  }  from "./C_Maze";
 import { C_Team, JSON_Team, alert_team_info  }  from "./C_Team";
 import { C_Guild, JSON_Guild, alert_guld_info } from "./C_Guild";
 import { C_MovablePoint, JSON_MovablePoint, alert_mvpt_info } from "./C_MovablePoint";
+import { _alert }                               from "../d_cmn/global";
 
 // サーバー側とやりとりするJSON形式データのテンプレート
 export interface JSON_Any {
@@ -16,6 +19,12 @@ export interface I_JSON {
 
 export interface I_JSON_Uniq extends I_JSON {
     uid: ()=>string,
+}
+
+export interface I_Abstract {
+    newObj: (j?:JSON_Any)=>I_Abstract|undefined,
+    encode: ()=>JSON_Any,
+//  static decode: (j:JSON_Any)=>I_JSON,
 }
 
 export interface I_JSON_Class {
@@ -220,5 +229,52 @@ export class C_SaveData implements I_JSON {
            }
         } 
         return this;
+    }
+    
+    public alert(): void {
+        _alert("Save Info:" 
+            + "\nsave_id:    " + (this.save_id   ?? '?')
+            + "\nplayer_id:  " + (this.player_id ?? '?')
+            + "\nuniq_no:    " + (this.uniq_no   ?? '?')
+            + "\ntitle:      " + (this.title     ?? '?')
+            + "\ndetail:     " + (this.detail    ?? '?')
+            + "\npoint:      " + (this.point     ?? '?')
+            + "\nauto_mode:  " + (this.auto_mode?'Y':'N'  ?? '?')
+            + "\nis_active:  " + (this.is_active?'Y':'N'  ?? '?')
+            + "\nis_delete:  " + (this.is_delete?'Y':'N'  ?? '?')
+            + "\nmyurl:      " + (this.mypos.url()      ?? '?')
+            + "\nteam_uid:   " + (this.mypos.tid()      ?? '?')
+            + "\nloc_kind:   " + (this.mypos.get_lckd() ?? '?')
+            + "\nloc_name:   " + (this.mypos.get_name() ?? '?')
+            + "\nloc_uid:    " + (this.mypos.get_uid()  ?? '?')
+            + "\nmvpt_count: " + (this.all_mvpt?.length ?? '?')
+            + "\nmaze_count: " + (this.all_maze?.length ?? '?')
+            + "\nguld_count: " + (this.all_guld?.length ?? '?')
+            + "\nteam_count: " + (this.all_team?.length ?? '?')
+            + "\n"
+        );
+    }
+
+    public alert_detail(): void {
+        try { 
+//            alert("Save Detail(mvpt):");
+            for (const ii in this.all_mvpt) this.all_mvpt[ii].alert();
+        } catch (err) {alert('alert mvpt error: ' + err)}
+            
+        try { 
+//            alert("Save Detail(team):");
+            for (const ii in this.all_team) this.all_team[ii].alert();
+        } catch (err) {alert('alert team error: ' + err)}
+            
+        try { 
+//            alert("Save Detail(maze):");
+            for (const ii in this.all_maze) this.all_maze[ii].alert();
+        } catch (err) {alert('alert maze error: ' + err)}
+            
+        try { 
+//            alert("Save Detail(guld):");
+            for (const ii in this.all_guld) this.all_guld[ii].alert();
+        } catch (err) {alert('alert guld error: ' + err)}
+            
     }
 }

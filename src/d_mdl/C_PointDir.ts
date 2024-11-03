@@ -1,5 +1,8 @@
+"use strict";
+
 import { C_Point, JSON_Point } from './C_Point';
 import {T_MakeEnumType}        from "../d_utl/T_MakeEnumType";
+import { _alert }              from '../d_cmn/global';
 
 export const T_Direction:{[dir: string]: number} = {
     N: 0,
@@ -99,5 +102,15 @@ export class  C_PointDir extends C_Point {
         super.decode(j);
         this.d = j.d as T_Direction;
         return this;
+    }
+    
+    public alert(): void {
+        _alert("PointData Info:" 
+            + "\nx: "     + (this.x ?? '?')
+            + "\ny: "     + (this.y ?? '?')
+            + "\nz: "     + (this.z ?? '?')
+            + "\nd: "     + (this.d ?? '?')
+            + "\n"
+        );
     }
 }

@@ -1,77 +1,90 @@
-import { C_GoodsItem, JSON_GoodsItem } from "./C_GoodsItem";
-import { I_JSON, JSON_Any }            from "./C_SaveData";
+"use strict";
 
-export interface JSON_Goods extends JSON_Any {
-    gold?: number,
-    arms?: JSON_GoodsItem[],    
-    shld?: JSON_GoodsItem[],    
-    drug?: JSON_GoodsItem[],    
-    item?: JSON_GoodsItem[],    
+import { I_JSON }          from "./C_SaveData";
+import { C_Obj, I_Obj, JSON_Obj } from "./C_Obj";
+import { T_MakeEnumType }  from "../d_utl/T_MakeEnumType";
+
+
+export interface JSON_Goods extends JSON_Obj {
+    gkind?:  string,
 }
 
-type T_GoodsList = {[uid: string]: C_GoodsItem}
+export const T_GoodsKind:{[lckd: string]: number}  = {
+    Unkn:  0,
+    Chet:  1,  
+    Gold:  2,
+    Arms:  3,
+    Shld:  5,
+    Drug:  6,
+    Item:  7,
+} as const;
+export type T_GoodsKind = T_MakeEnumType<typeof T_GoodsKind>;
 
-export class C_Goods implements I_JSON{
-    protected gold: number;
-    protected arms: T_GoodsList;
-    protected shld: T_GoodsList;
-    protected drug: T_GoodsList;
-    protected item: T_GoodsList;
+function T_GoodsKind_key(gkind: T_GoodsKind): string {
+    return Object.keys(T_GoodsKind).find(key => T_GoodsKind[key] === gkind) ?? "Unkn";
+}
 
-    public constructor(j?: JSON_Goods) {
-        this.gold = 0;
-        this.arms = {};
-        this.shld = {};
-        this.drug = {};
-        this.item = {};
+const GoodsKind_mb_name: {[gkind: number]: string} = {
+    0:  'バグ',
+    1:  '宝箱',
+    2:  '金銭',
+    3:  '武器',
+    5:  '装備',
+    6:  '薬剤',
+    7:  '物品',
+} as const;
 
+export interface I_Goods extends I_Obj {
+    okind:   ()=>T_GoodsKind, 
+}
+
+export class C_Goods extends C_Obj implements I_Goods, I_JSON {
+    public static newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
+        if (j      === undefined)   return undefined;
+        if (j.gkind === undefined)  return undefined;
+
+        if (j.gkind in T_GoodsKind) return new C_Goods(j);
+/*
+        switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
+            case T_ObjKind.Goods: return C_Goods.newObj(j);
+            case T_ObjKind.Other: return new C_Obj(j); 
+        }
+*/
+        return undefined;
+    }
+    public newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
+        return C_Goods.newObj(j);
+    }
+
+
+    protected my_gkind: number;
+    
+    public constructor(j?: JSON_Goods|undefined) {
+        super(j);
+        this.my_gkind = T_GoodsKind.Unkn;
         if (j !== undefined) this.decode(j);
     }
 
+    public gkind():   number {return this.my_gkind;}
+    public mb_name(): string {
+        return GoodsKind_mb_name[this.my_gkind];
+    }
+
+
     public encode(): JSON_Goods {
-        
-        const arms = this.__encode(this.arms);
-        const shld = this.__encode(this.shld);
-        const drug = this.__encode(this.drug);
-        const item = this.__encode(this.item);
-
-        return {
-            gold: this.gold,
-            arms: arms,
-            shld: shld,
-            drug: drug,
-            item: item,
-        }
+        const j   = super.encode() as JSON_Goods;
+        j.gkind   = T_GoodsKind_key(this.my_gkind);
+        return j;
     }
-    protected __encode(goods: T_GoodsList): JSON_GoodsItem[] {
-        const goods_JSON: JSON_GoodsItem[] = [];
-        for (let idx in goods) {
-            goods_JSON.push(goods[idx].encode())
-        }
-        return goods_JSON;
-    }
-
     public decode(j: JSON_Goods): C_Goods {
         if (j === undefined) return this;
+        super.decode(j);
 
-        if (j.gold !== undefined) this.gold = j.gold;
-        this.arms = this.__decode(this.arms, j.arms);
-        this.shld = this.__decode(this.shld, j.shld);
-        this.drug = this.__decode(this.drug, j.drug);
-        this.item = this.__decode(this.item, j.item);
-        return this;
-    }
-    protected __decode(
-        my_list: T_GoodsList, 
-        list_JSON: (JSON_GoodsItem[])|undefined
-        ): T_GoodsList 
-    {
-        if (list_JSON === undefined) return my_list;
-
-        for (const goods_JSON of list_JSON) {
-            const goods = C_GoodsItem.new_instance(goods_JSON);
-            if (goods !== undefined) my_list[goods.uid()] = goods;
+        if (j.gkind      !== undefined) { 
+            this.my_gkind   = T_GoodsKind[j.gkind]; 
+            this.amb_name   = GoodsKind_mb_name[this.my_gkind]; 
         }
-        return my_list;
+
+        return this;
     }
 }

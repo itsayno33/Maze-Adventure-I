@@ -326,7 +326,7 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     }
 
     return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode == 0) {
+        if (jsonObj?.ecode == 0) {
  
             if (jsonObj?.save  === undefined) {
                 g_mes.warning_message("受信した保存データが不正な形式でした\n" + jsonObj.emsg);

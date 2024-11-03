@@ -56,7 +56,7 @@ export function init_UD_mode(): void {
 }
 
 export function act_Up_mode(): void {
-    if (g_team.get_z() > 0) {
+    if (g_team.walk().get_z() > 0) {
         g_mvm.notice_message('上りテレポーターが有ります。登りますか？登る ⇒ 〇 登らない ⇒ ✖');
     } else {
         g_mvm.notice_message('街に戻りますか？戻る ⇒ 〇 戻らない ⇒ ✖');
@@ -93,7 +93,7 @@ function do_cancel(): void {
 }
 
 function do_up(): void {
-    const rslt = g_team.hope_p_up();
+    const rslt = g_team.walk().hope_p_up();
 
     //　上り階段が地下一階の場合はセーブしてから街(冒険者ギルド)へ移動する
     if (rslt.has_hope && rslt.subj.z < 0) {
@@ -127,7 +127,7 @@ function do_up(): void {
 }
 
 function do_down(): void {
-    const rslt = g_team.hope_p_down();
+    const rslt = g_team.walk().hope_p_down();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         rslt.doNG();
         g_mvm.clear_message();
@@ -155,7 +155,7 @@ function hope_Up(): void {
     isUp = true;
     g_ctls.act(ctls_updn_ud_hpdn);
 
-    if (g_team.get_z() > 0) {
+    if (g_team.walk().get_z() > 0) {
         g_mvm.notice_message('登りますか？登る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
     } else {
         g_mvm.notice_message('街に戻りますか？戻る⇒ 〇 降りる ⇒ (↓キー) 移動しない ⇒ ✖');
@@ -177,8 +177,8 @@ async function do_UD_save(): Promise<any|undefined> {
         /* detail: */    '',
         /* point: */     
                     `『${g_maze.get_name()}』 ` 
-                    + `地下 ${g_team.get_pd().z + 1}階層 ` 
-                    + `(X: ${g_team.get_pd().x}, Y: ${g_team.get_pd().y})`,
+                    + `地下 ${g_team.walk().get_pd().z + 1}階層 ` 
+                    + `(X: ${g_team.walk().get_pd().x}, Y: ${g_team.get_pd().y})`,
         /* auto_mode: */ true,
     );
     return UD_save();

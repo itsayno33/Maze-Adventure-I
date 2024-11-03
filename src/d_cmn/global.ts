@@ -8,6 +8,12 @@ export const g_url: string[] = new Array(10);
 
 export let   g_my_url: string;
 
+import { C_OnOffButton } from '../d_ctl/C_OnOffButton'
+export var g_debug: C_OnOffButton;
+
+import { C_AlertLog }    from "../d_cmn/C_AlertLog";
+export let g_alert: C_AlertLog;
+
 //export var g_pid: number[] = new Array(1) as number[];
 
 class C_ReadyGames  {
@@ -47,9 +53,13 @@ export var g_mes: C_DisplayMessage;
 import { C_SaveData }         from "../d_mdl/C_SaveData";
 export const g_save = new C_SaveData();
 
-export function init_after_loaded_DOM_in_common(msg_id: string = 'pane_sytm_logs'): void {
+export function init_after_loaded_DOM_in_common(debug_id: string = 'debug_mode', msg_id: string = 'pane_sytm_logs'): void {
     const  con = document.getElementById(msg_id);
     g_mes  = C_DisplayMessage.getObj(con, 'client_message');
+    g_alert = C_AlertLog.getObj();
+
+    const btn = document.getElementById(debug_id) as HTMLButtonElement;
+    g_debug = C_OnOffButton.getObj(btn, {});
 }
 
 export function _alert(txt: string, page_size = 250): void {

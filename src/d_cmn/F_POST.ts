@@ -1,6 +1,6 @@
 import { _min }          from "../d_utl/F_Math";
 import { C_UrlOpt }      from "../d_utl/C_UrlOpt";
-import { g_mes, _alert } from "../d_cmn/global";
+import { g_mes, _alert, g_debug, g_alert } from "../d_cmn/global";
 
 
 export async function POST_and_get_JSON(
@@ -21,13 +21,14 @@ export async function POST_and_get_JSON(
         return undefined;
     }
 
-    const monitor = false;  // alertで受信したテキストを表示するときにtrueにする
+    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
 
     return res.text()
         .then(txt=>{
             const tx = txt.slice();
 
-            if (monitor) _alert(tx);
+//            if (monitor) _alert(tx);
+            if (monitor) g_alert.set_message(`POST DATA`, tx);
 
             try {
                 return JSON.parse(txt);

@@ -1,3 +1,5 @@
+"use strict";
+
 import { I_JSON, JSON_Any } from "./C_SaveData";
 
 export interface JSON_Point extends JSON_Any {

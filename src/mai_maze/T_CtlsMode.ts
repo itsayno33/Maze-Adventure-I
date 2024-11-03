@@ -4,7 +4,7 @@ export const T_CtlsMode = {
     Move:     1,
     UD:       2,
     Battle:   3,
-    Camp:     5,
+    Menu:     5,
     Load:     6,
     Save:     7,
     MvPt:     8,

@@ -1,12 +1,14 @@
-// 一般に使えるユーティリティな呪文
-// オブジェクトを列挙型として型化するのに利用
+"use strict";
+
 import { I_JSON, JSON_Any } from "./C_SaveData";
 import { _round }           from "../d_utl/F_Math";
 
+// 一般に使えるユーティリティな呪文
+// オブジェクトを列挙型として型化するのに利用
 type T_HeroAbility = {[key: string]: number};
 export interface JSON_Hero_Ability extends JSON_Any {[key: string]: number}
 
-export class C_HeroAbility implements I_JSON{
+export class C_HeroAbility implements I_JSON {
     protected v: T_HeroAbility = {
         xp:  0,  // p:HP、m:MP
 

@@ -256,47 +256,57 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
+    e.preventDefault();
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
-        case 'KeyK': 
         case 'Numpad5': 
+        case 'KeyO':
+        case 'KeyW':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
-        case 'KeyJ': 
         case 'Numpad2': 
+        case 'KeyL':
+        case 'KeyS':
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
-        case 'KeyH': 
         case 'Numpad1': 
+        case 'KeyK':
+        case 'KeyA':
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
-        case 'KeyL':
-        case  'Numpad3': 
+        case 'Numpad3': 
+        case 'Semicolon':
+        case 'KeyD':
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
-        case 'KeyZ':
+        case 'KeyP':
+        case 'KeyC':
         case 'Digit0':
-        case 'Enter':
         case 'NumpadEnter':
+        case 'Enter':
                 (document.getElementById('y_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyN':
-        case 'KeyX':
+        case 'KeyI':
+        case 'KeyZ':
+        case 'Digit8':
         case 'Numpad0':
         case 'NumpadAdd':
                 (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyS':
         case 'Numpad7':
-        case 'Space':
+        case 'Comma':
+        case 'KeyQ':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyQ':
-        case 'Numpad9':
+        case 'KeyR':
+        case 'Numpad8':
+        case 'Period':
+        case 'KeyE':
                 (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }

@@ -1,13 +1,17 @@
-import { _get_uuid }               from "../d_utl/F_Rand";
-import { C_Point }                 from "./C_Point";
-import { C_PointDir, T_Direction } from './C_PointDir';
-import { I_Locate }                from './C_Location';
-import { C_MovablePoint }          from "./C_MovablePoint";
-import { C_Walker, JSON_Walker }   from "./C_Walker";
-import { C_Goods,  JSON_Goods }    from './C_Goods';
-import { C_Hero, JSON_Hero }       from "./C_Hero";
-import { I_JSON_Uniq, JSON_Any }   from "./C_SaveData";
-import { I_Exist, I_HopeAction }   from "./I_Common"
+"use strict";
+
+import { C_Point }               from "./C_Point";
+import { C_PointDir }            from './C_PointDir';
+import { C_MovablePoint }        from "./C_MovablePoint";
+import { C_Walker, JSON_Walker } from "./C_Walker";
+import { C_Goods,  JSON_Goods }  from './C_Goods';
+import { C_Hero, JSON_Hero }     from "./C_Hero";
+import { I_MazeObj }             from "./C_MazeObj";
+import { JSON_Any }              from "./C_SaveData";
+import { C_CurrentTeamView }     from "./C_TeamView";
+import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
+import { _get_uuid }             from "../d_utl/F_Rand";
+import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -18,6 +22,7 @@ export interface JSON_Team extends JSON_Any {
     goods?:     JSON_Goods,
     heroes?:    JSON_Hero[], 
     motion?:    string,
+    view?:      JSON_MazeObjView|undefined,
 }
 
 export function alert_team_info(a: JSON_Team|undefined): void {
@@ -44,16 +49,21 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 }
 
 
-export class C_Team implements I_Exist, I_JSON_Uniq {
+export class C_Team implements I_MazeObj {
+    public static newObj(j?: JSON_Team): C_Team {
+        return new C_Team(j);
+    }
+    public newObj(j?: JSON_Team): C_Team {return C_Team.newObj(j);}
+
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;
     protected save_id:   number;
     protected walker:    C_Walker;
-    protected my_layer:  number = 99;
     protected goods:     C_Goods;
     protected heroes:    {[uid: string]: C_Hero};
 
+    protected myView:    I_MazeObjView|undefined;
     protected hope_motion: string;
 
     public constructor(j?: JSON_Team) {
@@ -63,6 +73,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
 
+        this.myView = new C_CurrentTeamView(this) as I_MazeObjView;
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
@@ -81,17 +92,12 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         const here = this.walker.get_p();
         return here.within(p); 
     }
-    public layer(): number {return this.my_layer;}
-    public set_layer(layer: number): void {this.my_layer = layer;}
-    public to_letter(): string|null {
-        switch (this.walker.get_d()) {
-            case T_Direction.N: return '↑';
-            case T_Direction.E: return '→';
-            case T_Direction.S: return '↓';
-            case T_Direction.W: return '←';
-            default: return '🌀';
-        }
-    }
+
+    public view():  I_MazeObjView|undefined {return this.myView}
+    public walk():  C_Walker {return this.walker}
+    
+    public canThrough(): boolean {return true}
+
 
     public hres():  C_Hero[] {
         const hres: C_Hero[] = [];
@@ -108,125 +114,18 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
         delete this.heroes[hero.uid()];
     }
 
-    public set_place(
-        place: I_Locate, 
-        url?:  string, 
-        pos?:  C_PointDir) {
-
-        this.walker.set_uid (place.uid());
-        this.walker.set_lckd(place.get_lckd());
-        this.walker.set_name(place.get_name());
-
-        if (url !== undefined) this.walker.set_url(url);
-        if (pos !== undefined) {
-            this.walker.set_pd(pos);
-        }
-    }
     public get_loc(): C_MovablePoint {
         return this.walker;
     }
     public set_loc(loc: C_MovablePoint): void {
         this.walker.decode(loc.encode());
-        /*
-        this.walker.set_uid (loc.get_uid());
-        this.walker.set_lckd(loc.get_lckd());
-        this.walker.set_name(loc.get_name());
-        this.walker.set_pd  (loc.get_pd());
-        */
     }
-
 
     public get_pd(): C_PointDir {
         return this.walker.get_pd();
     }
-    public set_pd(p:C_PointDir): void {
-        this.walker.set_pd(p);
-    }
-    public get_z(): number {
-        return this.walker.get_z();
-    }
-    public set_z(z: number): void {
-        if (z < 0) return;
-        this.walker.set_z(z);
-    }
-    public get_dir(): T_Direction {
-        return this.walker.get_d();
-    }
-    public set_dir(d: T_Direction): void {
-        this.walker.set_d(d);
-    }
 
-    public get_around(front: number, right:number, up: number = 0): C_PointDir {
-        return this.walker.get_around(front, right, up);
-    }
-
-    public hope_p_fwd(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Move",
-            subj: this.walker.get_p_fwd(),
-            doOK: ()=>{this.walker.set_p_fwd();},
-            doNG: ()=>{this.isNG();},
-           };
-    }
-    public hope_p_bak(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Move",
-            subj: this.walker.get_p_bak(),
-            doOK: ()=>{this.walker.set_p_bak();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_turn_r(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Turn",
-            subj: this.walker.get_pd(),
-            doOK: ()=>{this.walker.turn_r();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_turn_l(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Turn",
-            subj: this.walker.get_pd(),
-            doOK: ()=>{this.walker.turn_l();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-
-    public hope_p_up(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Up",
-            subj: this.walker.get_p_up(),
-            doOK: ()=>{this.move_p_up();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-    public hope_p_down(): I_HopeAction {
-        return {
-            has_hope: true, 
-            hope: "Down",
-            subj: this.walker.get_p_down(),
-            doOK: ()=>{this.move_p_down();},
-            doNG: ()=>{this.isNG();},
-        };
-    }
-
-    public move_p_up(): void {
-        this.walker.set_p_up();
-    }
-    public move_p_down(): void {
-        this.walker.set_p_down();
-    }
-
-    public isNG(): void {
-        return;
-    }
-
+    
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新
 
@@ -242,6 +141,7 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
             goods:     this.goods.encode(),
             heroes:    json_heroes,
             motion:    this.hope_motion,
+            view:      this.myView?.encode() ?? {},
         };
     }
     public decode(a: JSON_Team|undefined): C_Team {
@@ -263,7 +163,12 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
                 this.heroes[hero.uid()] = hero;
             }
         }
-    
+/*
+        if (a.view    !== undefined) {
+            if (Object.keys(a.view).length > 0) this.myView = C_MazeObjView.newObj(a.view); 
+            else this.myView = new C_CurrentTeamView(this) as I_MazeObjView; 
+        }
+*/
         return this;
     }
     public static encode_all(all_team: C_Team[]): JSON_Team[] {
@@ -279,5 +184,29 @@ export class C_Team implements I_Exist, I_JSON_Uniq {
             all_team.push((new C_Team()).decode(team_data));
         }
         return all_team;
+    }
+    
+    public alert(): void {
+        _alert("Team Info:" 
+            + "\nid:    "     + (this.my_id            ?? '?')
+            + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
+            + "\nname:  "     + (this.my_name          ?? '?')
+            + "\nsave_id: "   + (this.save_id          ?? '?')
+            + "\nurl:  "      + (this.walker.url()     ?? '?')
+            + "\nlckd: "      + (this.walker.get_lckd_str() ?? '?')
+            + "\nlcnm: "      + (this.walker.get_name()     ?? '?')
+            + "\nlcid: "      + (this.walker.get_uid()      ?? '?')
+            + "\ncur_x: "     + (this.walker.get_p().x ?? '?')
+            + "\ncur_y: "     + (this.walker.get_p().y ?? '?')
+            + "\ncur_z: "     + (this.walker.get_p().z ?? '?')
+            + "\ncur_d: "     + (this.walker.get_d()   ?? '?')
+            + "\ngoods: "     + (Object.keys(this.goods??{}).length)
+            + "\nheroes: "    + (this.heroes?.length ?? '?')
+            + "\n"
+        );
+    }
+    public alert_hres(): void {
+//        alert("Team Info:");
+        for (const ii in this.heroes) this.heroes[ii].alert();
     }
 }

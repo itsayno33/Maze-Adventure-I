@@ -1,4 +1,7 @@
+"use strict";
+
 import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
+
 export const T_Direction = {
     N: 0,
     E: 1,

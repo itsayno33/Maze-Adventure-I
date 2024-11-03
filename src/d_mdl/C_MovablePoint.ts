@@ -1,6 +1,9 @@
+"use strict";
+
 import { C_Location, JSON_Location } from "./C_Location";
 import { I_JSON_Uniq }               from "./C_SaveData";
 import { _get_uuid }                 from "../d_utl/F_Rand";
+import { _alert }                    from "../d_cmn/global";
 
 export interface JSON_MovablePoint extends JSON_Location {
     uniq_id?:  string,
@@ -80,5 +83,21 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
 
         if (this.team_uid == '') this.team_uid = undefined;
         return this;
+    }
+    
+    public alert(): void {
+        _alert("MvPt Info:" 
+            + "\nuniq_id:  "  + (this.uniq_id    ?? '?')
+            + "\ncur_url:  "  + (this.cur_url    ?? '?')
+            + "\nteam_uid: "  + (this.team_uid   ?? '?')
+            + "\nlckd: "      + (this.loc_kind   ?? '?')
+            + "\nlcnm: "      + (this.loc_name   ?? '?')
+            + "\nlcid: "      + (this.loc_uid    ?? '?')
+            + "\ncur_x: "     + (this.loc_pos?.x ?? '?')
+            + "\ncur_y: "     + (this.loc_pos?.y ?? '?')
+            + "\ncur_z: "     + (this.loc_pos?.z ?? '?')
+            + "\ncur_d: "     + (this.loc_pos?.d ?? '?')
+            + "\n"
+        );
     }
 }

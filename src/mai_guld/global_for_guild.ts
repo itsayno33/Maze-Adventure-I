@@ -1,7 +1,8 @@
-export var g_debug_mode: boolean = false;
-
+import { C_Dialog } from './../d_cmn/C_Dialog';
 import { 
     _alert, 
+    g_alert, 
+    g_debug, 
     g_my_url, 
     g_ready_games, 
     g_save, 
@@ -41,7 +42,7 @@ export var g_vsw: C_SwitchView;
 import { init_menu }            from "./F_default_menu";
 import { post_load_function }   from './F_save_menu';
 
-
+export let g_dialog: C_Dialog;
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -75,7 +76,7 @@ function init_before_load_games(): void {
 }
 
 export function init_after_loaded_DOM(): void { 
-    init_after_loaded_DOM_in_common('sytm_logs_pane'); 
+    init_after_loaded_DOM_in_common('debug_mode', 'sytm_logs_pane'); 
 
     g_mvm  = C_OneLineViewMessage.getObj('guld_head_message'); 
     g_ctls = C_DefaultCtls.getObj(); 
@@ -90,42 +91,42 @@ export function init_after_loaded_DOM(): void {
 }
 
 export function init_debug_mode(): void {
-    g_debug_mode = true;
 
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    toggle_debug_mode();
-    btn.addEventListener("click", (event)=>{toggle_debug_mode();}, false);
-    window.addEventListener("keydown",(event)=>{
-        switch (event.code) {
-            case "Escape":
-            case "NumpadMultiply":
-            case "F12":
-                btn.click();
-                break;
-        }
-    })
+    try {
+        const alert = document.getElementById('alert_mode');
+        alert?.style.setProperty('display', 'none');
+        alert?.addEventListener("click",(event:MouseEvent)=>{
+            try{g_alert.show();} catch(err){};
+        });
+
+        g_debug.setObj({
+            yn:        false,
+            onName:   'DEBUG',
+            offName:  '通常',
+            onClass:  'debug',
+            offClass: 'normal',
+        });
+        g_debug.addFnc(toggle_debug_mode);//g_debug.setON();
+
+        const btn = document.getElementById('debug_mode') as HTMLButtonElement;
+        window.addEventListener("keydown",(event)=>{
+            switch (event.code) {
+                case "NumpadMultiply":
+                case "Escape":
+                    btn.click();
+                    break;
+            }
+        })
+        return;
+    } catch (err) {return};
 } 
-
-function toggle_debug_mode(): void {
-    const btn = document.getElementById('debug_mode') as HTMLButtonElement;
-    if (btn === null) return;
-    if (g_debug_mode) {
-        g_debug_mode = false;
-        btn.setAttribute('value', 'false');
-        btn.innerHTML = '通常モード中';
-        btn.style.setProperty('background-color', '#f0f8ff');
-        btn.style.setProperty('color', '#008000');
-    } else {
-        g_debug_mode = true;
-        btn.setAttribute('value', 'true');
-        btn.innerHTML = 'デバッグモード中';
-        btn.style.setProperty('background-color', '#ff0000');
-        btn.style.setProperty('color', '#ffffff');
-    }
-//    display_maze2D();
-}
 
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
+}
+
+function toggle_debug_mode(yn: boolean): void {
+    const alert = document.getElementById('alert_mode');
+    const display = yn ? 'block' : 'none';
+    alert?.style.setProperty('display', display);
 }

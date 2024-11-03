@@ -1,3 +1,5 @@
+"use strict";
+
     // 一般に使えるユーティリティな呪文
     // オブジェクトを列挙型として型化するのに利用
     import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";

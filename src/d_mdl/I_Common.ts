@@ -1,3 +1,5 @@
+"use strict";
+
 import { C_Point    } from "./C_Point"
 import { C_PointDir } from "./C_PointDir"
 
@@ -25,21 +27,3 @@ export interface I_Battle  extends I_HasHope {
     drop_item(): void;
 }
 
-export interface I_Exist {
-    // 表示関係
-    uid:   ()=>string;
-    layer: ()=>number;
-    set_layer: (layer: number)=>void;
-    within:    (p: C_Point)=>boolean;
-    to_letter: ()=>string|null; // null: 見えない、何もない
-}
-
-export type T_EventMapResult = {
-    isOK: boolean,
-    code: number,    // Ordinary, NormalEnd = 0
-    option?: string, // JSON string 
-}
-export interface I_EventMap {
-    here_is(p: C_Point): T_EventMapResult;
-    can_go (p: C_Point): T_EventMapResult; 
-}
