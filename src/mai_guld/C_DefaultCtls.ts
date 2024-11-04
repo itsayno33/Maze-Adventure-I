@@ -265,7 +265,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad5': 
         case 'KeyO':
-        case 'KeyW':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
@@ -274,7 +273,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad2': 
         case 'KeyL':
-        case 'KeyS':
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
@@ -283,7 +281,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad1': 
         case 'KeyK':
-        case 'KeyA':
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
@@ -292,12 +289,10 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad3': 
         case 'Semicolon':
-        case 'KeyD':
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyP':
-        case 'KeyC':
         case 'Digit0':
         case 'NumpadEnter':
         case 'Enter':
@@ -305,7 +300,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'KeyN':
         case 'KeyI':
-        case 'KeyZ':
         case 'Digit8':
         case 'Numpad0':
         case 'NumpadAdd':
@@ -313,13 +307,12 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad7':
         case 'Comma':
-        case 'KeyQ':
+        case 'KeyS':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyR':
         case 'Numpad8':
         case 'Period':
-        case 'KeyE':
                 (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }

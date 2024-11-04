@@ -272,7 +272,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad5': 
         case 'KeyO':
-        case 'KeyW':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
@@ -283,14 +282,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 e.preventDefault();
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyS':
-            if (g_debug.isON() && e.ctrlKey) {
-                do_instant_save();
-                do_move_bottom_half('blink_off');
-            } else {
-                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
-            }
-            break;
         case 'KeyL':
                 if (g_debug.isON() && e.ctrlKey) {
                     do_instant_load();
@@ -304,7 +295,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad1': 
         case 'KeyK':
-        case 'KeyA':
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
@@ -315,7 +305,6 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'Semicolon':
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyD':
                 if (g_debug.isON() && e.ctrlKey) {
                     const z = g_team.walk().get_z();
                     if (z < g_maze.get_z_max() - 1) g_team.walk().set_z(z + 1);
@@ -326,7 +315,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'KeyY':
         case 'KeyP':
-        case 'KeyC':
         case 'Digit0':
         case 'NumpadEnter':
         case 'Enter':
@@ -334,7 +322,6 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'KeyN':
         case 'KeyI':
-        case 'KeyZ':
         case 'Digit8':
         case 'Numpad0':
         case 'NumpadAdd':
@@ -354,13 +341,19 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad7':
         case 'Comma':
-        case 'KeyQ':
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
+        case 'KeyS':
+            if (g_debug.isON() && e.ctrlKey) {
+                do_instant_save();
+                do_move_bottom_half('blink_off');
+            } else {
+                (document.getElementById('s_arr') as HTMLButtonElement)?.click();
+            }
+            break;
         case 'KeyR':
         case 'Numpad8':
         case 'Period':
-        case 'KeyE':
                 (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }

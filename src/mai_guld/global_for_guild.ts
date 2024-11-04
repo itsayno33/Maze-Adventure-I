@@ -113,6 +113,7 @@ export function init_debug_mode(): void {
             switch (event.code) {
                 case "NumpadMultiply":
                 case "Escape":
+                case 'KeyQ':
                     btn.click();
                     break;
             }
