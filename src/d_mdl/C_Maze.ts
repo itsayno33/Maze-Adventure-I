@@ -11,6 +11,7 @@ import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { _alert, g_alert }       from "../d_cmn/global";
 import { _min } from "../d_utl/F_Math";
+import { C_PointDir } from "./C_PointDir";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -67,6 +68,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     protected size:     C_Range;
     protected cells:    C_MazeCell[][][];
     protected masks:    boolean[][][];
+    protected unclear:  number[];
     protected objs:     {[uid: string]: I_MazeObj};
 
     public constructor(a?: _init_arg) {
@@ -79,7 +81,11 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
             new C_Point(0, 0, 0), 
             new C_Point(2, 2, 2));
         this.cells   = this.__init_maze(T_MzKind.Stone);
+
         this.masks   = this.__init_mask(true);
+        this.unclear = [];
+        this.__init_unclear();
+
         this.objs    = {};
         
         if (a !== undefined) this.decode(a);
@@ -107,17 +113,33 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         const size_y = this.size.size_y();
         const size_z = this.size.size_z();
 
-        const masks: boolean[][][] = Array(size_z) as boolean[][][];
+        this.masks   = Array(size_z) as boolean[][][];
         for (var z = 0; z < size_z; z++) {
-            masks[z] = Array(size_y) as boolean[][];
+            this.masks[z] = Array(size_y) as boolean[][];
             for (var y = 0; y < size_y; y++) {
-                masks[z][y]  = Array(size_x) as boolean[];
+                this.masks[z][y]  = Array(size_x) as boolean[];
                 for (var x = 0; x < size_x; x++) {
-                    masks[z][y][x] = YN;
+                    this.masks[z][y][x] = YN;
                 }
             }
         }
-        return masks;
+        return this.masks;
+    }
+    protected __init_unclear(): void {
+        const size_x = this.size.size_x();
+        const size_y = this.size.size_y();
+        const size_z = this.size.size_z();
+
+        this.unclear = Array(size_z);
+        for (var z = 0; z < size_z; z++) {
+            this.unclear[z]=0;
+            for (var y = 0; y < size_y; y++) {
+                for (var x = 0; x < size_x; x++) {
+                    if (this.masks[z][y][x]) this.unclear[z]++;
+                }
+            }
+        }
+        return;
     }
     public uid(): string      {return this.uniq_id}
     public get_lckd(): T_Lckd {return T_Lckd.Maze}
@@ -198,7 +220,14 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     }
     protected __clear_mask(clr_pos: C_Point): void {
         if (!this.size.within(clr_pos)) return;
-        this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
+
+        if (this.masks[clr_pos.z][clr_pos.y][clr_pos.x]) {
+            this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
+            this.unclear[clr_pos.z]--;        }    
+    }
+
+    public is_cleared(clr_pos: C_Point): boolean {
+        return this.unclear[clr_pos.z] < 1;
     }
 
     public is_masked(p: C_Point): boolean {return this.is_masked_xyz(p.x, p.y, p.z)}
@@ -350,6 +379,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
                 );
             this.cells   = this.__init_maze(T_MzKind.Stone);
             this.masks   = this.__init_mask(true);
+            this.__init_unclear();
         }
 
         const size_x = this.size.size_x();
@@ -398,7 +428,8 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
                         }
                     }
                 }
-            }      
+            }
+            this.__init_unclear();      
         }
         return this;
     }

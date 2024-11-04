@@ -264,16 +264,23 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
-    e.preventDefault();
+//    e.preventDefault();
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
+                e.preventDefault();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad5': 
         case 'KeyO':
         case 'KeyW':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
+                e.preventDefault();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad2': 
+                e.preventDefault();
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyS':
@@ -292,25 +299,31 @@ function key_press_function(e: KeyboardEvent):void  {
                 }
             break;
         case 'ArrowLeft': 
+                e.preventDefault();
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad1': 
         case 'KeyK':
         case 'KeyA':
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
+                e.preventDefault();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                break;
         case  'Numpad3': 
         case 'Semicolon':
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyD':
-            if (g_debug.isON() && e.ctrlKey) {
-                const z = g_team.walk().get_z();
-                if (z < g_maze.get_z_max() - 1) g_team.walk().set_z(z + 1);
-                do_move_bottom_half('blink_off');
-            } else {
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-            }
-            break;
+                if (g_debug.isON() && e.ctrlKey) {
+                    const z = g_team.walk().get_z();
+                    if (z < g_maze.get_z_max() - 1) g_team.walk().set_z(z + 1);
+                    do_move_bottom_half('blink_off');
+                } else {
+                    (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                }
+                break;
         case 'KeyY':
         case 'KeyP':
         case 'KeyC':

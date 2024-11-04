@@ -256,27 +256,40 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
-    e.preventDefault();
+//    e.preventDefault();
+//    if ((e.target as HTMLElement)?.nodeType === Node.TEXT_NODE) return; else e.preventDefault();
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
+                e.preventDefault();
+                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad5': 
         case 'KeyO':
         case 'KeyW':
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
+                e.preventDefault();
+                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad2': 
         case 'KeyL':
         case 'KeyS':
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
+                e.preventDefault();
+                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad1': 
         case 'KeyK':
         case 'KeyA':
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
+                e.preventDefault();
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                break;
         case 'Numpad3': 
         case 'Semicolon':
         case 'KeyD':
