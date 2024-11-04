@@ -111,10 +111,6 @@ export function init_debug_mode(): void {
         const btn = document.getElementById('debug_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
-                case "KeyQ":
-                    if (!event.shiftKey) break;
-                    btn.click();
-                    break;
                 case "NumpadMultiply":
                 case "Escape":
                     btn.click();
