@@ -256,40 +256,41 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
-//    e.preventDefault();
-//    if ((e.target as HTMLElement)?.nodeType === Node.TEXT_NODE) return; else e.preventDefault();
+    const ee = (e.target as HTMLInputElement)?.value??'*****'
+    const ne=(ee === '*****') // Not Editting InputElement
+
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
+        case 'Numpad5': 
                 e.preventDefault();
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'Numpad5': 
         case 'KeyO':
-                if (e.shiftKey) (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
+        case 'Numpad2': 
                 e.preventDefault();
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'Numpad2': 
         case 'KeyL':
-                if (e.shiftKey) (document.getElementById('d_arr') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
+        case 'Numpad1': 
                 e.preventDefault();
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'Numpad1': 
         case 'KeyK':
-                if (e.shiftKey) (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
+        case 'Numpad3': 
                 e.preventDefault();
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'Numpad3': 
         case 'Semicolon':
-                if (e.shiftKey) (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'Enter':
         case 'NumpadEnter':
@@ -301,36 +302,36 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'KeyY':
         case 'KeyP':
         case 'Digit0':
-                if (e.shiftKey) (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('y_btn') as HTMLButtonElement)?.click();
                 break;
         case 'F1':
+        case 'Numpad0':
+        case 'NumpadAdd':
                 e.preventDefault();
                 (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyN':
         case 'KeyI':
         case 'Digit8':
-        case 'Numpad0':
-        case 'NumpadAdd':
-                if (e.shiftKey) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'F5':
+        case 'Numpad7':
                 e.preventDefault();
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
-        case 'Numpad7':
         case 'Comma':
         case 'KeyS':
-                if (e.shiftKey) (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'F3':
+        case 'Numpad8':
                 e.preventDefault();
                 (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyR':
-        case 'Numpad8':
         case 'Period':
-                if (e.shiftKey) (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+                if (ne) (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }
 }
