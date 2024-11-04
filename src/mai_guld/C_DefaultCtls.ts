@@ -265,7 +265,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad5': 
         case 'KeyO':
-                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
                 e.preventDefault();
@@ -273,7 +273,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad2': 
         case 'KeyL':
-                (document.getElementById('d_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowLeft': 
                 e.preventDefault();
@@ -281,7 +281,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad1': 
         case 'KeyK':
-                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
                 e.preventDefault();
@@ -289,31 +289,48 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad3': 
         case 'Semicolon':
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                break;
+        case 'Enter':
+        case 'NumpadEnter':
+        case 'F10':
+                e.preventDefault();
+                if (e.shiftKey) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                else            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyP':
         case 'Digit0':
-        case 'NumpadEnter':
-        case 'Enter':
-                (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                break;
+        case 'F1':
+                e.preventDefault();
+                (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyN':
         case 'KeyI':
         case 'Digit8':
         case 'Numpad0':
         case 'NumpadAdd':
-                (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                break;
+        case 'F5':
+                e.preventDefault();
+                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'Numpad7':
         case 'Comma':
         case 'KeyS':
-                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                break;
+        case 'F3':
+                e.preventDefault();
+                (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyR':
         case 'Numpad8':
         case 'Period':
-                (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }
 }

@@ -272,18 +272,18 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad5': 
         case 'KeyO':
-                (document.getElementById('u_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
                 e.preventDefault();
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'Numpad2': 
-                e.preventDefault();
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'KeyL':
-                if (g_debug.isON() && e.ctrlKey) {
+            if (!e.shiftKey) break; 
+                if (g_debug.isON()) {
                     do_instant_load();
                 } else {
                     (document.getElementById('d_arr') as HTMLButtonElement)?.click();
@@ -295,40 +295,44 @@ function key_press_function(e: KeyboardEvent):void  {
                 break;
         case 'Numpad1': 
         case 'KeyK':
-                (document.getElementById('l_arr') as HTMLButtonElement)?.click();
+            if (e.shiftKey) (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
                 e.preventDefault();
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
-        case  'Numpad3': 
+        case 'Numpad3': 
         case 'Semicolon':
-                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
-                if (g_debug.isON() && e.ctrlKey) {
-                    const z = g_team.walk().get_z();
-                    if (z < g_maze.get_z_max() - 1) g_team.walk().set_z(z + 1);
-                    do_move_bottom_half('blink_off');
-                } else {
-                    (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-                }
+        case 'Enter':
+        case 'NumpadEnter':
+        case 'F10':
+                e.preventDefault();
+                if (e.shiftKey) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                else            (document.getElementById('y_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyY':
         case 'KeyP':
         case 'Digit0':
-        case 'NumpadEnter':
-        case 'Enter':
-                (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('y_btn') as HTMLButtonElement)?.click();
+                break;
+        case 'F1':
+                e.preventDefault();
+                (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyN':
+                if (e.shiftKey) {e.preventDefault();(document.getElementById('n_btn') as HTMLButtonElement)?.click()};
+                break;
         case 'KeyI':
         case 'Digit8':
         case 'Numpad0':
         case 'NumpadAdd':
-                (document.getElementById('n_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyU':
-            if (g_debug.isON() && e.ctrlKey) {
+                if (!e.shiftKey) break;
+                if (g_debug.isON()) {
                 const z = g_team.walk().get_z();
                 if (z > 0) g_team.walk().set_z(z - 1);
                 do_move_bottom_half('blink_off');
@@ -337,24 +341,33 @@ function key_press_function(e: KeyboardEvent):void  {
             }
             break;
         case 'KeyM':
-                (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
+                break;
+        case 'F5':
+                e.preventDefault();
+                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'Numpad7':
         case 'Comma':
-                (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;
         case 'KeyS':
-            if (g_debug.isON() && e.ctrlKey) {
-                do_instant_save();
-                do_move_bottom_half('blink_off');
-            } else {
-                (document.getElementById('s_arr') as HTMLButtonElement)?.click();
-            }
-            break;
+                if (!e.shiftKey) break;
+                if (g_debug.isON()) {
+                    do_instant_save();
+                    do_move_bottom_half('blink_off');
+                } else {
+                    (document.getElementById('s_btn') as HTMLButtonElement)?.click();
+                }
+                break;
+        case 'F3':
+                e.preventDefault();
+                (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+                break;
         case 'KeyR':
         case 'Numpad8':
         case 'Period':
-                (document.getElementById('r_btn') as HTMLButtonElement)?.click();
+                if (e.shiftKey) (document.getElementById('r_btn') as HTMLButtonElement)?.click();
                 break;
     }
 }
