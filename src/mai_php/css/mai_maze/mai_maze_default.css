@@ -1,0 +1,157 @@
+@charset "utf-8";
+
+/* 定数定義(基本値) */
+
+:root {
+    --layout_mode: "Default";
+    
+    --body_lyt_bgcolor: azure;
+
+    --body_lyt_col_left_gap:   30px;
+    --body_lyt_col_right_gap:  30px;
+    --body_lyt_col_main_width: auto;
+
+    --body_lyt_row_header_height: 100px;
+    --body_lyt_row_main_height  :  auto;
+    --body_lyt_row_footer_height:  20px;
+
+    --header_text_color:darkgreen;
+    --header_font_family: sans-serif;
+    --header_font_size: 12px;
+    --header_line_height: 15px;
+
+    --icon_image_width:  50px;
+    --icon_cell_padding: 10px;
+    --icon_cell_width:   calc( var(--icon_image_width, 50px) + calc( var(--icon_cell_padding) * 2));
+
+    --body_lyt_row_header_height: calc( var(--icon_image_width, 50px) + var(--header_line_heght, 15px) * 2);
+
+    --footer_text_color: darkgreen;
+    --footer_font_family: 'Times New Roman', Times, serif;
+    --footer_font_size: 12px;
+    --footer_line_heght: 15px;
+
+    --h1_margin: 10px;
+    --h1_text_color: darkgoldenrod;
+    --h1_font_family: serif;
+    --h1_font_size: 36px;
+    --h1_line_heght: 38px;
+
+
+    --body_move_gap: 1rem 1.5rem;
+    --body_move_cols: 
+            var(--body_lyt_left_gap, 3rem)
+            [header-start footer-start view3d-start message-start maze_m-start]
+            auto
+            [view3d-end message-end view2d-start contls-start]
+            auto
+            [header-end footer-end maze_m-end view2d-end contls-end]
+            var(--body_lyt_right_gap, 3rem)
+            ;
+    --body_move_rows:
+            [header-start]
+            var(--body_lyt_row_header_height,  100px)
+            [header-end view3d-start view2d-start]
+            1fr
+            [view3d-end view2d-end maze_m-start contls-start] 
+            auto
+            [maze_m-end message-start]
+            1fr
+            [message-end contls-end footer-start]
+            var(--body_lyt_row_footer_height,  100px)
+            [footer-end]
+            ;
+
+    
+    --body_menu_gap: 1rem 1.5rem;
+    --body_menu_cols: 
+            var(--body_lyt_left_gap, 3rem)
+            [header-start footer-start message-start menu_l-start menu_m-start]
+            auto
+            [message-end contls-start]
+            auto
+            [header-end footer-end menu_l-end menu_m-end contls-end]
+            var(--body_lyt_right_gap, 3rem)
+            ;
+    --body_menu_rows:
+            [header-start]
+            var(--body_lyt_row_header_height,  100px)
+            [header-end menu_m-start]
+            auto
+            [menu_m-end menu_l-start] 
+            auto
+            [menu_l-end message-start contls-start]
+            auto
+            [message-end contls-end footer-start]
+            var(--body_lyt_row_footer_height,  100px)
+            [footer-end]
+            ;
+
+    
+    --body_ldsv_gap: 1rem 1.5rem;
+    --body_ldsv_cols: 
+            var(--body_lyt_left_gap, 3rem)
+            [header-start footer-start message-start ldsv_l-start ldsv_d-start menu_m-start]
+            1fr
+            [message-end ldsv_d-end contls-start]
+            auto
+            [header-end footer-end ldsv_l-end menu_m-end contls-end]
+            var(--body_lyt_right_gap, 3rem)
+            ;
+    --body_ldsv_rows:
+            [header-start]
+            var(--body_lyt_row_header_height,  100px)
+            [header-end menu_m-start]
+            auto
+            [menu_m-end ldsv_l-start] 
+            auto
+            [ldsv_l-end ldsv_d-start contls-start]
+            1fr
+            [ldsv_d-end message-start]
+            1fr
+            [message-end contls-end footer-start]
+            var(--body_lyt_row_footer_height,  100px)
+            [footer-end]
+            ;
+
+            
+    
+    --info_h2_font_size:  16px;
+
+    --view3D_info_width:  23rem;
+    --view3D_text_color:darkgreen;
+    --view3D_font_family: sans-serif;
+    --view3D_font_size:   1.3rem;
+    --view3D_line_heght:  1.6rem;
+
+    --view_message_hght:        3.5rem;
+    --view_maze_msg_hght:       3.5rem;
+    --view_menu_msg_hght:       3.5rem;
+    
+    --view_message_font_size:   1.1rem;
+    --view_maze_msg_font_size:  1.1rem;
+    --view_menu_msg_font_size:  1.1rem;
+
+
+    --head_menu_list_font_size: 1.1rem;
+    --head_menu_list_line_hght: 1.8rem;
+
+    --view_button_font_size:  0.8rem;
+    --ctl_font_size: 2.0rem;
+/*
+    --lr_arr_width:     2.3rem;
+    --lr_arr_height:    2.3rem;
+    --ud_arr_width:     2.3rem;
+    --ud_arr_height:    2.3rem;
+    --head_btn_height:  2.3rem;
+*/
+    --ldsv_data_list_cols:           4;
+
+    --ldsv_data_list_font_size: 0.9rem;
+    --ldsv_data_list_line_hght: 1.0rem;
+
+    --ldsv_data_dtil_font_size: 0.9rem;
+    --ldsv_data_dtil_line_hght: 1.0rem;
+    
+    --message_width:     33rem;
+}

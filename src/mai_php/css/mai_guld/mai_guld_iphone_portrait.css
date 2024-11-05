@@ -1,0 +1,191 @@
+@charset "utf-8";
+
+/* iphone 縦 */
+
+:root {
+    font-size: 12px;
+
+    --layout_mode: "iPhone Portrait";
+    
+    --body_lyt_bgcolor: rgb(250, 252, 217);
+
+    --body_lyt_col_left_gap:   30px;
+    --body_lyt_col_right_gap:  30px;
+    --body_lyt_col_main_width: auto;
+
+    --body_lyt_row_header_height: 100px;
+    --body_lyt_row_main_height  :  auto;
+    --body_lyt_row_footer_height:  20px;
+
+    --header_text_color:rgb(88, 0, 100);
+    --header_font_family: sans-serif;
+    --header_font_size:   0.8rem;
+    --header_line_height: 0.9rem;
+
+    --icon_image_width:  150px;
+    --icon_cell_padding: 10px;
+    --icon_cell_width:   calc( var(--icon_image_width, 50px) + calc( var(--icon_cell_padding) * 2));
+
+    --body_lyt_row_header_height: calc( var(--icon_image_width, 50px) + var(--header_line_heght, 15px) * 2);
+
+    --footer_text_color: rgb(88, 0, 100);
+    --footer_font_family: 'Times New Roman', Times, serif;
+    --footer_font_size: 12px;
+    --footer_line_heght: 15px;
+
+    --h1_margin: 10px;
+    --h1_text_color: darkgoldenrod;
+    --h1_font_family: serif;
+    --h1_font_size:  15px;
+    --h1_line_heght: 18px;
+
+/*
+    --body_grid_gap: 1rem 1.5rem;
+    --body_grid_cols: 
+            1rem
+            [h1-start footer-start view-start pane_sytm_logs-start cntl-start]
+            auto
+            [h1-end footer-end view-end pane_sytm_logs-end cntl-end]
+            1rem
+            ;
+    --body_grid_rows:
+            [h1-start]
+            100px
+            [h1-end view-start]
+            1fr
+            [view-end  cntl-start]
+            auto
+            [cntl-end pane_sytm_logs-start]
+            auto
+            [pane_sytm_logs-end footer-start]
+            100px
+            [footer-end]
+            ;
+*/
+
+
+    --body_menu_gap: 0 0;
+    --body_menu_cols: 
+        3rem
+        [head-start foot-start mn_l-start ctls-start mssg-start]
+        auto
+        [head-end foot-end mn_l-end ctls-end mssg-end]
+        3rem
+        ;
+    --body_menu_rows:
+        [head-start]
+        auto
+        [head-end mn_l-start]
+        auto 
+        [mn_l-end ctls-start]
+        auto
+        [ctls-end mssg-start]
+        auto
+        [mssg-end foot-start]
+        100px
+        [foot-end]
+        ;
+
+
+    --body_hres_gap: 1.0rem 0;
+    --body_hres_cols: 
+            3rem
+            [head-start foot-start hr_l-start hr_d-start ctls-start mssg-start]
+            auto
+            [head-end foot-end hr_l-end hr_d-end ctls-end mssg-end]
+            3rem
+            ;
+    --body_hres_rows:
+            [head-start]
+            auto
+            [head-end hr_l-start]
+            auto 
+            [hr_l-end hr_d-start]
+            auto
+            [hr_d-end ctls-start] 
+            auto
+            [ctls-end mssg-start]
+            auto 
+            [mssg-end foot-start] 
+            100px
+            [foot-end]
+            ;
+
+
+    --body_ldsv_gap: 1.0rem 0;
+    --body_ldsv_cols: 
+            3rem
+            [head-start foot-start ls_l-start ls_d-start ctls-start mssg-start]
+            auto
+            [head-end foot-end ls_l-end ls_d-end ctls-end mssg-end]
+            3rem
+            ;
+    --body_ldsv_rows:
+            [head-start]
+            auto
+            [head-end ls_l-start]
+            auto 
+            [ls_l-end ls_d-start]
+            auto
+            [ls_d-end ctls-start] 
+            auto
+            [ctls-end mssg-start]
+            auto 
+            [mssg-end foot-start] 
+            100px
+            [foot-end]
+            ;
+
+
+    --body_tomz_gap: 1.0rem 0;
+    --body_tomz_cols: 
+            3rem
+            [head-start foot-start mz_l-start vp_l-start ctls-start mssg-start]
+            auto
+            [head-end foot-end mz_l-end vp_l-end ctls-end mssg-end]
+            3rem
+            ;
+    --body_tomz_rows:
+            [head-start]
+            auto
+            [head-end mz_l-start]
+            auto 
+            [mz_l-end vp_l-start]
+            auto
+            [vp_l-end ctls-start] 
+            auto
+            [ctls-end mssg-start]
+            auto 
+            [mssg-end foot-start] 
+            100px
+            [foot-end]
+            ;
+
+
+    --cp_btn_font_size:   1.0rem;
+
+    --list_margin_button: 1.0rem;
+    --list_font:          1.3rem;
+    --list_heght:         1.8rem;
+    --hres_list_count:    2;
+
+    --detail_font:  0.8rem;
+    --detait_heght: 1.2rem;
+
+/*    --view3D_info_width:     100dvw; */
+
+    --info_h2_font_size:     16px;
+
+    --view_message_height:    2.5rem;
+    --view_message_font_size: 0.8rem;
+
+    --lr_arrow_width:   2.3rem;
+    --lr_arrow_height:  2.3rem;
+    --ud_arrow_width:   2.3rem;
+    --ud_arrow_height:  2.3rem;
+    --camp_btn_height:  2.3rem;
+
+    --message_width:     16rem;
+
+    touch-action: manipulation;
+}

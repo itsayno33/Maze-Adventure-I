@@ -6,8 +6,8 @@
   "scripts": {
     "tsc": "tsc",
     "build": "webpack --mode=development",
-    "maze":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_maze.js",
-    "guld":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_guld.js",
+    "maze":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_maze.js",
+    "guld":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_guld.js",
     "start": "webpack serve --mode=development"
   },
   "keywords": [],
