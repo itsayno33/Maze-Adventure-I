@@ -2,7 +2,8 @@
     declare(strict_types=1);
 
 // 本番環境はURLの先頭を書き換える
-    $db_host = '127.0.0.1';
+//    $db_host = '127.0.0.1';
+    $db_host = 'sql';
 
     // 日本語の利用
     mb_internal_encoding("UTF-8");
@@ -34,8 +35,11 @@
 /*******************************************************************************/
 
     init();
+//    $ga->mode = 'new'; // 暫定
     switch ($ga->mode) {
         case 'new':
+//            $gv->maze->create_maze(0);
+//            $gv->team = new_team();
             break;
         default:
             break;
@@ -60,6 +64,22 @@ function new_team(): Team {
 /*                                                                             */
 /*******************************************************************************/
 
+
+
+    function display_maze(): void {
+        global $gv;
+
+        echo "<pre>\n";
+        echo  $gv->maze->to_string() . PHP_EOL;
+        echo "</pre>\n";
+
+        return;
+    }
+
+    function display_cntl(): void {
+        global $gv,$ga;
+        return;
+    }
 
 
 /*******************************************************************************/
@@ -95,6 +115,7 @@ function new_team(): Team {
 
         public const    Maze_size_x = 21;
         public const    Maze_size_y = 21;
+        public const    Maze_size_z =  1;
         public const    Limit_of_room    = 5;
         public const    Max_size_of_room = 3;
         public Maze     $maze;
@@ -109,13 +130,14 @@ function new_team(): Team {
             $this->cgi_home    = dirname ($this->cgi_base);
             $this->icon_home   = "{$this->cgi_home}/icon-img/kkrn_icon_home_3.png";
 
-            $this->mmd_db      = PDO_db_open($db_host, 'db_mai'); 
+            $this->mmd_db      = PDO_db_open(); 
 
 //            $this->maze        = new Maze(MzKind::Empty);
             $this->maze        = new Maze([
                                     'fill_kind'  => MzKind::Empty,
                                     'size_x'     => GlobalVar::Maze_size_x,
                                     'size_y'     => GlobalVar::Maze_size_y,
+                                    'size_z'     => GlobalVar::Maze_size_z,
                                     'limit_room' => GlobalVar::Limit_of_room,
                                     'room_size'  => GlobalVar::Max_size_of_room,
                                 ]);
@@ -126,9 +148,9 @@ function new_team(): Team {
         }
     }
     
-        // POST引数の設定
-
-        class GlobalArguments {
+    
+    // POST引数の設定
+    class GlobalArguments {
         public string $mode;
         public int    $pid = 1;
         public string $opt = '';
@@ -186,11 +208,9 @@ function new_team(): Team {
     }
     
 
-    function PDO_db_open(string $db_host, string $db_name): PDO {
+    function PDO_db_open(): PDO {
 
         // データベース関連定数
-        $db_user = "namwons33";
-        $db_passwd = "PE333833";
         $db_options =  array(
             // SQL実行失敗時には例外をスローしてくれる
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -203,9 +223,9 @@ function new_team(): Team {
             // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
         );
 
-        $dsn = "mysql:dbname={$db_name};host={$db_host};charset=utf8mb4";
         try {
-            $dbh = new PDO($dsn,$db_user,$db_passwd,$db_options);
+            $dsn = 'mysql:host=sql;dbname=db_mai;charset=utf8mb4';
+            $dbh = new PDO($dsn, 'itsayno33', 'PE333833',$db_options);
         } catch (PDOException $e) {
             pdo_error1($e, "データベース接続エラー: {$dsn}");
         }
@@ -221,111 +241,98 @@ function new_team(): Team {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0 ,user-scalable=0, shrink-to-fit=no, viewport-fit=cover">
     <title>Maze Adventure I</title>
-    <link rel="stylesheet" href="css.php?time=<?php echo date("Y-m-d_H:i:s"); ?>&file=mai_guld" />
-    <script src="./js/mai_guld.js?time=<?php echo date("Y-m-d_H:i:s"); ?>"></script>
+    <link rel="stylesheet" href="css.php?time=<?php echo date("Y-m-d_H:i:s"); ?>&file=mai_maze" />
+    <script src="./js/mai_maze.js?time=<?php echo date("Y-m-d_H:i:s"); ?>"></script>
 </head>
 <body id='body'>
-    <article id='guld_head_pane'>
-        <h1 class='h1'>ダンジョンアドベンチャーⅠ【ギルド】</h1>
-        <button id='debug_mode' name='debug_mode' value='false' class='normal'>通常</button>
-        <button id='alert_mode' name='alert_mode' value='false' class='normal'>ログ</button>
-        <div id='guld_head_button'>
-            <button id='r_cp1' name='r_cp1' value='R'>窓口に戻る</button>
-            <button id='s_cp1' name='s_cp1' value='S'>切替</button>
-            <button id='y_cp1' name='y_cp1' value='Y'>はい</button>
-            <button id='n_cp1' name='n_cp1' value='N'>いいえ</button>
-        </div>
-        <p id='guld_head_message'></p>
+    <header id='pane_header'>
+        <h1 class='h1'>ダンジョンアドベンチャーⅠ</h1>
+    </header>
+    <article id='pane_maze_vw3D'>
+        <canvas id='maze_view3D_canvas' width='320' height='200'></canvas>
+        <p id='maze_view3D_direction_info'></p>
     </article>
-    <article id='guld_menu_list_pane'>
-        <h2>冒険者ギルド窓口</h2>
-        <ul id='guld_menu_list'>
-            <li id='guld_hres'>冒険者情報
-                <p>　冒険者情報を見ることができます</p></li>
-            <li id='guld_load'>冒険の呼び出し
-                <p>　冒険情報をロードできます</p></li>
-            <li id='guld_save'>冒険の記録
-                <p>　冒険情報をセーブできます</p></li>
-            <li id='guld_tomz'>冒険出発
-                <p>　ダンジョンに出発します</p></li>
+    <article id='pane_maze_vw2D'>
+        <div id='div_maze_vw2D'>
+        <pre id='maze_view2D_pre'></pre>
+        </div>
+    </article>
+    <article id='pane_menu_list'>
+        <ul id='menu_list'>
+            <li id='menu_load'>冒険の復活
+                <p>以前保存した冒険を再開できます</p></li>
+            <li id='menu_save'>冒険の記録
+                <p>直前までの冒険を保存できます</p></li>
+            <li id='menu_mvpt'>街への帰還
+                <p>街(冒険者ギルド)へジャンプします</p></li>
         </ul>
     </article>
-    <article id='guld_hres_list_pane'>
-        <h2>冒険者情報の一覧</h2>
-        <fieldset id='hres_team_fields'>
-            <legend>パーティ・メンバー</legend>
-            <ul id='team_list'></ul>
-        </fieldset>
-        <fieldset id='hres_guld_fields'>
-            <legend>ギルド・メンバー</legend>
-            <ul id='guld_list'></ul>
-        </fieldset>
-        <fieldset id='hres_appd_fields'>
-            <legend>求人募集メンバー</legend>
-            <ul id='appd_list'></ul>
-        </fieldset>
-        <fieldset id='hres_menu_fields'>
-            <legend>コマンド</legend>
-            <ul id='menu_list'></ul>
-        </fieldset>
-        <fieldset id='hres_inpt_fields'>
-            <legend>入力</legend>
-            <ul id='inpt_list'></ul>
+    <article id='pane_ldsv_list'>
+        <form id='ldsv_data_form'>
+            <input id='ldsv_data_id' for='ldsv_data_form' type='hidden' name='ldsv_data_id' value='-1' />
+        </form>
+        <ul id='ldsv_data_list'></ul>
+    </article>
+    <article id='pane_ldsv_data'>
+        <fieldset id='ldsv_data_fields'>
+            <legend id='ldsv_data_legend'>
+                セーブ情報
+            </legend>
+            <ul id='ldsv_data_detail'>
+                <li>
+                    <label for='ldsv_data_time'>保存日時:</label>
+                    <p id='ldsv_data_time'></p>
+                </li>
+                <li>
+                    <label for='ldsv_data_point'>保存場所:</label>
+                    <p id='ldsv_data_point'></p>
+                </li>
+                <li>
+                    <label for='ldsv_data_detail'>詳細:</label>
+                    <textarea id='ldsv_data_detail' for='load_data_form' type='text' name='detail' minlength='0' maxlength='99' cols='30' rows='5' placeholder='(任意)' readonly></textarea>
+                </li>
+            </ul>
         </fieldset>
     </article>
-    <article id='guld_hres_data_pane'>
-        <fieldset id='hres_hero_fields'>
-            <legend>冒険者の詳細情報</legend>
-            <ul id='hres_hero_info'></ul>
-        </fieldset>
+    <article id='pane_menu_mesg'>
+        <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
+        <p id='menu_mesg'></p>
+        <button id='n_cp1' type='button' name='n_cp1' value='N'>いいえ</button>
+        <button id='y_cp1' type='button' name='y_cp1' value='Y'>はい</button>
+        <button id='s_cp1' type='button' name='s_cp1' value='S'>切替</button>
     </article>
-    <article id='guld_ldsv_list_pane'>
-        <h2>冒険の呼び出し</h2>
-        <ul id='ldsv_list'></ul>
+    <article id='pane_maze_mesg'>
+        <p id='maze_mesg'></p>
     </article>
-    <article id='guld_ldsv_data_pane'>
-                <fieldset id='ldsv_info_fields'>
-                    <legend>今までの記録</legend>
-                    <ul id='ldsv_info_detail'></ul>
-                </fieldset>
-    </article>
-    <article id='guld_tomz_maze_pane'>
-        <h2>迷宮への挑戦</h2>
-        <fieldset id='tomz_maze_fields'>
-            <legend>新たな迷宮への入り口</legend>
-            <ul id='maze_list'></ul>
-        </fieldset>
-    </article>
-    <article id='guld_tomz_mvpt_pane'>
-        <fieldset id='tomz_mvpt_fields'>
-            <legend>攻略中の迷宮に戻る</legend>
-            <ul id='mvpt_list'></ul>
-        </fieldset>
-    </article>
-    <article id='guld_ctls_pane'>
-        <div id ='ctls_view'><div id='ctls_panel'>
+    <article id ='pane_ctls_boad'> 
+        <div id ='div_ctls_boad'>
+        <div id='ctls_boad'>
+            <button id='debug_mode' type='button' name='debug_mode_button' value='false'>通常</button>
+            <button id='alert_mode' type='button' name='alert_mode_button' value='false'>ログ</button>
             <button id='u_arr' type='button' name='u_arr' value='U'>↑</button>
             <button id='d_arr' type='button' name='d_arr' value='D'>↓</button>
             <button id='l_arr' type='button' name='l_arr' value='L'>←</button>
             <button id='r_arr' type='button' name='r_arr' value='R'>→</button>
-            <button id='y_btn' type='button' name='y_btn' value='U'>〇</button>
+            <button id='y_btn' type='button' name='y_btn' value='Y'>〇</button>
             <button id='n_btn' type='button' name='n_btn' value='N'>✖</button>
             <button id='s_btn' type='button' name='s_btn' value='S'>選</button>
-            <button id='r_btn' type='button' name='r_btn' value='R'>戻</button>
-        </div></div>
+            <button id='r_btn' type='button' name='r_btn' value='T'>戻</button>
+            <button id='m_btn' type='button' name='m_btn' value='M'>メニュー（Ｍ）</button>
+        </div>
+        </div>
     </article>
-    <article id='sytm_logs_pane'>
-        <div id='client_message'></div>
+    <article id ='pane_sytm_logs'>
+        <!-- div id='client_message'></div -->
         <?php 
             $gv->mes->display_err_message(); 
             $gv->mes->display_nor_message(); 
         ?>
     </article>
-    <footer id='foot_pane'>
-        <a href='../../md/'><img src='./icon-img/kkrn_icon_home_3.png' /></a>
-        <p class='foot_print'>Guild in Maze Adventure I.</p>
+    <footer id='pane_footer'>
+        <a href='../md/'><img src='./icon-img/kkrn_icon_home_3.png' /></a>
+        <p class='foot_print'>Maze Adventure Ⅰ.</p>
     </footer>
-    <script>
+    <script id='ts_caller'>
         window.tsCall.start_game(
             '<?php echo $ga->mode; ?>', 
             '<?php echo $gv->script_path; ?>', 

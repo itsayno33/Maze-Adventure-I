@@ -2,7 +2,8 @@
     declare(strict_types=1);
 
 // 本番環境はURLの先頭を書き換える
-    $db_host = '127.0.0.1';
+//    $db_host = '127.0.0.1';
+    $db_host = 'sql';
 
     // 日本語の利用
     mb_internal_encoding("UTF-8");
@@ -83,7 +84,7 @@
             break;
     }
 
-    header("Content-type: application/json");
+#    header("Content-type: application/json");
     echo $ret_JSON;
     free();
  
@@ -312,7 +313,7 @@ function create_team(Maze $maze, array $pos): Team {
             $this->cgi_home    = dirname ($this->cgi_base);
             $this->icon_home   = "{$this->cgi_home}/icon-img/kkrn_icon_home_3.png";
 
-            $this->db_mai      = PDO_db_open($db_host, 'db_mai'); 
+            $this->db_mai      = PDO_db_open(); 
            [$rslt, $mazeinfo]  = MazeInfo::get_tbl_all($this->db_mai, $this->mes);
             if ($rslt) $this->mazeinfo = $mazeinfo; 
 
@@ -420,11 +421,9 @@ function tr_rollback(PDO $db_mai): bool {
 
 
 
-function PDO_db_open(string $db_host, string $db_name): PDO {
+function PDO_db_open(): PDO {
 
     // データベース関連定数
-    $db_user    = "namwons33";
-    $db_passwd  = "PE333833";
     $db_options =  array(
         // SQL実行失敗時には例外をスローしてくれる
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -437,10 +436,10 @@ function PDO_db_open(string $db_host, string $db_name): PDO {
         // PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
     );
 
-    $dsn = "mysql:dbname={$db_name};host={$db_host};charset=utf8mb4";
     try {
-        $dbh = new PDO($dsn,$db_user,$db_passwd,$db_options);
-    } catch (PDOException $e) {
+        $dsn = 'mysql:host=sql;dbname=db_mai;charset=utf8mb4';
+        $dbh = new PDO($dsn, 'itsayno33', 'PE333833',$db_options);
+} catch (PDOException $e) {
         pdo_error1($e, "データベース接続エラー: {$dsn}");
     }
     return $dbh;
