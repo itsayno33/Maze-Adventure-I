@@ -1,0 +1,94 @@
+docker+Node.js(Express)の最小構成プロジェクトを作成する
+
+https://qiita.com/ryo-ohnishi/items/b54e649b14b51694ef77
+
+
+
+Docker上でNext.js/Express.jsを環境構築
+
+https://zenn.dev/unnnyou/articles/cf978d62d3638d
+
+
+
+DockerでTypeScript×Node.js×Expressの環境構築
+
+https://qiita.com/tanakaPH/items/84aedaad8c0f5958a5f0
+
+参考になる
+
+
+>>>
+version: '3'
+services:
+    app:
+        # 起動イメージ
+        image: node:16
+        # 環境変数
+        environment:
+            - DEBUG=app:*
+        tty: true
+        # ホスト側のポート：コンテナのポート
+        ports:
+            - '3000:3000'
+        # ホスト側のsrcをコンテナのappにマウント
+        volumes:
+            - ./src:/app
+        # 起動時のカレントフォルダ
+        working_dir: /app
+        # 起動後に実行するコマンド
+        command: npm start
+<<<
+
+(???)
+volumes:
+      - ./src:/app
+      - /app/node_modules  # node_modulesはコンテナ内に保持
+(???)
+
+
+
+
+# Node.jsコンテナを起動(ホスト側)
+>>>
+$ docker-compose run --rm app /bin/bash
+<<<
+
+
+Expressアプリケーション作成(ゲスト側)
+>>>
+# express-generatorでひな形を生成
+root@2e490c20618c:/app# npx express-generator
+
+# 依存パッケージをインストール
+root@2e490c20618c:/app# npm install
+
+# nodemonをインストール
+root@2e490c20618c:/app# npm install -D nodemon
+<<<
+
+
+nodemonに関する設定変更(ホスト側: マウントしたプロジェクトのディレクトリ?)
+
+package.jsonの変更
+>>>
+"scripts": {
+  "dev": "nodemon ./bin/www",
+  "start": "node ./bin/www"
+},
+<<<
+
+docker-compose.ymlの変更
+>>>
+# 起動後に実行するコマンド
+command: npm run dev
+<<<
+
+Expressアプリケーション起動
+>>>
+# Expressアプリケーションを起動
+$ docker-compose up
+<<<
+
+
+
+
