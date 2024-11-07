@@ -194,9 +194,9 @@ export class C_SaveData implements I_JSON {
         this.title     = s.title     ?? this.title;
         this.detail    = s.detail    ?? this.detail;
         this.point     = s.point     ?? this.point;
-        this.auto_mode = s.auto_mode != '0' ?? this.auto_mode;
-        this.is_active = s.is_active != '0' ?? this.is_active;
-        this.is_delete = s.is_delete != '0' ?? this.is_delete; 
+        if (s.auto_mode === undefined) this.auto_mode; else s.auto_mode !== '0' ? true : false;
+        if (s.is_active === undefined) this.is_active; else s.is_active !== '0' ? true : false;
+        if (s.is_delete === undefined) this.is_delete; else s.is_delete !== '0' ? true : false;
         if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
         if (s.mypos     !== undefined) this.mypos.decode(s.mypos); 
 
@@ -239,9 +239,9 @@ export class C_SaveData implements I_JSON {
             + "\ntitle:      " + (this.title     ?? '?')
             + "\ndetail:     " + (this.detail    ?? '?')
             + "\npoint:      " + (this.point     ?? '?')
-            + "\nauto_mode:  " + (this.auto_mode?'Y':'N'  ?? '?')
-            + "\nis_active:  " + (this.is_active?'Y':'N'  ?? '?')
-            + "\nis_delete:  " + (this.is_delete?'Y':'N'  ?? '?')
+            + "\nauto_mode:  " + (this.auto_mode?'Y':'N')
+            + "\nis_active:  " + (this.is_active?'Y':'N')
+            + "\nis_delete:  " + (this.is_delete?'Y':'N')
             + "\nmyurl:      " + (this.mypos.url()      ?? '?')
             + "\nteam_uid:   " + (this.mypos.tid()      ?? '?')
             + "\nloc_kind:   " + (this.mypos.get_lckd() ?? '?')

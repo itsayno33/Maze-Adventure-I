@@ -52,8 +52,13 @@ typings/
 # 共通
 **/.gitignore
 /dist
-/html
+*.bak
 **/_ord_src
 **/_old_src
+*.org
+*.new
+*.old
 **/no_git/*
 *.log
+env*.conf
+.env
