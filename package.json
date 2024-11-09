@@ -5,28 +5,27 @@
   "main": "D:/Top/Dev/Docker/Mai/bck/app/app.js",
   "scripts": {
     "tsc": "tsc",
-    "maze":   "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_maze.js",
-    "guld":   "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_guld.js",
-    "tmaze":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_maze.js",
-    "tguld":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_guld.js",
+    "maze": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_maze.js",
+    "guld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_guld.js",
+    "tmaze": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_maze.js",
+    "tguld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_guld.js",
     "eclern": "rimraf D:/Top/Dev/Docker/Mai/bck/app/routes",
-    "emain":  "tsc --target es5 --moduleResolution node10 --esModuleInterop true D:/Top/Dev/ts/mai/src/express/app.ts --outDir D:/Top/Dev/Docker/Mai/bck/app/",
-    "etest":  "ts-node-dev --respawn D:/Top/Dev/ts/mai/src/express/app.ts"
+    "emain": "tsc --target es5 --moduleResolution node10 --esModuleInterop true D:/Top/Dev/ts/mai/src/express/app.ts --outDir D:/Top/Dev/Docker/Mai/bck/app/",
+    "etest": "ts-node-dev --respawn D:/Top/Dev/ts/mai/src/express/app.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.1",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.6.3",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "@types/node": "^22.9.0",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0"
+    "@types/node": "^22.9.0"
   }
 }

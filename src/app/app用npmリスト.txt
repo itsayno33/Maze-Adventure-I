@@ -1,4 +1,0 @@
-npm install node npm express express-generator
-npm install -D @types/express @types/node @types/typescript @types/webpack
-npm install -D typescript ts-loader ts-node ts-node-dev webpack webpack-cli webpack-dev-server npm-run-all rimraf
-npx express-generator --view=ejs
