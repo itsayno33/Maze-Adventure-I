@@ -1,22 +1,22 @@
 import { _max, _min, _round } from "./F_Math";
 
 // 乱数関数呼び出し用の型宣言
-type T_frand = (()=>number)
+type T_frand = ()=>number
 const frand: T_frand =  ()=>{return Math.random()}
 
 // 一様乱数(整数)
 export function _irand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    const frand = Math.floor(rand() * (max - min + 1) + min);
-    return _round(frand, 0);
+    const f_rand = Math.floor(rand() * (max - min + 1) + min);
+    return _round(f_rand, 0);
 }
 
 // 正規分布もどき乱数(整数)
-export function _igrand(min: number = 0, max: number = 1, rand: T_frand = frand):number {
+export function _igrand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
     return _irand(min, max, ()=>{return _grand(0, 1, rand)})
 }
 
 // 正規分布もどき乱数(実数)
-export function _grand(min: number = 0, max: number = 1, rand: T_frand = frand):number {
+export function _grand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
     return Math.floor(___gaussianRand(rand) * (max - min + 1) + min);
 }
 function ___gaussianRand(rand: T_frand = frand) {

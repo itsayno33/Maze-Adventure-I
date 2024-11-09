@@ -12,6 +12,8 @@ import { C_CurrentTeamView }     from "./C_TeamView";
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { _alert }                from "../d_cmn/global";
+import { C_GoodsItem } from "./C_GoodsItem";
+import { T_GoodsKind } from "../html/js/mai_guld";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -60,7 +62,7 @@ export class C_Team implements I_MazeObj {
     protected uniq_id:   string;
     protected save_id:   number;
     protected walker:    C_Walker;
-    protected goods:     C_Goods;
+    protected gold:      C_GoodsItem;
     protected heroes:    {[uid: string]: C_Hero};
 
     protected myView:    I_MazeObjView|undefined;
@@ -77,7 +79,7 @@ export class C_Team implements I_MazeObj {
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
-        this.goods  = new C_Goods();
+        this.gold   = new C_GoodsItem({gkind: T_GoodsKind.Gold, value: 0});
         this.heroes = {};
         this.hope_motion = 'NOP';    
         if (j !== undefined) this.decode(j);
@@ -138,7 +140,7 @@ export class C_Team implements I_MazeObj {
             uniq_id:   this.uniq_id,
             save_id:   this.save_id,
             locate:    this.walker.encode(),
-            goods:     this.goods.encode(),
+            gold:      this.gold.encode(),
             heroes:    json_heroes,
             motion:    this.hope_motion,
             view:      this.myView?.encode() ?? {},
@@ -154,7 +156,7 @@ export class C_Team implements I_MazeObj {
         if (a.motion !== undefined)  this.hope_motion = a.motion;
 
         if (a.locate !== undefined)  this.walker.decode(a.locate);
-        if (a.goods !== undefined)   this.goods.decode(a.goods);
+        if (a.gold   !== undefined)  this.gold.decode(a.gold);
 
         if (a.heroes !== undefined)  {
             this.heroes = {};
@@ -200,7 +202,7 @@ export class C_Team implements I_MazeObj {
             + "\ncur_y: "     + (this.walker.get_p().y ?? '?')
             + "\ncur_z: "     + (this.walker.get_p().z ?? '?')
             + "\ncur_d: "     + (this.walker.get_d()   ?? '?')
-            + "\ngoods: "     + (Object.keys(this.goods??{}).length)
+            + "\ngold: "      + (Object.keys(this.gold ?? {}).length)
             + "\nheroes: "    + (this.heroes?.length ?? '?')
             + "\n"
         );

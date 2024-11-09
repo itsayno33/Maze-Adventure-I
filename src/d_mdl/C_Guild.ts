@@ -6,6 +6,7 @@ import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { C_Goods, JSON_Goods }   from "./C_Goods";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { _alert }                from "../d_cmn/global";
+import { C_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,
@@ -34,14 +35,14 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     protected uniq_id:    string;
     protected save_id:    number;
     protected name:       string;
-    public    goods:      C_Goods;
+    public    gold:       C_GoodsItem;
     protected heroes:     {[uid: string]: C_Hero};
     public constructor(a?: JSON_Guild) {
         this.id         = -1;
         this.uniq_id    = 'mai_guld#' + _get_uuid();
         this.save_id    = -1;
         this.name       = '';
-        this.goods      = new C_Goods();
+        this.gold       = new C_GoodsItem({gkind: T_GoodsKind.Gold, value: 0});
         this.heroes     = {};
         if (a !== undefined) this.decode(a);
     }
@@ -74,7 +75,7 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
             id:      this.id,
             uniq_id: this.uniq_id,
             save_id: this.save_id,
-            goods:   this.goods.encode(),
+            gold:    this.gold.encode(),
             heroes:  json_heroes,
             name:    this.name,
         }
@@ -86,7 +87,7 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
         if (a.uniq_id  !== undefined) this.uniq_id    = a.uniq_id;
         if (a.save_id  !== undefined) this.save_id    = a.save_id;
         if (a.name     !== undefined) this.name       = a.name;
-        if (a.goods    !== undefined) this.goods.decode(a.goods);
+        if (a.gold     !== undefined) this.gold.decode (a.gold);
 
         if (a.heroes !== undefined)  {
             this.heroes = {};
@@ -118,7 +119,7 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
             + "\nuniq_id:  " + (this.uniq_id        ?? '?')
             + "\nsave_id:  " + (this.save_id        ?? '?')
             + "\nname:     " + (this.name           ?? '?')
-            + "\ngoods:    " + (Object.keys(this.goods??0).length)
+            + "\ngold:     " + (Object.keys(this.gold??0).length)
             + "\nheroes:   " + (this.heroes?.length ?? '?')
             + "\n"
         );
