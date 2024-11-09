@@ -13,7 +13,9 @@ import { POST_and_get_JSON, POST_and_move_page } from "../d_cmn/F_POST";
 import { 
     _alert, g_mes, g_start_env, 
     g_url,  g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
-    g_save, 
+    g_save,
+    g_url_new_guld,
+    g_url_new_hres, 
 } from "../d_cmn/global";
 
 
@@ -31,7 +33,8 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
     const opt = new C_UrlOpt();
     opt.set('mode', 'new_game'); 
     opt.set('pid',   g_start_env.pid);
-    return await _get_new_game(g_url[g_url_get_guld], opt, callback);
+//    return await _get_new_game(g_url[g_url_get_guld], opt, callback);
+    return await _get_new_game(g_url[g_url_new_guld], opt, callback);
 }
 
 async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
@@ -172,7 +175,8 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
     const opt = new C_UrlOpt();
     opt.set('mode',        'new_hero'); 
     opt.set('number',      num.toString()); 
-    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
+//    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON(g_url[g_url_new_hres], opt)?.then(jsonObj=>{
         if (jsonObj.ecode == 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.hres  === undefined) {

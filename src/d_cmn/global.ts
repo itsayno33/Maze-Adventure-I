@@ -1,10 +1,16 @@
-export const g_url_get_save    = 0;
-export const g_url_get_maze    = 1;
-export const g_url_get_guld    = 2;
-export const g_url_mai_maze    = 3;
-export const g_url_mai_guld    = 5;
-export const g_url_check_JSON  = 9;
-export const g_url: string[] = new Array(10);
+export const g_url_get_save    =  0;
+export const g_url_get_maze    =  1;
+export const g_url_get_guld    =  2;
+export const g_url_mai_maze    =  3;
+export const g_url_mai_guld    =  5;
+export const g_url_new_maze    =  6;
+export const g_url_new_guld    =  7;
+export const g_url_new_hres    =  8;
+export const g_url_rcd_list    =  9;
+export const g_url_rcd_load    = 10;
+export const g_url_rcd_save    = 11;
+export const g_url_check_JSON  = 12;
+export const g_url: string[] = new Array(13);
 
 export let   g_my_url: string;
 
@@ -89,12 +95,19 @@ const tsCaller: I_TsCall = (() => {
         get_init_data: (my_url: string): void => {
             g_my_url = my_url;
             const url_top = parent_url(my_url);
+            const exp_top = parent_url(my_url).replace(/\:\d+/, ':3000');
 //            const url_top = url_base;
             g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
             g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
             g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
+
             g_url[g_url_mai_maze]   = url_top + "/mai_maze.php";
             g_url[g_url_mai_guld]   = url_top + "/mai_guld.php";
+
+            g_url[g_url_new_maze]   = exp_top + "/mai/newMaze";
+            g_url[g_url_new_guld]   = exp_top + "/mai/newGuld";
+            g_url[g_url_new_hres]   = exp_top + "/mai/newHres";
+            
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },
         // 暫定版開始処理

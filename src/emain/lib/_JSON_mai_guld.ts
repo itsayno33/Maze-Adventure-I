@@ -43,17 +43,20 @@ interface I_Return {
     ecode: number;
     emsg:  string;
     save?: JSON_SaveData;
-    hres?: JSON_Hero[];
+    data?: {
+        hres:JSON_Hero[];
+    }
 }
 
-function newGame(arg: I_GlobalArguments): I_Return {
+export function newGame(arg: I_GlobalArguments): I_Return {
     init(arg);
     const guld = new_guld();
     const team = new_team(guld);
     const save = new_save(guld, team);
     return save_encode(0, save);
 }
-function newHero(arg: I_GlobalArguments): I_Return {
+
+export function newHres(arg: I_GlobalArguments): I_Return {
     init(arg);
     const hres = new_hres();
     return hres_encode(0,  hres);
@@ -97,6 +100,7 @@ function hres_encode(code: number, hres: C_Hero[]): I_Return {
         for(const hero of hres) {
             hres_array.push(hero.encode());
         }
+        ret_assoc.data  = {hres: hres_array};
         return ret_assoc;
     }
 }
@@ -219,5 +223,7 @@ class C_GlobalArguments {
     }
 }
 
+/*
 module.exports = newGame;
 module.exports = newHero;
+*/
