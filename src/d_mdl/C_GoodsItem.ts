@@ -1,5 +1,5 @@
 import { T_MakeEnumType }   from "../d_utl/T_MakeEnumType";
-import { _get_uuid }        from "../d_utl/F_Rand";
+import { _get_uuid, _irand }        from "../d_utl/F_Rand";
 import { I_JSON, JSON_Any } from "./C_SaveData";
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
@@ -119,6 +119,12 @@ export class C_GoodsItem implements I_JSON {
         this.original_value = original_value;
         this.value          = original_value;
         return this.value;
+    }
+
+    public random_make(kind: T_GoodsKind): C_GoodsItem {
+        this.kind = kind;
+        if (kind === T_GoodsKind.Gold)  this.value = _irand(100,1000);
+        return this;
     }
 
     public encode(): JSON_GoodsItem {

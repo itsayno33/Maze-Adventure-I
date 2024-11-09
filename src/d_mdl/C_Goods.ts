@@ -3,6 +3,7 @@
 import { I_JSON }          from "./C_SaveData";
 import { C_Obj, I_Obj, JSON_Obj } from "./C_Obj";
 import { T_MakeEnumType }  from "../d_utl/T_MakeEnumType";
+import { _irand } from "../d_utl/F_Rand";
 
 
 export interface JSON_Goods extends JSON_Obj {
@@ -59,7 +60,7 @@ export class C_Goods extends C_Obj implements I_Goods, I_JSON {
 
     protected my_gkind: number;
     
-    public constructor(j?: JSON_Goods|undefined) {
+    protected constructor(j?: JSON_Goods|undefined) {
         super(j);
         this.my_gkind = T_GoodsKind.Unkn;
         if (j !== undefined) this.decode(j);
@@ -70,6 +71,10 @@ export class C_Goods extends C_Obj implements I_Goods, I_JSON {
         return GoodsKind_mb_name[this.my_gkind];
     }
 
+    public random_make(): C_Goods {
+        this.my_gkind = _irand(0, 7); 
+        return this;
+    }
 
     public encode(): JSON_Goods {
         const j   = super.encode() as JSON_Goods;
