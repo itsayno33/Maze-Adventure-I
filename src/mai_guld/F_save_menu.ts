@@ -13,6 +13,7 @@ import {
     g_all_maze, g_all_team, g_all_guld, g_all_mvpt, g_vsw 
 } 
 from "./global_for_guild";
+import { C_PointDir, C_Team } from "../html/js/mai_guld";
 
 
 
@@ -437,8 +438,40 @@ export function post_load_function(jsonObj: any): boolean {
     set_from_save_to_all_data(g_all_guld, g_save.all_guld);
     set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
 
-    g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
-    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
+//loc
+//    g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
+//    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
+
+    if (g_save?.mypos !== undefined && g_team?.get_loc() !== undefined) {
+        g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
+        g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
+    } else {
+        const [team_id, team_val] = Object.entries(g_all_team)[0]
+        g_team.decode(team_val.encode());
+
+        const [guld_id, guld_val] = Object.entries(g_all_guld)[0]
+        g_guld.decode(guld_val.encode());
+
+        const loc = new C_MovablePoint();
+        loc.decode({
+            kind:   'Guld',
+            name:    g_guld.get_name(),
+            loc_uid: g_guld.uid(),
+            loc_pos: new C_PointDir({
+                'x': 0,
+                'y': 0,
+                'z': 0,
+                'd': 0,
+            }),
+            team_uid: g_team.uid(),
+        });
+        g_team.set_loc(loc);
+        g_save.mypos = loc;
+
+    }
+    g_save.mypos.set_url(g_my_url);
+    g_team.set_loc(g_save.mypos);
+//loc
 
     return true;
 }

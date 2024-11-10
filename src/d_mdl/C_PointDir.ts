@@ -2,7 +2,6 @@
 
 import { C_Point, JSON_Point } from './C_Point';
 import {T_MakeEnumType}        from "../d_utl/T_MakeEnumType";
-import { _alert }              from '../d_cmn/global';
 
 export const T_Direction:{[dir: string]: number} = {
     N: 0,
@@ -95,7 +94,7 @@ export class  C_PointDir extends C_Point {
         j.d     = this.d as number;
         return j;
     }
-    public decode(j: JSON_PointDir): C_PointDir {
+    public decode(j?: JSON_PointDir): C_PointDir {
         if (j === undefined) return this;
         if (!(_dir_key(j.d) in T_Direction)) return this;
 
@@ -105,7 +104,7 @@ export class  C_PointDir extends C_Point {
     }
     
     public alert(): void {
-        _alert("PointData Info:" 
+        alert("PointData Info:" 
             + "\nx: "     + (this.x ?? '?')
             + "\ny: "     + (this.y ?? '?')
             + "\nz: "     + (this.z ?? '?')

@@ -3,7 +3,6 @@
 import { C_Location, JSON_Location } from "./C_Location";
 import { I_JSON_Uniq }               from "./C_SaveData";
 import { _get_uuid }                 from "../d_utl/F_Rand";
-import { _alert }                    from "../d_cmn/global";
 
 export interface JSON_MovablePoint extends JSON_Location {
     uniq_id?:  string,
@@ -40,7 +39,7 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         this.cur_url  = '';
         this.team_uid = undefined;
 
-        if (json !== undefined) this.decode(json);
+        if (json !== undefined && json !== null) this.decode(json);
     }
     public uid(): string { return this.uniq_id}
     public url(): string { return this.cur_url}
@@ -75,18 +74,19 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         j.team_uid = this.team_uid ?? '';
         return j;
     }
-    public decode(j: JSON_MovablePoint): C_MovablePoint {
+    public decode(j?: JSON_MovablePoint): C_MovablePoint {
         super.decode(j);
+        if (j === undefined) return this;
         if (j.uniq_id  !== undefined) this.uniq_id  = j.uniq_id;
         if (j.cur_url  !== undefined) this.cur_url  = j.cur_url;
         if (j.team_uid !== undefined) this.team_uid = j.team_uid;
 
-        if (this.team_uid == '') this.team_uid = undefined;
+        if (this.team_uid === '') this.team_uid = undefined;
         return this;
     }
     
     public alert(): void {
-        _alert("MvPt Info:" 
+        alert("MvPt Info:" 
             + "\nuniq_id:  "  + (this.uniq_id    ?? '?')
             + "\ncur_url:  "  + (this.cur_url    ?? '?')
             + "\nteam_uid: "  + (this.team_uid   ?? '?')

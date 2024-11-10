@@ -8,11 +8,7 @@
     "maze": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_maze.js",
     "guld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_guld.js",
     "tmaze": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_maze.js",
-    "tguld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_guld.js",
-    "eclern": "xxxrimraf D:/Top/Dev/Docker/Mai/bck/app/routes",
-    "emain": "webpack --mode=development  --config webpack.server.config.js --env entry=D:/Top/Dev/ts/mai/src/emain/app.ts --env outdir=D:/Top/Dev/Docker/Mai/bck/app --env outfile=app.js",
-    "etest": "node D:/Top/Dev/Docker/Mai/bck/app/app.js",
-    "ttest": "ts-node-dev --respawn D:/Top/Dev/ts/mai/src/emain/app.ts"
+    "tguld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/Docker/Mai/www/html/mai/js --env outfile=mai_guld.js"
   },
   "keywords": [],
   "author": "",

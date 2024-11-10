@@ -34,14 +34,9 @@ export class C_Location implements I_JSON {
     protected loc_kind: T_Lckd = T_Lckd.Unkn;
     protected loc_name: string = '';
     protected loc_uid:  string = '';
-    protected loc_pos:  C_PointDir;
+    protected loc_pos:  C_PointDir = new C_PointDir();
 
     public constructor(json?: JSON_Location) {
-        this.loc_kind = T_Lckd.Unkn; 
-        this.loc_name = '';
-        this.loc_uid  = '';
-        this.loc_pos  = new C_PointDir();
-
         if (json !== undefined) this.decode(json);
     }
 
@@ -106,7 +101,7 @@ export class C_Location implements I_JSON {
             loc_pos:  this.loc_pos.encode(),
         };
     }
-    public decode(j: JSON_Location): C_Location {
+    public decode(j?: JSON_Location): C_Location {
         if (j === undefined) return this;
         if (j.kind === undefined || !(j.kind in T_Lckd)) return this;
 

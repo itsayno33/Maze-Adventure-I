@@ -11,9 +11,7 @@ import { JSON_Any }              from "./C_SaveData";
 import { C_CurrentTeamView }     from "./C_TeamView";
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert }                from "../d_cmn/global";
-import { C_GoodsItem } from "./C_GoodsItem";
-import { T_GoodsKind } from "../html/js/mai_guld";
+import { C_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -91,12 +89,14 @@ export class C_Team implements I_MazeObj {
     public uid(): string { return this.uniq_id}
 
     public within(p: C_Point): boolean {
-        const here = this.walker.get_p();
-        return here.within(p); 
+        const here = this.walker?.get_p();
+        return here?.within(p) ?? false; 
     }
 
     public view():  I_MazeObjView|undefined {return this.myView}
-    public walk():  C_Walker {return this.walker}
+    public walk():  C_Walker {
+        return this.walker
+    }
     
     public canThrough(): boolean {return true}
 
@@ -120,7 +120,7 @@ export class C_Team implements I_MazeObj {
         return this.walker;
     }
     public set_loc(loc: C_MovablePoint): void {
-        this.walker.decode(loc.encode());
+        (this.walker ??= new C_Walker()).decode(loc.encode());
     }
 
     public get_pd(): C_PointDir {
@@ -189,7 +189,7 @@ export class C_Team implements I_MazeObj {
     }
     
     public alert(): void {
-        _alert("Team Info:" 
+        alert("Team Info:" 
             + "\nid:    "     + (this.my_id            ?? '?')
             + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
             + "\nname:  "     + (this.my_name          ?? '?')

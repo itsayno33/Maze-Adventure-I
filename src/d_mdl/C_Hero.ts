@@ -4,7 +4,6 @@ import { C_Goods, JSON_Goods }             from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveData";
 import { _get_uuid, _irand, _random_str }  from "../d_utl/F_Rand";
-import { _alert }                          from "../d_cmn/global";
 import { C_GoodsItem, JSON_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
 
 export interface JSON_Hero extends JSON_Any {
@@ -224,7 +223,7 @@ export class C_Hero implements I_JSON_Uniq {
     }
 
     public alert(): void { 
-        _alert("Hero Info:\n" 
+        alert("Hero Info:\n" 
             + "\nid:       "     + (this.id        ?? '?')
             + "\nuniq_id   "     + (this.uniq_id   ?? '?')
             + "\nname:     "     + (this.name      ?? '?')
@@ -235,7 +234,7 @@ export class C_Hero implements I_JSON_Uniq {
     }
     public static alert_hres(a: (C_Hero|undefined)[]|undefined): void { 
         if (a === undefined) return;
-        _alert('Number of Hero = ' + a.length.toString());
+        alert('Number of Hero = ' + a.length.toString());
         for (var i in a) a[i]?.alert();
     }
 }

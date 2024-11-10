@@ -9,7 +9,6 @@ import { C_Range }               from "./C_Range";
 import { C_Team, JSON_Team }     from "./C_Team";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert, g_alert }       from "../d_cmn/global";
 import { _min } from "../d_utl/F_Math";
 import { C_PointDir } from "./C_PointDir";
 
@@ -32,7 +31,7 @@ export interface JSON_Maze extends JSON_Any {
 export function alert_maze_info(a: JSON_Maze|undefined): void {
     if (a === undefined) return;
 
-    _alert("Maze Info:"
+    alert("Maze Info:"
         + "\nmaze id :" + (a.id      ?? '?')
         + "\nfloor: "   + (a.floor   ?? '?')
         + "\nuniq id :" + (a.uniq_id ?? '?')
@@ -449,7 +448,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     }
     
     public alert(): void {
-        _alert("Maze Info:"
+        alert("Maze Info:"
             + "\nmaze id :" + (this.maze_id ?? '?')
             + "\nfloor: "   + (this.floor   ?? '?')
             + "\nuniq id :" + (this.uniq_id ?? '?')
@@ -462,13 +461,13 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         );
     }
     public alert_maze(floor: number = 0): void {
-        _alert("Maze Map:"
+        alert("Maze Map:"
             + "maze:\n"     + (this.to_string(floor, true)  ?? '?')
             + "\n"
         );
     }
     public alert_mask(floor: number = 0): void {
-        _alert("Mask Map:"
+        alert("Mask Map:"
             + "mask:\n"     + (this.to_string(floor, false) ?? '?')
             + "\n"
         );

@@ -62,8 +62,8 @@ function init_before_new_games(): void {
             return;
         }
         post_load_function(jsonObj);
-        g_save.mypos.set_url(g_my_url);
-        g_team.set_loc(g_save.mypos);
+//loc        g_save.mypos.set_url(g_my_url);
+//loc        g_team.set_loc(g_save.mypos);
     });
     return;
 }
