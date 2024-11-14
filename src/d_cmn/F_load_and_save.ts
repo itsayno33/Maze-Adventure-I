@@ -175,7 +175,7 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
 export async function get_new_hero(num: number = 20, callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'new_hero'); 
-    opt.set('number',      num.toString());                                           g_alert.set_message('NEW HRES URL:','url[' + g_url_new_hres + '] = ' + g_url[g_url_new_hres]);
+    opt.set('num',          num.toString());                                           g_alert.set_message('NEW HRES URL:','url[' + g_url_new_hres + '] = ' + g_url[g_url_new_hres]);
 //    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
     return await POST_and_get_JSON(g_url[g_url_new_hres], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {

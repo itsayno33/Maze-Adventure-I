@@ -439,9 +439,14 @@ export function post_load_function(jsonObj: any): boolean {
     set_from_save_to_all_data(g_all_mvpt, g_save.all_mvpt);
 
 //loc
-//    g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
-//    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
+    g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
 
+//    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
+    const [guld_id, guld_val] = Object.entries(g_all_guld)[0]
+    g_guld.decode(guld_val.encode());
+
+//loc
+/*
     if (g_save?.mypos !== undefined && g_team?.get_loc() !== undefined) {
         g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
         g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
@@ -471,7 +476,8 @@ export function post_load_function(jsonObj: any): boolean {
     }
     g_save.mypos.set_url(g_my_url);
     g_team.set_loc(g_save.mypos);
-//loc
+*/
+    //loc
 
     return true;
 }
