@@ -229,10 +229,10 @@ function new_team(): Team {
         <button id='debug_mode' name='debug_mode' value='false' class='normal'>通常</button>
         <button id='alert_mode' name='alert_mode' value='false' class='normal'>ログ</button>
         <div id='guld_head_button'>
-            <button id='r_cp1' name='r_cp1' value='R'>窓口に戻る</button>
-            <button id='s_cp1' name='s_cp1' value='S'>切替</button>
-            <button id='y_cp1' name='y_cp1' value='Y'>はい</button>
-            <button id='n_cp1' name='n_cp1' value='N'>いいえ</button>
+            <button id='r_cp1' name='r_cp1' value='R'>窓口に戻る(Ｒ)</button>
+            <button id='s_cp1' name='s_cp1' value='S'>切替(Ｓ)</button>
+            <button id='y_cp1' name='y_cp1' value='Y'>はい(ENTER)</button>
+            <button id='n_cp1' name='n_cp1' value='N'>いいえ(SHIFT+ENTER)</button>
         </div>
         <p id='guld_head_message'></p>
     </article>
@@ -309,7 +309,7 @@ function new_team(): Team {
             <button id='r_arr' type='button' name='r_arr' value='R'>→</button>
             <button id='y_btn' type='button' name='y_btn' value='U'>〇</button>
             <button id='n_btn' type='button' name='n_btn' value='N'>✖</button>
-            <button id='s_btn' type='button' name='s_btn' value='S'>選</button>
+            <button id='s_btn' type='button' name='s_btn' value='S'>替</button>
             <button id='r_btn' type='button' name='r_btn' value='R'>戻</button>
         </div></div>
     </article>

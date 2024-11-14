@@ -13,7 +13,7 @@ import {
     g_all_maze, g_all_team, g_all_guld, g_all_mvpt, g_vsw 
 } 
 from "./global_for_guild";
-import { C_PointDir, C_Team } from "../html/js/mai_guld";
+import { C_PointDir } from "../d_mdl/C_PointDir";
 
 
 

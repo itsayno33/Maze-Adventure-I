@@ -315,7 +315,7 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'Digit8':
                 if (ne) (document.getElementById('n_btn') as HTMLButtonElement)?.click();
                 break;
-        case 'F5':
+        case 'F7':  // 効いてない
         case 'Numpad7':
                 e.preventDefault();
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();

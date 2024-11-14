@@ -354,7 +354,7 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'Numpad7':
                 if (ne) (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
                 break;
-        case 'F5':
+        case 'F7':
                 e.preventDefault();
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;

@@ -206,7 +206,7 @@ button#y_cp1 {
 button#n_cp1 {
     float: left;
     
-    color: #ff00ff;
+    color: #cc00cc;
     background-color:pink;
 
     margin: 0.2rem;
@@ -454,7 +454,7 @@ article#pane_ctls_boad #div_ctls_boad {
     background-color:#ccffcc;
 }
 #n_btn {
-    color: #ff00ff;
+    color: #cc00cc;
     background-color:pink;
 }
 

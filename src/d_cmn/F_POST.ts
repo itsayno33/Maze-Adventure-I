@@ -3,6 +3,7 @@ import { C_UrlOpt }      from "../d_utl/C_UrlOpt";
 import { g_mes, _alert, g_debug, g_alert } from "../d_cmn/global";
 
 
+// 非同期通信版 POST & GET JSON
 export async function POST_and_get_JSON(
     url: string, 
     opt: C_UrlOpt, 
@@ -13,8 +14,12 @@ export async function POST_and_get_JSON(
     try {
         res = await fetch(url, {
             method: 'POST',
+            cache:  'no-cache',
             body: form_data
         });
+        if (!res.ok) {
+            throw new Error(`レスポンスステータス (${res.status})`);
+        }
     }
     catch (err) {
         g_mes.warning_message('通信エラー: ' + err);
@@ -28,7 +33,11 @@ export async function POST_and_get_JSON(
             const tx = txt.slice();
 
 //            if (monitor) _alert(tx);
-            if (monitor) g_alert.set_message(`POST DATA`, tx);
+            if (monitor) {
+                g_alert.set_message(`POST URL:`, url);
+                g_alert.set_message(`POST OPT:`, opt.to_string());
+                g_alert.set_message(`POST DATA:`, tx);
+            }
 
             try {
                 return JSON.parse(txt);
@@ -39,6 +48,49 @@ export async function POST_and_get_JSON(
             }
         });
 }
+
+
+// 同期通信版 POST & GET JSON
+export async function POST_and_get_JSON2(
+    url: string, 
+    opt: C_UrlOpt, 
+): Promise<any|undefined> {
+    const reqObj = new XMLHttpRequest(); // object of request
+
+    try {
+        reqObj.open("POST", url, false); // Sync mode
+        reqObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // setting of headers  in request
+        reqObj.send(opt.to_FormData()); // data to send in request
+    } catch (err) {
+        g_mes.warning_message(`通信エラー: ${reqObj.status}`);
+        return undefined;
+    }
+
+    const txt = reqObj.responseText; // displaying response text in paragraph tag
+
+    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+    if (monitor) {
+        g_alert.set_message(`POST URL:`,  url);
+        g_alert.set_message(`POST OPT:`,  opt.to_string());
+        g_alert.set_message(`POST DATA:`, txt);
+    }
+
+    if (Number(reqObj.status) > 399) {
+        g_mes.warning_message(`レスポンスステータス: ${reqObj.status}`);
+        return undefined;
+    }
+
+    try {
+        return JSON.parse(txt);
+    } catch (err) {
+        g_mes.warning_message('JSON形式のデコードエラー: ' + err);
+        _alert(txt);
+        return undefined;
+    }
+}
+
+
+
 
 export function POST_and_move_page(url: string, opt: C_UrlOpt): void {
     create_form(url, opt).submit();

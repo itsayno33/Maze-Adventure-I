@@ -297,9 +297,9 @@ function new_team(): Team {
     <article id='pane_menu_mesg'>
         <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
         <p id='menu_mesg'></p>
-        <button id='n_cp1' type='button' name='n_cp1' value='N'>いいえ</button>
-        <button id='y_cp1' type='button' name='y_cp1' value='Y'>はい</button>
-        <button id='s_cp1' type='button' name='s_cp1' value='S'>切替</button>
+        <button id='n_cp1' type='button' name='n_cp1' value='N'>いいえ（Ｎ）</button>
+        <button id='y_cp1' type='button' name='y_cp1' value='Y'>はい（Ｙ）</button>
+        <button id='s_cp1' type='button' name='s_cp1' value='S'>切替（Ｓ）utton>
     </article>
     <article id='pane_maze_mesg'>
         <p id='maze_mesg'></p>
@@ -315,7 +315,7 @@ function new_team(): Team {
             <button id='r_arr' type='button' name='r_arr' value='R'>→</button>
             <button id='y_btn' type='button' name='y_btn' value='Y'>〇</button>
             <button id='n_btn' type='button' name='n_btn' value='N'>✖</button>
-            <button id='s_btn' type='button' name='s_btn' value='S'>選</button>
+            <button id='s_btn' type='button' name='s_btn' value='S'>替</button>
             <button id='r_btn' type='button' name='r_btn' value='T'>戻</button>
             <button id='m_btn' type='button' name='m_btn' value='M'>メニュー（Ｍ）</button>
         </div>

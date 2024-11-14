@@ -120,6 +120,16 @@ export function _random_str(length: number): string {
     for (let i=0; i < length; i++) str += _random_Char();
     return str;
 }
+export function _random_UpperStr(length: number): string {
+    let str = '';
+    for (let i=0; i < length; i++) str += _random_UpperChar();
+    return str;
+}
+export function _random_LowerStr(length: number): string {
+    let str = '';
+    for (let i=0; i < length; i++) str += _random_LowerChar();
+    return str;
+}
 export function _random_UpperChar(): string {
     const val = _irand(0,26)
     return String.fromCharCode(65+val);
@@ -135,6 +145,6 @@ export function _random_NumChar(): string {
 export function _random_Char(): string {
     const val = _irand(0,61)
     if (val < 26) return String.fromCharCode(65+val);
-    if (val < 52) return String.fromCharCode(95+val-26);
+    if (val < 52) return String.fromCharCode(97+val-26);
     return String.fromCharCode(48+val-52);
 }
