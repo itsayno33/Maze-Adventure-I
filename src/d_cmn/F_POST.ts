@@ -3,19 +3,25 @@ import { C_UrlOpt }      from "../d_utl/C_UrlOpt";
 import { g_mes, _alert, g_debug, g_alert } from "../d_cmn/global";
 
 
-// 非同期通信版 POST & GET JSON
+// 非同期通信版 POST(String) & GET JSON
 export async function POST_and_get_JSON(
     url: string, 
     opt: C_UrlOpt, 
 ): Promise<any|undefined> {
-    const form_data = opt.to_FormData();
-    if (form_data === null) return '';
+    const form_data = opt.toFormData();
+
+    if (form_data === undefined) return undefined;
     var res: Response;
     try {
         res = await fetch(url, {
             method: 'POST',
             cache:  'no-cache',
-            body: form_data
+            headers: {
+//                "Content-Type": "multipart/form-data"
+//                "Content-Type": "application/x-www-form-urlencoded"
+//                "Content-Type": "application/json"
+},
+            body: opt.toFormData()
         });
         if (!res.ok) {
             throw new Error(`レスポンスステータス (${res.status})`);
@@ -35,7 +41,59 @@ export async function POST_and_get_JSON(
 //            if (monitor) _alert(tx);
             if (monitor) {
                 g_alert.set_message(`POST URL:`, url);
-                g_alert.set_message(`POST OPT:`, opt.to_string());
+                g_alert.set_message(`POST OPT:`, opt.toString());
+                g_alert.set_message(`POST DATA:`, tx);
+            }
+
+            try {
+                return JSON.parse(txt);
+            } catch(err) {
+                g_mes.warning_message('JSON形式のデコードエラー');
+                _alert(tx);
+                return undefined;
+            }
+        });
+}
+
+// 非同期通信版 POST(JSON) & GET JSON
+export async function POST_and_get_JSON3(
+    url: string, 
+    opt: C_UrlOpt, 
+): Promise<any|undefined> {
+    const form_data = opt.toFormData();
+
+    if (form_data === undefined) return undefined;
+    var res: Response;
+    try {
+        res = await fetch(url, {
+            method: 'POST',
+            cache:  'no-cache',
+            headers: {
+//                "Content-Type": "multipart/form-data"
+//                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/json"
+},
+            body: opt.toJSON()
+        });
+        if (!res.ok) {
+            throw new Error(`レスポンスステータス (${res.status})`);
+        }
+    }
+    catch (err) {
+        g_mes.warning_message('通信エラー: ' + err);
+        return undefined;
+    }
+
+    const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
+
+    return res.text()
+        .then(txt=>{
+            const tx = txt.slice();
+
+//            if (monitor) _alert(tx);
+            if (monitor) {
+                g_alert.set_message(`POST URL:`, url);
+                g_alert.set_message(`POST OPT:`, opt.toString());
                 g_alert.set_message(`POST DATA:`, tx);
             }
 
@@ -50,6 +108,8 @@ export async function POST_and_get_JSON(
 }
 
 
+
+
 // 同期通信版 POST & GET JSON
 export async function POST_and_get_JSON2(
     url: string, 
@@ -60,7 +120,7 @@ export async function POST_and_get_JSON2(
     try {
         reqObj.open("POST", url, false); // Sync mode
         reqObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); // setting of headers  in request
-        reqObj.send(opt.to_FormData()); // data to send in request
+        reqObj.send(opt.toFormData()); // data to send in request
     } catch (err) {
         g_mes.warning_message(`通信エラー: ${reqObj.status}`);
         return undefined;
@@ -71,7 +131,7 @@ export async function POST_and_get_JSON2(
     const monitor = true;  // alertで受信したテキストを表示するときにtrueにする
     if (monitor) {
         g_alert.set_message(`POST URL:`,  url);
-        g_alert.set_message(`POST OPT:`,  opt.to_string());
+        g_alert.set_message(`POST OPT:`,  opt.toString());
         g_alert.set_message(`POST DATA:`, txt);
     }
 

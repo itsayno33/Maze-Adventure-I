@@ -1,9 +1,12 @@
-export type T_Attr = {[key: string]: string|number};
+interface JSONAble {
+    [key: string]: any
+}
+export type T_Attr = {[key: string]: string|number|object};
 
 export class C_UrlOpt {
     protected v: T_Attr;
-    public constructor(s?:  string);
-    public constructor(t?:  T_Attr);
+    public constructor(s?: string);
+    public constructor(t?: T_Attr);
     public constructor(a?: any) {
         if (typeof a === "undefined") {
             this.v = {} as T_Attr;
@@ -31,6 +34,9 @@ export class C_UrlOpt {
             if  (typeof this.v[key] === "number") {
                 return this.v[key].toString();
             }
+            if  (typeof this.v[key] === "object") {
+                return JSON.stringify(this.v[key]);
+            }
             return this.v[key] as string;
         } else {
             return "";
@@ -40,7 +46,8 @@ export class C_UrlOpt {
     public set(atr: T_Attr):  void;
     public set(key: string, val?: string): void;
     public set(key: string, val?: number): void;
-    public set(ukn: any,    val?: string|number): void {
+    public set(key: string, val?: object): void;
+    public set(ukn: any,    val?: string|number|object): void {
         if (typeof ukn === "string") {
             if (typeof val === "undefined") {
                 this.add_from_string(ukn);
@@ -49,10 +56,14 @@ export class C_UrlOpt {
                 this.v[ukn] = val;
                 return;
             } else if (typeof val === "number" ){
-                this.v[ukn] = val.toString();
+                this.v[ukn] = val;
+                return;
+            } else if (typeof val === "object" ){
+                this.v[ukn] = val;
                 return;
             } else {
                 this.v[ukn] = "";
+                return;
             }
         }
         if (typeof ukn === "object") {
@@ -75,7 +86,7 @@ export class C_UrlOpt {
     public clear(): void {
         this.v = {} as T_Attr;
     }
-    public to_string(): string {
+    public toString(): string {
         const len: number =  Object.keys(this.v).length;
         if (len < 1)  return "";
 
@@ -86,15 +97,20 @@ export class C_UrlOpt {
 
         return str_array.join("&");
     }
-    public to_FormData(): FormData|null {
+    public toJSON(): string {
+        return JSON.stringify(this.v);
+    }
+    public toFormData(): FormData|undefined {
         const len: number =  Object.keys(this.v).length;
-        if (len < 1)  return null;
+        if (len < 1)  return undefined;
 
         var form_data = new FormData();
         for (const key in this.v) {
-            const value: string|number = this.v[key];
+            const value: string|number|object = this.v[key];
             if (typeof value === "string")
                 form_data.append(key, value);
+            if (typeof value === "object")
+                form_data.append(key, JSON.stringify(value));
             else
                 form_data.append(key, value.toString());
         }

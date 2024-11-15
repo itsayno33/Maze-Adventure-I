@@ -28,6 +28,7 @@ module.exports = (env) => {
 						/node_modules.org/,
 						/_old_src/,
 						/_ord_src/,
+						/maiex/,
 					],
 				}
 			]

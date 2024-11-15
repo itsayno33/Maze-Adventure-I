@@ -9,14 +9,13 @@ import { alert_mazeinfo_info } from '../d_mdl/C_MazeInfo';
 
 import { _round, _min, _max  } from "../d_utl/F_Math";
 import { C_UrlOpt }            from "../d_utl/C_UrlOpt";  
-import { POST_and_get_JSON, POST_and_get_JSON2, POST_and_move_page } from "../d_cmn/F_POST";
+import { POST_and_get_JSON,  POST_and_get_JSON3, POST_and_move_page } from "../d_cmn/F_POST";
 import { 
     _alert, g_mes, g_start_env, 
     g_url,  g_url_get_maze, g_url_get_save, g_url_get_guld, g_url_check_JSON, 
     g_save,
     g_url_new_guld,
     g_url_new_hres,
-    g_alert, 
 } from "../d_cmn/global";
 
 
@@ -33,13 +32,13 @@ export async function get_mai_maze(callback?: T_callback): Promise<any|undefined
 export async function get_mai_guld(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode', 'new_game'); 
-    opt.set('pid',   g_start_env.pid);                                          g_alert.set_message('NEW GUILD URL:','url[' + g_url_new_guld + '] = ' + g_url[g_url_new_guld]);
+    opt.set('pid',   g_start_env.pid.toString());
 //    return await _get_new_game(g_url[g_url_get_guld], opt, callback);
     return await _get_new_game(g_url[g_url_new_guld], opt, callback);
 }
 
 async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-    return await POST_and_get_JSON(url, opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -175,9 +174,10 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
 export async function get_new_hero(num: number = 20, callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'new_hero'); 
-    opt.set('num',          num.toString());                                           g_alert.set_message('NEW HRES URL:','url[' + g_url_new_hres + '] = ' + g_url[g_url_new_hres]);
+//    opt.set('number',       num.toString());
 //    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
-    return await POST_and_get_JSON(g_url[g_url_new_hres], opt)?.then(jsonObj=>{
+    opt.set('nmbr',         num.toString());
+    return await POST_and_get_JSON3(g_url[g_url_new_hres], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.hres  === undefined) {
