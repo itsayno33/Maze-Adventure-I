@@ -8,9 +8,11 @@ import { I_Locate, T_Lckd }      from "./C_Location";
 import { C_Range }               from "./C_Range";
 import { C_Team, JSON_Team }     from "./C_Team";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
-import { _get_uuid }             from "../d_utl/F_Rand";
+import { _get_uuid, _igrand, _irand }             from "../d_utl/F_Rand";
 import { _min } from "../d_utl/F_Math";
 import { C_PointDir } from "./C_PointDir";
+import { T_Direction } from "./T_Direction";
+import { C_PointLink2D, C_PointSet2D } from "./C_PointSet2D";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -69,6 +71,8 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     protected masks:    boolean[][][];
     protected unclear:  number[];
     protected objs:     {[uid: string]: I_MazeObj};
+    protected num_of_room:      number = 5; /* ランダム生成の際の部屋の数の最大数 */
+    protected max_size_of_room: number = 3; /* ランダム生成の際の部屋の大きさ */
 
     public constructor(a?: _init_arg) {
         this.maze_id = -1;
@@ -272,12 +276,225 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
             this.cells[p.z][p.y][p.x] = C_MazeCell.newObj({kind: k, pos: p});
         }
     }
+    public set_cell_xyz(x: number, y: number, z: number, k: T_MzKind): void {
+        if (this.size.within(x, y, z)) {
+            this.cells[z][y][x] = C_MazeCell.newObj({kind: k, pos: {x:x, y:y, z:z}});
+        }
+    }
     public can_move(p: C_Point): boolean {
         return this.size.within(p);
     }
     public can_UD(p: C_Point): boolean {
         return this.is_movable(p);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+public fill_cell(kind: T_MzKind, floor:number): void {
+    for (let h = 0; h < this.size.size_y(); h++)
+    for (let w = 0; w < this.size.size_x(); w++)
+        this.set_cell_xyz(w, h, floor, kind);
+    return;
+}
+
+public set_box(kind: T_MzKind, top_x:number, top_y: number, size_x: number, size_y: number, floor: number): void {
+    if (top_x + size_x > this.size.size_x()) size_x = this.size.size_x() - top_x + 1; 
+    if (top_y + size_y > this.size.size_y()) size_y = this.size.size_y() - top_y + 1;
+    
+    const top = top_y;
+    const btm = top    + size_y - 1;
+    const lft = top_x;
+    const rgt = lft    + size_x - 1;
+    
+    // 北側(上)と南側(下)を石壁に
+    for (let x = 0; x < size_x; x++) {
+        this.set_cell_xyz(x, top, floor, kind);
+        this.set_cell_xyz(x, btm, floor, kind);
+    }
+    // 東側(右)と西側(左)を石壁に
+    for (let y = 0; y < size_y; y++) {
+        this.set_cell_xyz(lft, y, floor, kind);
+        this.set_cell_xyz(rgt, y, floor, kind);
+    }
+    return;
+}
+
+// 階上と階下に階段を設置する
+public create_stair(floor:number): C_PointDir {
+    const H_size_x = (this.size.size_x() - 1) / 2;
+    const H_size_y = (this.size.size_y() - 1) / 2;
+    const pos_x    = 2 * _irand(0, H_size_x - 1) + 1;
+    const pos_y    = 2 * _irand(0, H_size_y - 1) + 1;
+    const pos_d    = 1 * _irand(0, T_Direction.MAX);
+
+    // 乱数で得た座標に階段を置く
+    if (floor >= 1) {
+        if (this.get_cell_xyz(pos_x, pos_y, floor - 1)?.getKind() !== T_MzKind.StrUp) {
+            this.set_cell_xyz(pos_x, pos_y, floor - 1,  T_MzKind.StrDn);
+        } else {
+            this.set_cell_xyz(pos_x, pos_y, floor - 1,  T_MzKind.StrUD);
+        }
+    }
+    if (this.get_cell_xyz(pos_x, pos_y, floor)?.getKind() !== T_MzKind.StrDn) {
+        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUp);
+    } else {
+        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUD);
+    }
+
+    return new C_PointDir({x: pos_x, y: pos_y, z: floor, d: pos_d});
+}
+
+public create_maze(floor: number): void {
+    const size_x = this.size.size_x();
+    const size_y = this.size.size_y();
+
+
+    // ダンジョンで$floorで指定された階を未踏地にする 
+    this.fill_cell(T_MzKind.Unexp, floor);
+
+    // ダンジョンの輪郭を石壁にする
+    this.set_box(T_MzKind.Stone, 0, 0, size_x, size_y, floor);
+
+    // 通路に一つ置きに壁が成長するポイントを設定する
+    // ポイントから壁を伸ばす方向をランダムに決める
+    const points = new C_PointSet2D();
+    for (let h = 2; h < size_y - 2; h += 2){
+        for (let w = 2; w < size_x - 2; w += 2){
+            const di = _irand(0, T_Direction.MAX);
+            points.push(new C_PointLink2D(w, h, di));
+        }
+    }
+
+    // 乱数でいくつか部屋を作る
+    const rooms_array = [];
+    const num_of_room = _irand(0, this.num_of_room);
+    for (let cnt = 0; cnt < num_of_room; cnt++) {
+        const leng_x = _irand(1,  this.max_size_of_room) * 2 + 1;
+        const leng_y = _irand(1,  this.max_size_of_room) * 2 + 1;
+        const room_x = _irand(0, (size_x - leng_x) / 2) * 2;
+        const room_y = _irand(0, (size_y - leng_y) / 2) * 2;
+        rooms_array.push({tx: room_x, ty: room_y, sx: leng_x, sy: leng_y});
+    }
+
+    // 部屋の中のポイントを削除する
+    for (const room of rooms_array) {
+        for (let ii = 0; ii < points.set.length; ii++) {
+            const p =  points.set[ii];
+            if (p === undefined) continue;
+
+            if (    (p.x >= room.tx) 
+                &&  (p.x <= room.tx + room.sx)
+                &&  (p.y >= room.ty)
+                &&  (p.y <= room.ty + room.sy)) {
+                    points.remove(p);
+                }
+        }
+    }
+
+
+    // ポイントから壁を成長させて迷路を作る
+    for (const p of points.set) {
+        if (p === undefined) continue;
+        
+        // ポイントの位置に石壁を置く
+        this.set_cell_xyz(p.x, p.y, floor, T_MzKind.Stone);
+
+        // 柱の東西南北のいずれかにも石壁を置く
+        const direction = [0, 0, 0, 0];
+        const di = C_PointLink2D.cast(p)?.di ?? T_Direction.X;
+        if (di === T_Direction.X) continue;
+        direction[di] = 1;
+
+        this.set_cell_xyz(
+            p.x - direction[T_Direction.W] + direction[T_Direction.E], 
+            p.y - direction[T_Direction.N] + direction[T_Direction.S], 
+            floor,
+            T_MzKind.Stone
+        );
+        
+    }
+
+    // 閉鎖空間が出来ていたら出口を作る
+    // ポイントをトレースして、既出のポイントに繋がっていたら閉鎖空間
+    for (const set of points.set) {
+        if (set === undefined) continue;
+
+        const [yn, trace_set] = this.check_close(set.x, set.y, points, new C_PointSet2D());
+        if (yn) {
+            this.open_exit(trace_set, T_MzKind.Unexp, floor);
+            if (trace_set !== undefined) for (const t of trace_set.set) points.remove(t);
+        }
+    }
+    return;
+}
+
+protected check_close(x: number, y: number, point_set: C_PointSet2D, trace_set: C_PointSet2D|undefined): [boolean, C_PointSet2D|undefined] {
+    if (x < 2 || y < 2 || x > this.size.size_x() - 2 || y > this.size.size_y() - 2) return [false, undefined];
+    if (point_set .is_exist(x, y) === false) return [false, undefined];
+    if (trace_set?.is_exist(x, y) === true)  return [true,  trace_set];
+
+    const p = point_set.get_point(x, y);
+    trace_set ??= new C_PointSet2D();
+    trace_set?.push(new C_PointLink2D(x, y, C_PointLink2D.cast(p)?.di));
+
+    let next_x: number = 0, next_y: number = 0;
+    switch (C_PointLink2D.cast(p)?.di) {
+        case T_Direction.N:  // 北
+            next_x = x;
+            next_y = y - 2;
+            break;
+        case T_Direction.E:  // 東
+            next_x = x + 2;
+            next_y = y;
+            break;
+        case T_Direction.S:  // 南
+            next_x = x;
+            next_y = y + 2;
+            break;
+        case T_Direction.W:  // 西
+            next_x = x - 2;
+            next_y = y;
+            break;
+        }
+        return this.check_close(next_x, next_y, point_set, trace_set);
+}
+
+protected open_exit(p: C_PointSet2D|undefined, kind: T_MzKind, floor: number): void {
+    if (p === undefined) return;
+
+    const cnt = _irand(0, p.set.length - 1);
+    const pp  =  p.set[cnt];
+
+    let direction = [0, 0, 0, 0];
+    const di = C_PointLink2D.cast(pp)?.di ?? T_Direction.N
+    direction[di] = 1;
+
+    this.set_cell_xyz(
+        pp.x - direction[T_Direction.W] + direction[T_Direction.E], 
+        pp.y - direction[T_Direction.N] + direction[T_Direction.S], 
+        floor,
+        kind 
+    );
+    return;
+}
+
+
+
+
+
+
+
+
+
     public to_letter(p: C_Point): string {
         return this.cells[p.z][p.y][p.x].to_letter();
     }

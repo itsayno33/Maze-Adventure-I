@@ -1,6 +1,7 @@
 "use strict";
 
 import { _alert } from "../d_cmn/global";
+import { C_DspMessage } from "../d_utl/C_DspMessage";
 
 export interface JSON_MazeInfo {
     name:      string;
@@ -30,24 +31,68 @@ export function alert_mazeinfo_info(a?: JSON_MazeInfo): void {
 }
 
 export class C_MazeInfo {
-    public name:      string;
-    public mbname:    string;
-    public lv:        number;
-    public size_x:    number;
-    public size_y:    number;
-    public size_z:    number;
-    public max_room:  number;
-    public room_size: number;
-    public constructor (j?: JSON_MazeInfo) {
-        this.name      = '';
-        this.mbname    = '';
-        this.lv        = 0;
-        this.size_x    = 3;
-        this.size_y    = 3;
-        this.size_z    = 3;
-        this.max_room  = 1;
-        this.room_size = 1;
+    public name:      string = '';
+    public mbname:    string = '';
+    public lv:        number = 0;
+    public size_x:    number = 3;
+    public size_y:    number = 3;
+    public size_z:    number = 3;
+    public max_room:  number = 1;
+    public room_size: number = 1;
+    public static get_tbl_all(): C_MazeInfo[] {
+        const mazeinfo: C_MazeInfo[] = [];
+        mazeinfo.push(
+            new C_MazeInfo().decode({
+                name:   	'maze010', 
+                mbname: 	'教練場', 
+                lv:     	 1, 
+                size_x: 	11, 
+                size_y: 	11, 
+                size_z: 	 3, 
+                max_room: 	 2, 
+                room_size: 	 3 
+            }),
+        );
+        mazeinfo.push(
+            new C_MazeInfo().decode({
+                name:   	'maze011', 
+                mbname: 	'始まりの迷宮', 
+                lv:     	 1, 
+                size_x: 	21, 
+                size_y: 	21, 
+                size_z: 	 5, 
+                max_room: 	 3, 
+                room_size: 	 3 
+            }),
+        );
+        mazeinfo.push(
+            new C_MazeInfo().decode({
+                name:   	'maze012', 
+                mbname: 	'暗き森の迷宮', 
+                lv:     	 1, 
+                size_x: 	26, 
+                size_y: 	26, 
+                size_z: 	 7, 
+                max_room: 	 5, 
+                room_size: 	 3 
+            }),
+        )
+        mazeinfo.push(
+            new C_MazeInfo().decode({
+                name:   	'maze013', 
+                mbname: 	'暗黒魔術師の地下墓地', 
+                lv:     	 1, 
+                size_x: 	31, 
+                size_y: 	31, 
+                size_z: 	10, 
+                max_room: 	 5, 
+                room_size: 	 5 
+            }),
+        )
 
+        return mazeinfo;
+    }
+    public constructor (j?: JSON_MazeInfo) {
         if (j !== undefined) this.decode(j);
     }
     public encode(): JSON_MazeInfo {
@@ -78,7 +123,7 @@ export class C_MazeInfo {
     }
     
     public alert(): void {
-        _alert("MazeInfo Data:"
+        alert("MazeInfo Data:"
             + "\nname : "       + (this.name      ?? '?')
             + "\nmbname: "      + (this.mbname    ?? '?')
             + "\nlv :"          + (this.lv        ?? '?')
