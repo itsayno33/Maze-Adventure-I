@@ -36,7 +36,7 @@ export class C_PointSet2D {
     }
     public get_point(x: number, y: number): C_Point2D|undefined {
         for (const p of this.set) {
-            if (p.is_exist(x, y)) return p;
+            if (p?.is_exist(x, y)) return p;
         }
         return undefined;            
     }
@@ -46,7 +46,7 @@ export class C_PointSet2D {
     }
     public remove_xy(x: number, y: number): void {
         for (const i in this.set) {
-            if (this.set[i].is_exist(x, y)) {
+            if (this.set[i]?.is_exist(x, y)) {
                 delete this.set[i];
                 this.set = [...this.set];
                 break;
@@ -55,7 +55,7 @@ export class C_PointSet2D {
         return;
     }
     public is_exist(x: number, y: number): boolean {
-        for (const p of this.set) if (p.is_exist(x, y)) return true;
+        for (const p of this.set) if (p?.is_exist(x, y)) return true;
         return false;
     }
 }

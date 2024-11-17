@@ -439,8 +439,11 @@ public create_maze(floor: number): void {
 
 protected check_close(x: number, y: number, point_set: C_PointSet2D, trace_set: C_PointSet2D|undefined): [boolean, C_PointSet2D|undefined] {
     if (x < 2 || y < 2 || x > this.size.size_x() - 2 || y > this.size.size_y() - 2) return [false, undefined];
-    if (point_set .is_exist(x, y) === false) return [false, undefined];
-    if (trace_set?.is_exist(x, y) === true)  return [true,  trace_set];
+
+    if (point_set === undefined) return [false, undefined];
+    if (point_set?.is_exist(x, y) === false) return [false, undefined];
+
+    if (trace_set !== undefined && trace_set?.is_exist(x, y) === true)  return [true,  trace_set];
 
     const p = point_set.get_point(x, y);
     trace_set ??= new C_PointSet2D();

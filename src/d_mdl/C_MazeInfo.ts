@@ -80,7 +80,7 @@ export class C_MazeInfo {
         mazeinfo.push(
             new C_MazeInfo().decode({
                 name:   	'maze013', 
-                mbname: 	'暗黒魔術師の地下墓地', 
+                mbname: 	'黒魔の地下墓地', 
                 lv:     	 1, 
                 size_x: 	31, 
                 size_y: 	31, 

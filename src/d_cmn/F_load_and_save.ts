@@ -12,14 +12,15 @@ import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
 import { POST_and_get_JSON,  POST_and_get_JSON3, POST_and_move_page } from "../d_cmn/F_POST";
 import { 
     _alert, g_mes, g_start_env, 
-    g_url,  g_url_get_maze, g_url_get_save, g_url_get_guld, 
+    g_url,  g_url_gt2_maze, g_url_get_save, g_url_gt2_guld, 
     g_save,
-    g_url_inf_maze,
-    g_url_gam_maze,
-    g_url_gam_guld,
-    g_url_new_hres,
+    g_url_all_maze,
+    g_url_get_maze, 
+    g_url_new_maze,
+    g_url_new_guld,
+    g_url_all_hres,
     g_url_check_JSON,
-    g_url_new_maze, 
+    g_url_gt2_save,
 } from "../d_cmn/global";
 
 
@@ -29,7 +30,8 @@ export async function get_mai_maze(callback?: T_callback): Promise<any|undefined
     const opt = new C_UrlOpt();
     opt.set('mode', 'new_game'); 
     opt.set('pid',   g_start_env.pid);
-    return await _get_new_game(g_url[g_url_gam_maze], opt, callback);
+//    return await _get_new_game(g_url[g_url_gt2_maze], opt, callback);
+    return await _get_new_game(g_url[g_url_new_maze], opt, callback);
 }
 
 
@@ -37,8 +39,8 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
     const opt = new C_UrlOpt();
     opt.set('mode', 'new_game'); 
     opt.set('pid',   g_start_env.pid.toString());
-//    return await _get_new_game(g_url[g_url_get_guld], opt, callback);
-    return await _get_new_game(g_url[g_url_gam_guld], opt, callback);
+//    return await _get_new_game(g_url[g_url_gt2_guld], opt, callback);
+    return await _get_new_game(g_url[g_url_new_guld], opt, callback);
 }
 
 async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
@@ -76,7 +78,8 @@ export function get_new_maze(maze_name: string, callback?: T_callback): Promise<
     opt.set('pid',        g_start_env.pid);
     opt.set('maze_name',  maze_name);
 
-    return POST_and_get_JSON3(g_url[g_url_new_maze], opt)?.then(jsonObj=>{
+//    return POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON3(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode !== 0) {
             g_mes.warning_message("新迷宮データを受信できませんでした\n" + jsonObj.emsg);
             _alert(jsonObj.emsg);
@@ -114,7 +117,7 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_start_env.pid);
 
-    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
 
@@ -147,7 +150,8 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
 export async function get_maze_info(callback?: T_callback): Promise<any|undefined> {
     const opt = new C_UrlOpt();
     opt.set('mode',        'maze_info'); 
-    return await POST_and_get_JSON3(g_url[g_url_inf_maze], opt)?.then(jsonObj=>{
+//    return await POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(g_url[g_url_all_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.mazeinfo === undefined) {
@@ -179,9 +183,9 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
     const opt = new C_UrlOpt();
     opt.set('mode',        'new_hero'); 
 //    opt.set('number',       num.toString());
-//    return await POST_and_get_JSON(g_url[g_url_get_guld], opt)?.then(jsonObj=>{
+//    return await POST_and_get_JSON(g_url[g_url_gt2_guld], opt)?.then(jsonObj=>{
     opt.set('nmbr',         num.toString());
-    return await POST_and_get_JSON3(g_url[g_url_new_hres], opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(g_url[g_url_all_hres], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.hres  === undefined) {
@@ -248,7 +252,7 @@ export function general_load(uniq_no: number, opt?: C_UrlOpt, callback?: T_callb
 
 function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
 
-    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
  
@@ -334,7 +338,7 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
         POST_and_move_page(g_url[g_url_check_JSON], opt);
     }
 
-    return POST_and_get_JSON(g_url[g_url_get_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
         if (jsonObj?.ecode === 0) {
  
             if (jsonObj?.save  === undefined) {

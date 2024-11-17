@@ -84,7 +84,7 @@ function init_before_start_games(): void {
     const maze_name = g_start_env.opt;
     tmp_load().then((jsonObj:any)=>{
         decode_all(jsonObj?.save);
-        get_new_maze(maze_name).then((jsonObj:any)=>{  
+        get_new_maze(maze_name).then((jsonObj:any)=>{ 
             decode_maze(jsonObj?.data);
             do_load_bottom_half('冒険を始めましょう！'); 
         });
