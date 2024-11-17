@@ -70,8 +70,8 @@ export class C_MazeInfo {
                 name:   	'maze012', 
                 mbname: 	'暗き森の迷宮', 
                 lv:     	 1, 
-                size_x: 	26, 
-                size_y: 	26, 
+                size_x: 	25, 
+                size_y: 	25, 
                 size_z: 	 7, 
                 max_room: 	 5, 
                 room_size: 	 3 
