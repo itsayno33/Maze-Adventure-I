@@ -25,11 +25,11 @@ export class C_DspMessage {
 
         if (this.isHTML) {
             let all_msg = "<p class='normal_message'>\n";
-            for (const msg in this.nor_message) all_msg += "{$msg}</br>\n";
+            for (const msg of this.nor_message) all_msg += `${msg}</br>\n`;
             all_msg +=  "</p>\n";
             alert(all_msg);
         } else {
-            for (const msg in this.nor_message) console.log(msg);
+            for (const msg of this.nor_message) console.log(msg);
         }
         return;
     }
@@ -39,13 +39,13 @@ export class C_DspMessage {
 
         if (this.isHTML) {
             let all_msg = "<p class='error_message'>\n";
-            for (const msg in this.err_message) all_msg += "{$msg}</br>\n";
+            for (const msg of this.err_message) all_msg += `${msg}</br>\n`;
             all_msg +=  "</p>\n";
             alert(all_msg);
         } else {
-            console.log("\n\n\n###\n### ERROR Occuerd.\n###\n");
-            for (const msg in this.err_message) console.log(`### ${msg}`);
-            console.log("###\n");
+            console.error("\n\n\n###\n### ERROR Occuerd.\n###\n");
+            for (const msg of this.err_message) console.error(`### ${msg}`);
+            console.error("###\n");
         }
         return;
     }

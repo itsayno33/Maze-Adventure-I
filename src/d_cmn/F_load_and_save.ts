@@ -44,7 +44,7 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
 }
 
 async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
-    return await POST_and_get_JSON(url, opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(url, opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
         
@@ -79,7 +79,7 @@ export function get_new_maze(maze_name: string, callback?: T_callback): Promise<
     opt.set('maze_name',  maze_name);
 
 //    return POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
-    return POST_and_get_JSON(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON3(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode !== 0) {
             g_mes.warning_message("新迷宮データを受信できませんでした\n" + jsonObj.emsg);
             _alert(jsonObj.emsg);
@@ -151,7 +151,7 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
     const opt = new C_UrlOpt();
     opt.set('mode',        'maze_info'); 
 //    return await POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
-    return await POST_and_get_JSON(g_url[g_url_all_maze], opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(g_url[g_url_all_maze], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.mazeinfo === undefined) {
@@ -185,7 +185,7 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 //    opt.set('number',       num.toString());
 //    return await POST_and_get_JSON(g_url[g_url_gt2_guld], opt)?.then(jsonObj=>{
     opt.set('nmbr',         num.toString());
-    return await POST_and_get_JSON(g_url[g_url_all_hres], opt)?.then(jsonObj=>{
+    return await POST_and_get_JSON3(g_url[g_url_all_hres], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.hres  === undefined) {
