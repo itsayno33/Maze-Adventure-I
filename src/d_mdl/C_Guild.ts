@@ -1,18 +1,18 @@
 "use strict";
 
 import { I_Locate, T_Lckd }      from "./C_Location";
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { C_Goods, JSON_Goods }   from "./C_Goods";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { C_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
+import { C_GoodsItem, JSON_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,
     uniq_id?:  string,
     save_id?:  number,
     name?:     string,
-    goods?:    JSON_Goods,
+    gold?:     JSON_GoodsItem,
     heroes?:   JSON_Hero[],
 }
 
@@ -23,7 +23,7 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
         + "\nuniq_id:  " + (a.uniq_id   ?? '?')
         + "\nsave_id:  " + (a.save_id   ?? '?')
         + "\nname:     " + (a.name      ?? '?')
-        + "\ngoods:    " + (Object.keys(a.goods??0).length)
+        + "\ngold:     " + (Object.keys(a.gold??0).length)
         + "\nheroes:   " + (a.heroes?.length ?? '?')
         + "\n"
     );
@@ -63,6 +63,37 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     }
     public rmv_hero(hero: C_Hero): void {
         delete this.heroes[hero.uid()];
+    }
+
+
+    public static from_obj_to_string(oa: C_Guild): string {
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_objArray_to_string(oaa: {[uid: string]: C_Guild}): string {
+        const oa = [] as C_Guild[];
+        for (const ii in oaa) oa.push(oaa[ii]);
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_string_to_obj(txt: string): C_Guild {
+        try {
+            const j   = JSON.parse(txt) as JSON_Guild[];
+            return new C_Guild(j);
+        } catch (err) {
+            return new C_Guild();
+        };
+    }
+    public static from_string_to_objArray(txt: string): {[uid: string]: C_Guild} {
+        try {
+            const j   = JSON.parse(txt) as JSON_Guild[];
+            const mpa = {} as {[id: string]: C_Guild};
+            for (const jj of j) {
+                const aaa = new C_Guild().decode(jj);
+                mpa[aaa.uid()] = aaa;
+            }
+            return mpa;
+        } catch (err) {
+            return {};
+        };
     }
 
 

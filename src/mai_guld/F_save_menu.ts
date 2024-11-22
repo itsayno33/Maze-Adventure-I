@@ -1,7 +1,8 @@
 import { _ceil, _floor, _round }   from "../d_utl/F_Math";
 import { C_UrlOpt }                from "../d_utl/C_UrlOpt";
 import { C_MovablePoint }          from "../d_mdl/C_MovablePoint";
-import { C_SaveData, I_JSON_Uniq } from "../d_mdl/C_SaveData";
+import { I_JSON_Uniq }             from "../d_mdl/C_SaveInfo";
+import { C_SaveData }              from "../d_mdl/C_SaveData";
 import { C_CtlCursor }             from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }      from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
@@ -117,7 +118,7 @@ async function update_data_list(): Promise<void> {
                     }
                     return;
                 }
-                g_mes.warning_message('saveプロパティが返ってきませんでした');
+                g_mes.warning_message('save_infoプロパティが返ってきませんでした');
                 return;
             }
             catch (err) {

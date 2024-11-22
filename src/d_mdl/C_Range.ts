@@ -2,7 +2,7 @@
 
 import { _max, _min }           from "../d_utl/F_Math";
 import { C_Point, JSON_Point }  from "./C_Point";
-import { JSON_Any }             from "./C_SaveData";
+import { JSON_Any }             from "./C_SaveInfo";
 
 export interface JSON_Range extends JSON_Any {
     min?:   JSON_Point, 

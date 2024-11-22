@@ -1,12 +1,12 @@
 "use strict";
 
-import { JSON_Any }  from "./C_SaveData";
+import { JSON_Any }  from "./C_SaveInfo";
 import { JSON_Obj }  from "./C_Obj";
-import { C_ObjList } from "./C_ObjList";
+import { C_ObjList, JSON_ObjList } from "./C_ObjList";
 import { C_Goods, JSON_Goods, T_GoodsKind } from "./C_Goods";
 
 
-export interface JSON_GoodsList extends JSON_Any {
+export interface JSON_GoodsList extends JSON_ObjList {
     gold?: JSON_Obj[],
     arms?: JSON_Obj[],    
     shld?: JSON_Obj[],    

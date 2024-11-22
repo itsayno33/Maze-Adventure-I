@@ -7,7 +7,7 @@ import { C_Walker, JSON_Walker } from "./C_Walker";
 import { C_Goods,  JSON_Goods }  from './C_Goods';
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { I_MazeObj }             from "./C_MazeObj";
-import { JSON_Any }              from "./C_SaveData";
+import { JSON_Any }              from "./C_SaveInfo";
 import { C_CurrentTeamView }     from "./C_TeamView";
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { _get_uuid }             from "../d_utl/F_Rand";
@@ -125,6 +125,37 @@ export class C_Team implements I_MazeObj {
 
     public get_pd(): C_PointDir {
         return this.walker.get_pd();
+    }
+
+
+    public static from_obj_to_string(oa: C_Team): string {
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_objArray_to_string(oaa: {[uid: string]: C_Team}): string {
+        const oa = [] as C_Team[];
+        for (const ii in oaa) oa.push(oaa[ii]);
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_string_to_obj(txt: string): C_Team {
+        try {
+            const j   = JSON.parse(txt) as C_Team[];
+            return new C_Team(j);
+        } catch (err) {
+            return new C_Team();
+        };
+    }
+    public static from_string_to_objArray(txt: string): {[uid: string]: C_Team} {
+        try {
+            const j   = JSON.parse(txt) as JSON_Team[];
+            const mpa = {} as {[id: string]: C_Team};
+            for (const jj of j) {
+                const aaa = new C_Team().decode(jj);
+                mpa[aaa.uid()] = aaa;
+            }
+            return mpa;
+        } catch (err) {
+            return {};
+        };
     }
 
     

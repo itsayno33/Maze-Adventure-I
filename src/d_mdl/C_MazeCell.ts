@@ -2,7 +2,7 @@
 
 import { _get_uuid } from "../d_utl/F_Rand";
 import { T_MzKind }  from "./T_MzKind";
-import { JSON_Any }  from "./C_SaveData";
+import { JSON_Any }  from "./C_SaveInfo";
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { T_Wall }    from './C_Wall';
 

@@ -3,7 +3,7 @@
 import { C_Point }                   from './C_Point';
 import { C_PointDir, JSON_PointDir } from './C_PointDir';
 import { T_Direction }               from './C_PointDir';
-import { I_JSON, JSON_Any }          from './C_SaveData';
+import { I_JSON, JSON_Any }          from './C_SaveInfo';
 import { T_MakeEnumType }            from "../d_utl/T_MakeEnumType";
 
 export const T_Lckd:{[lckd: string]: number}  = {

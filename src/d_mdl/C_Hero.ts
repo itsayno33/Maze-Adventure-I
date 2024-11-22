@@ -2,7 +2,7 @@
 
 import { C_Goods, JSON_Goods }             from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
-import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveData";
+import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveInfo";
 import { _get_uuid, _irand, _random_str }  from "../d_utl/F_Rand";
 import { C_GoodsItem, JSON_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
 
@@ -13,7 +13,7 @@ export interface JSON_Hero extends JSON_Any {
     name?:      string, 
     sex?:       number; 
     age?:       number; 
-    gold?:     JSON_GoodsItem; 
+    gold?:      JSON_GoodsItem; 
     state?:     number; 
     lv?:        number; 
     val?:       JSON_Hero_Value;
@@ -59,7 +59,7 @@ export class C_Hero implements I_JSON_Uniq {
     protected state:    number; 
     protected lv:       number; 
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
-    protected gold:    C_GoodsItem; 
+    protected gold:     C_GoodsItem; 
     protected val:      JSON_Hero_Value;
     protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
     protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};

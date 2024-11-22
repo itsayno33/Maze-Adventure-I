@@ -1,6 +1,6 @@
 "use strict";
 
-import { I_Abstract, JSON_Any } from "./C_SaveData";
+import { I_Abstract, JSON_Any } from "./C_SaveInfo";
 import { T_Wall }               from "../d_mdl/C_Wall";
 
 

@@ -1,6 +1,6 @@
 "use strict";
 
-import { I_JSON }          from "./C_SaveData";
+import { I_JSON }          from "./C_SaveInfo";
 import { C_Obj, I_Obj, JSON_Obj } from "./C_Obj";
 import { T_MakeEnumType }  from "../d_utl/T_MakeEnumType";
 import { _irand } from "../d_utl/F_Rand";

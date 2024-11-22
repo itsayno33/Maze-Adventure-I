@@ -1,4 +1,4 @@
-import { alert_save_detail, alert_save_info } from "../d_mdl/C_SaveData"; 
+import { alert_save_detail, alert_save_info } from '../d_mdl/C_SaveData'; 
 import { alert_team_info }     from "../d_mdl/C_Team"; 
 import { alert_maze_info }     from "../d_mdl/C_Maze"; 
 import { alert_guld_info }     from "../d_mdl/C_Guild"; 

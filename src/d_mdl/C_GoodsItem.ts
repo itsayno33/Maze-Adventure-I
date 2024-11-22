@@ -1,6 +1,6 @@
 import { T_MakeEnumType }   from "../d_utl/T_MakeEnumType";
 import { _get_uuid, _irand }        from "../d_utl/F_Rand";
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON, JSON_Any } from "./C_SaveInfo";
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,

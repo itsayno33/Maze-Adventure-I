@@ -1,6 +1,6 @@
 "use strict";
 
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON, JSON_Any } from "./C_SaveInfo";
 import { _round }           from "../d_utl/F_Math";
 import { _inrand } from "../d_utl/F_Rand";
 

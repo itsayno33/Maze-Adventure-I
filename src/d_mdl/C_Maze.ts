@@ -7,7 +7,7 @@ import { C_Point }               from "./C_Point";
 import { I_Locate, T_Lckd }      from "./C_Location";
 import { C_Range }               from "./C_Range";
 import { C_Team, JSON_Team }     from "./C_Team";
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { _get_uuid, _igrand, _irand }             from "../d_utl/F_Rand";
 import { _min } from "../d_utl/F_Math";
 import { C_PointDir } from "./C_PointDir";
@@ -491,11 +491,35 @@ protected open_exit(p: C_PointSet2D|undefined, kind: T_MzKind, floor: number): v
 }
 
 
-
-
-
-
-
+public static from_obj_to_string(oa: C_Maze): string {
+    return JSON.stringify(oa, null, "\t");
+}
+public static from_objArray_to_string(oaa: {[uid: string]: C_Maze}): string {
+    const oa = [] as C_Maze[];
+    for (const ii in oaa) oa.push(oaa[ii]);
+    return JSON.stringify(oa, null, "\t");
+}
+public static from_string_to_obj(txt: string): C_Maze {
+    try {
+        const j   = JSON.parse(txt) as JSON_Maze[];
+        return new C_Maze().decode(j);
+    } catch (err) {
+        return new C_Maze();
+    };
+}
+public static from_string_to_objArray(txt: string): {[uid: string]: C_Maze} {
+    try {
+        const j   = JSON.parse(txt) as JSON_Maze[];
+        const mpa = {} as {[id: string]: C_Maze};
+        for (const jj of j) {
+            const aaa = new C_Maze().decode(jj);
+            mpa[aaa.uid()] = aaa;
+        }
+        return mpa;
+    } catch (err) {
+        return {};
+    };
+}
 
 
     public to_letter(p: C_Point): string {
