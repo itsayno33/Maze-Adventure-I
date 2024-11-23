@@ -9,17 +9,20 @@ export const g_url_put_save    =  8;
 export const g_url_all_save    =  9;
 export const g_url_mai_maze    = 10;
 export const g_url_mai_guld    = 11;
+export const g_url_get_info    = 12;
+export const g_url_get_data    = 13;
+export const g_url_put_data    = 15;
 
-export const g_url_check_JSON  = 12;
+export const g_url_check_JSON  = 16;
 
-export const g_url_rcd_list    = 13;
-export const g_url_rcd_load    = 15;
-export const g_url_rcd_save    = 16;
+export const g_url_rcd_list    = 17;
+export const g_url_rcd_load    = 18;
+export const g_url_rcd_save    = 19;
 
-export const g_url_gt2_guld    = 17;
-export const g_url_gt2_maze    = 18;
-export const g_url_gt2_save    = 19;
-export const g_url: string[] = new Array(20);
+export const g_url_gt2_guld    = 20;
+export const g_url_gt2_maze    = 21;
+export const g_url_gt2_save    = 22;
+export const g_url: string[] = new Array(23);
 
 export let   g_my_url: string;
 
@@ -118,6 +121,10 @@ const tsCaller: I_TsCall = (() => {
             g_url[g_url_all_maze]   = exp_top + "/maze/allMaze";
             g_url[g_url_new_guld]   = exp_top + "/guld/newGuld";
             g_url[g_url_all_hres]   = exp_top + "/guld/allHres";
+
+            g_url[g_url_get_info]   = exp_top + "/ldsv/_info";
+            g_url[g_url_get_data]   = exp_top + "/ldsv/_load";
+            g_url[g_url_put_data]   = exp_top + "/ldsv/_save";
 
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },

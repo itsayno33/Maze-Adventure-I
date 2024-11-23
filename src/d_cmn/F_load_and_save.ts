@@ -21,6 +21,9 @@ import {
     g_url_all_hres,
     g_url_check_JSON,
     g_url_gt2_save,
+    g_url_get_info,
+    g_url_get_data,
+    g_url_put_data,
 } from "../d_cmn/global";
 
 
@@ -117,7 +120,8 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
     opt.set('mode',       'save_info'); 
     opt.set('pid',         g_start_env.pid);
 
-    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+//    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON3(g_url[g_url_get_info], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
 
@@ -252,7 +256,8 @@ export function general_load(uniq_no: number, opt?: C_UrlOpt, callback?: T_callb
 
 function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
 
-    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+//    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON3(g_url[g_url_get_data], opt)?.then(jsonObj=>{
         if (jsonObj.ecode === 0) {
             g_mes.normal_message('正常にロードされました');
  
@@ -338,7 +343,8 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
         POST_and_move_page(g_url[g_url_check_JSON], opt);
     }
 
-    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+//    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
+    return POST_and_get_JSON3(g_url[g_url_put_data], opt)?.then(jsonObj=>{
         if (jsonObj?.ecode === 0) {
  
             if (jsonObj?.save  === undefined) {
