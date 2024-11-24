@@ -10,7 +10,8 @@ import {
     g_maze, 
     g_team,
     g_ctls,
-    g_vsw, 
+    g_vsw,
+    g_ds, 
 }   from "./global_for_maze";
 
 
@@ -66,6 +67,7 @@ export function act_Up_mode(): void {
     canDn = false;
     g_ctls.act(ctls_updn_up);
     g_vsw.view(g_vsw.Move());
+    setCanvas3DClick()
 }
 
 export function act_Dn_mode(): void {
@@ -183,4 +185,40 @@ async function do_UD_save(): Promise<any|undefined> {
     );
     return UD_save();
 }
+
+
+
+
+
+function setCanvas3DClick(): void {
+    if (g_ds?.canvas === null)     return;
+    g_ds.canvas.onclick = canvas3Dclick;
+}
+function clrCanvas3DClick(): void {
+    if (g_ds?.canvas === null)     return;
+    g_ds.canvas.onclick = ()=>{};
+}
+
+function canvas3Dclick(ev: MouseEvent): void {
+    if (g_ds?.canvas === null)     return;
+    if (ev.target !== g_ds.canvas) return;
+
+    const cvs = g_ds.canvas;
+//debug    alert(`x=${(ev.offsetX??-1)}, y=${(ev.offsetY??-1)}`);
+
+    const left_pane_r  = cvs.clientWidth  * 0.35;
+    const rght_pane_l  = cvs.clientWidth  * 0.65;
+    const back_pane_u  = cvs.clientHeight * 0.50;
+
+    // キャンバスの左側
+    if (ev.offsetX < left_pane_r) {(document.getElementById('n_btn') as HTMLButtonElement)?.click(); return;}
+    // キャンバスの右側
+    if (ev.offsetX > rght_pane_l) {(document.getElementById('y_btn') as HTMLButtonElement)?.click(); return;}
+    //キャンバスの中央上(前進)
+    if (ev.offsetY < back_pane_u) {(document.getElementById('u_arr') as HTMLButtonElement)?.click(); return;}
+    // キャンバスの中央下(後退)
+    (document.getElementById('d_arr') as HTMLButtonElement)?.click(); return;
+}
+
+
 
