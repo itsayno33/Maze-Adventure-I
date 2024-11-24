@@ -10,7 +10,8 @@ interface I_tbl_guld extends mysql.RowDataPacket {
     save_id: number,
     uniq_id: string,
     name:    string,
-    goods:   string,
+    gold:    number,
+//    goods:   string,
 }
 interface I_lastInsert extends mysql.RowDataPacket {
     id: number;
@@ -75,7 +76,7 @@ export class C_GuildRDB {
         save_id: number,
     ): Promise<C_Guild[]> {
         const get_guld_SQL = `
-            SELECT 	id, save_id, uniq_id, name, goods 
+            SELECT 	id, save_id, uniq_id, name, gold
             FROM    tbl_guld
             WHERE   save_id = :save_id
         `
@@ -106,15 +107,16 @@ export class C_GuildRDB {
     ): Promise<number> {
 
         const insert_guld_SQL =`
-            INSERT INTO tbl_guld ( save_id,  uniq_id,  name,  goods )
-            VALUES              ( :save_id, :uniq_id, :name, :goods )
+            INSERT INTO tbl_guld ( save_id,  uniq_id,  name,  gold )
+            VALUES              ( :save_id, :uniq_id, :name, :gold )
         `
         const j = guld.encode();
         await db_mai.query(insert_guld_SQL, {
             save_id:  save_id,  
             uniq_id:  j.uniq_id,  
             name:     j.name,
-            goods:    JSON.stringify(j.gold),
+            gold:     j.gold,
+//            goods:    JSON.stringify(j.goods),
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 61: ${insert_guld_SQL}`);
@@ -160,7 +162,8 @@ export class C_GuildRDB {
             save_id: j.save_id,
             uniq_id: j.uniq_id,
             name:    j.name,
-            gold:    JSON.parse(j.goods),
+            gold:    j.gold,
+//            goods:   JSON.parse(j.goods),
         };
     }
 }

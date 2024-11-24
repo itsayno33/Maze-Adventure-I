@@ -12,7 +12,8 @@ interface I_tbl_team extends mysql.RowDataPacket {
     uniq_id: string,
     name:    string,
     locate:  string,
-    goods:   string,
+    gold:    number,
+//    goods:   string,
 }
 interface I_lastInsert extends mysql.RowDataPacket {
     id: number;
@@ -94,7 +95,7 @@ export class C_TeamRDB {
         save_id: number,
     ): Promise<C_Team[]> {
         const get_team_SQL =`
-            SELECT 	id, save_id, uniq_id, name, locate, goods
+            SELECT 	id, save_id, uniq_id, name, locate, gold
             FROM tbl_team
             WHERE   save_id = :save_id
         `
@@ -123,7 +124,7 @@ export class C_TeamRDB {
         join_uid: string,
     ): Promise<C_Team|undefined> {
         const get_team_SQL = `
-            SELECT 	id, save_id, uniq_id, name, locate, goods 
+            SELECT 	id, save_id, uniq_id, name, locate, gold 
             FROM tbl_team
             WHERE   save_id = :save_id  AND  uniq_id = :uniq_id
         `
@@ -152,10 +153,10 @@ export class C_TeamRDB {
     ): Promise<number> {
         const insert_team_SQL = `
             INSERT INTO tbl_team (
-                save_id, uniq_id, name, locate, goods
+                save_id, uniq_id, name, locate, gold
             )
             VALUES ( 
-                :save_id, :uniq_id, :name, :locate, :goods
+                :save_id, :uniq_id, :name, :locate, :gold
             )
         `
         const j = team.encode();
@@ -165,7 +166,8 @@ export class C_TeamRDB {
             uniq_id : j.uniq_id, 
             name    : j.name, 
             locate  : JSON.stringify(j.locate), 
-            goods   : JSON.stringify(j.gold),  
+            gold    : j.gold,  
+//            goods   : JSON.stringify(j.goods),  
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 6: ${insert_team_SQL} ` + err);
@@ -233,7 +235,8 @@ export class C_TeamRDB {
             uniq_id: j.uniq_id,
             name:    j.name,
             locate:  JSON.parse(j.locate),
-            gold:    JSON.parse(j.goods),
+            gold:    j.gold,
+//            goods:   JSON.parse(j.goods),
         };
     }
 }

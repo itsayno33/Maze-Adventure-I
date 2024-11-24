@@ -4,7 +4,6 @@ import { C_Point }               from "./C_Point";
 import { C_PointDir }            from './C_PointDir';
 import { C_MovablePoint }        from "./C_MovablePoint";
 import { C_Walker, JSON_Walker } from "./C_Walker";
-import { C_Goods,  JSON_Goods }  from './C_Goods';
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { I_MazeObj }             from "./C_MazeObj";
 import { JSON_Any }              from "./C_SaveInfo";
@@ -12,6 +11,7 @@ import { C_CurrentTeamView }     from "./C_TeamView";
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { C_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsList";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -19,7 +19,8 @@ export interface JSON_Team extends JSON_Any {
     save_id?:   number, 
     name?:      string, 
     locate?:    JSON_Walker,
-    gold?:      JSON_Goods,
+    gold?:      number,
+//    goods?:     JSON_GoodsList,
     heroes?:    JSON_Hero[], 
     motion?:    string,
     view?:      JSON_MazeObjView|undefined,
@@ -40,7 +41,8 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\ncur_y: "     + (a.locate?.loc_pos?.y ?? '?')
         + "\ncur_z: "     + (a.locate?.loc_pos?.z ?? '?')
         + "\ncur_d: "     + (a.locate?.loc_pos?.d ?? '?')
-        + "\ngoods: "     + (Object.keys(a.goods??[]).length)
+        + "\ngold: "      + (a.gold      ??  0 )
+//        + "\ngoods: "     + (Object.keys(a.goods??[]).length)
         + "\nheroes: "    + (a.heroes?.length ?? '?')
         + "\n"
     );
@@ -60,7 +62,8 @@ export class C_Team implements I_MazeObj {
     protected uniq_id:   string;
     protected save_id:   number;
     protected walker:    C_Walker;
-    protected gold:      C_GoodsItem;
+    protected gold:      number;
+//    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
 
     protected myView:    I_MazeObjView|undefined;
@@ -77,7 +80,8 @@ export class C_Team implements I_MazeObj {
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
-        this.gold   = new C_GoodsItem({gkind: T_GoodsKind.Gold, value: 0});
+        this.gold   = 0;
+//        this.goods  = new C_GoodsList();
         this.heroes = {};
         this.hope_motion = 'NOP';    
         if (j !== undefined) this.decode(j);
@@ -171,7 +175,8 @@ export class C_Team implements I_MazeObj {
             uniq_id:   this.uniq_id,
             save_id:   this.save_id,
             locate:    this.walker.encode(),
-            gold:      this.gold.encode(),
+            gold:      this.gold,
+//            goods:     this.goods.encode(),
             heroes:    json_heroes,
             motion:    this.hope_motion,
             view:      this.myView?.encode() ?? {},
@@ -187,7 +192,8 @@ export class C_Team implements I_MazeObj {
         if (a.motion !== undefined)  this.hope_motion = a.motion;
 
         if (a.locate !== undefined)  this.walker.decode(a.locate);
-        if (a.gold   !== undefined)  this.gold.decode(a.gold);
+        if (a.gold   !== undefined)  this.gold = a.gold;
+//        if (a.goods  !== undefined)  this.goods.decode(a.goods);
 
         if (a.heroes !== undefined)  {
             this.heroes = {};

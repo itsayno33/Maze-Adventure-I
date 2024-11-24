@@ -12,7 +12,8 @@ interface I_tbl_hero extends mysql.RowDataPacket {
     name:      string;
     sex:       number;
     age:       number;
-    goods:     string;
+    gold:      number;
+//    goods:     string;
     state:     number;
     lv:        number;
     skp_ttl:   string;
@@ -91,7 +92,7 @@ export class C_HeroRDB {
     ): Promise<C_Hero|undefined> {
         const get_heroes_SQL = `
             SELECT 	id, save_id, uniq_id, join_uid, 
-                    name, sex, age, goods, state, lv,  
+                    name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
                     abi_p_bsc, abi_m_bsc, is_alive 
             FROM    tbl_hero
@@ -122,7 +123,7 @@ export class C_HeroRDB {
     ): Promise<C_Hero[]> {
         const get_heroes_SQL = `
             SELECT 	id, save_id, uniq_id, join_uid, 
-                    name, sex, age, goods, state, lv,  
+                    name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
                     abi_p_bsc, abi_m_bsc, is_alive 
             FROM    tbl_hero
@@ -161,13 +162,13 @@ export class C_HeroRDB {
         const insert_hero_SQL = `
             INSERT INTO tbl_hero (
                 save_id, uniq_id, join_uid, 
-                name, sex, age, goods, state, lv, 
+                name, sex, age, gold, state, lv, 
                 skp_ttl, skp_now, exp_ttl, exp_now, nxe,
                 abi_p_bsc, abi_m_bsc, is_alive 
             )
             VALUES ( 
                 :save_id, :uniq_id, :join_uid, 
-                :name, :sex, :age, :goods, :state, :lv, 
+                :name, :sex, :age, :gold, :state, :lv, 
                 :skp_ttl, :skp_now, :exp_ttl, :exp_now, :nxe,
                 :abi_p_bsc, :abi_m_bsc, :is_alive 
             )
@@ -182,6 +183,7 @@ console.error(
     +', name='      +jsonHero.name
     +', sex='       +jsonHero.sex
     +', age='       +jsonHero.age
+    +', gold='      +jsonHero.gold
     +', goods='     +(JSON.stringify(jsonHero?.goods)??'???')
     +', state='     +jsonHero.state
     +', lv='        +jsonHero.lv
@@ -202,7 +204,8 @@ console.error(
             'name':      jsonHero.name,
             'sex':       jsonHero.sex,
             'age':       jsonHero.age,
-            'goods':     JSON.stringify(jsonHero.goods),
+            'gold':      jsonHero.gold,
+//            'goods':     JSON.stringify(jsonHero.goods),
             'state':     jsonHero.state,
             'lv':        jsonHero.lv,
             'skp_ttl':   jsonHero.val?.skp?.ttl??'',
@@ -302,7 +305,8 @@ console.error(
             name:      j.name,
             sex:       j.sex,
             age:       j.age,
-            gold:      JSON.parse(j.goods),
+            gold:      j.gold,
+//            goods:     JSON.parse(j.goods),
             state:     j.state,
             lv:        j.lv,
             val: {
