@@ -39,7 +39,7 @@ body.move {
 }
 
 #pane_maze_vw3D.move,
-#pane_maze_vw2D.move,
+#pane_maze_vwCh.move,
 #pane_maze_mesg.move,
 #pane_ctls_boad.move,
 #pane_sytm_logs.move
@@ -67,7 +67,7 @@ body.menu {
 {display: block;}
 
 #pane_maze_vw3D.menu,
-#pane_maze_vw2D.menu,
+#pane_maze_vwCh.menu,
 #pane_ldsv_list.menu,
 #pane_ldsv_data.menu,
 #pane_maze_mesg.menu 
@@ -90,7 +90,7 @@ body.ldsv {
 {display: block;}
 
 #pane_maze_vw3D.ldsv,
-#pane_maze_vw2D.ldsv,
+#pane_maze_vwCh.ldsv,
 #pane_menu_list.ldsv,
 #pane_maze_mesg.ldsv 
 {display: none; }
@@ -98,7 +98,7 @@ body.ldsv {
 
 #pane_header    {grid-area: header;}
 #pane_maze_vw3D {grid-area: view3d;}
-#pane_maze_vw2D {grid-area: view2d;}
+#pane_maze_vwCh {grid-area: viewCh;}
 #pane_menu_list {grid-area: menu_l;}
 #pane_ldsv_list {grid-area: ldsv_l;}
 #pane_ldsv_data {grid-area: ldsv_d;}
@@ -241,15 +241,15 @@ button#r_cp1 {
     font-size:  var(--view_button_font_size, 0.8rem);
 }
 
-#div_maze_vw2D {
+#div_maze_vwCh {
     display: grid;
 }
 
-pre#maze_view2D_pre {
-    margin:       var(--view2D_pre_margin,      0.8rem);
-    width:        var(--view2D_pre_wdth,        320px);
-    height:       var(--view2D_pre_hght,        283px); 
-    font-family:  var(--view2D_pre_font_family, monospace);
+pre#maze_viewCh_pre {
+    margin:       var(--viewCh_pre_margin,      0.8rem);
+    width:        var(--viewCh_pre_wdth,        320px);
+    height:       var(--viewCh_pre_hght,        283px); 
+    font-family:  var(--viewCh_pre_font_family, monospace);
     justify-self: center; 
     text-align:   center;
 }
@@ -355,12 +355,12 @@ p#maze_view3D_direction_info span#direction_Y {
 }
 
 
-div#pane_maze_vw2D {
+div#pane_maze_vwCh {
     justify-self:center; 
     text-align:  center;
 }
 /*
-div#Maze_view2D {
+div#Maze_viewCh {
     justify-self:center; 
     text-align:  center;
 }

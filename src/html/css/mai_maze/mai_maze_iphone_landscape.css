@@ -81,21 +81,21 @@
 --body_move_gap: 1rem 1.5rem;
 --body_move_cols: 
         var(--body_lyt_left_gap, 3rem)
-        [header-start footer-start view2d-start message-start maze_m-start]
+        [header-start footer-start viewCh-start message-start maze_m-start]
         auto
-        [view2d-end message-end view3d-start]
+        [viewCh-end message-end view3d-start]
         auto
         [view3d-end maze_m-end contls-start]
         auto
-        [header-end footer-end view2d-end contls-end]
+        [header-end footer-end viewCh-end contls-end]
         var(--body_lyt_right_gap, 3rem)
         ;
 --body_move_rows:
         [header-start]
         var(--body_lyt_row_header_height,  100px)
-        [header-end view2d-start view3d-start contls-start]
+        [header-end viewCh-start view3d-start contls-start]
         1fr
-        [view2d-end view3d-end maze_m-start] 
+        [viewCh-end view3d-end maze_m-start] 
         auto
         [contls-end maze_m-end message-start]
         auto
@@ -169,8 +169,8 @@
 --view3D_font_size:   1.3rem;
 --view3D_line_heght:  1.6rem;
 
---view2D_pre_wdth:   260px;
---view2D_pre_hght:   220px;
+--viewCh_pre_wdth:   260px;
+--viewCh_pre_hght:   220px;
 
 --view_maze_msg_margin_UD:  0.5rem;
 --view_menu_msg_margin_UD:  0.1rem;

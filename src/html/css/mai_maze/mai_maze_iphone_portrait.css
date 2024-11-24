@@ -67,9 +67,9 @@
 --body_move_gap: 1.5rem 0.5rem;
 --body_move_cols: 
         1rem
-        [header-start footer-start view3d-start view2d-start maze_m-start message-start]
+        [header-start footer-start view3d-start viewCh-start maze_m-start message-start]
         auto
-        [view2d-end contls-start]
+        [viewCh-end contls-start]
         auto
         [header-end footer-end view3d-end maze_m-end contls-end message-end]
         1rem
@@ -81,9 +81,9 @@
         auto
         [view3d-end maze_m-start]
         auto
-        [maze_m-end view2d-start contls-start]
+        [maze_m-end viewCh-start contls-start]
         auto
-        [view2d-end contls-end message-start] 
+        [viewCh-end contls-end message-start] 
         auto
         [message-end footer-start]
         var(--body_lyt_row_footer_height,  100px)
@@ -144,12 +144,12 @@
 
     font-size: 16px;
 
-    --view2D_pre_margin:        0px;
-    --view2D_pre_wdth:        50dvw;
-    --view2D_pre_hght:        175px;
-    --view2D_pre_font_family: monospace;
-    --view2D_pre_font_size:    08pt;
-    --view2D_pre_line_height:  09pt;
+    --viewCh_pre_margin:        0px;
+    --viewCh_pre_wdth:        50dvw;
+    --viewCh_pre_hght:        175px;
+    --viewCh_pre_font_family: monospace;
+    --viewCh_pre_font_size:    08pt;
+    --viewCh_pre_line_height:  09pt;
 
     --view3D_canvas_wdth:     300px;
     --view3D_canvas_hght:     180px;
@@ -200,7 +200,7 @@
     touch-action: manipulation;
 }
 
-div#Maze_view2D button {
+div#Maze_viewCh button {
     font-size: small;
 }
 
