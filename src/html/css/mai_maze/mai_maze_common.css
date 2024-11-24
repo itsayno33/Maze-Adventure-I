@@ -242,7 +242,12 @@ button#r_cp1 {
 }
 
 #div_maze_vwCh {
-    display: grid;
+    display:      grid;
+    position:     relative;
+    width:        var(--viewCh_pre_wdth,        320px);
+    height:       var(--viewCh_pre_hght,        283px); 
+    border:       thick double #33aacc;
+    overflow:     hidden;
 }
 
 pre#maze_viewCh_pre {
@@ -252,6 +257,7 @@ pre#maze_viewCh_pre {
     font-family:  var(--viewCh_pre_font_family, monospace);
     justify-self: center; 
     text-align:   center;
+    position:     absolute;
 }
 #pane_maze_vw3D {
     text-align: center;

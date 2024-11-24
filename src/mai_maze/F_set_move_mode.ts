@@ -6,7 +6,7 @@ import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
 import { act_menu_mode }                         from "./F_set_menu_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
 import { decode_all, set_g_save }                from "./F_set_save_mode";
-import { display_mazeChpre }                     from "./F_display_mazeCh"; 
+import { display_mazeCh}                         from "./F_display_mazeCh"; 
 import { display_maze3D, 
          maze3D_blink_on_direction, maze3D_blink_off_direction }   from "./F_display_maze3D";
 import { 
@@ -166,7 +166,7 @@ function action_obj(): void {}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
-    display_mazeChpre();
+    display_mazeCh();
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();
     else maze3D_blink_off_direction();
