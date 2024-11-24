@@ -55,7 +55,7 @@ export class C_SaveInfoRDB {
         const get_save_SQL = `
             SELECT save_id, player_id, uniq_no, title, detail, point, 
                     auto_mode, is_active, is_delete, 
-                    mypos, 
+                    mypos as mp, 
                     DATE_FORMAT(save_time,'%Y-%m-%dT%H:%i:%s.%fZ') AS save_time
             FROM   tbl_save
             WHERE  player_id = :player_id 
@@ -73,7 +73,10 @@ export class C_SaveInfoRDB {
             if (recordSet[ii].is_active == '0') continue;
             if (recordSet[ii].is_delete != '0') continue;
 
-            save_data_set.push(new C_SaveInfo(recordSet[ii]));
+            const save = new C_SaveInfo(recordSet[ii]);
+            save.mypos     = C_MovablePoint.from_string_to_obj(recordSet[ii].mp)
+    
+            save_data_set.push(save);
         }
         return save_data_set;
     }
