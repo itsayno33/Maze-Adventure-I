@@ -4,6 +4,7 @@ import { C_DspMessage }        from '../d_utl/C_DspMessage'; // 画面メッセ�
 import { C_Guild, JSON_Guild } from "../d_mdl/C_Guild";
 import { C_HeroRDB }           from './C_HeroRDB';
 
+type db_connect = mysql.PoolConnection;
 interface I_tbl_guld extends mysql.RowDataPacket {
     id:      number,
     save_id: number,
@@ -18,7 +19,7 @@ interface I_lastInsert extends mysql.RowDataPacket {
 export class C_GuildRDB {
     public constructor() {}
 
-    public static async get_from_rdb_all(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<C_Guild[]> {
+    public static async get_from_rdb_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<C_Guild[]> {
         const guld_array = await C_GuildRDB.get_from_tbl_all(db_mai, mes, save_id);
         if (mes.is_err()) {
             return [];
@@ -36,7 +37,7 @@ export class C_GuildRDB {
     }
 
 
-    public static async set_to_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number, guld: C_Guild): Promise<boolean> {
+    public static async set_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, guld: C_Guild): Promise<boolean> {
         const guld_id = await C_GuildRDB.add_tbl(db_mai, mes, save_id, guld);
         if (mes.is_err()) {
             return false;
@@ -51,7 +52,7 @@ export class C_GuildRDB {
     } 
 
 
-    public static async del_to_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number, guld_uid: string): Promise<boolean> {
+    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, guld_uid: string): Promise<boolean> {
         await C_HeroRDB.del_to_rdb(db_mai, mes, save_id, guld_uid);
         if (mes.is_err()) {
             return false;
@@ -69,7 +70,7 @@ export class C_GuildRDB {
     // Guildクラスの配列にセットする
     // 
     protected static async get_from_tbl_all(
-        db_mai:  mysql.Pool, 
+        db_mai:  db_connect, 
         mes:     C_DspMessage, 
         save_id: number,
     ): Promise<C_Guild[]> {
@@ -98,7 +99,7 @@ export class C_GuildRDB {
     // そのID(id)を返す
     // 
     protected static async add_tbl(
-        db_mai:  mysql.Pool, 
+        db_mai:  db_connect, 
         mes:     C_DspMessage, 
         save_id: number,
         guld:    C_Guild
@@ -109,11 +110,11 @@ export class C_GuildRDB {
             VALUES              ( :save_id, :uniq_id, :name, :goods )
         `
         const j = guld.encode();
-        const [resultRecordSet] = await db_mai.query<I_tbl_guld[]>(insert_guld_SQL, {
+        await db_mai.query(insert_guld_SQL, {
             save_id:  save_id,  
             uniq_id:  j.uniq_id,  
             name:     j.name,
-            goods:    JSON.stringify(j.goods),
+            goods:    JSON.stringify(j.gold),
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 61: ${insert_guld_SQL}`);
@@ -123,9 +124,9 @@ export class C_GuildRDB {
     }
 
     // tbl_teamで最後に追加した行番号(save_id)を返す【1行挿入専用】
-    protected static async lastInsert(db_mai: mysql.Pool, mes: C_DspMessage) : Promise<number> {
+    protected static async lastInsert(db_mai: db_connect, mes: C_DspMessage) : Promise<number> {
         const lastInsert_SQL =`
-            SELECT LAST_INSERT_ID() FROM tbl_guld;
+            SELECT LAST_INSERT_ID() as id FROM tbl_guld;
         `
         const [recordSet] = await db_mai.query<I_lastInsert[]>(lastInsert_SQL)
         .catch ((err) => {
@@ -139,12 +140,12 @@ export class C_GuildRDB {
 
     // DB処理。save_idで指定されたレコード(複数)を削除(delete)する
     // 
-    public static async del_tbl(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         const delete_guld_SQL = `
             DELETE FROM tbl_guld 
             WHERE  save_id = :save_id
         `
-        await db_mai.query<I_lastInsert[]>(delete_guld_SQL)
+        await db_mai.query(delete_guld_SQL,{save_id: save_id})
         .catch ((err) => {
             mes.set_err_message(`SQLエラー 68: ${delete_guld_SQL} ` + err);
             return false;

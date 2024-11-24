@@ -490,7 +490,7 @@ protected open_exit(p: C_PointSet2D|undefined, kind: T_MzKind, floor: number): v
     return;
 }
 
-
+/*
 public static from_obj_to_string(oa: C_Maze): string {
     return JSON.stringify(oa, null, "\t");
 }
@@ -520,7 +520,7 @@ public static from_string_to_objArray(txt: string): {[uid: string]: C_Maze} {
         return {};
     };
 }
-
+*/
 
     public to_letter(p: C_Point): string {
         return this.cells[p.z][p.y][p.x].to_letter();

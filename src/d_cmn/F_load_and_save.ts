@@ -248,7 +248,7 @@ export function before_load(opt?: C_UrlOpt, callback?: T_callback): Promise<any|
 
 export function general_load(uniq_no: number, opt?: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     opt ??= new C_UrlOpt();
-    opt.set('mode',           'load'); 
+    opt.set('mode',   'general_load'); 
     opt.set('pid',   g_start_env.pid); 
     opt.set('uno',           uniq_no); 
     return __auto_load(opt, callback);
@@ -322,7 +322,7 @@ export function general_save(opt?: C_UrlOpt, callback?: T_callback): Promise<any
     g_save.auto_mode = false;
 
     opt ??= new C_UrlOpt();
-    opt.set('mode',           'save'); 
+    opt.set('mode',   'general_save'); 
     opt.set('pid',   g_start_env.pid); 
     return __save(opt, callback);
 }
@@ -369,6 +369,9 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
             return undefined;
         }
         
+    }). catch(err=>{
+        g_mes.warning_message('POST読み込みに失敗しました(POST_AND_JSON3)');
+        return undefined;
     });
 
 //    POST_and_move_page(g_url[g_url_check_JSON], opt); return {ecode: 0};

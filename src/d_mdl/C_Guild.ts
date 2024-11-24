@@ -65,7 +65,7 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
         delete this.heroes[hero.uid()];
     }
 
-
+/*
     public static from_obj_to_string(oa: C_Guild): string {
         return JSON.stringify(oa, null, "\t");
     }
@@ -95,7 +95,7 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
             return {};
         };
     }
-
+*/
 
     public encode(): JSON_Guild {
         const json_heroes: JSON_Hero[] = [];

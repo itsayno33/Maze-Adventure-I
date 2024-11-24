@@ -4,6 +4,8 @@ import { C_DspMessage }       from '../d_utl/C_DspMessage'; // 画面メッセ�
 import { C_Team, JSON_Team }  from "../d_mdl/C_Team";
 import { C_HeroRDB }          from './C_HeroRDB';
 
+type db_connect = mysql.PoolConnection;
+
 interface I_tbl_team extends mysql.RowDataPacket {
     id: number,
     save_id: number,
@@ -11,7 +13,6 @@ interface I_tbl_team extends mysql.RowDataPacket {
     name:    string,
     locate:  string,
     goods:   string,
-    is_hero: string,
 }
 interface I_lastInsert extends mysql.RowDataPacket {
     id: number;
@@ -20,7 +21,7 @@ interface I_lastInsert extends mysql.RowDataPacket {
 export class C_TeamRDB { 
     public constructor() {}
 
-    public static async get_from_rdb_all(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<C_Team[]> {
+    public static async get_from_rdb_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<C_Team[]> {
         const team_array = await C_TeamRDB.get_from_tbl_all(db_mai, mes, save_id);
         if (mes.is_err()) {
             return [];
@@ -36,7 +37,7 @@ export class C_TeamRDB {
     }
 
 
-    public static async get_from_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number, team: C_Team): Promise<boolean> {
+    public static async get_from_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, team: C_Team): Promise<boolean> {
         const rslt0 = await C_TeamRDB.get_from_tbl(db_mai, mes, save_id, team.uid());
         if (mes.is_err()) {
             return false;
@@ -51,7 +52,7 @@ export class C_TeamRDB {
 
 
     public static async set_to_rdb(
-        db_mai:  mysql.Pool,
+        db_mai:  db_connect,
         mes:     C_DspMessage,
         save_id: number,
         team:    C_Team
@@ -70,7 +71,7 @@ export class C_TeamRDB {
     }
 
     
-    public static async del_to_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number, team_uid: string): Promise<boolean> {
+    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, team_uid: string): Promise<boolean> {
         await C_HeroRDB.del_to_rdb(db_mai, mes, save_id, team_uid);
         if (mes.is_err()) {
             return false;
@@ -88,18 +89,18 @@ export class C_TeamRDB {
     // Teamクラスの配列にセットする
     // 
     protected static async get_from_tbl_all(
-        db_mai:  mysql.Pool, 
+        db_mai:  db_connect, 
         mes:     C_DspMessage, 
         save_id: number,
     ): Promise<C_Team[]> {
         const get_team_SQL =`
-            SELECT 	id, save_id, uniq_id, name, locate, goods, is_hero
+            SELECT 	id, save_id, uniq_id, name, locate, goods
             FROM tbl_team
             WHERE   save_id = :save_id
         `
         const [resultRecordSet] = await db_mai.query<I_tbl_team[]>(get_team_SQL, {save_id: save_id})
         .catch(err=>{
-            mes.set_err_message(`SQLエラー 37a: ${get_team_SQL}`);
+            mes.set_err_message(`SQLエラー 37a: ${get_team_SQL} ` + err);
             return [];
         });
     
@@ -116,19 +117,19 @@ export class C_TeamRDB {
     // DB処理。save_idと自身のuniq_idで指定されたteamレコードセットを読み込む
     // 
     protected static async get_from_tbl(
-        db_mai:   mysql.Pool, 
+        db_mai:   db_connect, 
         mes:      C_DspMessage, 
         save_id:  number,
         join_uid: string,
     ): Promise<C_Team|undefined> {
         const get_team_SQL = `
-            SELECT 	id, save_id, uniq_id, name, locate, goods, is_hero 
+            SELECT 	id, save_id, uniq_id, name, locate, goods 
             FROM tbl_team
             WHERE   save_id = :save_id  AND  uniq_id = :uniq_id
         `
         const [resultRecordSet] = await db_mai.query<I_tbl_team[]>(get_team_SQL, {save_id: save_id, join_uid: join_uid})
         .catch(err=>{
-            mes.set_err_message(`SQLエラー 37b: ${get_team_SQL}`);
+            mes.set_err_message(`SQLエラー 37b: ${get_team_SQL} ` + err);
             return [];
         });
     
@@ -144,30 +145,30 @@ export class C_TeamRDB {
     // そのID(id)を返す
     // 
     protected static async add_tbl(
-        db_mai:  mysql.Pool, 
+        db_mai:  db_connect, 
         mes:     C_DspMessage, 
         save_id: number,
         team:    C_Team,
     ): Promise<number> {
         const insert_team_SQL = `
             INSERT INTO tbl_team (
-                save_id, uniq_id, name, locate,  goods, is_hero
+                save_id, uniq_id, name, locate, goods
             )
             VALUES ( 
-                :save_id, :uniq_id, :name, :locate,  :goods, :is_hero
+                :save_id, :uniq_id, :name, :locate, :goods
             )
         `
         const j = team.encode();
-        const [resultRecordSet] = await db_mai.query<I_tbl_team[]>(insert_team_SQL, {
+//console.error(`${save_id}, ${j.uniq_id}, ${j.name}, ${JSON.stringify(j.locate)}, ${JSON.stringify(j.gold)}`);
+        await db_mai.query(insert_team_SQL, {
             save_id : save_id,  
             uniq_id : j.uniq_id, 
             name    : j.name, 
             locate  : JSON.stringify(j.locate), 
             goods   : JSON.stringify(j.gold),  
-            is_hero : j.is_hero,
         })
         .catch(err=>{
-            mes.set_err_message(`SQLエラー 6: ${insert_team_SQL}`);
+            mes.set_err_message(`SQLエラー 6: ${insert_team_SQL} ` + err);
             return [];
         });
 
@@ -175,9 +176,9 @@ export class C_TeamRDB {
     }
 
     // tbl_teamで最後に追加した行番号(save_id)を返す【1行挿入専用】
-    protected static async lastInsert(db_mai: mysql.Pool, mes: C_DspMessage) : Promise<number> {
+    protected static async lastInsert(db_mai: db_connect, mes: C_DspMessage) : Promise<number> {
         const lastInsert_SQL =`
-            SELECT LAST_INSERT_ID() FROM tbl_team;
+            SELECT LAST_INSERT_ID() as id FROM tbl_team;
         `
         const [recordSet] = await db_mai.query<I_lastInsert[]>(lastInsert_SQL)
         .catch ((err) => {
@@ -194,7 +195,7 @@ export class C_TeamRDB {
     // そのID(id)の配列を返す
     // 
     protected static async add_tbl_all(
-        db_mai:     mysql.Pool, 
+        db_mai:     db_connect, 
         mes:        C_DspMessage, 
         save_id:    number,
         team_array: C_Team[], 
@@ -211,14 +212,14 @@ export class C_TeamRDB {
 
     // DB処理。save_idで指定されたレコード(複数)を削除(delete)する
     // 
-    public static async del_tbl(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         const delete_team_SQL = `
             DELETE FROM tbl_team 
             WHERE  save_id = :save_id
         `
-        await db_mai.query<I_tbl_team[]>(delete_team_SQL, {save_id : save_id,})
+        await db_mai.query(delete_team_SQL, {save_id : save_id,})
         .catch(err=>{
-            mes.set_err_message(`SQLエラー 15: ${delete_team_SQL}`);
+            mes.set_err_message(`SQLエラー 15: ${delete_team_SQL} ` + err);
             return false;
         });
         return true;
@@ -233,7 +234,6 @@ export class C_TeamRDB {
             name:    j.name,
             locate:  JSON.parse(j.locate),
             gold:    JSON.parse(j.goods),
-            is_hero: j.is_hero,
         };
     }
 }

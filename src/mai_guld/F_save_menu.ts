@@ -514,7 +514,7 @@ async function post_save_data(): Promise<boolean> {
     g_save.all_team[g_team.uid()] = g_team; 
     g_save.mypos = loc; 
 
-    return await general_save().then((jsonObj:any)=>{return jsonObj.ecode == 0}); 
+    return await general_save().then((jsonObj:any)=>{return jsonObj?.ecode === 0}); 
 }
 
 function isNG(): void {

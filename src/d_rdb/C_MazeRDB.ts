@@ -4,6 +4,8 @@ import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセー
 import { C_Maze, JSON_Maze } from "../d_mdl/C_Maze";
 import { C_HeroRDB }         from './C_HeroRDB';
 
+type db_connect = mysql.PoolConnection;
+
 interface I_tbl_maze extends mysql.RowDataPacket {
     id:      number,
     save_id: number,
@@ -24,7 +26,7 @@ export class C_MazeRDB {
     public constructor() {}
 
 
-    public static async get_from_rdb_all(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<C_Maze[]> {
+    public static async get_from_rdb_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<C_Maze[]> {
         const maze_array = await C_MazeRDB.get_from_tbl_all(db_mai, mes, save_id);
         if (mes.is_err()) {
             return [];
@@ -33,7 +35,7 @@ export class C_MazeRDB {
     }
 
 
-    public static async set_to_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number, maze: C_Maze): Promise<boolean> {
+    public static async set_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, maze: C_Maze): Promise<boolean> {
         const mase_id = await C_MazeRDB.add_tbl(db_mai, mes, save_id, maze);
         if (mes.is_err()) {
             return false;
@@ -42,7 +44,7 @@ export class C_MazeRDB {
     }
 
     
-    public static async del_to_rdb(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         C_MazeRDB.del_tbl(db_mai, mes, save_id);
         if (mes.is_err()) {
             return false;
@@ -56,7 +58,7 @@ export class C_MazeRDB {
     // Mazeクラスの配列にセットする
     // 
     protected static async get_from_tbl_all(
-            db_mai: mysql.Pool, 
+            db_mai: db_connect, 
             mes: C_DspMessage, 
             save_id: number
     ): Promise<C_Maze[]> {
@@ -87,7 +89,7 @@ export class C_MazeRDB {
     // そのID(maze_id)を返す
     // 
     protected static async add_tbl(
-            db_mai:  mysql.Pool, 
+            db_mai:  db_connect, 
             mes:     C_DspMessage, 
             save_id: number,
             maze:    C_Maze
@@ -104,14 +106,26 @@ export class C_MazeRDB {
             )
         `
         const j = maze.encode();
-        const [resultRecordSet] = await db_mai.query<I_tbl_maze[]>(insert_maze_SQL, {
+
+console.error(
+       "save_id=" + save_id
+    +", uniq_id=" + j.uniq_id
+    +", name="    + j.name
+    +", size_x="  + j.size_x
+    +", size_y="  + j.size_y
+    +", size_z="  + j.size_z
+    +", maps="    + j.maze
+    +", mask="    + j.mask
+)
+
+        await db_mai.query(insert_maze_SQL, {
             save_id: save_id,
             uniq_id: j.uniq_id,
             name:    j.name,
             size_x:  j.size_x,
             size_y:  j.size_y,
             size_z:  j.size_z,
-            maps:    j.maps,
+            maps:    j.maze,
             mask:    j.mask,
         })
         .catch(err=>{
@@ -122,9 +136,9 @@ export class C_MazeRDB {
     }
     
     // tbl_teamで最後に追加した行番号(save_id)を返す【1行挿入専用】
-    protected static async lastInsert(db_mai: mysql.Pool, mes: C_DspMessage) : Promise<number> {
+    protected static async lastInsert(db_mai: db_connect, mes: C_DspMessage) : Promise<number> {
         const lastInsert_SQL =`
-            SELECT LAST_INSERT_ID() FROM tbl_maze;
+            SELECT LAST_INSERT_ID() as id FROM tbl_maze;
         `
         const [recordSet] = await db_mai.query<I_lastInsert[]>(lastInsert_SQL)
         .catch ((err) => {
@@ -138,14 +152,14 @@ export class C_MazeRDB {
 
     // DB処理。save_idで指定されたレコード(複数)を削除(delete)する
     // 
-    public static async del_tbl(db_mai: mysql.Pool, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         const delete_maze_SQL = `
             DELETE FROM tbl_maze 
             WHERE  save_id = :save_id
         `
-        await db_mai.query(delete_maze_SQL)
+        await db_mai.query(delete_maze_SQL, {save_id: save_id})
         .catch ((err) => {
-            mes.set_err_message(`SQLエラー 12: {$delete_maze_SQL} ` + err);
+            mes.set_err_message(`SQLエラー 12: ${delete_maze_SQL} ` + err);
             return false;
         });
         return true;

@@ -19,7 +19,7 @@ export interface JSON_Team extends JSON_Any {
     save_id?:   number, 
     name?:      string, 
     locate?:    JSON_Walker,
-    goods?:     JSON_Goods,
+    gold?:      JSON_Goods,
     heroes?:    JSON_Hero[], 
     motion?:    string,
     view?:      JSON_MazeObjView|undefined,
@@ -127,7 +127,7 @@ export class C_Team implements I_MazeObj {
         return this.walker.get_pd();
     }
 
-
+/*
     public static from_obj_to_string(oa: C_Team): string {
         return JSON.stringify(oa, null, "\t");
     }
@@ -157,7 +157,7 @@ export class C_Team implements I_MazeObj {
             return {};
         };
     }
-
+*/
     
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新

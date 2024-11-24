@@ -68,17 +68,17 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
     }
 
     public static from_obj_to_string(oa: C_MovablePoint): string {
-        return JSON.stringify(oa, null, "\t");
+        return JSON.stringify(oa.encode());
     }
     public static from_objArray_to_string(oaa: {[uid: string]: C_MovablePoint}): string {
-        const oa = [] as C_MovablePoint[];
-        for (const ii in oaa) oa.push(oaa[ii]);
-        return JSON.stringify(oa, null, "\t");
+        const oa = [] as JSON_MovablePoint[];
+        for (const ii in oaa) oa.push(oaa[ii].encode());
+        return JSON.stringify(oa);
     }
     public static from_string_to_obj(txt: string): C_MovablePoint {
         try {
             const j   = JSON.parse(txt) as JSON_MovablePoint[];
-            return new C_MovablePoint(j);
+            return new C_MovablePoint().decode(j);
         } catch (err) {
             return new C_MovablePoint();
         };
