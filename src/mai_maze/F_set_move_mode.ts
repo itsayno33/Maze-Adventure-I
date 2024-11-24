@@ -166,7 +166,6 @@ function action_obj(): void {}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
-    display_mazeCh();
     display_maze3D();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();
     else maze3D_blink_off_direction();
@@ -174,6 +173,7 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
         clear_mask_around_the_team(); 
         if (mask_cleared()) alert('この階を制覇しました！！') /* **************************** */
     }
+    display_mazeCh();
 }
 
 function mask_cleared(): boolean {return g_maze.is_cleared(g_team.get_pd())}
