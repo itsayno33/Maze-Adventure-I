@@ -71,6 +71,7 @@ export function hero_info_form_set(hres: C_Hero[], detail: T_Detail, idx: number
     detail['age']  .innerHTML = '年　齢:<br />' + ((hero['age']?.toString() ?? '???')) + ' 歳';
     detail['state'].innerHTML = '状　態:<br />' + ((hero['state'] == 0)? '正常' : '異常');
     detail['lv']   .innerHTML = 'レベル:<br />' +  (hero['lv']?.toString() ?? '???');
+    detail['gold'] .innerHTML = '所持金:<br />' +  (hero['gold']?.toString() ?? '???') + ' Gold';
 
     detail['exp']  .innerHTML = '経験値:<br />' +  (hero.val?.['exp']?.now?.toString() ?? '???');
     detail['skp']  .innerHTML = 'ｽｷﾙ値 :<br />' +  (hero.val?.['skp']?.now?.toString() ?? '???');
