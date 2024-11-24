@@ -256,8 +256,7 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
-    const ee = (e.target as HTMLInputElement)?.value??'*****'
-    const ne=(ee === '*****') // Not Editting InputElement
+    const ne = (e.target as HTMLInputElement)?.value === undefined // Not Editting InputElement
 
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
