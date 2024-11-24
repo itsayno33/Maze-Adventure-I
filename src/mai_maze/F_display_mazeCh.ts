@@ -20,20 +20,18 @@ export function init_mazeCh(): void {
 
 // 【初期設定】ViewChの横幅をCSSから読み込んで適合する文字のサイズを計算してセットする
 function calc_viewCh_width(): void {
-//    const pre = document.getElementById('maze_viewCh_pre') as HTMLPreElement;
-    if (pre === null) return;
 
     view_wdth  = div.clientWidth;
     view_hght  = div.clientHeight;
 
-    const col    = g_maze.get_x_max() + 2;
+    const col    = g_maze.get_x_max() + 1;
     const col_px = view_wdth  / col;
 
-    const row    = g_maze.get_y_max() + 2;
+    const row    = g_maze.get_y_max() + 1;
     const row_px = view_hght / row;
 
-    font_size   = _max([15.0, _round(1.00 *  _min([col_px, row_px]), 2)]);
-    line_hght   = _max([15.0, _round(1.00 *  _min([col_px, row_px]), 2)]);
+    font_size   = _round(_max([15.0, _round(1.00 *  _min([col_px, row_px]), 2)]), 0);
+    line_hght   = _round(_max([15.0, _round(1.00 *  _min([col_px, row_px]), 2)]), 0);
 
     map_wdth    = font_size * col;
     map_hght    = line_hght * col;
@@ -45,24 +43,25 @@ function calc_viewCh_width(): void {
 }
 
 function calc_view_top(): void {
+
+    view_wdth  = div.clientWidth;
+    view_hght  = div.clientHeight;
+
     const pd = g_team.get_pd();
 
-    let top_x =  view_wdth / 2 - pd.x * font_size;
-    if (top_x < -view_wdth / 2) top_x = -view_wdth / 2;
-    if (top_x > map_wdth - view_wdth) top_x = map_wdth - view_wdth;
+    let top_x =  view_wdth / 2 - (pd.x + 1) * font_size;
+//    if (top_x < -view_wdth / 2) top_x = -view_wdth / 2;
+//    if (top_x > map_wdth - view_wdth) top_x = map_wdth - view_wdth;
 
-    let top_y =  view_hght / 2 - pd.y * line_hght;
-    if (top_y < -view_hght / 2 - 3.3*line_hght) top_y = -view_hght / 2 - 3.3*line_hght; // バグ対策の適当修正
-    if (top_y > map_hght - view_hght) top_y = map_hght - view_hght;
+    let top_y =  view_hght / 2 - (pd.y + 1) * line_hght;
+//    if (top_y < -view_hght / 2) top_y = -view_hght / 2; // バグ対策の適当修正
+//    if (top_y > map_hght - view_hght) top_y = map_hght - view_hght;
 
-//    const pre = document.getElementById('maze_viewCh_pre') as HTMLPreElement;
-    if (pre === null) return;
     pre.style.setProperty('left',      `${top_x}px`);
     pre.style.setProperty('top',       `${top_y}px`);
 }
 
 export function display_mazeCh(): void { 
-//    const pre: HTMLElement|null = document.getElementById('maze_viewCh_pre');
     if (pre !== null) {pre.innerText = to_string();calc_view_top()}
     else g_mes.warning_message('Can not found pre#Maze_viewCh_pre!!');
 }
