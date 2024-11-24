@@ -15,7 +15,8 @@ import {
     g_maze, 
     g_team,
     do_load_bottom_half,
-    g_ctls, 
+    g_ctls,
+    g_ds, 
 } from "./global_for_maze";
 
 const ctls_move_nor = {
@@ -36,6 +37,7 @@ export function init_move_mode(): void {
 export function act_move_mode(): void {
     g_ctls.act(ctls_move_nor);
     g_vsw.view(g_vsw.Move());
+    setCanvas3DClick();
 }
 
 
@@ -177,15 +179,52 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
 function mask_cleared(): boolean {return g_maze.is_cleared(g_team.get_pd())}
 
 
+
+
+function setCanvas3DClick(): void {
+    if (g_ds?.canvas === null)     return;
+    g_ds.canvas.onclick = canvas3Dclick;
+}
+function clrCanvas3DClick(): void {
+    if (g_ds?.canvas === null)     return;
+    g_ds.canvas.onclick = ()=>{};
+}
+
+function canvas3Dclick(ev: MouseEvent): void {
+    if (g_ds?.canvas === null)     return;
+    if (ev.target !== g_ds.canvas) return;
+
+    const cvs = g_ds.canvas;
+//debug    alert(`x=${(ev.offsetX??-1)}, y=${(ev.offsetY??-1)}`);
+
+    const left_pane_r  = cvs.clientWidth  * 0.25;
+    const rght_pane_l  = cvs.clientWidth  * 0.75;
+    const back_pane_u  = cvs.clientHeight * 0.80;
+
+    // キャンバスの左側
+    if (ev.offsetX < left_pane_r) {(document.getElementById('l_arr') as HTMLButtonElement)?.click(); return;}
+    // キャンバスの右側
+    if (ev.offsetX > rght_pane_l) {(document.getElementById('r_arr') as HTMLButtonElement)?.click(); return;}
+    //キャンバスの中央上(前進)
+    if (ev.offsetY < back_pane_u) {(document.getElementById('u_arr') as HTMLButtonElement)?.click(); return;}
+    // キャンバスの中央下(後退)
+    (document.getElementById('d_arr') as HTMLButtonElement)?.click(); return;
+}
+
+
+
 function do_stairs_motion(kind: T_MzKind): void {
     switch (kind) {
         case T_MzKind.StrUp:
+            clrCanvas3DClick();
             act_Up_mode();
             break;
         case T_MzKind.StrDn:
+            clrCanvas3DClick();
             act_Dn_mode();
             break;
         case T_MzKind.StrUD:
+            clrCanvas3DClick();
             act_UD_mode();
             break;
     }
@@ -193,6 +232,7 @@ function do_stairs_motion(kind: T_MzKind): void {
 
 
 function menu(): void {
+    clrCanvas3DClick();
     g_mvm.clear_message();
     act_menu_mode();
 }

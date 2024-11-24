@@ -21,13 +21,13 @@ var isUp:  boolean  =  false;
 
 const ctls_updn_up = {
     name: 'updn_up', 
-    do_U:  do_up,
+//    do_U:  do_up,
     isOK:  do_up,
     isNG:  do_cancel,
 }
 const ctls_updn_dn = {
     name: 'updn_dn', 
-    do_D:  do_down,
+//    do_D:  do_down,
     isOK:  do_down,
     isNG:  do_cancel,
 }
