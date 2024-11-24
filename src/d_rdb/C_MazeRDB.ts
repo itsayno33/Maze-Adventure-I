@@ -106,7 +106,8 @@ export class C_MazeRDB {
             )
         `
         const j = maze.encode();
-
+//Debug
+/*
 console.error(
        "save_id=" + save_id
     +", uniq_id=" + j.uniq_id
@@ -117,7 +118,7 @@ console.error(
     +", maps="    + j.maze
     +", mask="    + j.mask
 )
-
+*/
         await db_mai.query(insert_maze_SQL, {
             save_id: save_id,
             uniq_id: j.uniq_id,
