@@ -26,8 +26,10 @@ export class C_DefaultCtlsTmpl {
 
         this.btns = {};
         for (const id of ids) {
-            this.btns[id] = document.getElementById(id) as HTMLButtonElement;
-            this.btns[id].style.display = 'node';
+            try {
+                this.btns[id] = document.getElementById(id) as HTMLButtonElement;
+                this.btns[id].style.display = 'node';
+            } catch (err) {}
         }
     }
     public static getObj(ids: string[]): C_DefaultCtlsTmpl {
