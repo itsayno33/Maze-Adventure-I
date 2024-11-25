@@ -1,3 +1,7 @@
+/*******
+ * たぶん昔の自分がボツにしたファイル
+*******/
+
 "use strict";
 
 import { I_JSON }          from "./C_SaveInfo";
@@ -40,27 +44,28 @@ export interface I_Goods extends I_Obj {
 }
 
 export class C_Goods extends C_Obj implements I_Goods, I_JSON {
+/**********************
     public static newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
         if (j      === undefined)   return undefined;
         if (j.gkind === undefined)  return undefined;
 
         if (j.gkind in T_GoodsKind) return new C_Goods(j);
-/*
-        switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
-            case T_ObjKind.Goods: return C_Goods.newObj(j);
-            case T_ObjKind.Other: return new C_Obj(j); 
-        }
-*/
+/***
+/***        switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
+/***            case T_ObjKind.Goods: return C_Goods.newObj(j);
+/***            case T_ObjKind.Other: return new C_Obj(j); 
+/***        }
+/***
         return undefined;
     }
     public newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
         return C_Goods.newObj(j);
     }
-
+***************************/
 
     protected my_gkind: number;
     
-    protected constructor(j?: JSON_Goods|undefined) {
+    public constructor(j?: JSON_Goods|undefined) {
         super(j);
         this.my_gkind = T_GoodsKind.Unkn;
         if (j !== undefined) this.decode(j);

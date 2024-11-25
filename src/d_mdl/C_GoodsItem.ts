@@ -1,6 +1,7 @@
-import { T_MakeEnumType }   from "../d_utl/T_MakeEnumType";
-import { _get_uuid, _irand }        from "../d_utl/F_Rand";
-import { I_JSON, JSON_Any } from "./C_SaveInfo";
+import { T_MakeEnumType }    from "../d_utl/T_MakeEnumType";
+import { _get_uuid, _irand } from "../d_utl/F_Rand";
+import { I_JSON, JSON_Any }  from "./C_SaveInfo";
+import { C_Obj }             from './C_Obj';
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,
@@ -9,7 +10,7 @@ export const T_GoodsKind:{[lckd: string]: number}  = {
     Arms:  3,
     Shld:  5,
     Drug:  6,
-    Item:  7,
+    Othr:  7,
 } as const;
 export type T_GoodsKind = T_MakeEnumType<typeof T_GoodsKind>;
 
@@ -42,32 +43,30 @@ export interface JSON_GoodsItem extends JSON_Any {
     is_confirmed?:    string,
 }
 
-export class C_GoodsItem implements I_JSON {
-
+export class C_GoodsItem extends C_Obj implements I_JSON {
     public static newObj(j?: JSON_GoodsItem): C_GoodsItem|undefined {
         if (j      === undefined) return undefined;
         if (j.kind === undefined) return undefined;
 
         if (j.kind in T_GoodsKind) return new C_GoodsItem(j);
         return undefined;
-/*        
-        const kind = T_GoodsKind[j.kind];
-        switch (kind) {
-            case T_GoodsKind.Gold:
-            case T_GoodsKind.Arms:
-            case T_GoodsKind.Shld:
-            case T_GoodsKind.Drug:
-            case T_GoodsKind.Item:
-                return new C_GoodsItem(j);
-            default:
-                return undefined;
-        }
-*/
+/***        
+/***        const kind = T_GoodsKind[j.kind];
+/***        switch (kind) {
+/***            case T_GoodsKind.Gold:
+/***            case T_GoodsKind.Arms:
+/***            case T_GoodsKind.Shld:
+/***            case T_GoodsKind.Drug:
+/***            case T_GoodsKind.Item:
+/***                return new C_GoodsItem(j);
+/***            default:
+/***                return undefined;
+/***        }
+/***/
     }
-
     protected uniq_id:         string;
     protected kind:            T_GoodsKind;
-    protected name:            string;   // 下記の名前のうち、最新のもの
+    protected my_name:            string;   // 下記の名前のうち、最新のもの
     protected ambiguous_name:  string;   // 鑑定までの名前
     protected confirmed_name:  string;   // 鑑定で確定した名前
     protected original_name:   string|undefined;  // 自分で命名したオリジナルの名前
@@ -78,6 +77,7 @@ export class C_GoodsItem implements I_JSON {
     protected is_confirmed:    boolean; // 鑑定で確定(True)したか否(False)か
 
     public constructor(j?: JSON_GoodsItem) {
+        super(j);
         this.uniq_id        =  'goods_' + _get_uuid();
         this.kind           = T_GoodsKind.Unkn;
         this.is_confirmed   = false; 
@@ -85,7 +85,7 @@ export class C_GoodsItem implements I_JSON {
         this.ambiguous_name = ''; 
         this.confirmed_name = ''; 
         this.original_name  = undefined; 
-        this.name           = this.ambiguous_name; 
+        this.my_name           = this.ambiguous_name; 
 
         this.ambiguous_value = 0; 
         this.confirmed_value = 0; 
@@ -97,7 +97,7 @@ export class C_GoodsItem implements I_JSON {
 
     public uid(): string {return this.uniq_id;};
     public get_kind(): T_GoodsKind {return this.kind;};
-    public get_name(): string {return this.name};
+    public get_name(): string {return this.my_name};
     public get_gold(): number {return this.value};
 
     public get_kind_name(): string {
@@ -106,14 +106,14 @@ export class C_GoodsItem implements I_JSON {
 
     public do_confirme(): string {
         this.is_confirmed   = true;
-        this.name  = this.original_name  ?? this.confirmed_name;
-        this.value = this.original_value ?? this.confirmed_value;
-        return this.name;
+        this.my_name        = this.original_name  ?? this.confirmed_name;
+        this.value          = this.original_value ?? this.confirmed_value;
+        return this.my_name;
     }
     public set_own_name(original_name: string): string {
-        this.original_name = original_name;
-        this.name          = original_name;
-        return this.name;
+        this.original_name  = original_name;
+        this.my_name        = original_name;
+        return this.my_name;
     }
     public set_own_value(original_value: number): number {
         this.original_value = original_value;
@@ -153,8 +153,8 @@ export class C_GoodsItem implements I_JSON {
         if (j.original_value  !== undefined) this.original_value   = j.original_value !== 0 ? j.original_value : undefined;
         if (j.is_confirmed    !== undefined) this.is_confirmed     = j.is_confirmed != '0' ? true : false;
 
-        if (this.original_name !== undefined) this.name = this.original_name;
-        else this.name = this.is_confirmed ? this.confirmed_name : this.ambiguous_name;
+        if (this.original_name !== undefined) this.my_name = this.original_name;
+        else this.my_name = this.is_confirmed ? this.confirmed_name : this.ambiguous_name;
 
         if (this.original_value !== undefined) this.value = this.original_value;
         else this.value = this.is_confirmed ? this.confirmed_value : this.ambiguous_value;

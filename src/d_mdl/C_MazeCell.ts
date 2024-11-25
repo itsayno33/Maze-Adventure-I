@@ -185,7 +185,8 @@ class C_MazeCellStrUp extends C_MazeCell {
             layer: 0, letter: '上', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+//            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '', 
             col_l: '#0000ff', 
         }
         super(j);
@@ -203,7 +204,8 @@ class C_MazeCellStrDn extends C_MazeCell {
             layer: 0, letter: '下', 
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+//            col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
+            col_f: '', col_b: '', col_s: '', col_t: '', col_d: '#ffffcc', 
             col_l: '#0000ff', 
         }
         super(j);

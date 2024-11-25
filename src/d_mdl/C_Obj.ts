@@ -5,6 +5,7 @@ import { T_MakeEnumType }                   from "../d_utl/T_MakeEnumType";
 import { I_Abstract, JSON_Any }             from "./C_SaveInfo";
 import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
 import { C_Goods, JSON_Goods }              from "./C_Goods";
+import { C_GoodsItem } from "./C_GoodsItem";
 
 export const T_ObjKind:{[lckd: string]: number}  = {
     Unkwn: 0,
@@ -62,14 +63,14 @@ export interface I_Obj {
     set_abi_m: (abi: C_HeroAbility)=>void, 
 }
 
-export class C_Obj implements I_Obj, I_Abstract {
+export class C_Obj implements I_Obj {
     public static newObj(j?: JSON_Obj|undefined): C_Obj|undefined {
         if (j      === undefined) return undefined;
         if (j.okind === undefined) return undefined;
 
 //        if (j.kind in T_ObjKind) return new C_Obj(j);
         switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
-            case T_ObjKind.Goods: return C_Goods.newObj(j as JSON_Goods);
+            case T_ObjKind.Goods: return C_GoodsItem.newObj(j as JSON_Goods);
             case T_ObjKind.Other: return new C_Obj(j); 
         }
         return undefined;
@@ -77,7 +78,6 @@ export class C_Obj implements I_Obj, I_Abstract {
     public newObj(j?: JSON_Obj|undefined): C_Obj|undefined {
         return C_Obj.newObj(j);
     }
-
     protected uniq_id:   string;
     protected my_okind:  T_ObjKind;
     protected is_gen:    boolean;     // 鑑定で確定(True)したか否(False)か
@@ -91,7 +91,8 @@ export class C_Obj implements I_Obj, I_Abstract {
     protected my_abi_p:  C_HeroAbility;
     protected my_abi_m:  C_HeroAbility;
 
-    protected constructor(j?: JSON_Obj|undefined) {
+//    protected constructor(j?: JSON_Obj|undefined) {
+    public constructor(j?: JSON_Obj|undefined) {
         this.uniq_id     =  'game_obj_' + _get_uuid();
         this.my_okind    = T_ObjKind.Unkn;
  

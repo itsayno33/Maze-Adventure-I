@@ -36,7 +36,7 @@ export class C_ObjList implements I_JSON {
     public encode(): JSON_ObjList {
         
         const objs: JSON_Obj[] = [];
-        for (let idx in this.list) {
+        for (const idx in this.list) {
             objs.push(this.list[idx].encode())
         }
 
@@ -47,7 +47,8 @@ export class C_ObjList implements I_JSON {
 
     public decode(j: JSON_ObjList): C_ObjList {
         for (const json_objs of j?.objs??[]) {
-            const obj = C_Obj.newObj(json_objs);
+//            const obj = C_Obj.newObj(json_objs);     ＊＊＊＊＊＊＊＊＊　要検討！！！　＊＊＊＊＊＊＊＊＊
+            const obj = new C_Obj(json_objs);
             if (obj !== undefined) this.list[obj.uid()] = obj;
         }
         return this;
