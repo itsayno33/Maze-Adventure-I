@@ -231,16 +231,16 @@ function new_team(): Team {
         <div id='guld_head_button'>
             <button id='r_cp1' name='r_cp1' value='R'>窓口に戻る(Ｒ)</button>
             <button id='s_cp1' name='s_cp1' value='S'>切替(Ｓ)</button>
-            <button id='y_cp1' name='y_cp1' value='Y'>はい(ENTER)</button>
-            <button id='n_cp1' name='n_cp1' value='N'>いいえ(SHIFT+ENTER)</button>
+            <button id='y_cp1' name='y_cp1' value='Y'>はい(Ｙ)</button>
+            <button id='n_cp1' name='n_cp1' value='N'>いいえ(Ｎ)</button>
         </div>
         <p id='guld_head_message'></p>
     </article>
     <article id='guld_menu_list_pane'>
-        <h2>冒険者ギルド窓口</h2>
+        <h2>街の入り口</h2>
         <ul id='guld_menu_list'>
-            <li id='guld_hres'>冒険者情報
-                <p>　冒険者情報を見ることができます</p></li>
+            <li id='guld_hres'>冒険者ギルド
+                <p>　仲間を募れます</p></li>
             <li id='guld_load'>冒険の呼び出し
                 <p>　冒険情報をロードできます</p></li>
             <li id='guld_save'>冒険の記録
@@ -250,7 +250,7 @@ function new_team(): Team {
         </ul>
     </article>
     <article id='guld_hres_list_pane'>
-        <h2>冒険者情報の一覧</h2>
+        <h2>冒険者ギルド</h2>
         <fieldset id='hres_team_fields'>
             <legend>パーティ・メンバー</legend>
             <ul id='team_list'></ul>
@@ -279,12 +279,12 @@ function new_team(): Team {
         </fieldset>
     </article>
     <article id='guld_ldsv_list_pane'>
-        <h2>冒険の呼び出し</h2>
+        <h2>冒険の記録</h2>
         <ul id='ldsv_list'></ul>
     </article>
     <article id='guld_ldsv_data_pane'>
                 <fieldset id='ldsv_info_fields'>
-                    <legend>今までの記録</legend>
+                    <legend>記録の概要</legend>
                     <ul id='ldsv_info_detail'></ul>
                 </fieldset>
     </article>

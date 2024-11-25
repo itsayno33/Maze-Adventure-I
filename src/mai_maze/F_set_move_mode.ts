@@ -167,6 +167,7 @@ function action_obj(): void {}
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
     display_maze3D();
+    display_maze_name();
     if (blink_mode === 'blink_on') maze3D_blink_on_direction();
     else maze3D_blink_off_direction();
     if (!mask_cleared()) {
@@ -178,7 +179,12 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
 
 function mask_cleared(): boolean {return g_maze.is_cleared(g_team.get_pd())}
 
-
+function display_maze_name(): void {
+    try {
+        const p = document.getElementById('maze_view3D_maze_name_info') as HTMLParagraphElement;
+        p.innerHTML = g_maze.get_name();
+    } catch (err) {};
+}
 
 
 function setCanvas3DClick(): void {

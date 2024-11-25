@@ -4,6 +4,7 @@ import { JSON_Any }  from "./C_SaveInfo";
 import { JSON_Obj }  from "./C_Obj";
 import { C_ObjList, JSON_ObjList } from "./C_ObjList";
 import { C_Goods, JSON_Goods, T_GoodsKind } from "./C_Goods";
+import { C_GoodsItem } from "./C_GoodsItem";
 
 
 export interface JSON_GoodsList extends JSON_ObjList {
@@ -21,7 +22,7 @@ export class C_GoodsList extends C_ObjList {
         if (j !== undefined) this.decode(j);
     }
 
-    public add(obj: C_Goods|undefined): void {
+    public add(obj: C_GoodsItem|undefined): void {
         if (obj === undefined) return; 
         if (obj instanceof C_Goods) this.list[obj.uid()] = obj; 
     }
@@ -63,7 +64,7 @@ export class C_GoodsList extends C_ObjList {
 
         for (const gkind in j) { 
             for (const goods_JSON of j[gkind]) {
-                this.add(C_Goods.newObj(goods_JSON));
+                this.add(C_GoodsItem.newObj(goods_JSON));
             }
         }
         return this;

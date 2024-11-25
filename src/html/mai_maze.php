@@ -250,6 +250,7 @@ function new_team(): Team {
     </header>
     <article id='pane_maze_vw3D'>
         <canvas id='maze_view3D_canvas' width='320' height='200'></canvas>
+        <p id='maze_view3D_maze_name_info'></p>
         <p id='maze_view3D_direction_info'></p>
     </article>
     <article id='pane_maze_vwCh'>

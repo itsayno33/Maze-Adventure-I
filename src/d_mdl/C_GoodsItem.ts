@@ -1,7 +1,7 @@
 import { T_MakeEnumType }    from "../d_utl/T_MakeEnumType";
 import { _get_uuid, _irand } from "../d_utl/F_Rand";
 import { I_JSON, JSON_Any }  from "./C_SaveInfo";
-import { C_Obj }             from './C_Obj';
+import { C_Obj, JSON_Obj }             from './C_Obj';
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,
@@ -30,7 +30,7 @@ const GoodsKind_mb_name: {[kind: number]: string} = {
 
 
 
-export interface JSON_GoodsItem extends JSON_Any {
+export interface JSON_GoodsItem extends JSON_Obj {
     uniq_id?:         string,
     kind?:            string,
     name?:            string,

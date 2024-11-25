@@ -75,7 +75,7 @@ function to_string(): string {
     for (let y = 0; y < size_y; y++) {
         for (let x = 0; x < size_x; x++) {
             if (!g_debug.isON() && g_maze.is_masked_xyz(x, y, floor)) {
-                ret_str += 'Ｘ';
+                ret_str += '◆';
             } else {
                 const obj = g_maze.get_obj_xyz(x, y, floor);
                 if (obj === null || obj.view() === undefined) {
