@@ -9,6 +9,7 @@ import { C_TeamRDB }      from "./C_TeamRDB";
 import { C_HeroRDB }      from "./C_HeroRDB";
 import { C_MazeRDB }      from "./C_MazeRDB";
 import { C_GuildRDB }     from "./C_GuildRDB";
+import { C_MvptRDB } from "./C_MvptRDB";
 
 type db_connect = mysql.PoolConnection;
 
@@ -37,7 +38,7 @@ interface I_tbl_SaveData extends mysql.RowDataPacket  {
     is_delete: string; 
     mp:        string;  // mypos
     save_time: string;
-    mvpt:      string;  // all_mvpt
+//    mvpt:      string;  // all_mvpt
 }
 interface I_tbl_SaveId   extends mysql.RowDataPacket {
     save_id: number;
@@ -124,6 +125,13 @@ export class C_SaveDataRDB {
             return undefined;
         }
         for (const maze of maze_array) save_data.all_maze[maze.uid()] = maze;
+ 
+//debug console.error(`pre get_from MvptRDB save_id=${save_id}`);
+        const mvpt_array = await C_MvptRDB.get_from_rdb_all(db_mai, mes, save_id);
+        if (mes.is_err()) {
+            return undefined;
+        }
+        for (const mvpt of mvpt_array) save_data.all_mvpt[mvpt.uid()] = mvpt;
         
 //debug console.error(`pre get_from TeamRDB save_id=${save_id}`);
         const team_array = await C_TeamRDB.get_from_rdb_all(db_mai, mes, save_id);
@@ -138,7 +146,7 @@ export class C_SaveDataRDB {
                 return undefined;
         }
         for (const guld of guld_array) save_data.all_guld[guld.uid()] = guld;
- 
+        
         return save_data;
     }
 
@@ -157,6 +165,14 @@ export class C_SaveDataRDB {
                 return false;
             }
         }
+
+        for (const ii in save.all_mvpt) {
+//debug console.error(`save_id = ${save_id}, mvpt[${ii}] = ${save.all_mvpt[ii]}`);
+            await C_MvptRDB.set_to_rdb(db_mai, mes, save_id, save.all_mvpt[ii]);
+            if (mes.is_err()) {
+                return false;
+            }
+        }
         
         for (const ii in save.all_team) {
             await C_TeamRDB.set_to_rdb(db_mai, mes, save_id, save.all_team[ii]);
@@ -171,7 +187,7 @@ export class C_SaveDataRDB {
                 return false;
             }
         }
-
+        
         return true;
     }
 
@@ -188,6 +204,11 @@ export class C_SaveDataRDB {
         }
 
         await C_TeamRDB.del_tbl(db_mai, mes, save_id);
+        if (mes.is_err()) {
+            return false;
+        }
+
+        await C_MvptRDB.del_tbl(db_mai, mes, save_id);
         if (mes.is_err()) {
             return false;
         }
@@ -213,8 +234,7 @@ export class C_SaveDataRDB {
         const get_save_SQL = `
             SELECT  save_id, player_id, uniq_no, title, detail, point, 
                     auto_mode, is_active, is_delete, 
-                    mypos as mp, DATE_FORMAT(save_time,'%Y-%m-%dT%H:%i:%s.%fZ') AS save_time,
-                    all_mvpt as mvpt
+                    mypos as mp, DATE_FORMAT(save_time,'%Y-%m-%dT%H:%i:%s.%fZ') AS save_time
             FROM   tbl_save
             WHERE  save_id = :save_id
         `
@@ -224,7 +244,8 @@ export class C_SaveDataRDB {
             return [];
         });
 
-//degub if (recordSet === undefined) console.error(`SaveDataRDB.get_from_table Error: undefinde!! save_id=${save_id}`);
+//degub 
+if (recordSet === undefined) console.error(`SaveDataRDB.get_from_table Error: undefinde!! save_id=${save_id}`);
         if (recordSet.length < 1) {
             mes.set_err_message(`該当するデータが有りません: ${get_save_SQL}`);
             return undefined;
@@ -232,7 +253,7 @@ export class C_SaveDataRDB {
 
         const save = new C_SaveData(recordSet[0]);
         save.mypos     = C_MovablePoint.from_string_to_obj(recordSet[0].mp)
-        save.all_mvpt  = C_MovablePoint.from_string_to_objArray(recordSet[0].mvpt);
+//        save.all_mvpt  = C_MovablePoint.from_string_to_objArray(recordSet[0].mvpt);
 //        save.all_maze  = C_Maze .from_string_to_objArray(recordSet[0].maze);
 //        save.all_team  = C_Team .from_string_to_objArray(recordSet[0].team);
 //        save.all_guld  = C_Guild.from_string_to_objArray(recordSet[0].guld);
@@ -252,12 +273,12 @@ export class C_SaveDataRDB {
         const insert_save_SQL =`
             INSERT  INTO tbl_save (
                     player_id, uniq_no,   title, detail, point, 
-                    mypos, all_mvpt, 
+                    mypos, 
                     auto_mode, is_active, is_delete
                 )
             VALUES ( 
                     :player_id, :uniq_no,   :title, :detail, :point, 
-                    :mypos, :all_mvpt, 
+                    :mypos, 
                     :auto_mode, :is_active, :is_delete)
         `
         await db_mai.query(insert_save_SQL, {
@@ -267,7 +288,7 @@ export class C_SaveDataRDB {
             detail:    save.detail,
             point:     save.point,
             mypos:     C_MovablePoint.from_obj_to_string(save.mypos),
-            all_mvpt:  C_MovablePoint.from_objArray_to_string(save.all_mvpt),
+//            all_mvpt:  C_MovablePoint.from_objArray_to_string(save.all_mvpt),
             auto_mode: auto_mode,
             is_active: is_active,
             is_delete: is_delete,

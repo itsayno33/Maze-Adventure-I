@@ -2,7 +2,6 @@
 import mysql from 'mysql2/promise';
 import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { C_Maze, JSON_Maze } from "../d_mdl/C_Maze";
-import { C_HeroRDB }         from './C_HeroRDB';
 
 type db_connect = mysql.PoolConnection;
 
