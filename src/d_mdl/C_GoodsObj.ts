@@ -5,12 +5,13 @@ import { C_Obj, JSON_Obj }   from './C_Obj';
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,
-    Chst:  1,  
-    Gold:  2,
+    Gold:  1,
+    Chst:  2,  
     Arms:  3,
     Shld:  5,
     Drug:  6,
-    Othr:  7,
+    Item:  7,
+    Othr:  8,
 } as const;
 export type T_GoodsKind = T_MakeEnumType<typeof T_GoodsKind>;
 
@@ -20,12 +21,13 @@ function T_GoodsKind_key(gdkd: T_GoodsKind): string {
 
 const GoodsKind_mb_name: {[kind: number]: string} = {
     0:  'バグ',
-    1:  '宝箱',
-    2:  '金銭',
+    1:  '金銭',
+    2:  '宝箱',
     3:  '武器',
     5:  '装備',
-    6:  '薬',
-    7:  '物品',
+    6:  '薬品',
+    7:  '装飾',
+    8:  '物品',
 } as const;
 
 
@@ -54,6 +56,7 @@ export class C_GoodsObj extends C_Obj implements I_JSON {
 /***        const kind = T_GoodsKind[j.kind];
 /***        switch (kind) {
 /***            case T_GoodsKind.Gold:
+/***            case T_GoodsKind.Chst:
 /***            case T_GoodsKind.Arms:
 /***            case T_GoodsKind.Shld:
 /***            case T_GoodsKind.Drug:
@@ -75,12 +78,14 @@ export class C_GoodsObj extends C_Obj implements I_JSON {
     protected confirmed_value: number;  // 鑑定で確定した価値
     protected original_value:  number|undefined;  // オリジナル化した後の価値
     protected is_confirmed:    boolean; // 鑑定で確定(True)したか否(False)か
+    protected is_origin:       boolean; // オリジナル化したか否(False)か
 
     public constructor(j?: JSON_GoodsObj) {
         super(j);
         this.uniq_id        =  'goods_' + _get_uuid();
         this.goodskind      = T_GoodsKind.Unkn;
         this.is_confirmed   = false; 
+        this.is_origin      = false; 
 
         this.ambiguous_name = ''; 
         this.confirmed_name = ''; 
@@ -138,6 +143,7 @@ export class C_GoodsObj extends C_Obj implements I_JSON {
             confirmed_value: this.confirmed_value,
             original_value:  this.original_value ?? 0,
             is_confirmed:    this.is_confirmed ? '1' : '0',
+            is_origin:       this.is_origin    ? '1' : '0',
         }
     }
     public decode(j: JSON_GoodsObj): C_GoodsObj {
@@ -147,11 +153,12 @@ export class C_GoodsObj extends C_Obj implements I_JSON {
         if (j.goodskind       !== undefined) this.goodskind        = T_GoodsKind[j.goodskind];
         if (j.ambiguous_name  !== undefined) this.ambiguous_name   = j.ambiguous_name;
         if (j.confirmed_name  !== undefined) this.confirmed_name   = j.confirmed_name;
-        if (j.original_name   !== undefined) this.original_name    = j.original_name !== '' ? j.original_name : undefined;
+        if (j.original_name   !== undefined) this.original_name    = j.original_name  !== '' ? j.original_name : undefined;
         if (j.ambiguous_value !== undefined) this.ambiguous_value  = j.ambiguous_value;
         if (j.confirmed_value !== undefined) this.confirmed_value  = j.confirmed_value;
         if (j.original_value  !== undefined) this.original_value   = j.original_value !== 0 ? j.original_value : undefined;
-        if (j.is_confirmed    !== undefined) this.is_confirmed     = j.is_confirmed != '0' ? true : false;
+        if (j.is_confirmed    !== undefined) this.is_confirmed     = j.is_confirmed   != '0' ? true : false;
+        if (j.is_origin       !== undefined) this.is_origin        = j.is_origin      != '0' ? true : false;
 
         if (this.original_name !== undefined) this.my_name = this.original_name;
         else this.my_name = this.is_confirmed ? this.confirmed_name : this.ambiguous_name;
