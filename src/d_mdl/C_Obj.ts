@@ -69,7 +69,7 @@ export class C_Obj implements I_Obj {
 
 //        if (j.kind in T_ObjKind) return new C_Obj(j);
         switch (T_ObjKind[j.okind??T_ObjKind.Unkwn]) {
-            case T_ObjKind.Goods: return C_GoodsObj.newObj(j as JSON_GoodsObj);
+//            case T_ObjKind.Goods: return C_GoodsObj.newObj(j as JSON_GoodsObj);
             case T_ObjKind.Other: return new C_Obj(j); 
         }
         return undefined;
