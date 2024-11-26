@@ -8,10 +8,10 @@ import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { I_MazeObj }             from "./C_MazeObj";
 import { JSON_Any }              from "./C_SaveInfo";
 import { C_CurrentTeamView }     from "./C_TeamView";
-import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
-import { _get_uuid }             from "../d_utl/F_Rand";
-import { C_GoodsItem, T_GoodsKind } from "./C_GoodsItem";
+import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
+import { C_GoodsObj,  T_GoodsKind }    from "./C_GoodsObj";
 import { C_GoodsList, JSON_GoodsList } from "./C_GoodsList";
+import { _get_uuid }             from "../d_utl/F_Rand";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 

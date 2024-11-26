@@ -40,11 +40,10 @@ const GoodsKind_mb_name: {[gkind: number]: string} = {
 } as const;
 
 export interface I_Goods extends I_Obj {
-    okind:   ()=>T_GoodsKind, 
+    obj_kind:   ()=>T_GoodsKind, 
 }
 
 export class C_Goods extends C_Obj implements I_Goods, I_JSON {
-/**********************
     public static newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
         if (j      === undefined)   return undefined;
         if (j.gkind === undefined)  return undefined;
@@ -55,35 +54,34 @@ export class C_Goods extends C_Obj implements I_Goods, I_JSON {
 /***            case T_ObjKind.Goods: return C_Goods.newObj(j);
 /***            case T_ObjKind.Other: return new C_Obj(j); 
 /***        }
-/***
+/***/
         return undefined;
     }
     public newObj(j?: JSON_Goods|undefined): C_Goods|undefined {
         return C_Goods.newObj(j);
     }
-***************************/
 
-    protected my_gkind: number;
+    protected my_goodskind: number;
     
-    public constructor(j?: JSON_Goods|undefined) {
+    protected constructor(j?: JSON_Goods|undefined) {
         super(j);
-        this.my_gkind = T_GoodsKind.Unkn;
+        this.my_goodskind = T_GoodsKind.Unkn;
         if (j !== undefined) this.decode(j);
     }
 
-    public gkind():   number {return this.my_gkind;}
+    public goods_kind():   number {return this.my_goodskind;}
     public mb_name(): string {
-        return GoodsKind_mb_name[this.my_gkind];
+        return GoodsKind_mb_name[this.my_goodskind];
     }
 
     public random_make(): C_Goods {
-        this.my_gkind = _irand(0, 7); 
+        this.my_goodskind = _irand(0, 7); 
         return this;
     }
 
     public encode(): JSON_Goods {
         const j   = super.encode() as JSON_Goods;
-        j.gkind   = T_GoodsKind_key(this.my_gkind);
+        j.goodskind   = T_GoodsKind_key(this.my_goodskind);
         return j;
     }
     public decode(j: JSON_Goods): C_Goods {
@@ -91,8 +89,8 @@ export class C_Goods extends C_Obj implements I_Goods, I_JSON {
         super.decode(j);
 
         if (j.gkind      !== undefined) { 
-            this.my_gkind   = T_GoodsKind[j.gkind]; 
-            this.amb_name   = GoodsKind_mb_name[this.my_gkind]; 
+            this.my_goodskind   = T_GoodsKind[j.goodskind]; 
+            this.amb_name   = GoodsKind_mb_name[this.my_goodskind]; 
         }
 
         return this;

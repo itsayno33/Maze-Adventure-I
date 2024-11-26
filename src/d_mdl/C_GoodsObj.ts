@@ -1,7 +1,7 @@
 import { T_MakeEnumType }    from "../d_utl/T_MakeEnumType";
 import { _get_uuid, _irand } from "../d_utl/F_Rand";
-import { I_JSON, JSON_Any }  from "./C_SaveInfo";
-import { C_Obj, JSON_Obj }             from './C_Obj';
+import { I_JSON }            from "./C_SaveInfo";
+import { C_Obj, JSON_Obj }   from './C_Obj';
 
 export const T_GoodsKind:{[lckd: string]: number}  = {
     Unkn:  0,
@@ -30,9 +30,9 @@ const GoodsKind_mb_name: {[kind: number]: string} = {
 
 
 
-export interface JSON_GoodsItem extends JSON_Obj {
+export interface JSON_GoodsObj extends JSON_Obj {
     uniq_id?:         string,
-    kind?:            string,
+    goodskind?:       string,
     name?:            string,
     ambiguous_name?:  string,
     confirmed_name?:  string,
@@ -43,12 +43,12 @@ export interface JSON_GoodsItem extends JSON_Obj {
     is_confirmed?:    string,
 }
 
-export class C_GoodsItem extends C_Obj implements I_JSON {
-    public static newObj(j?: JSON_GoodsItem): C_GoodsItem|undefined {
-        if (j      === undefined) return undefined;
-        if (j.kind === undefined) return undefined;
+export class C_GoodsObj extends C_Obj implements I_JSON {
+    public static newObj(j?: JSON_GoodsObj): C_GoodsObj|undefined {
+        if (j           === undefined) return undefined;
+        if (j.goodskind === undefined) return undefined;
 
-        if (j.kind in T_GoodsKind) return new C_GoodsItem(j);
+        if (j.goodskind in T_GoodsKind) return new C_GoodsObj(j);
         return undefined;
 /***        
 /***        const kind = T_GoodsKind[j.kind];
@@ -65,7 +65,7 @@ export class C_GoodsItem extends C_Obj implements I_JSON {
 /***/
     }
     protected uniq_id:         string;
-    protected kind:            T_GoodsKind;
+    protected goodskind:       T_GoodsKind;
     protected my_name:            string;   // 下記の名前のうち、最新のもの
     protected ambiguous_name:  string;   // 鑑定までの名前
     protected confirmed_name:  string;   // 鑑定で確定した名前
@@ -76,10 +76,10 @@ export class C_GoodsItem extends C_Obj implements I_JSON {
     protected original_value:  number|undefined;  // オリジナル化した後の価値
     protected is_confirmed:    boolean; // 鑑定で確定(True)したか否(False)か
 
-    public constructor(j?: JSON_GoodsItem) {
+    public constructor(j?: JSON_GoodsObj) {
         super(j);
         this.uniq_id        =  'goods_' + _get_uuid();
-        this.kind           = T_GoodsKind.Unkn;
+        this.goodskind      = T_GoodsKind.Unkn;
         this.is_confirmed   = false; 
 
         this.ambiguous_name = ''; 
@@ -96,12 +96,12 @@ export class C_GoodsItem extends C_Obj implements I_JSON {
     }
 
     public uid(): string {return this.uniq_id;};
-    public get_kind(): T_GoodsKind {return this.kind;};
-    public get_name(): string {return this.my_name};
-    public get_gold(): number {return this.value};
+    public goods_kind(): T_GoodsKind {return this.goodskind;};
+    public get_name():   string {return this.my_name};
+    public get_gold():   number {return this.value};
 
     public get_kind_name(): string {
-        return GoodsKind_mb_name[this.kind];
+        return GoodsKind_mb_name[this.goodskind];
     }
 
     public do_confirme(): string {
@@ -121,16 +121,16 @@ export class C_GoodsItem extends C_Obj implements I_JSON {
         return this.value;
     }
 
-    public random_make(kind: T_GoodsKind): C_GoodsItem {
-        this.kind = kind;
+    public random_make(kind: T_GoodsKind): C_GoodsObj {
+        this.goodskind = kind;
         if (kind === T_GoodsKind.Gold)  this.value = _irand(100,1000);
         return this;
     }
 
-    public encode(): JSON_GoodsItem {
+    public encode(): JSON_GoodsObj {
         return {
             uniq_id:         this.uniq_id,
-            kind:            T_GoodsKind_key(this.kind),
+            goodskind:       T_GoodsKind_key(this.goodskind),
             ambiguous_name:  this.ambiguous_name,
             confirmed_name:  this.confirmed_name,
             original_name:   this.original_name ?? '',
@@ -140,11 +140,11 @@ export class C_GoodsItem extends C_Obj implements I_JSON {
             is_confirmed:    this.is_confirmed ? '1' : '0',
         }
     }
-    public decode(j: JSON_GoodsItem): C_GoodsItem {
+    public decode(j: JSON_GoodsObj): C_GoodsObj {
         if (j === undefined) return this;
 
         if (j.uniq_id         !== undefined) this.uniq_id          = j.uniq_id;
-        if (j.kind            !== undefined) this.kind             = T_GoodsKind[j.kind];
+        if (j.goodskind       !== undefined) this.goodskind        = T_GoodsKind[j.goodskind];
         if (j.ambiguous_name  !== undefined) this.ambiguous_name   = j.ambiguous_name;
         if (j.confirmed_name  !== undefined) this.confirmed_name   = j.confirmed_name;
         if (j.original_name   !== undefined) this.original_name    = j.original_name !== '' ? j.original_name : undefined;
