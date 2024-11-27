@@ -1,0 +1,211 @@
+@charset "utf-8";
+
+/* iphone 縦 */
+
+:root {
+    font-size: 16px;
+
+    --layout_mode: "iPhone Portrait";
+    
+    --body_lyt_bgcolor: rgb(250, 252, 217);
+
+    --body_lyt_col_left_gap:   30px;
+    --body_lyt_col_right_gap:  30px;
+    --body_lyt_col_main_width: auto;
+
+    --body_lyt_row_header_height: 100px;
+    --body_lyt_row_main_height  :  1fr;
+    --body_lyt_row_footer_height:  20px;
+
+    --header_text_color:rgb(88, 0, 100);
+    --header_font_family: sans-serif;
+    --header_font_size:   0.8rem;
+    --header_line_height: 0.9rem;
+
+    --icon_image_width:  150px;
+    --icon_cell_padding: 10px;
+    --icon_cell_width:   calc( var(--icon_image_width, 50px) + calc( var(--icon_cell_padding) * 2));
+
+    --body_lyt_row_header_height: calc( var(--icon_image_width, 50px) + var(--header_line_heght, 15px) * 2);
+
+    --footer_text_color: rgb(88, 0, 100);
+    --footer_font_family: 'Times New Roman', Times, serif;
+    --footer_font_size: 12px;
+    --footer_line_heght: 15px;
+
+    --h1_margin: 10px;
+    --h1_text_color: darkgoldenrod;
+    --h1_font_family: serif;
+    --h1_font_size:  18px;
+    --h1_line_heght: 30px;
+    
+/*
+    --body_grid_gap: 1rem 1.5rem;
+    --body_grid_cols: 
+            [h1-start footer-start view3d-start message-start]
+            1fr
+            [info-start]
+            1fr
+            [h1-end footer-end view3d-end message-end info-end]
+            ;
+    --body_grid_rows:
+            [h1-start]
+            2.0rem
+            [h1-end view3d-start]
+            auto
+            [view3d-end info-start]
+            auto
+            [info-end message-start]
+            1fr
+            [message-end footer-start]
+            3.0rem
+            [footer-end]
+            ;
+*/
+
+
+--body_move_gap: 1.5rem 0.5rem;
+--body_move_cols: 
+        1rem
+        [header-start footer-start view3d-start viewCh-start maze_m-start message-start]
+        auto
+        [viewCh-end contls-start]
+        auto
+        [header-end footer-end view3d-end maze_m-end contls-end message-end]
+        1rem
+        ;
+--body_move_rows:
+        [header-start]
+        auto
+        [header-end view3d-start]
+        auto
+        [view3d-end maze_m-start]
+        auto
+        [maze_m-end viewCh-start contls-start]
+        auto
+        [viewCh-end contls-end message-start] 
+        auto
+        [message-end footer-start]
+        var(--body_lyt_row_footer_height,  100px)
+        [footer-end]
+        ;
+
+--body_menu_gap: 1.5rem 0.5rem;
+--body_menu_cols: 
+        1rem
+        [header-start footer-start menu_m-start menu_l-start contls-start message-start]
+        auto
+        [header-end footer-end menu_m-end menu_l-end contls-end message-end]
+        1rem
+        ;
+--body_menu_rows:
+        [header-start]
+        auto
+        [header-end menu_m-start]
+        auto
+        [menu_m-end menu_l-start]
+        auto
+        [menu_l-end contls-start]
+        auto
+        [contls-end message-start] 
+        auto
+        [message-end footer-start]
+        var(--body_lyt_row_footer_height,  100px)
+        [footer-end]
+        ;
+
+
+--body_ldsv_gap: 1.5rem 0.5rem;
+--body_ldsv_cols: 
+        1rem
+        [header-start footer-start menu_m-start ldsv_l-start ldsv_d-start message-start]
+        auto
+        [message-end contls-start]
+        auto
+        [header-end footer-end menu_m-end ldsv_l-end ldsv_d-end contls-end]
+        1rem
+        ;
+--body_ldsv_rows:
+        [header-start]
+        auto
+        [header-end menu_m-start]
+        auto
+        [menu_m-end ldsv_l-start]
+        auto
+        [ldsv_l-end ldsv_d-start]
+        auto
+        [ldsv_d-end message-start contls-start]
+        auto
+        [message-end contls-end footer-start]
+        var(--body_lyt_row_footer_height,  100px)
+        [footer-end]
+        ;
+
+
+    font-size: 16px;
+
+    --viewCh_pre_margin:        0px;
+    --viewCh_pre_wdth:        50dvw;
+    --viewCh_pre_hght:        175px;
+    --viewCh_pre_font_family: monospace;
+    --viewCh_pre_font_size:    08pt;
+    --viewCh_pre_line_height:  09pt;
+
+    --view3D_canvas_wdth:     300px;
+    --view3D_canvas_hght:     180px;
+
+/*    --view3D_info_width:     100dvw; */
+
+    --info_h2_font_size:     16px;
+
+    --view3D_info_width:  23rem;
+    --view3D_text_color:darkgreen;
+    --view3D_font_family: sans-serif;
+    --view3D_font_size:   1.0rem;
+    --view3D_line_heght:  1.1rem;
+
+    --view_message_margin_UD:  0.5rem;
+
+    --view_message_hght:       2.5rem;
+    --view_maze_msg_hght:      2.5rem;
+    --view_menu_msg_hght:      2.5rem;
+    
+
+    --view_message_font_size:  0.8rem;
+    --view_maze_msg_font_size: 0.8rem;
+    --view_menu_msg_font_size: 0.7rem;
+
+    --head_menu_list_font_size: 1.0rem;
+    --head_menu_list_line_hght: 1.5rem;
+
+    --view_button_font_size:  0.6rem;
+    --ctl_font_size: 2.0rem;
+/* 
+    --lr_arr_width:     3.0rem;
+    --lr_arr_height:    3.0rem;
+    --ud_arr_width:     3.0rem;
+    --ud_arr_height:    3.0rem;
+    --menu_btn_height:  3.0rem;
+*/
+    --ldsv_data_list_cols:   2;
+
+    --ldsv_data_list_font_size: 0.9rem;
+    --ldsv_data_list_line_hght: 1.0rem;
+
+    --ldsv_data_dtil_font_size: 0.9rem;
+    --ldsv_data_dtil_line_hght: 1.0rem;
+    
+    --message_width:     16rem;
+
+    touch-action: manipulation;
+}
+
+div#Maze_viewCh button {
+    font-size: small;
+}
+
+div#move_ctl_panel button {
+    padding: 0;
+    text-align: center;
+    font-size:  small;
+}

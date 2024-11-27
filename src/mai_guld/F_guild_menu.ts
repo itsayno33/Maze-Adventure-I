@@ -88,7 +88,8 @@ function init_ctls(): boolean {
 }
 function init_default_ctls(): boolean {
     try {
-        if (!g_ctls.set(guld_ctls_nor))  return false;
+        g_ctls.deact();
+        if (!g_ctls.set(guld_ctls_nor)) return false;
         if (!g_ctls.act(guld_ctls_nor)) return false;
         return true;
     } catch (err) {

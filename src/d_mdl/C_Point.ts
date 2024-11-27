@@ -1,6 +1,6 @@
 "use strict";
 
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON, JSON_Any } from "./C_SaveInfo";
 
 export interface JSON_Point extends JSON_Any {
     x?: number,
@@ -42,13 +42,18 @@ export class C_Point implements I_JSON{
         return this;
     }
 
+    public is_exist(x: number, y: number, z: number): boolean {
+        return (x == this.x && y == this.y && z == this.z);
+    }
     public within(p: C_Point): boolean {
         return (p.x == this.x && p.y == this.y && p.z == this.z);
     }
+    
     public encode(): JSON_Point {
         return {x: this.x, y: this.y, z: this.z};
     }
-    public decode(a: JSON_Point): C_Point {
+    public decode(a?: JSON_Point): C_Point {
+        if (a === undefined) return this;
         if (a.x === undefined || a.y === undefined || a.z === undefined) return this;
         this.x = a.x; this.y = a.y; this.z = a.z;
         return this;

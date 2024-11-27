@@ -1,18 +1,18 @@
 "use strict";
 
 import { I_Locate, T_Lckd }      from "./C_Location";
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveData";
+import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { C_Hero, JSON_Hero }     from "./C_Hero";
-import { C_Goods, JSON_Goods }   from "./C_Goods";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert }                from "../d_cmn/global";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,
     uniq_id?:  string,
     save_id?:  number,
     name?:     string,
-    goods?:    JSON_Goods,
+    gold?:     number,
+    goods?:    JSON_GoodsList,
     heroes?:   JSON_Hero[],
 }
 
@@ -23,7 +23,8 @@ export function alert_guld_info(a: JSON_Guild|undefined): void {
         + "\nuniq_id:  " + (a.uniq_id   ?? '?')
         + "\nsave_id:  " + (a.save_id   ?? '?')
         + "\nname:     " + (a.name      ?? '?')
-        + "\ngoods:    " + (Object.keys(a.goods??0).length)
+        + "\ngold:     " + (a.gold      ??  0 )
+//        + "\ngoods:    " + (Object.keys(a.goods??0).length)
         + "\nheroes:   " + (a.heroes?.length ?? '?')
         + "\n"
     );
@@ -34,14 +35,16 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     protected uniq_id:    string;
     protected save_id:    number;
     protected name:       string;
-    public    goods:      C_Goods;
+    public    gold:       number;
+//    public    goods:      C_GoodsList;
     protected heroes:     {[uid: string]: C_Hero};
     public constructor(a?: JSON_Guild) {
         this.id         = -1;
         this.uniq_id    = 'mai_guld#' + _get_uuid();
         this.save_id    = -1;
         this.name       = '';
-        this.goods      = new C_Goods();
+        this.gold       =  0;
+//        this.goods      = new C_GoodsList();
         this.heroes     = {};
         if (a !== undefined) this.decode(a);
     }
@@ -65,6 +68,37 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
         delete this.heroes[hero.uid()];
     }
 
+/*
+    public static from_obj_to_string(oa: C_Guild): string {
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_objArray_to_string(oaa: {[uid: string]: C_Guild}): string {
+        const oa = [] as C_Guild[];
+        for (const ii in oaa) oa.push(oaa[ii]);
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_string_to_obj(txt: string): C_Guild {
+        try {
+            const j   = JSON.parse(txt) as JSON_Guild[];
+            return new C_Guild(j);
+        } catch (err) {
+            return new C_Guild();
+        };
+    }
+    public static from_string_to_objArray(txt: string): {[uid: string]: C_Guild} {
+        try {
+            const j   = JSON.parse(txt) as JSON_Guild[];
+            const mpa = {} as {[id: string]: C_Guild};
+            for (const jj of j) {
+                const aaa = new C_Guild().decode(jj);
+                mpa[aaa.uid()] = aaa;
+            }
+            return mpa;
+        } catch (err) {
+            return {};
+        };
+    }
+*/
 
     public encode(): JSON_Guild {
         const json_heroes: JSON_Hero[] = [];
@@ -74,7 +108,8 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
             id:      this.id,
             uniq_id: this.uniq_id,
             save_id: this.save_id,
-            goods:   this.goods.encode(),
+            gold:    this.gold,
+//            goods:   this.goods.encode(),
             heroes:  json_heroes,
             name:    this.name,
         }
@@ -86,7 +121,8 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
         if (a.uniq_id  !== undefined) this.uniq_id    = a.uniq_id;
         if (a.save_id  !== undefined) this.save_id    = a.save_id;
         if (a.name     !== undefined) this.name       = a.name;
-        if (a.goods    !== undefined) this.goods.decode(a.goods);
+        if (a.gold     !== undefined) this.gold;
+//        if (a.goods    !== undefined) this.goods.decode (a.goods);
 
         if (a.heroes !== undefined)  {
             this.heroes = {};
@@ -113,12 +149,13 @@ export class C_Guild implements I_Locate, I_JSON_Uniq {
     }
     
     public alert(): void {
-        _alert("Guild Info:" 
+        alert("Guild Info:" 
             + "\nid:       " + (this.id             ?? '?')
             + "\nuniq_id:  " + (this.uniq_id        ?? '?')
             + "\nsave_id:  " + (this.save_id        ?? '?')
             + "\nname:     " + (this.name           ?? '?')
-            + "\ngoods:    " + (Object.keys(this.goods??0).length)
+            + "\ngold:     " + (this.gold           ??  0)
+//            + "\ngoods:    " + (Object.keys(this.goods??0).length)
             + "\nheroes:   " + (this.heroes?.length ?? '?')
             + "\n"
         );

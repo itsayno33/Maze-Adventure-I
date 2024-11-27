@@ -1,7 +1,8 @@
 "use strict";
 
-import { I_JSON, JSON_Any } from "./C_SaveData";
+import { I_JSON, JSON_Any } from "./C_SaveInfo";
 import { _round }           from "../d_utl/F_Math";
+import { _inrand } from "../d_utl/F_Rand";
 
 // 一般に使えるユーティリティな呪文
 // オブジェクトを列挙型として型化するのに利用
@@ -72,6 +73,44 @@ export class C_HeroAbility implements I_JSON {
             this.v[key] += a[key];
         }
     } 
+
+    public add_xp_bonus(bonus: number): void {
+        this.v.xp  +=  bonus;
+    }
+    public add_el_bonus(bonus: number): void {
+        this.v.atk +=  bonus;
+        this.v.def +=  bonus;
+        this.v.quc +=  bonus;
+        this.v.cnc +=  bonus;
+    }
+    public add_pr_bonus(bonus: number): void {
+        this.v.str +=  bonus;
+        this.v.pwr +=  bonus;
+        this.v.vit +=  bonus;
+        this.v.dex +=  bonus;
+        this.v.agi +=  bonus;
+        this.v.tec +=  bonus;
+        this.v.luk +=  bonus;
+    }
+
+    public random_make(): C_HeroAbility {
+        this.v.xp  =  _inrand(0, 1000, 3.0);
+
+        this.v.atk =  _inrand(0,  100, 2.5);
+        this.v.def =  _inrand(0,  100, 2.5);
+        this.v.quc =  _inrand(0,  100, 2.5);
+        this.v.cnc =  _inrand(0,  100, 2.5);
+    
+        this.v.str =  _inrand(0,   20, 2.0);
+        this.v.pwr =  _inrand(0,   20, 2.0);
+        this.v.vit =  _inrand(0,   20, 2.0);
+        this.v.dex =  _inrand(0,   20, 2.0);
+        this.v.agi =  _inrand(0,   20, 2.0);
+        this.v.tec =  _inrand(0,   20, 2.0);
+        this.v.luk =  _inrand(0,   20, 2.0);
+
+        return this;
+    }
 
     public encode(): JSON_Hero_Ability {
         const a: JSON_Hero_Ability = {};

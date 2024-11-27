@@ -20,6 +20,7 @@ import {
     g_hres, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
+import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
 
 let   for_save: boolean  = false;
 
@@ -51,7 +52,7 @@ export type T_save_list = {
     __is_new:  boolean,
 }
 
-let   save_list:        {[uniq_no: number]: C_SaveData};
+let   save_list:        {[uniq_no: number]: C_SaveInfo};
 const save_list_max = 20;
 
 const ctls_load_rtn = {
@@ -295,12 +296,12 @@ export async function display_save_list(): Promise<void> {
             save_list = {}; 
 
             for (let save_info of jsonObj.save_info) {
-                save_list[save_info.uniq_no] = new C_SaveData(save_info);
+                save_list[save_info.uniq_no] = new C_SaveInfo(save_info);
             }
             if (for_save) {
                 for (let uniq_no_cnt = 0; uniq_no_cnt < save_list_max; uniq_no_cnt++) {
                     if (uniq_no_cnt in save_list) continue;
-                    save_list[uniq_no_cnt] = new C_SaveData({
+                    save_list[uniq_no_cnt] = new C_SaveInfo({
                         save_id:    -1,
                         uniq_no:     uniq_no_cnt,
                         title:      `新規保存#${uniq_no_cnt.toString().padStart(2, '0')}`,

@@ -264,8 +264,7 @@ function _c(c: T_marg): boolean {
 }
 
 function key_press_function(e: KeyboardEvent):void  {
-    const ee = (e.target as HTMLInputElement)?.value??'*****'
-    const ne=(ee === '*****') // Not Editting InputElement
+    const ne = (e.target as HTMLInputElement)?.value === undefined // Not Editting InputElement
 
     switch(e.code) { // Arrowは反応せず(イベント自体が発生せず)
         case 'ArrowUp': 
@@ -354,7 +353,7 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'Numpad7':
                 if (ne) (document.getElementById('m_btn')   as HTMLButtonElement)?.click();
                 break;
-        case 'F5':
+        case 'F7':
                 e.preventDefault();
                 (document.getElementById('s_btn') as HTMLButtonElement)?.click();
                 break;

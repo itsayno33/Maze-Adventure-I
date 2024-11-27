@@ -1,0 +1,426 @@
+@charset "utf-8";
+
+
+/* 標準レイアウト */
+
+* {
+    margin: 0;
+}
+
+img {
+    width: 200px;
+    height: auto;
+}
+
+/* レイアウトCSSの判別　*/
+h1::after {
+    content: "\A『" var(--layout_mode, "Common") "』レイアウト\A";
+    white-space: pre;
+
+    color: var(--h1_text_color, darkgoldenrod);
+    font-family: var(--header_font_family, sans-serif);
+    font-size: var(--header_font_size, 18px);
+    line-height: var(--header_line_heght, 23px);
+}
+
+
+/* 全体のレイアウト関係 */
+body {
+    background-color: var(--body_lyt_bgcolor,#ccffcc);
+    display: grid;
+}
+
+
+body.menu {
+    gap:                   var(--body_menu_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_menu_cols);
+    grid-template-rows:    var(--body_menu_rows);
+}
+
+#guld_head_pane.menu, 
+#guld_menu_list_pane.menu, 
+#guld_ctls_pane.menu, 
+#sytm_logs_pane.menu,
+#foot_pane.menu 
+{display: block;}
+
+#guld_hres_list_pane.menu, 
+#guld_hres_data_pane.menu,
+#guld_ldsv_list_pane.menu, 
+#guld_ldsv_data_pane.menu, 
+#guld_tomz_maze_pane.menu, 
+#guld_tomz_mvpt_pane.menu 
+{display: none;}
+
+
+body.hres {
+    gap:                   var(--body_hres_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_hres_cols);
+    grid-template-rows:    var(--body_hres_rows);
+}
+
+#guld_head_pane.hres, 
+#guld_hres_list_pane.hres, 
+#guld_hres_data_pane.hres,
+#guld_ctls_pane.hres, 
+#sytm_logs_pane.hres,
+#foot_pane.hres 
+{display: block;}
+
+#guld_menu_list_pane.hres, 
+#guld_ldsv_list_pane.hres, 
+#guld_ldsv_data_pane.hres, 
+#guld_tomz_maze_pane.hres, 
+#guld_tomz_mvpt_pane.hres 
+{display: none;}
+
+
+body.ldsv {
+    gap:                   var(--body_ldsv_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_ldsv_cols);
+    grid-template-rows:    var(--body_ldsv_rows);
+}
+
+#guld_head_pane.ldsv, 
+#guld_ldsv_list_pane.ldsv, 
+#guld_ldsv_data_pane.ldsv, 
+#guld_ctls_pane.ldsv, 
+#sytm_logs_pane.ldsv,
+#foot_pane.ldsv 
+{display: block;}
+
+#guld_menu_list_pane.ldsv, 
+#guld_hres_list_pane.ldsv, 
+#guld_hres_data_pane.ldsv,
+#guld_tomz_maze_pane.ldsv, 
+#guld_tomz_mvpt_pane.ldsv 
+{display: none;}
+
+
+body.tomz {
+    gap:                   var(--body_tomz_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_tomz_cols);
+    grid-template-rows:    var(--body_tomz_rows);
+}
+
+#guld_head_pane.tomz, 
+#guld_tomz_maze_pane.tomz, 
+#guld_tomz_mvpt_pane.tomz, 
+#guld_ctls_pane.tomz, 
+#sytm_logs_pane.tomz,
+#foot_pane.tomz 
+{display: block;}
+
+#guld_menu_list_pane.tomz, 
+#guld_hres_list_pane.tomz, 
+#guld_hres_data_pane.tomz,
+#guld_ldsv_list_pane.tomz, 
+#guld_ldsv_data_pane.tomz 
+{display: none;}
+
+
+#guld_head_pane      {grid-area: head;}
+#guld_menu_list_pane {grid-area: mn_l;}
+#guld_hres_list_pane {grid-area: hr_l;}
+#guld_hres_data_pane {grid-area: hr_d;}
+#guld_ldsv_list_pane {grid-area: ls_l;}
+#guld_ldsv_data_pane {grid-area: ls_d;}
+#guld_tomz_maze_pane {grid-area: mz_l;}
+#guld_tomz_mvpt_pane {grid-area: vp_l;}
+#guld_ctls_pane      {grid-area: ctls;}
+#sytm_logs_pane      {grid-area: mssg;}
+#foot_pane           {grid-area: foot;}
+
+
+/* Headerの見栄え */
+header {
+    justify-self: center;
+    align-self: baseline;
+
+    display:grid;
+}
+
+/* Footerの見栄え */
+footer {
+    display: grid;
+    justify-self:center;
+    align-self: auto;
+}
+
+footer img {
+    width: 50px;
+}
+
+footer a {
+    text-decoration: none;
+}
+footer p {
+    text-align: right;
+
+    color: var(--footer_text_color, darkgreen);
+    font-family: var(--footer_font_family, serif);
+    font-size: var(--footer_font_size, 12px);
+    line-height: var(--footer_line_heght, 158px);
+}
+
+/* 大タイトルのスタイル */
+h1 {
+    margin: var(--h1_margin, 10px);
+    text-align: center;
+
+    color:       var(--h1_text_color,darkgreen);
+    font-family: var(--h1_font_family, serif);
+    font-size:   var(--h1_font_size,   22px);
+    line-height: var(--h1_line_heght,  26px);
+}
+
+
+#guld_menu_list, 
+#team_list,
+#guld_list,
+#appd_list,
+#menu_list,
+#inpt_list,
+#ldsv_list, 
+#maze_list,
+#mvpt_list
+{
+    color:            chocolate;
+    background-color: cornsilk;
+}
+
+#guld_menu_list li, 
+#team_list li,
+#guld_list li,
+#appd_list li,
+#menu_list li,
+#inpt_list li,
+#ldsv_list li, 
+#maze_list li,
+#mvpt_list li
+{
+    margin-bottom: var(--list_margin_button, 0.5rem);
+    font-size:     var(--list_font,  1.0rem);
+    line-height:   var(--list_heght, 1.2rem);
+}
+
+#hres_hero_fields {
+    font-size:   var(--detail_font,  0.9rem);
+    line-height: var(--detait_heght, 1.1rem);
+}
+
+#guld_head_pane {
+    font-size:   var(--view_message_font_size, 1.1rem);
+    line-height: var(--view_message_height,    3.5rem);
+}
+
+#debug_mode {
+    float: left;
+}
+#debug_mode.normal {
+    color:            var(--debug_button_fwcolor, #008000);
+    background-color: var(--debug_button_bgcolor, #f0f8ff);
+}
+
+#debug_mode.debug {
+    color:            var(--debug_button_fwcolor, #ffffff);
+    background-color: var(--debug_button_bgcolor, #ff0000);
+}
+
+#alert_mode {
+    float: left;
+}
+#alert_mode.normal {
+    color:            var(--debug_button_fwcolor, #808000);
+    background-color: var(--debug_button_bgcolor, #f0f8ff);
+}
+
+p#guld_head_message {
+    clear: both;
+}
+#s_cp1 {
+    float: right;
+    margin-left: 1.0rem;
+    font-size: var(--cp_btn_font_size, 1.0rem);
+    color: #03ec0f;
+    background-color:rgb(253, 255, 233);
+}
+#r_cp1 {
+    float: right;
+    margin-left: 1.0rem;
+    font-size: var(--cp_btn_font_size, 1.0rem);
+    color:chocolate ;
+    background-color:ivory;
+}
+#y_cp1 {
+    float: right;
+    margin-left: 1.0rem;
+    font-size: var(--cp_btn_font_size, 1.0rem);
+    color: darkgreen ;
+    background-color:#ccffcc;
+}
+#n_cp1 {
+    float: right;
+    margin-left: 1.0rem;
+    font-size: var(--cp_btn_font_size, 1.0rem);
+    color: #cc00cc;
+    background-color:pink;
+}
+
+
+#ctls_view {
+    display: grid;
+}
+
+#ctls_panel {
+    justify-self:center; 
+    text-align:  center;
+    font-family: sans-serif;
+    font-weight: bold;
+
+    display: grid;
+
+    gap: 0.5rem 0.5rem;
+    grid-template-columns: 
+        [l_arr-start n_btn-start s_btn-start]
+        var(--lr_arrow_width, 2.3rem)
+        [l_arr-end n_btn-end s_btn-end u_arr-start d_arr-start]
+        var(--ud_arrow_width, 2.3rem)
+        [u_arr-end d_arr-end r_arr-start y_btn-start r_btn-start]
+        var(--lr_arrow_width, 2.3rem)
+        [r_arr-end y_btn-end r_btn-end]
+        ;
+
+    grid-template-rows: 
+        [s_btn-start r_btn-start]
+        var(--sr_buton_height,  2.3rem)
+        [s_btn-end r_btn-end u_arr-start]
+        var(--ud_arrow_height,  2.3rem)
+        [u_arr-end l_arr-start r_arr-start]
+        var(--lr_arrow_height,  2.3rem)
+        [l_arr-end r_arr-end d_arr-start]
+        var(--ud_arrow_height,  2.3rem)
+        [d_arr-end y_btn-start n_btn-start]
+        var(--ud_arrow_height,  2.3rem)
+        [y_btn-end n_btn-end c_btn-start] 
+        var(--camp_btn_height,  2.3rem)
+        [c_btn-end]
+        ;
+
+}
+
+#u_arr {grid-area: u_arr;}
+#d_arr {grid-area: d_arr;}
+#l_arr {grid-area: l_arr;}
+#r_arr {grid-area: r_arr;}
+#y_btn {grid-area: y_btn;}
+#n_btn {grid-area: n_btn;}
+#s_btn {grid-area: s_btn;}
+#r_btn {grid-area: r_btn;}
+#c_btn {grid-area: c_btn;}
+
+#y_btn {
+    color: darkgreen ;
+    background-color:#ccffcc;
+}
+#n_btn {
+    color: #cc00cc;
+    background-color:pink;
+}
+#s_btn {
+    color: #03ec0f;
+    background-color:rgb(253, 255, 233);
+}
+#r_btn {
+    color:chocolate ;
+    background-color:ivory;
+}
+#c_btn {
+    color: rgb(139, 141, 0) ;
+    background-color:#f6ffcc;
+}
+
+#sytm_logs_pane {
+/*    width:       var(--message_width,        33rem); */
+    font-size:    var(--message_font_size,   0.6rem);
+    line-height:  var(--message_line_height, 0.7rem);
+    max-height:   calc( var(--message_line_height, 0.7rem) * 6);
+    overflow-y:   scroll;
+    justify-self: auto;
+    align-self:   auto;
+}
+
+#sytm_logs_pane p {
+    word-break: break-all;
+}
+
+#team_list,
+#guld_list,
+#menu_list,
+#edit_list,
+#appd_list,
+#ldsv_list 
+{
+    column-count: var(--hres_list_count, 4); 
+}
+#maze_list,
+#mvpt_list
+{
+    column-count: var(--maze_list_count, 1); 
+}
+
+#hres_hero_info,
+#edit_hero_info,
+#appd_hero_info {
+    display: grid;
+    gap:  var(--hero_info_grid_gap, 0.5rem 1.0rem);
+    grid: var(--hero_info_grid_template, none);
+}
+
+#hres_hero_info {
+    list-style:   none;
+    padding-left: 0px;
+    text-align:   center;
+}
+#hres_hero_info li {
+    border: 2px dotted var(--hero_info_border_color, rgb(165, 255, 225));
+}
+
+#_hr_name  { grid-area: _hr_name;  }
+#_hr_lv    { grid-area: _hr_lv;    }
+#_hr_exp   { grid-area: _hr_exp;   }
+#_hr_skp   { grid-area: _hr_skp;   }
+#_hr_state { grid-area: _hr_state; }
+#_hr_sex   { grid-area: _hr_sex;   }
+#_hr_age   { grid-area: _hr_age;   }
+#_hr_gold  { grid-area: _hr_gold;  }
+
+#_hr_hp    { grid-area: _hr_hp;    }
+#_hr_mp    { grid-area: _hr_mp;    }
+
+#_hr_atk_p { grid-area: _hr_atk_p; }
+#_hr_def_p { grid-area: _hr_def_p; }
+#_hr_quc_p { grid-area: _hr_quc_p; }
+#_hr_cnc_p { grid-area: _hr_cnc_p; }
+
+#_hr_str_p { grid-area: _hr_str_p; }
+#_hr_pwr_p { grid-area: _hr_pwr_p; }
+#_hr_vit_p { grid-area: _hr_vit_p; }
+#_hr_dex_p { grid-area: _hr_dex_p; }
+#_hr_agi_p { grid-area: _hr_agi_p; }
+#_hr_tec_p { grid-area: _hr_tec_p; }
+#_hr_luk_p { grid-area: _hr_luk_p; }
+
+#_hr_atk_m { grid-area: _hr_atk_m; }
+#_hr_def_m { grid-area: _hr_def_m; }
+#_hr_quc_m { grid-area: _hr_quc_m; }
+#_hr_cnc_m { grid-area: _hr_cnc_m; }
+
+#_hr_str_m { grid-area: _hr_str_m; }
+#_hr_pwr_m { grid-area: _hr_pwr_m; }
+#_hr_vit_m { grid-area: _hr_vit_m; }
+#_hr_dex_m { grid-area: _hr_dex_m; }
+#_hr_agi_m { grid-area: _hr_agi_m; }
+#_hr_tec_m { grid-area: _hr_tec_m; }
+#_hr_luk_m { grid-area: _hr_luk_m; }
+

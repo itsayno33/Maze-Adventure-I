@@ -4,14 +4,14 @@ import { C_Point }               from "./C_Point";
 import { C_PointDir }            from './C_PointDir';
 import { C_MovablePoint }        from "./C_MovablePoint";
 import { C_Walker, JSON_Walker } from "./C_Walker";
-import { C_Goods,  JSON_Goods }  from './C_Goods';
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { I_MazeObj }             from "./C_MazeObj";
-import { JSON_Any }              from "./C_SaveData";
+import { JSON_Any }              from "./C_SaveInfo";
 import { C_CurrentTeamView }     from "./C_TeamView";
-import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
+import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
+import { C_Good,  T_GoodKind }   from "./C_Good";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { _alert }                from "../d_cmn/global";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -19,7 +19,8 @@ export interface JSON_Team extends JSON_Any {
     save_id?:   number, 
     name?:      string, 
     locate?:    JSON_Walker,
-    goods?:     JSON_Goods,
+    gold?:      number,
+//    goods?:     JSON_GoodsList,
     heroes?:    JSON_Hero[], 
     motion?:    string,
     view?:      JSON_MazeObjView|undefined,
@@ -40,7 +41,8 @@ export function alert_team_info(a: JSON_Team|undefined): void {
         + "\ncur_y: "     + (a.locate?.loc_pos?.y ?? '?')
         + "\ncur_z: "     + (a.locate?.loc_pos?.z ?? '?')
         + "\ncur_d: "     + (a.locate?.loc_pos?.d ?? '?')
-        + "\ngoods: "     + (Object.keys(a.goods??[]).length)
+        + "\ngold: "      + (a.gold      ??  0 )
+//        + "\ngoods: "     + (Object.keys(a.goods??[]).length)
         + "\nheroes: "    + (a.heroes?.length ?? '?')
         + "\n"
     );
@@ -60,7 +62,8 @@ export class C_Team implements I_MazeObj {
     protected uniq_id:   string;
     protected save_id:   number;
     protected walker:    C_Walker;
-    protected goods:     C_Goods;
+    protected gold:      number;
+//    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
 
     protected myView:    I_MazeObjView|undefined;
@@ -77,7 +80,8 @@ export class C_Team implements I_MazeObj {
         this.walker = new C_Walker();
         this.walker.set_tid(this.uid());
 
-        this.goods  = new C_Goods();
+        this.gold   = 0;
+//        this.goods  = new C_GoodsList();
         this.heroes = {};
         this.hope_motion = 'NOP';    
         if (j !== undefined) this.decode(j);
@@ -89,12 +93,14 @@ export class C_Team implements I_MazeObj {
     public uid(): string { return this.uniq_id}
 
     public within(p: C_Point): boolean {
-        const here = this.walker.get_p();
-        return here.within(p); 
+        const here = this.walker?.get_p();
+        return here?.within(p) ?? false; 
     }
 
     public view():  I_MazeObjView|undefined {return this.myView}
-    public walk():  C_Walker {return this.walker}
+    public walk():  C_Walker {
+        return this.walker
+    }
     
     public canThrough(): boolean {return true}
 
@@ -118,13 +124,44 @@ export class C_Team implements I_MazeObj {
         return this.walker;
     }
     public set_loc(loc: C_MovablePoint): void {
-        this.walker.decode(loc.encode());
+        (this.walker ??= new C_Walker()).decode(loc.encode());
     }
 
     public get_pd(): C_PointDir {
         return this.walker.get_pd();
     }
 
+/*
+    public static from_obj_to_string(oa: C_Team): string {
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_objArray_to_string(oaa: {[uid: string]: C_Team}): string {
+        const oa = [] as C_Team[];
+        for (const ii in oaa) oa.push(oaa[ii]);
+        return JSON.stringify(oa, null, "\t");
+    }
+    public static from_string_to_obj(txt: string): C_Team {
+        try {
+            const j   = JSON.parse(txt) as C_Team[];
+            return new C_Team(j);
+        } catch (err) {
+            return new C_Team();
+        };
+    }
+    public static from_string_to_objArray(txt: string): {[uid: string]: C_Team} {
+        try {
+            const j   = JSON.parse(txt) as JSON_Team[];
+            const mpa = {} as {[id: string]: C_Team};
+            for (const jj of j) {
+                const aaa = new C_Team().decode(jj);
+                mpa[aaa.uid()] = aaa;
+            }
+            return mpa;
+        } catch (err) {
+            return {};
+        };
+    }
+*/
     
     public encode(): JSON_Team {
         this.get_loc(); // Location情報を最新に更新
@@ -138,7 +175,8 @@ export class C_Team implements I_MazeObj {
             uniq_id:   this.uniq_id,
             save_id:   this.save_id,
             locate:    this.walker.encode(),
-            goods:     this.goods.encode(),
+            gold:      this.gold,
+//            goods:     this.goods.encode(),
             heroes:    json_heroes,
             motion:    this.hope_motion,
             view:      this.myView?.encode() ?? {},
@@ -154,7 +192,8 @@ export class C_Team implements I_MazeObj {
         if (a.motion !== undefined)  this.hope_motion = a.motion;
 
         if (a.locate !== undefined)  this.walker.decode(a.locate);
-        if (a.goods !== undefined)   this.goods.decode(a.goods);
+        if (a.gold   !== undefined)  this.gold = a.gold;
+//        if (a.goods  !== undefined)  this.goods.decode(a.goods);
 
         if (a.heroes !== undefined)  {
             this.heroes = {};
@@ -187,7 +226,7 @@ export class C_Team implements I_MazeObj {
     }
     
     public alert(): void {
-        _alert("Team Info:" 
+        alert("Team Info:" 
             + "\nid:    "     + (this.my_id            ?? '?')
             + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
             + "\nname:  "     + (this.my_name          ?? '?')
@@ -200,7 +239,7 @@ export class C_Team implements I_MazeObj {
             + "\ncur_y: "     + (this.walker.get_p().y ?? '?')
             + "\ncur_z: "     + (this.walker.get_p().z ?? '?')
             + "\ncur_d: "     + (this.walker.get_d()   ?? '?')
-            + "\ngoods: "     + (Object.keys(this.goods??{}).length)
+            + "\ngold: "      + (Object.keys(this.gold ?? {}).length)
             + "\nheroes: "    + (this.heroes?.length ?? '?')
             + "\n"
         );

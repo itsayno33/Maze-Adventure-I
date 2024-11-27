@@ -700,6 +700,8 @@ const ctls_hres_rtn = {
     name: 'hres_rtn', 
     isOK:  isRT,
     isNG:  isRT,
+    cpOK:  isRT,
+    cpNG:  isRT,
     isRT:  isRT,
     cpRT:  isRT,
 }
@@ -713,6 +715,8 @@ const ctls_hres_nor = {
     isNG:  isNG,
     isSL:  isSL,
     isRT:  isRT,
+    cpOK:  isOK,
+    cpNG:  isNG,
     cpSL:  isSL,
     cpRT:  isRT,
 }

@@ -2,7 +2,7 @@
 
 import { C_Point }                   from "./C_Point";
 import { C_PointDir, JSON_PointDir } from "./C_PointDir";
-import { I_Abstract, I_JSON_Uniq, JSON_Any }     from "./C_SaveData";
+import { I_Abstract, I_JSON_Uniq, JSON_Any }     from "./C_SaveInfo";
 import { _get_uuid }                 from "../d_utl/F_Rand";
 import { 
     C_MazeObjView, 

@@ -1,22 +1,22 @@
 import { _max, _min, _round } from "./F_Math";
 
 // 乱数関数呼び出し用の型宣言
-type T_frand = (()=>number)
+type T_frand = ()=>number
 const frand: T_frand =  ()=>{return Math.random()}
 
 // 一様乱数(整数)
 export function _irand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
-    const frand = Math.floor(rand() * (max - min + 1) + min);
-    return _round(frand, 0);
+    const f_rand = Math.floor(rand() * (max - min + 1) + min);
+    return _round(f_rand, 0);
 }
 
 // 正規分布もどき乱数(整数)
-export function _igrand(min: number = 0, max: number = 1, rand: T_frand = frand):number {
+export function _igrand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
     return _irand(min, max, ()=>{return _grand(0, 1, rand)})
 }
 
 // 正規分布もどき乱数(実数)
-export function _grand(min: number = 0, max: number = 1, rand: T_frand = frand):number {
+export function _grand(min: number = 0, max: number = 1, rand: T_frand = frand): number {
     return Math.floor(___gaussianRand(rand) * (max - min + 1) + min);
 }
 function ___gaussianRand(rand: T_frand = frand) {
@@ -112,4 +112,39 @@ export function _shuffleArray<T>(array: T[], rand: T_frand = frand): T[] {
         [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
     }
     return shuffledArray; // シャッフルされた配列を返す
+}
+
+// 乱数による文字列生成
+export function _random_str(length: number): string {
+    let str = '';
+    for (let i=0; i < length; i++) str += _random_Char();
+    return str;
+}
+export function _random_UpperStr(length: number): string {
+    let str = '';
+    for (let i=0; i < length; i++) str += _random_UpperChar();
+    return str;
+}
+export function _random_LowerStr(length: number): string {
+    let str = '';
+    for (let i=0; i < length; i++) str += _random_LowerChar();
+    return str;
+}
+export function _random_UpperChar(): string {
+    const val = _irand(0,26)
+    return String.fromCharCode(65+val);
+}
+export function _random_LowerChar(): string {
+    const val = _irand(0,26)
+    return String.fromCharCode(95+val);
+}
+export function _random_NumChar(): string {
+    const val = _irand(0,9)
+    return String.fromCharCode(48+val);
+}
+export function _random_Char(): string {
+    const val = _irand(0,61)
+    if (val < 26) return String.fromCharCode(65+val);
+    if (val < 52) return String.fromCharCode(97+val-26);
+    return String.fromCharCode(48+val-52);
 }

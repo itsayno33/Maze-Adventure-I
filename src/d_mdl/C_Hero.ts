@@ -1,10 +1,9 @@
 "use strict";
 
-import { C_Goods, JSON_Goods }             from "./C_Goods";
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
-import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveData";
-import { _get_uuid }                       from "../d_utl/F_Rand";
-import { _alert }                          from "../d_cmn/global";
+import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveInfo";
+import { _get_uuid, _inrand, _irand, _random_str }  from "../d_utl/F_Rand";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 
 export interface JSON_Hero extends JSON_Any {
     id?:        number, 
@@ -13,7 +12,8 @@ export interface JSON_Hero extends JSON_Any {
     name?:      string, 
     sex?:       number; 
     age?:       number; 
-    goods?:     JSON_Goods; 
+    gold?:      number; 
+//    goods?:     JSON_GoodsList; 
     state?:     number; 
     lv?:        number; 
     val?:       JSON_Hero_Value;
@@ -59,7 +59,8 @@ export class C_Hero implements I_JSON_Uniq {
     protected state:    number; 
     protected lv:       number; 
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
-    protected goods:    C_Goods; 
+    protected gold:     number; 
+//    protected goods:    C_GoodsList; 
     protected val:      JSON_Hero_Value;
     protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
     protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
@@ -73,7 +74,8 @@ export class C_Hero implements I_JSON_Uniq {
         this.save_id    = 0;
         this.sex        = 0; 
         this.age        = 0; 
-        this.goods      = new C_Goods(); 
+        this.gold       = 0; 
+//        this.goods      = new C_GoodsList(); 
         this.state      = 0; 
         this.lv         = 0;
         this.val        = {};
@@ -109,7 +111,8 @@ export class C_Hero implements I_JSON_Uniq {
             age:       this.age, 
             state:     this.state, 
             lv:        this.lv, 
-            goods:     this.goods.encode(), 
+            gold:      this.gold, 
+//            goods:     this.goods.encode(), 
             val:       this.val,
             abi_p_bsc: this.abi_p.bsc.encode(),
             abi_m_bsc: this.abi_m.bsc.encode(),
@@ -127,6 +130,7 @@ export class C_Hero implements I_JSON_Uniq {
         if (a.age      !== undefined) this.age      = a.age;
         if (a.state    !== undefined) this.state    = a.state;
         if (a.lv       !== undefined) this.lv       = a.lv;
+        if (a.gold     !== undefined) this.gold     = a.gold;
         if (a.is_alive !== undefined) {
             if (typeof a.is_alive === "boolean") {
                 this.is_alive = a.is_alive;
@@ -134,7 +138,7 @@ export class C_Hero implements I_JSON_Uniq {
                 this.is_alive = (a.is_alive != 'N') ? true: false;
             }
         }
-        if (a.goods   !== undefined) this.goods.decode(a.goods);
+//        if (a.goods   !== undefined) this.goods.decode(a.goods);
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }
@@ -172,6 +176,39 @@ export class C_Hero implements I_JSON_Uniq {
         new_hero.set_prp({name:  new_hero.id()});
         return new_hero;
     }
+
+    public random_make(): C_Hero {
+        this.my_id    = 0; // --Hero::$max_id;
+        this.my_name  = "冒険者 " + _random_str(5);
+        this.sex      = _irand( 0,     1); 
+        this.age      = _irand( 15,   25); 
+        this.state    = 0; 
+        this.lv       = 0; 
+        this.gold     = _irand( 500, 1000); 
+        this.val      = {
+            skp: {ttl: 0, now: 0}, 
+            exp: {ttl: 0, now: 0},
+            'nxe': 1000
+        };
+
+
+        const abi_p_bsc = this.abi_p.bsc;
+        abi_p_bsc.random_make();
+        abi_p_bsc.add_xp_bonus((this.age - 15) * 10);
+        abi_p_bsc.add_el_bonus((this.age - 15) *  5);
+        abi_p_bsc.add_pr_bonus((this.age - 15) *  2);
+        this.abi_p.bsc = abi_p_bsc;
+
+        const abi_m_bsc = this.abi_m.bsc;
+        abi_m_bsc.random_make();
+        abi_m_bsc.add_xp_bonus((this.age - 15) * 10);
+        abi_m_bsc.add_el_bonus((this.age - 15) *  5);
+        abi_m_bsc.add_pr_bonus((this.age - 15) *  2);
+        this.abi_m.bsc = abi_m_bsc;
+
+        return this;
+    }
+
     public static encode_heroes(heroes: C_Hero[]): JSON_Hero[] {
         const heroes_data = [] as JSON_Hero[];
         for (var hero of heroes) {
@@ -190,7 +227,7 @@ export class C_Hero implements I_JSON_Uniq {
     }
 
     public alert(): void { 
-        _alert("Hero Info:\n" 
+        alert("Hero Info:\n" 
             + "\nid:       "     + (this.id        ?? '?')
             + "\nuniq_id   "     + (this.uniq_id   ?? '?')
             + "\nname:     "     + (this.name      ?? '?')
@@ -201,7 +238,7 @@ export class C_Hero implements I_JSON_Uniq {
     }
     public static alert_hres(a: (C_Hero|undefined)[]|undefined): void { 
         if (a === undefined) return;
-        _alert('Number of Hero = ' + a.length.toString());
+        alert('Number of Hero = ' + a.length.toString());
         for (var i in a) a[i]?.alert();
     }
 }

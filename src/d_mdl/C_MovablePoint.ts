@@ -1,9 +1,8 @@
 "use strict";
 
 import { C_Location, JSON_Location } from "./C_Location";
-import { I_JSON_Uniq }               from "./C_SaveData";
+import { I_JSON_Uniq }               from "./C_SaveInfo";
 import { _get_uuid }                 from "../d_utl/F_Rand";
-import { _alert }                    from "../d_cmn/global";
 
 export interface JSON_MovablePoint extends JSON_Location {
     uniq_id?:  string,
@@ -40,7 +39,7 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         this.cur_url  = '';
         this.team_uid = undefined;
 
-        if (json !== undefined) this.decode(json);
+        if (json !== undefined && json !== null) this.decode(json);
     }
     public uid(): string { return this.uniq_id}
     public url(): string { return this.cur_url}
@@ -68,6 +67,36 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         return JSON.stringify(this.encode(), null, "\t");
     }
 
+    public static from_obj_to_string(oa: C_MovablePoint): string {
+        return JSON.stringify(oa.encode());
+    }
+    public static from_objArray_to_string(oaa: {[uid: string]: C_MovablePoint}): string {
+        const oa = [] as JSON_MovablePoint[];
+        for (const ii in oaa) oa.push(oaa[ii].encode());
+        return JSON.stringify(oa);
+    }
+    public static from_string_to_obj(txt: string): C_MovablePoint {
+        try {
+            const j   = JSON.parse(txt) as JSON_MovablePoint[];
+            return new C_MovablePoint().decode(j);
+        } catch (err) {
+            return new C_MovablePoint();
+        };
+    }
+    public static from_string_to_objArray(txt: string): {[uid: string]: C_MovablePoint} {
+        try {
+            const j   = JSON.parse(txt) as JSON_MovablePoint[];
+            const mpa = {} as {[id: string]: C_MovablePoint};
+            for (const jj of j) {
+                const aaa = new C_MovablePoint().decode(jj);
+                mpa[aaa.uid()] = aaa;
+            }
+            return mpa;
+        } catch (err) {
+            return {};
+        };
+    }
+
     public encode(): JSON_MovablePoint {
         const j = super.encode() as JSON_MovablePoint;
         j.uniq_id  = this.uniq_id;
@@ -75,18 +104,19 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
         j.team_uid = this.team_uid ?? '';
         return j;
     }
-    public decode(j: JSON_MovablePoint): C_MovablePoint {
+    public decode(j?: JSON_MovablePoint): C_MovablePoint {
         super.decode(j);
+        if (j === undefined) return this;
         if (j.uniq_id  !== undefined) this.uniq_id  = j.uniq_id;
         if (j.cur_url  !== undefined) this.cur_url  = j.cur_url;
         if (j.team_uid !== undefined) this.team_uid = j.team_uid;
 
-        if (this.team_uid == '') this.team_uid = undefined;
+        if (this.team_uid === '') this.team_uid = undefined;
         return this;
     }
     
     public alert(): void {
-        _alert("MvPt Info:" 
+        alert("MvPt Info:" 
             + "\nuniq_id:  "  + (this.uniq_id    ?? '?')
             + "\ncur_url:  "  + (this.cur_url    ?? '?')
             + "\nteam_uid: "  + (this.team_uid   ?? '?')

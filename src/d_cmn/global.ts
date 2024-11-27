@@ -1,10 +1,28 @@
-export const g_url_get_save    = 0;
-export const g_url_get_maze    = 1;
-export const g_url_get_guld    = 2;
-export const g_url_mai_maze    = 3;
-export const g_url_mai_guld    = 5;
-export const g_url_check_JSON  = 9;
-export const g_url: string[] = new Array(10);
+export const g_url_get_maze    =  0;
+export const g_url_new_maze    =  1;
+
+export const g_url_all_maze    =  2;
+export const g_url_new_guld    =  5;
+export const g_url_all_hres    =  6;
+export const g_url_get_save    =  7;
+export const g_url_put_save    =  8;
+export const g_url_all_save    =  9;
+export const g_url_mai_maze    = 10;
+export const g_url_mai_guld    = 11;
+export const g_url_get_info    = 12;
+export const g_url_get_data    = 13;
+export const g_url_put_data    = 15;
+
+export const g_url_check_JSON  = 16;
+
+export const g_url_rcd_list    = 17;
+export const g_url_rcd_load    = 18;
+export const g_url_rcd_save    = 19;
+
+export const g_url_gt2_guld    = 20;
+export const g_url_gt2_maze    = 21;
+export const g_url_gt2_save    = 22;
+export const g_url: string[] = new Array(23);
 
 export let   g_my_url: string;
 
@@ -89,12 +107,25 @@ const tsCaller: I_TsCall = (() => {
         get_init_data: (my_url: string): void => {
             g_my_url = my_url;
             const url_top = parent_url(my_url);
-//            const url_top = url_base;
-            g_url[g_url_get_save]   = url_top + "/_JSON_mai_save.php";
-            g_url[g_url_get_maze]   = url_top + "/_JSON_mai_maze.php";
-            g_url[g_url_get_guld]   = url_top + "/_JSON_mai_guld.php";
+            const exp_top = parent_url(url_top) + "/maiex";
+
+            g_url[g_url_gt2_save]   = url_top + "/_JSON_mai_save.php";
+            g_url[g_url_gt2_maze]   = url_top + "/_JSON_mai_maze.php";
+            g_url[g_url_gt2_guld]   = url_top + "/_JSON_mai_guld.php";
+
             g_url[g_url_mai_maze]   = url_top + "/mai_maze.php";
             g_url[g_url_mai_guld]   = url_top + "/mai_guld.php";
+
+            g_url[g_url_new_maze]   = exp_top + "/maze/newMaze";
+            g_url[g_url_get_maze]   = exp_top + "/maze/getMaze";
+            g_url[g_url_all_maze]   = exp_top + "/maze/allMaze";
+            g_url[g_url_new_guld]   = exp_top + "/guld/newGuld";
+            g_url[g_url_all_hres]   = exp_top + "/guld/allHres";
+
+            g_url[g_url_get_info]   = exp_top + "/ldsv/_info";
+            g_url[g_url_get_data]   = exp_top + "/ldsv/_load";
+            g_url[g_url_put_data]   = exp_top + "/ldsv/_save";
+
             g_url[g_url_check_JSON] = url_top + "/check_JSON.php";
         },
         // 暫定版開始処理
