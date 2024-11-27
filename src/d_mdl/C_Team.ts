@@ -9,8 +9,8 @@ import { I_MazeObj }             from "./C_MazeObj";
 import { JSON_Any }              from "./C_SaveInfo";
 import { C_CurrentTeamView }     from "./C_TeamView";
 import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
-import { C_GoodsObj,  T_GoodsKind }    from "./C_GoodsObj";
-import { C_GoodsList, JSON_GoodsList } from "./C_GoodsList";
+import { C_Good,  T_GoodKind }   from "./C_Good";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
 
 export interface JSON_Team extends JSON_Any {

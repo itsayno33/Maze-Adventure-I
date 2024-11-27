@@ -3,7 +3,7 @@
 import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveInfo";
 import { _get_uuid, _inrand, _irand, _random_str }  from "../d_utl/F_Rand";
-import { C_GoodsList, JSON_GoodsList } from "./C_GoodsList";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 
 export interface JSON_Hero extends JSON_Any {
     id?:        number, 

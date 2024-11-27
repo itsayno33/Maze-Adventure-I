@@ -4,7 +4,7 @@ import { _get_uuid, _irand, _nrand }        from "../d_utl/F_Rand";
 import { T_MakeEnumType }                   from "../d_utl/T_MakeEnumType";
 import { JSON_Any }                         from "./C_SaveInfo";
 import { C_HeroAbility, JSON_Hero_Ability } from "./C_HeroAbility";
-import { C_GoodsObj, JSON_GoodsObj }        from "./C_GoodsObj";
+import { C_Good, JSON_Good }                from "./C_Good";
 
 export const T_ObjKind:{[lckd: string]: number}  = {
     Unkwn: 0,

@@ -4,7 +4,7 @@ import { I_Locate, T_Lckd }      from "./C_Location";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { C_Hero, JSON_Hero }     from "./C_Hero";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { C_GoodsList, JSON_GoodsList } from "./C_GoodsList";
+import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 
 export interface JSON_Guild extends JSON_Any {
     id?:       number,

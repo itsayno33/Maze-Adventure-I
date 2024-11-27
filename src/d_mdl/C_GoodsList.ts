@@ -1,80 +1,102 @@
-/**********************
- * 
- * おそらく不要なクラス
- * 
-**********************/
-
 "use strict";
 
-import { C_ObjList, I_ObjList, JSON_ObjList } from "./C_ObjList";
-import { C_Goods, JSON_Goods, T_GoodsKind } from "./C_Goods";
-import { C_GoodsObj, JSON_GoodsObj } from "./C_GoodsObj";
+import { I_JSON, JSON_Any }             from "./C_SaveInfo";
+import { C_Good,  I_Good,  JSON_Good }  from "./C_Good";
 
-
-export interface JSON_GoodsList extends JSON_ObjList {
-/************
-    gold?: JSON_Obj[],
-    arms?: JSON_Obj[],    
-    shld?: JSON_Obj[],    
-    drug?: JSON_Obj[],    
-    item?: JSON_Obj[],    
-*************/
+export interface JSON_GoodsListElement {
+    elm: JSON_Good,
+    qty: number,
+}
+export interface JSON_GoodsList extends JSON_Any {
+    goods?: JSON_GoodsListElement[]
 }
 
+export interface I_GoodsListElement {
+    elm: I_Good,
+    qty: number,
+}
+export interface I_GoodsList  {
+    [uid: string]: I_GoodsListElement
+}
 
-export class C_GoodsList extends C_ObjList {
+export class C_GoodsList implements I_JSON {
+    protected list: I_GoodsList = {};
+
     public constructor(j?: JSON_GoodsList) {
-        super(j);
+        this.clr();
         if (j !== undefined) this.decode(j);
     }
+    public keys(): string[] {return Object.keys(this.list)}
+    public get    (key: string): I_GoodsListElement {return this.list[key]}
+    public get_elm(key: string): I_Good {return this.list[key].elm}
+    public get_qty(key: string): number {return this.list[key].qty}
 
-    public add(obj: C_GoodsObj|undefined): void {
+    public get_list(): I_GoodsListElement[] {
+        const list: I_GoodsListElement[] = []; 
+        for (const ii in this.list) list.push(this.list[ii]);
+        return list;
+    }
+
+    public clr(): void {
+        this.list = {};
+    }
+    public add(obj: I_Good|undefined): void {
         if (obj === undefined) return; 
-        if (obj instanceof C_Goods) this.list[obj.uid()] = obj; 
-    }
 
-    public gold(): number {
-        let ttl_gold = 0; 
-        for (const ii in this.list) if ((this.list[ii] as C_Goods).goods_kind() === T_GoodsKind.Gold) ttl_gold += this.list[ii].gold();
-        return ttl_gold;
+        const id = obj.key();
+        this.list[id] ??= {elm:new C_Good(),qty:0};
+        this.list[id].elm = obj;
+        this.list[id].qty++;
     }
-
-    public gold_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Gold);}
-    public arms_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Arms);}
-    public shld_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Shld);}
-    public drug_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Drug);}
-    public item_array(): C_Goods[] {return this.__make_array(T_GoodsKind.Item);}
-    private __make_array(gkind: number): C_Goods[] {
-        const make_array:C_Goods[] = []; 
-        for (const ii in this.list) if ((this.list[ii] as C_Goods).goods_kind() === gkind) make_array.push(this.list[ii] as C_Goods);
-        return make_array;
+    public add_list(list: I_Good[]) {
+        for (const elm of list) this.add(elm);
+    }
+    public pop_one(): I_Good|undefined {
+        if (Object.entries(this.list).length < 1) return undefined;
+        const [key,obj] = Object.entries(this.list)[0];
+        this.rmv_one(obj.elm);
+        return obj.elm;
+    }
+    public pop_qty(qty:number): I_Good|undefined {
+        if (Object.entries(this.list).length < 1) return undefined;
+        const [key,obj] = Object.entries(this.list)[0];
+        this.rmv_qty(obj.elm,qty);
+        return obj.elm;
+    }
+    
+    public rmv_one(obj: I_Good|undefined): void {
+        if (obj === undefined)         return; 
+        if (!(obj.key() in this.list)) return;
+        if (--this.list[obj.key()].qty <= 0) delete this.list[obj.key()];
+    }
+    public rmv_qty(obj: I_Good|undefined, qty: number): void {
+        if (obj === undefined)         return; 
+        if (!(obj.key() in this.list)) return;
+        this.list[obj.key()].qty -= qty;
+        if (this.list[obj.key()].qty <= 0) delete this.list[obj.key()];
     }
 
     public encode(): JSON_GoodsList {
-        return {
-            list: this.__encode(this.list), 
-/******************
-            gold: this.__encode(this.gold_array()), 
-            arms: this.__encode(this.arms_array()), 
-            shld: this.__encode(this.shld_array()), 
-            drug: this.__encode(this.drug_array()), 
-            item: this.__encode(this.item_array()), 
-*******************/
+        
+        const goods = [] as JSON_GoodsListElement[];
+        for (const idx in this.list) {
+            goods.push({
+                elm: this.list[idx].elm.encode(),
+                qty: this.list[idx].qty,
+            })
         }
-    }
-    protected __encode(goods: I_ObjList): JSON_Goods[] {
-        const goods_JSON: JSON_Goods[] = [];
-        for (const item in goods) goods_JSON.push(goods[item].encode()); 
-        return goods_JSON;
+
+        return {
+            goods: goods,
+        }
     }
 
     public decode(j: JSON_GoodsList): C_GoodsList {
-        if (j === undefined) return this;
-
-        for (const gkind in j) { 
-            for (const goods_JSON of j[gkind]) {
-                this.add(C_GoodsObj.newObj(goods_JSON));
-            }
+        for (const {elm, qty} of j?.goods??[]) {
+                                                               // ＊＊＊＊＊＊＊＊＊　要検討！！！　＊＊＊＊＊＊＊＊＊
+            const good = C_Good.newObj(elm);
+            this.list[good.key()].elm = good;
+            this.list[good.key()].qty = qty;
         }
         return this;
     }
