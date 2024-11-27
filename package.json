@@ -8,6 +8,8 @@
     "build": "webpack --mode=development",
     "maze":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_maze.js",
     "guld":  "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Apache24/htdocs/mai/js --env outfile=mai_guld.js",
+    "main":  "tsc D:/Top/Dev/ts/mai/src/express/mai.ts --outDir D:/Top/Dev/Docker/Mai/bck/app/routes",
+    "tmain": "tsc D:/Top/Dev/ts/mai/src/express/mai.ts --outDir D:/Top/Dev/Docker/Mai/bck/app/routes --outFile mai.js",
     "start": "webpack serve --mode=development"
   },
   "keywords": [],
