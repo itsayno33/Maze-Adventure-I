@@ -5,29 +5,30 @@
   "main": "D:/Top/Dev/Docker/Mai/bck/app/app.js",
   "scripts": {
     "tsc": "tsc",
-    "maze": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_maze/mai_maze.ts --env outdir=D:/Top/Dev/ts/mai/src/html/js --env outfile=mai_maze.js",
-    "guld": "webpack --mode=development --env entry=D:/Top/Dev/ts/mai/src/mai_guld/mai_guld.ts --env outdir=D:/Top/Dev/ts/mai/src/html/js --env outfile=mai_guld.js"
+    "maze": "webpack --mode=development --env entry=E:/Dev/vscode/mai/mai/src/mai_maze/mai_maze.ts --env outdir=E:/Dev/vscode/mai/mai/src/html/js --env outfile=mai_maze.js",
+    "guld": "webpack --mode=development --env entry=E:/Dev/vscode/mai/mai/src/mai_guld/mai_guld.ts --env outdir=E:/Dev/vscode/mai/mai/src/html/js --env outfile=mai_guld.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.1",
     "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "http-errors": "^2.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.11.5",
     "nodemon": "^3.1.7",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.3",
+    "typescript": "^5.7.2",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
     "webpack-node-externals": "^3.0.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.9.0",
-    "http-errors": "^2.0.0",
-    "morgan": "^1.10.0",
-    "mysql2": "^3.11.4"
   }
 }
