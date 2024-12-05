@@ -62,3 +62,9 @@ typings/
 *.log
 env*.conf
 .env
+package.json.org
+package.server.json.org
+tsconfig.server.json.org
+webpack.server.config.js.org
+www.bat.org
+maiex.bat.org
