@@ -44,7 +44,7 @@ type T_xy   = {x: number, y: number}
 type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
 
 export class C_MazeObjView implements I_MazeObjView {
-    public static con3D?: CanvasRenderingContext2D;
+    protected static con3D?: CanvasRenderingContext2D;
     public static get_context3D(): CanvasRenderingContext2D|undefined {return this?.con3D}
     public static set_context3D(con3D?: CanvasRenderingContext2D): void {this.con3D = con3D}
 
@@ -150,20 +150,20 @@ export class C_MazeObjView implements I_MazeObjView {
 
 
     public drow3D(frot: T_Wall, back: T_Wall): void {
-        this.drow_obj_back      (frot, back);
-        this.drow_obj_down      (frot, back);
-        this.drow_obj_top       (frot, back);
-        this.drow_obj_right_side(frot, back);
-        this.drow_obj_left_side (frot, back);
-        this.drow_obj_front     (frot, back);
+        this.drow3D_obj_back      (frot, back);
+        this.drow3D_obj_down      (frot, back);
+        this.drow3D_obj_top       (frot, back);
+        this.drow3D_obj_right_side(frot, back);
+        this.drow3D_obj_left_side (frot, back);
+        this.drow3D_obj_front     (frot, back);
     }
-    private drow_obj_down(
+    private drow3D_obj_down(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
         if (!this.canShow() || this.col_t() === null) return;
         if (this.pad_s() <= 0.0 && this.pad_t() >= 1.0) {
-            drow_cell_floor(frot, back, this.col_t() ?? '#6666ff', this.col_l() ?? '#9999ff');
+            drow3D_cell_floor(frot, back, this.col_t() ?? '#6666ff', this.col_l() ?? '#9999ff');
             return;
         }
     
@@ -174,16 +174,16 @@ export class C_MazeObjView implements I_MazeObjView {
             dr: o.bdr,
             dl: o.bdl,
         }
-        drow_cell(rect, this.col_t(), this.col_l());
+        drow3D_cell(rect, this.col_t(), this.col_l());
     }
 
-    private drow_obj_top(
+    private drow3D_obj_top(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
         if (!this.canShow() || this.col_d() === null) return;
         if (this.pad_s() <= 0.0 && this.pad_d() >= 1.0) {
-            drow_cell_ceiling(frot, back, this.col_d() ?? '#aaaaaa', this.col_l() ?? '#9999ff');
+            drow3D_cell_ceiling(frot, back, this.col_d() ?? '#aaaaaa', this.col_l() ?? '#9999ff');
             return;
         }
     
@@ -194,9 +194,9 @@ export class C_MazeObjView implements I_MazeObjView {
             dr: o.btr,
             dl: o.btl,
         }
-        drow_cell(rect, this.col_d(), this.col_l());
+        drow3D_cell(rect, this.col_d(), this.col_l());
     }
-    private drow_obj_front(
+    private drow3D_obj_front(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -210,9 +210,9 @@ export class C_MazeObjView implements I_MazeObjView {
             dl: o.fdl, 
         }
     
-        drow_cell(rect, this.col_f(), this.col_l());
+        drow3D_cell(rect, this.col_f(), this.col_l());
     }
-    private drow_obj_back(
+    private drow3D_obj_back(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -226,9 +226,9 @@ export class C_MazeObjView implements I_MazeObjView {
             dl: o.bdl, 
         }
     
-        drow_cell(rect, this.col_b(), this.col_l());
+        drow3D_cell(rect, this.col_b(), this.col_l());
     }
-    private drow_obj_left_side(
+    private drow3D_obj_left_side(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -242,9 +242,9 @@ export class C_MazeObjView implements I_MazeObjView {
             dl: o.bdl,
         }
     
-        drow_cell(rect, this.col_s(), this.col_l());
+        drow3D_cell(rect, this.col_s(), this.col_l());
     }
-    private drow_obj_right_side(
+    private drow3D_obj_right_side(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -258,7 +258,7 @@ export class C_MazeObjView implements I_MazeObjView {
             dl: o.fdr,
         }
     
-        drow_cell(rect, this.col_s(), this.col_l());
+        drow3D_cell(rect, this.col_s(), this.col_l());
     }
     
 
@@ -359,7 +359,7 @@ function __calc_padding_xy(frot: T_xy, back: T_xy, ratio: number): T_xy {
 }
 
 
-function drow_cell_floor(
+function drow3D_cell_floor(
         rect_frot: T_Wall, 
         rect_back: T_Wall, 
         fill: string = '#6666ff', 
@@ -372,9 +372,9 @@ function drow_cell_floor(
         dr: {x: rect_back.max_x, y: rect_back.max_y},
         dl: {x: rect_back.min_x, y: rect_back.max_y}
     }
-    drow_cell(rect, fill, line);
+    drow3D_cell(rect, fill, line);
 }
-function drow_cell_ceiling(
+function drow3D_cell_ceiling(
         rect_frot: T_Wall, 
         rect_back: T_Wall, 
         fill: string = '#aaaaaa', 
@@ -387,12 +387,12 @@ function drow_cell_ceiling(
         dr: {x: rect_back.max_x, y: rect_back.min_y},
         dl: {x: rect_back.min_x, y: rect_back.min_y}
     }
-    drow_cell(rect, fill, line);
+    drow3D_cell(rect, fill, line);
 }
 
-function drow_cell(r: T_Rect, fill: string|null, line: string|null): void {
-    if (C_MazeObjView.con3D === undefined) return;
-    const con = C_MazeObjView.con3D;
+function drow3D_cell(r: T_Rect, fill: string|null, line: string|null): void {
+    const con = C_MazeObjView.get_context3D();
+    if (con === undefined) return;
 
     con.beginPath();
     con.moveTo(r.tl.x, r.tl.y);
