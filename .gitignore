@@ -67,4 +67,4 @@ package.server.json.org
 tsconfig.server.json.org
 webpack.server.config.js.org
 www.bat.org
-maiex.bat.org
+src/html/js/mai_maze.js
