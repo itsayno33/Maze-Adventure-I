@@ -226,7 +226,8 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
         if (this.masks[clr_pos.z][clr_pos.y][clr_pos.x]) {
             this.masks[clr_pos.z][clr_pos.y][clr_pos.x] = false;
-            this.unclear[clr_pos.z]--;        }    
+            this.unclear[clr_pos.z]--;
+        }    
     }
 
     public is_cleared(clr_pos: C_Point): boolean {
