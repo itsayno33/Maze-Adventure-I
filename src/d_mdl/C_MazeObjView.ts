@@ -11,7 +11,8 @@ export interface I_MazeObjView extends I_Abstract {
 
     // 表示関係(3D)
     canShow: ()=>boolean;
-    drow3D:  (frot: T_Wall, back: T_Wall)=>void;
+    drow2D:  (floor: T_Rect)=>void;
+    drow3D:  (frot:  T_Wall, back: T_Wall)=>void;
 
     pad_t:   ()=>number; //上側の空き(割合: 0から1) 
     pad_d:   ()=>number; //床側の空き(割合: 0から1) 
@@ -22,13 +23,15 @@ export interface I_MazeObjView extends I_Abstract {
     col_t:   ()=>string|null; //上部の色(CSSカラー)。nullは透明。ややこしいが、物体の底面に当たる
     col_d:   ()=>string|null; //下部の色(CSSカラー)。nullは透明。ややこしいが、物体の天井に当たる
     col_l:   ()=>string|null; //ラインの色(CSSカラー)
+
+    col_2:   ()=>string|null; //2Dマップの色(CSSカラー)
 }
 
 export interface JSON_MazeObjView extends JSON_Any {
     clname?: string,
     layer?:  number,
     letter?: string,
-    show3D?: string,
+    show?:   string,
     pad_t?:  number, // オブジェクト上部の隙間の割合(0.0 から 1.0) 
     pad_d?:  number, // オブジェクト下部の隙間の割合(0.0 から 1.0) 
     pad_s?:  number, // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
@@ -38,15 +41,20 @@ export interface JSON_MazeObjView extends JSON_Any {
     col_t?:  string|null, // オブジェクト上面のCSSカラー 
     col_d?:  string|null, // オブジェクト底面のCSSカラー 
     col_l?:  string|null, // オブジェクトの線のCSSカラー 
+    col_2?:  string|null, // 2Dマップの面のCSSカラー
 }
 
-type T_xy   = {x: number, y: number}
-type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
+export type T_xy   = {x: number, y: number}
+export type T_Rect = {tl: T_xy, tr: T_xy, dl: T_xy, dr: T_xy};
 
 export class C_MazeObjView implements I_MazeObjView {
-    protected static con3D?: CanvasRenderingContext2D;
+    protected static con3D: CanvasRenderingContext2D|undefined;
     public static get_context3D(): CanvasRenderingContext2D|undefined {return this?.con3D}
     public static set_context3D(con3D?: CanvasRenderingContext2D): void {this.con3D = con3D}
+
+    protected static con2D: CanvasRenderingContext2D|undefined;
+    public static get_context2D(): CanvasRenderingContext2D|undefined {return this?.con2D}
+    public static set_context2D(con2D?: CanvasRenderingContext2D): void {this.con2D = con2D}
 
     public static newObj(j?: JSON_MazeObjView|undefined): I_MazeObjView {
         j ??= {};
@@ -66,7 +74,7 @@ export class C_MazeObjView implements I_MazeObjView {
     private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
-    private my_show3D: boolean;
+    private my_show: boolean;
     private my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
     private my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
     private my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
@@ -78,6 +86,8 @@ export class C_MazeObjView implements I_MazeObjView {
     private my_col_d:  string|null; // オブジェクト底面のCSSカラー 
     private my_col_l:  string|null; // オブジェクトの線のCSSカラー 
 
+    private my_col_2:  string|null; // 2Dマップの面のCSSカラー 
+
     protected constructor(j?: JSON_MazeObjView|undefined) {
         this.clname     =  this.constructor.name;
 
@@ -88,7 +98,7 @@ export class C_MazeObjView implements I_MazeObjView {
         this.my_pad_d   =  0.0;
         this.my_pad_s   =  0.0;
 
-        this.my_show3D  =  true;
+        this.my_show    =  true;
 
         this.my_col_f   = '#f8f8f8'; 
         this.my_col_b   = '#aaaaaa'; 
@@ -96,6 +106,8 @@ export class C_MazeObjView implements I_MazeObjView {
         this.my_col_t   = '#ffffff'; 
         this.my_col_d   = '#cccccc'; 
         this.my_col_l   = '#333333'; 
+
+        this.my_col_2   = '#cccccc'; 
 
         if (j !== undefined) this.__init(j);
     }
@@ -108,13 +120,14 @@ export class C_MazeObjView implements I_MazeObjView {
         if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
         if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
         if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
-        if (j.show3D  !== undefined) this.my_show3D = j.show3D !== '0' ? true     : false; 
+        if (j.show    !== undefined) this.my_show   = j.show   !== '0' ? true     : false; 
         if (j.col_f   !== undefined) this.my_col_f  = j.col_f  !== ''  ? j.col_f  : null; 
         if (j.col_b   !== undefined) this.my_col_b  = j.col_b  !== ''  ? j.col_b  : null; 
         if (j.col_s   !== undefined) this.my_col_s  = j.col_s  !== ''  ? j.col_s  : null; 
         if (j.col_t   !== undefined) this.my_col_t  = j.col_t  !== ''  ? j.col_t  : null; 
         if (j.col_d   !== undefined) this.my_col_d  = j.col_d  !== ''  ? j.col_d  : null; 
         if (j.col_l   !== undefined) this.my_col_l  = j.col_l  !== ''  ? j.col_l  : null; 
+        if (j.col_2   !== undefined) this.my_col_2  = j.col_2  !== ''  ? j.col_2  : null; 
 
         return this;
     }
@@ -125,8 +138,8 @@ export class C_MazeObjView implements I_MazeObjView {
     public letter():  string|null {return this.my_letter}
     public set_letter(letter: string|null): string|null {return this.my_letter = letter}
 
-    public canShow(): boolean {return this.my_show3D};
-    public setShow(can_show: boolean): boolean {return this.my_show3D = can_show};
+    public canShow(): boolean {return this.my_show};
+    public setShow(can_show: boolean): boolean {return this.my_show = can_show};
 
     public pad_t():  number {return this.my_pad_t}
     public pad_d():  number {return this.my_pad_d}
@@ -148,6 +161,12 @@ export class C_MazeObjView implements I_MazeObjView {
     public set_col_d(col_d: string|null): string|null {return this.my_col_d = col_d} 
     public set_col_l(col_l: string|null): string|null {return this.my_col_l = col_l} 
 
+    public col_2(): string|null {return this.my_col_2}
+    public set_col_2(col_2: string|null): string|null {return this.my_col_2 = col_2} 
+
+    public drow2D(rect: T_Rect): void {
+        drow2D_cell(rect, this.col_2() ?? '#cccccc', this.col_l() ?? '#9999ff');
+    }
 
     public drow3D(frot: T_Wall, back: T_Wall): void {
         this.drow3D_obj_back      (frot, back);
@@ -270,13 +289,14 @@ export class C_MazeObjView implements I_MazeObjView {
             pad_t:   this.my_pad_t, 
             pad_d:   this.my_pad_d, 
             pad_s:   this.my_pad_s, 
-            show3D:  this.canShow() ? '1' : '0',
+            show:    this.canShow() ? '1' : '0',
             col_f:   this.my_col_f ?? '',  
             col_b:   this.my_col_b ?? '',  
             col_s:   this.my_col_s ?? '', 
             col_t:   this.my_col_t ?? '', 
             col_d:   this.my_col_d ?? '', 
             col_l:   this.my_col_l ?? '', 
+            col_2:   this.my_col_2 ?? '', 
         }
     }
     public decode(j: JSON_MazeObjView|undefined): I_MazeObjView {
@@ -388,6 +408,28 @@ function drow3D_cell_ceiling(
         dl: {x: rect_back.min_x, y: rect_back.min_y}
     }
     drow3D_cell(rect, fill, line);
+}
+
+function drow2D_cell(r: T_Rect, fill: string|null, line: string|null): void {
+    const con = C_MazeObjView.get_context2D();
+    if (con === undefined) return;
+
+    con.beginPath();
+    con.moveTo(r.tl.x, r.tl.y);
+    con.lineTo(r.tr.x, r.tr.y);
+    con.lineTo(r.dr.x, r.dr.y);
+    con.lineTo(r.dl.x, r.dl.y);
+    con.closePath();
+
+    if (fill != null) {
+        con.fillStyle   = fill;
+        con.fill();
+    }
+    if (line !== null) {
+        con.strokeStyle = line;
+        con.lineWidth   = 1;
+        con.stroke();
+    }
 }
 
 function drow3D_cell(r: T_Rect, fill: string|null, line: string|null): void {

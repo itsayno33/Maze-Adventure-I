@@ -78,7 +78,7 @@ class C_MazeCellNoDef extends C_MazeCell {
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-            col_l: '', 
+            col_l: '', col_2: '', 
         }
         super(j);
     }
@@ -96,7 +96,7 @@ class C_MazeCellUnkwn extends C_MazeCell {
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-            col_l: '', 
+            col_l: '', col_2: '', 
             }
         super(j);
     }
@@ -114,7 +114,7 @@ class C_MazeCellEmpty extends C_MazeCell {
             show3D:  '0',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-            col_l: '', 
+            col_l: '', col_2: '', 
             }
         super(j);
     }
@@ -132,7 +132,7 @@ class C_MazeCellFloor extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '#6666ff', col_d: '', 
-            col_l: '#9999ff', 
+            col_l: '#9999ff', col_2: '#6666ff', 
         }
         super(j);
     }
@@ -150,7 +150,7 @@ class C_MazeCellUnexp extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '#66ffff', col_d: '', 
-            col_l: '#9999ff', 
+            col_l: '#9999ff', col_2: '#66ffff', 
         }
         super(j);
     }
@@ -168,7 +168,7 @@ class C_MazeCellStone extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '#00ff00', col_b: '', col_s: '#00ee00', col_t: '', col_d: '', 
-            col_l: '#0000ff', 
+            col_l: '#0000ff', col_2: '#00ee00', 
         }
         super(j);
     }
@@ -186,7 +186,7 @@ class C_MazeCellStrUp extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '', col_d: '#ffffcc', 
-            col_l: '#0000ff', 
+            col_l: '#0000ff', col_2: '#ffffcc', 
         }
         super(j);
     }
@@ -204,7 +204,7 @@ class C_MazeCellStrDn extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '', 
-            col_l: '#0000ff', 
+            col_l: '#0000ff', col_2: '#ffffcc', 
         }
         super(j);
     }
@@ -222,7 +222,7 @@ class C_MazeCellStrUD extends C_MazeCell {
             show3D:  '1',
             pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
             col_f: '', col_b: '', col_s: '', col_t: '#ffffcc', col_d: '#ffffcc', 
-            col_l: '#0000ff', 
+            col_l: '#0000ff', col_2: '#ffffcc', 
         }
         super(j);
     }
