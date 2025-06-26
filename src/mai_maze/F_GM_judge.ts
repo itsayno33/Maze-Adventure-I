@@ -32,7 +32,7 @@ function _jdge_touch() {}
 function _jdge_collide() {}
 
 // 当たり判定（上に乗る）
-function _jdge_on() {}
+function _jdge_stepon() {}
 
 // 拾うものがあるか
 function _jdge_pickup(): boolean {
