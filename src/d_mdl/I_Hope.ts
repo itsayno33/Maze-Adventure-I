@@ -33,13 +33,10 @@ export interface I_HopeAction extends I_HasHope {
 
 export interface I_HopeResponce {
     ok:   boolean,         // 行動可否
-    hope: I_HopeAction,    // 行動の種類
     res:  T_HopeResKind,   // 行動結果
+    hope: I_HopeAction,    // 希望行動の種類
 }
 
-export interface I_HopeResponceMove extends I_HopeResponce {
-    damage: number,        // ダメージ値(移動不可時の値)
-}
-
+export interface I_HopeResponceMove extends I_HopeResponce {}
 export interface I_HopeResponceTurn extends I_HopeResponce {}
 
