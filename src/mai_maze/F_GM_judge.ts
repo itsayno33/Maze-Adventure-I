@@ -1,5 +1,5 @@
 import { T_MzKind }                   from "../d_mdl/T_MzKind";
-import { I_HopeAction }               from "../d_mdl/I_Common";
+import { I_HopeAction }               from "../d_mdl/I_Hope";
 import { C_Point }                    from "../d_mdl/C_Point";
 import { g_debug }                    from "../d_cmn/global";
 
@@ -34,4 +34,17 @@ function _jdge_collide() {}
 // 当たり判定（上に乗る）
 function _jdge_on() {}
 
+// 拾うものがあるか
+function _jdge_pickup(): boolean {
+    return false; // ここでは拾うものはない
+}
 
+// 罠があるか
+function _jdge_trap(): boolean {
+    return false; // ここでは罠はない
+}
+
+// 敵がいるか
+function _jdge_enemy(): boolean {
+    return false; // ここでは敵はいない
+}

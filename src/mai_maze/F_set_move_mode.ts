@@ -1,5 +1,5 @@
 import { T_MzKind }                   from "../d_mdl/T_MzKind";
-import { I_HopeAction }               from "../d_mdl/I_Common";
+import { I_HopeAction }               from "../d_mdl/I_Hope";
 import { C_Point }                    from "../d_mdl/C_Point";
 import { g_debug }                    from "../d_cmn/global";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";

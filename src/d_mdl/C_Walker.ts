@@ -3,7 +3,7 @@
 import { C_PointDir, T_Direction }           from "./C_PointDir";
 import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
 import { I_Locate }     from "./C_Location";
-import { I_HopeAction } from "./I_Common";
+import { I_HopeAction } from "./I_Hope";
 
 
 export interface JSON_Walker extends JSON_MovablePoint {
