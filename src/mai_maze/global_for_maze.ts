@@ -104,7 +104,7 @@ function init_before_mvpt_games(): void {
 
 export function do_load_bottom_half(msg: string): void{
     init_mazeCh();
-    init_maze2D();                       // ****************  作成中  *****************
+    init_maze2D();
     g_ds = init_maze3D(); 
 
     g_mvm.notice_message(msg); 

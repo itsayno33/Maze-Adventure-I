@@ -171,8 +171,9 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
             if (exist.view() === undefined) continue;
             if (exist.within(p) && exist.view()?.letter() !== null) {
-                if (exist.view()?.layer()??-99 > layer) {
-                    layer = exist.view()?.layer()??-99;
+                const exist_layer = exist.view()?.layer()??-99;
+                if (exist_layer > layer) {
+                    layer = exist_layer;
                     obj   = exist;
                 }
             }
