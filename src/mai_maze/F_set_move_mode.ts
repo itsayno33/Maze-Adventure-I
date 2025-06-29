@@ -21,6 +21,7 @@ import {
     g_ctls,
     g_ds, 
 } from "./global_for_maze";
+import { can_move_team, can_turn_team } from "./F_GM_judge";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -118,10 +119,30 @@ function move_check(r: I_HopeAction): void {
 
     if (!r.has_hope) return;
     if (r.hope == 'Turn') {
-        r.doOK();
+        const _rslt = can_turn_team(r);
+        if (_rslt.ok) r.doOK();
         return;
     }
     if (r.hope == 'Move') {
+        const _rslt = can_move_team(r);
+        if (_rslt.ok) {
+            // 進行方向へ進む
+            r.doOK();
+
+            // 移動先が階段なら階段の処理
+            const kind = g_maze.get_cell(r.subj)?.getKind();
+            switch (kind) {
+                case T_MzKind.StrUp:
+                case T_MzKind.StrDn:
+                case T_MzKind.StrUD:
+                    do_stairs_motion(kind);
+            }
+        } else {               //   alert ( 'r.res = ' + _rslt.res ); 
+            // 進行方向へ進めない
+            dont_move(r);
+        }
+    }
+/******************
         const cell = g_maze.get_cell(r.subj);
 
         // 進行方向が壁等なら移動不可
@@ -156,6 +177,7 @@ function move_check(r: I_HopeAction): void {
         }
         return;
     }
+****************/
 } 
 function dont_move(r: I_HopeAction): void {
     g_mvm.normal_message('進めない！（笑）');
