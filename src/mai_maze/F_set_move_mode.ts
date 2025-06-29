@@ -21,7 +21,7 @@ import {
     g_ctls,
     g_ds, 
 } from "./global_for_maze";
-import { can_move_team, can_turn_team } from "./F_GM_judge";
+import { can_move_team, can_turn_team } from "./F_GM_move_and_turn";
 
 const ctls_move_nor = {
     name: 'move_nor', 
