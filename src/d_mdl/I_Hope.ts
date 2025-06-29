@@ -20,6 +20,7 @@ export type T_HopeResKind =
   |  'Block'     // 行動を阻止された
   ;
 
+
 export interface I_HasHope {
     has_hope: boolean,      // 希望行動の有無
     hope:     T_HopeReqKind,   // 行動の種類
@@ -30,6 +31,7 @@ export interface I_HopeAction extends I_HasHope {
     doOK:    ()=>void,      // 許可時の行動(関数)
     doNG:    ()=>void,      // 不許可時の行動(関数)
 }
+
 
 export interface I_HopeResponce {
     ok:   boolean,         // 行動可否
