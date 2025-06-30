@@ -116,6 +116,10 @@ export class C_Hero implements I_JSON_Uniq {
             val:       this.val,
             abi_p_bsc: this.abi_p.bsc.encode(),
             abi_m_bsc: this.abi_m.bsc.encode(),
+            abi_p_ttl: this.abi_p.ttl.encode(),
+            abi_m_ttl: this.abi_m.ttl.encode(),
+            abi_p_now: this.abi_p.now.encode(),
+            abi_m_now: this.abi_m.now.encode(),
             is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
@@ -142,6 +146,7 @@ export class C_Hero implements I_JSON_Uniq {
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }
+/****************************************************************
         if (a.abi_p_bsc !== undefined) {
             this.abi_p.bsc.decode(a.abi_p_bsc);
             // 暫定
@@ -152,6 +157,14 @@ export class C_Hero implements I_JSON_Uniq {
             // 暫定
             this.abi_m.ttl = this.abi_m.now = this.abi_m.bsc;
         }
+****************************************************************/
+        if (a.abi_p_bsc !== undefined) this.abi_p.bsc.decode(a.abi_p_bsc);
+        if (a.abi_m_bsc !== undefined) this.abi_m.bsc.decode(a.abi_m_bsc);
+        if (a.abi_p_ttl !== undefined) this.abi_p.ttl.decode(a.abi_p_ttl);
+        if (a.abi_m_ttl !== undefined) this.abi_m.ttl.decode(a.abi_m_ttl);
+        if (a.abi_p_now !== undefined) this.abi_p.now.decode(a.abi_p_now);
+        if (a.abi_m_now !== undefined) this.abi_m.now.decode(a.abi_m_now);
+
         return this;
     }
 
@@ -168,13 +181,6 @@ export class C_Hero implements I_JSON_Uniq {
         d.ttl = s.ttl ?? d.ttl;
         d.now = s.now ?? s.ttl ?? d.now;
         return d;
-    }
-
-    public static create_hero(): C_Hero {
-        const new_hero = new C_Hero();
-        new_hero.set_prp({id:    Math.floor(-1000.0 * Math.random())});
-        new_hero.set_prp({name:  new_hero.id()});
-        return new_hero;
     }
 
     public random_make(): C_Hero {
@@ -194,21 +200,11 @@ export class C_Hero implements I_JSON_Uniq {
 
         const abi_p_bsc = this.abi_p.bsc;
         abi_p_bsc.random_make();
-//        abi_p_bsc.add_xp_bonus((this.age - 15) * 10);
-//        abi_p_bsc.add_el_bonus((this.age - 15) *  5);
-//        abi_p_bsc.add_pr_bonus((this.age - 15) *  2);
-        abi_p_bsc.calc_xp();
-        abi_p_bsc.calc_el();
-        this.abi_p.bsc = abi_p_bsc;
+        this.abi_p.bsc = this.abi_p.ttl = this.abi_p.now = abi_p_bsc;
 
         const abi_m_bsc = this.abi_m.bsc;
         abi_m_bsc.random_make();
-//        abi_m_bsc.add_xp_bonus((this.age - 15) * 10);
-//        abi_m_bsc.add_el_bonus((this.age - 15) *  5);
-//        abi_m_bsc.add_pr_bonus((this.age - 15) *  2);
-        abi_m_bsc.calc_xp();
-        abi_m_bsc.calc_el();
-        this.abi_m.bsc = abi_m_bsc;
+        this.abi_m.bsc = this.abi_m.ttl = this.abi_m.now = abi_m_bsc;
 
         return this;
     }
