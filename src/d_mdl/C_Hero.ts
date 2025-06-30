@@ -194,16 +194,20 @@ export class C_Hero implements I_JSON_Uniq {
 
         const abi_p_bsc = this.abi_p.bsc;
         abi_p_bsc.random_make();
-        abi_p_bsc.add_xp_bonus((this.age - 15) * 10);
-        abi_p_bsc.add_el_bonus((this.age - 15) *  5);
-        abi_p_bsc.add_pr_bonus((this.age - 15) *  2);
+//        abi_p_bsc.add_xp_bonus((this.age - 15) * 10);
+//        abi_p_bsc.add_el_bonus((this.age - 15) *  5);
+//        abi_p_bsc.add_pr_bonus((this.age - 15) *  2);
+        abi_p_bsc.calc_xp();
+        abi_p_bsc.calc_el();
         this.abi_p.bsc = abi_p_bsc;
 
         const abi_m_bsc = this.abi_m.bsc;
         abi_m_bsc.random_make();
-        abi_m_bsc.add_xp_bonus((this.age - 15) * 10);
-        abi_m_bsc.add_el_bonus((this.age - 15) *  5);
-        abi_m_bsc.add_pr_bonus((this.age - 15) *  2);
+//        abi_m_bsc.add_xp_bonus((this.age - 15) * 10);
+//        abi_m_bsc.add_el_bonus((this.age - 15) *  5);
+//        abi_m_bsc.add_pr_bonus((this.age - 15) *  2);
+        abi_m_bsc.calc_xp();
+        abi_m_bsc.calc_el();
         this.abi_m.bsc = abi_m_bsc;
 
         return this;

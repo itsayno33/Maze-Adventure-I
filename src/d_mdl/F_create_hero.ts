@@ -22,6 +22,7 @@ const make_abi_ave: {[key: string]: number} = {
     luk:  10,
 }
 
+/*********************************************************
 export function make_hero(): C_Hero {
     const val1 = _irand(0, 100);  // 一様分布乱数(整数)
     const val2 = _inrand(0, 100); // 正規分布乱数(整数)
@@ -54,6 +55,7 @@ export function make_hero(): C_Hero {
 
     return new C_Hero(hh);    
 }
+***************************************************/
 
 // ヒーローレベルアップ時のアビリティ(BSC)の増加を行う
 function level_up_hero(hero: C_Hero): C_Hero {return hero;}
@@ -64,6 +66,7 @@ function level_up_hero(hero: C_Hero): C_Hero {return hero;}
 // TTLの能力部分(xp,atk,def,quc,cnc)は
 // TTLのアビリティ(str,pwr,vit,dex,agi,tec,luk)を
 // 基に計算したボーナスを加算する
+/*****************************************************
 function calc_abi_ttl_hero(hero: C_Hero): C_Hero {
     const abi_p = hero.encode().abi_p?.bsc;
     if (abi_p === undefined) return hero;
@@ -102,3 +105,4 @@ function calc_abi_ttl_hero(hero: C_Hero): C_Hero {
 
     return hero;
 }
+******************************************************/

@@ -22,7 +22,7 @@ export class C_HeroAbility implements I_JSON {
         // 以下、いわゆるステータス。上記の計算に影響。ヒーローレベルやステータスアップで加算
         str: 0,  // 根性。攻撃/防御力にも影響。HP/MP回復やアイテムの最大所持重量にボーナス
         pwr: 0,  // 基本的強さ。攻撃力に影響
-        vit: 0,  // 耐久力。HP/MPの最大値や防御力に影響を与える
+        vit: 0,  // 耐久力。HP/MPの最大値や防御力、回復値に影響を与える
         dex: 0,  // 器用さ。命中率に影響を与える。飛び道具や長距離魔法では特に影響。罠解除にも影響
         agi: 0,  // 素早さ。行動速度や回避率に影響を与える。命中率にも影響
         tec: 0,  // 技術力。経験で向上して能力値(quc/cnc)にボーナスを与える
@@ -74,6 +74,7 @@ export class C_HeroAbility implements I_JSON {
         }
     } 
 
+/*****************************************************
     public add_xp_bonus(bonus: number): void {
         this.v.xp  +=  bonus;
     }
@@ -83,6 +84,8 @@ export class C_HeroAbility implements I_JSON {
         this.v.quc +=  bonus;
         this.v.cnc +=  bonus;
     }
+*****************************************************/
+
     public add_pr_bonus(bonus: number): void {
         this.v.str +=  bonus;
         this.v.pwr +=  bonus;
@@ -93,21 +96,39 @@ export class C_HeroAbility implements I_JSON {
         this.v.luk +=  bonus;
     }
 
+    public calc_xp(): void {
+        this.v.xp  =  Math.ceil(20.0 * this.v.str + 20.0 * this.v.vit + 5.0 * this.v.tec + 5.0 * this.v.luk);
+//        this.v.xp  =  _inrand(0, 1000, 3.0);
+    }
+
+    public calc_el(): void {
+        this.v.atk =  Math.ceil(2.0 * this.v.str + 2.0 * this.v.pwr + 1.0 * this.v.tec);
+        this.v.def =  Math.ceil(2.0 * this.v.str + 2.0 * this.v.vit + 1.0 * this.v.tec);
+        this.v.quc =  Math.ceil(2.0 * this.v.dex + 2.0 * this.v.agi + 1.0 * this.v.tec);
+        this.v.cnc =  Math.ceil(3.0 * this.v.luk                    + 2.0 * this.v.tec);
+    }
+
     public random_make(): C_HeroAbility {
+/****************
         this.v.xp  =  _inrand(0, 1000, 3.0);
 
         this.v.atk =  _inrand(0,  100, 2.5);
         this.v.def =  _inrand(0,  100, 2.5);
         this.v.quc =  _inrand(0,  100, 2.5);
         this.v.cnc =  _inrand(0,  100, 2.5);
-    
-        this.v.str =  _inrand(0,   20, 2.0);
-        this.v.pwr =  _inrand(0,   20, 2.0);
-        this.v.vit =  _inrand(0,   20, 2.0);
-        this.v.dex =  _inrand(0,   20, 2.0);
-        this.v.agi =  _inrand(0,   20, 2.0);
-        this.v.tec =  _inrand(0,   20, 2.0);
-        this.v.luk =  _inrand(0,   20, 2.0);
+*****************/
+
+        this.v.str =  _inrand(5,   20, 2.0);
+        this.v.pwr =  _inrand(5,   20, 2.0);
+        this.v.vit =  _inrand(5,   20, 2.0);
+        this.v.dex =  _inrand(5,   20, 2.0);
+        this.v.agi =  _inrand(5,   20, 2.0);
+        this.v.tec =  _inrand(5,   20, 2.0);
+        this.v.luk =  _inrand(5,   20, 2.0);
+
+        
+        this.calc_xp();
+        this.calc_el();
 
         return this;
     }
