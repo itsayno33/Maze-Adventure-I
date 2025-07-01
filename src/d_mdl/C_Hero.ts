@@ -106,11 +106,15 @@ export class C_Hero implements I_JSON_Uniq {
         return hp - hd > 0;
     }
 
+    public hero_bonus(n: number): number {
+        return n * ( this.lv + 1 );
+    }
 
     public hp_damage(dmg: number): number {
-        const xp_now = this.abi_p.now.get('xp') ?? 0;
-        let   xd_now = this.abi_p.now.get('xd') ?? 0;
-        xd_now += dmg;
+        const xp_now  = this.abi_p.now.get('xp') ?? 0;
+        let   xd_now  = this.abi_p.now.get('xd') ?? 0;
+
+        xd_now += dmg - Math.round( this.hero_bonus((this.abi_p.now.get('vit') ?? 0) / 10.0) );
 
         const d = xd_now > xp_now ? xp_now : xd_now;
         this.abi_p.now.set('xd', d);
@@ -118,11 +122,17 @@ export class C_Hero implements I_JSON_Uniq {
     }
     public hp_heal(heal: number): number {
         let   xd_now = this.abi_p.now.get('xd') ?? 0;
+        if (xd_now <= 0) return 0;
+
         xd_now -= heal;
 
         const d = xd_now < 0 ? 0 : xd_now;
         this.abi_p.now.set('xd', d);
         return d;
+    }
+    public hp_auto_heal(): number {
+        const heal = Math.ceil( this.hero_bonus((this.abi_p.now.get('vit') ?? 0) / 10.0) );
+        return this.hp_heal(heal);
     }
 
     

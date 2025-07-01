@@ -17,14 +17,28 @@ import { _irand } from "../d_utl/F_Rand";
 
 
 // チーム全体のダメージ処理（ＨＰ）
-export function hp_damage_team(basic_damage: number): void {
-    for (const hero of g_hres) hp_damage_hero(hero, basic_damage);
+export function hp_damage_hres(damage: number): void {
+    for (const hero of g_hres) hp_damage_hero(hero, damage);
+}
+// Heroのダメージ処理（ＨＰ）
+export function hp_damage_hero(hero: C_Hero, damage: number): number
+{ 
+    return hero.hp_damage(damage);
+} 
+
+
+// チーム全体の回復処理（ＨＰ）
+export function hp_recover_hres(recover: number): void {
+    for (const hero of g_hres) hp_recover_hero(hero, recover);
+}
+// Heroの回復処理（ＨＰ）
+export function hp_recover_hero(hero: C_Hero, recover: number): number
+{ 
+    return hero.hp_damage(recover);
+} 
+
+// Team全体の自動回復処理（ＨＰ）
+export function hp_auto_recover_hres() {
+    for (const hero of g_hres) hero.hp_auto_heal();
 }
 
-// Heroのダメージ処理（ＨＰ）
-export function hp_damage_hero(hero: C_Hero, basic_damage: number): number
-{ 
-    const  real_damage = _irand(Math.trunc(basic_damage * 0.9), Math.ceil(basic_damage * 1.1));
-    const  d = hero.hp_damage(real_damage);
-    return d; 
-} 
