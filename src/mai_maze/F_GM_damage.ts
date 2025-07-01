@@ -16,13 +16,12 @@ import { C_Hero } from "../d_mdl/C_Hero";
 import { _irand } from "../d_utl/F_Rand";
 
 
-// チーム全体のダメージ処理
+// チーム全体のダメージ処理（ＨＰ）
 export function hp_damage_team(basic_damage: number): void {
     for (const hero of g_hres) hp_damage_hero(hero, basic_damage);
 }
 
-// Heroのダメージ処理
-// ここではダメージはない設定
+// Heroのダメージ処理（ＨＰ）
 export function hp_damage_hero(hero: C_Hero, basic_damage: number): number
 { 
     const  real_damage = _irand(Math.trunc(basic_damage * 0.9), Math.ceil(basic_damage * 1.1));
