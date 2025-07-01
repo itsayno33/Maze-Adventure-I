@@ -2,6 +2,8 @@
 import mysql from 'mysql2/promise';
 import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { C_Maze, JSON_Maze } from "../d_mdl/C_Maze";
+import { C_MazeObjRDB }      from './C_MazeObj';
+import { C_MazeObj }         from '../d_mdl/C_MazeObj';
 
 type db_connect = mysql.PoolConnection;
 
@@ -30,6 +32,15 @@ export class C_MazeRDB {
         if (mes.is_err()) {
             return [];
         }
+
+        for (const maze of maze_array) {
+            const  obje_array =  await C_MazeObjRDB.get_from_rdb_all(db_mai, mes, save_id, maze.uid());
+            if (mes.is_err()) {
+                return [];
+            }
+            for (const obje of obje_array) maze.add_obj(obje);
+        }
+
         return maze_array;
     }
 
@@ -39,11 +50,20 @@ export class C_MazeRDB {
         if (mes.is_err()) {
             return false;
         }
+        for (const obje of maze.get_obj_array()) {
+            await C_MazeObjRDB.set_to_rdb(db_mai, mes, save_id, maze.uid(), obje as C_MazeObj);
+            if (mes.is_err()) {
+                return false;
+            }
+        }
         return true;
     }
 
-    
-    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, maze_uid: string): Promise<boolean> {
+        await C_MazeObjRDB.del_to_rdb(db_mai, mes, save_id, maze_uid);
+        if (mes.is_err()) {
+            return false;
+        }
         C_MazeRDB.del_tbl(db_mai, mes, save_id);
         if (mes.is_err()) {
             return false;

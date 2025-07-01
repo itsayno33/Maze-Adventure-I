@@ -301,7 +301,7 @@ console.error(
     public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number, join_uid: string): Promise<boolean> {
         const delete_hero_SQL = `
             DELETE FROM tbl_hero 
-            WHERE  save_id = :save_id AND  join_uid = :join_uid
+            WHERE  save_id = :save_id AND join_uid = :join_uid
         `
         await db_mai.query(delete_hero_SQL,{save_id: save_id, join_uid: join_uid})
         .catch ((err) => {

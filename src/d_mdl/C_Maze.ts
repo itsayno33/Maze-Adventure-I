@@ -160,6 +160,11 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public rmv_obj(obj: I_MazeObj): void {
         delete this.objs[obj.uid()];
     }
+    public get_obj_array(): I_MazeObj[] {
+        const obj_array: I_MazeObj[] = [];
+        for (const id in this.objs)  obj_array.push(this.objs[id]);
+        return obj_array;
+    }
     public get_obj_xyz(x: number, y: number, z: number): I_MazeObj|null {
         return this.get_obj(new C_Point(x, y, z));
     }

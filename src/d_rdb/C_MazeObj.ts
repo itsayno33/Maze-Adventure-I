@@ -27,8 +27,13 @@ export class C_MazeObjRDB {
     public constructor() {}
 
 
-    public static async get_from_rdb_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<C_MazeObj[]> {
-        const obje_array = await C_MazeObjRDB.get_from_tbl_all(db_mai, mes, save_id);
+    public static async get_from_rdb_all(
+        db_mai:   db_connect,
+        mes:      C_DspMessage, 
+        save_id:  number,
+        join_uid: string
+    ): Promise<C_MazeObj[]> {
+        const obje_array = await C_MazeObjRDB.get_from_tbl_all(db_mai, mes, save_id, join_uid);
         if (mes.is_err()) {
             return [];
         }
@@ -36,8 +41,23 @@ export class C_MazeObjRDB {
     }
 
 
-    public static async set_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, obje: C_MazeObj): Promise<boolean> {
-        const mase_id = await C_MazeObjRDB.add_tbl(db_mai, mes, save_id, obje);
+    public static async set_to_rdb(
+        db_mai: db_connect, 
+        mes: C_DspMessage, 
+        save_id: number, 
+        maze_uid: string, 
+        obje: C_MazeObj
+    ): Promise<boolean> {
+        const mase_id = await C_MazeObjRDB.add_tbl(db_mai, mes, save_id, maze_uid, obje);
+        if (mes.is_err()) {
+            return false;
+        }
+        return true;
+    }
+
+
+    public static async del_to_rdb_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
+        const rslt = await C_MazeObjRDB.del_tbl_all(db_mai, mes, save_id);
         if (mes.is_err()) {
             return false;
         }
@@ -45,23 +65,23 @@ export class C_MazeObjRDB {
     }
 
     
-    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
-        C_MazeObjRDB.del_tbl(db_mai, mes, save_id);
+    public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, maze_uid: string): Promise<boolean> {
+        C_MazeObjRDB.del_tbl(db_mai, mes, save_id, maze_uid);
         if (mes.is_err()) {
             return false;
         }
         return true;
     }
-
-
+    
 
     // DB処理。save_idで指定されたmazeレコードセットを読み込み
     // MazeObjクラスの配列にセットする
     // 
     protected static async get_from_tbl_all(
-            db_mai:  db_connect, 
-            mes:     C_DspMessage, 
-            save_id: number
+            db_mai:   db_connect, 
+            mes:      C_DspMessage, 
+            save_id:  number,
+            maze_uid: string
     ): Promise<C_MazeObj[]> {
         const get_obje_SQL = `
             SELECT 	id,       save_id,  uniq_id, 
@@ -69,9 +89,9 @@ export class C_MazeObjRDB {
                     pos_x,    pos_y,    pos_z,   pos_d, 
                     view,     stat 
             FROM tbl_obje
-            WHERE   save_id = :save_id
+            WHERE   save_id = :save_id AND maze_uid = :maze_uid
         `
-        const [resultRecordSet] = await db_mai.query<I_tbl_obje[]>(get_obje_SQL, {save_id: save_id})
+        const [resultRecordSet] = await db_mai.query<I_tbl_obje[]>(get_obje_SQL, {save_id: save_id, maze_uid: maze_uid})
         .catch(err=>{
             mes.set_err_message(`SQLエラー 33: ${get_obje_SQL}`);
             return [];
@@ -92,10 +112,11 @@ export class C_MazeObjRDB {
     // そのID(maze_id)を返す
     // 
     protected static async add_tbl(
-            db_mai:  db_connect, 
-            mes:     C_DspMessage, 
-            save_id: number,
-            obje:    C_MazeObj
+            db_mai:   db_connect, 
+            mes:      C_DspMessage, 
+            save_id:  number,
+            maze_uid: string,
+            obje:     C_MazeObj
         ): Promise<number> {
 
         const insert_obje_SQL = `
@@ -139,7 +160,7 @@ export class C_MazeObjRDB {
     await db_mai.query(insert_obje_SQL, {
             save_id:     save_id,
             uniq_id:     j.uniq_id,
-            maze_uid:    j.maze_uid,
+            maze_uid:    maze_uid,
             cls_name:    j.cls_name,
             pos_x:       j.pos?.x??0,
             pos_y:       j.pos?.y??0,
@@ -170,14 +191,29 @@ export class C_MazeObjRDB {
     }
 
 
-    // DB処理。save_idで指定されたレコード(複数)を削除(delete)する
+// DB処理。save_idで指定されたレコード(複数)を削除(delete)する
     // 
-    public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
+    public static async del_tbl_all(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         const delete_obje_SQL = `
             DELETE FROM tbl_obje 
-            WHERE  save_id = :save_id
+            WHERE  save_id = :save_id 
         `
-        await db_mai.query(delete_obje_SQL, {save_id: save_id})
+        await db_mai.query(delete_obje_SQL,{save_id: save_id})
+        .catch ((err) => {
+            mes.set_err_message(`SQLエラー 17: ${delete_obje_SQL} ` + err);
+            return false;
+        });
+        return true;
+    }
+
+    // DB処理。save_idで指定されたレコード(単数)を削除(delete)する
+    // 
+    public static async del_tbl(db_mai: db_connect, mes: C_DspMessage, save_id: number, maze_uid: string): Promise<boolean> {
+        const delete_obje_SQL = `
+            DELETE FROM tbl_obje 
+            WHERE  save_id = :save_id AND maze_uid = :maze_uid
+        `
+        await db_mai.query(delete_obje_SQL, {save_id: save_id, maze_uid: maze_uid})
         .catch ((err) => {
             mes.set_err_message(`SQLエラー 12: ${delete_obje_SQL} ` + err);
             return false;
