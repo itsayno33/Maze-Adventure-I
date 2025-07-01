@@ -23,7 +23,7 @@ interface I_tbl_hero extends mysql.RowDataPacket {
     nxe:       string;
     abi_p_bsc: string;
     abi_m_bsc: string;
-    is_alive:  number;
+//    is_alive:  number;
 }
 interface I_lastInsert extends mysql.RowDataPacket {
     id: number;
@@ -94,7 +94,7 @@ export class C_HeroRDB {
             SELECT 	id, save_id, uniq_id, join_uid, 
                     name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
-                    abi_p_bsc, abi_m_bsc, is_alive 
+                    abi_p_bsc, abi_m_bsc 
             FROM    tbl_hero
             WHERE   id = :id
         `
@@ -125,7 +125,7 @@ export class C_HeroRDB {
             SELECT 	id, save_id, uniq_id, join_uid, 
                     name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
-                    abi_p_bsc, abi_m_bsc, is_alive 
+                    abi_p_bsc, abi_m_bsc 
             FROM    tbl_hero
             WHERE   save_id = :save_id AND join_uid = :join_uid
         `
@@ -164,13 +164,13 @@ export class C_HeroRDB {
                 save_id, uniq_id, join_uid, 
                 name, sex, age, gold, state, lv, 
                 skp_ttl, skp_now, exp_ttl, exp_now, nxe,
-                abi_p_bsc, abi_m_bsc, is_alive 
+                abi_p_bsc, abi_m_bsc 
             )
             VALUES ( 
                 :save_id, :uniq_id, :join_uid, 
                 :name, :sex, :age, :gold, :state, :lv, 
                 :skp_ttl, :skp_now, :exp_ttl, :exp_now, :nxe,
-                :abi_p_bsc, :abi_m_bsc, :is_alive 
+                :abi_p_bsc, :abi_m_bsc 
             )
         `
         const jsonHero = hero.encode();
@@ -215,7 +215,6 @@ console.error(
             'nxe':       jsonHero.val?.nxe??-1,
             'abi_p_bsc': JSON.stringify(jsonHero.abi_p_bsc)??'',
             'abi_m_bsc': JSON.stringify(jsonHero.abi_m_bsc)??'',
-            'is_alive':  jsonHero.is_alive !== 'N' ? 1 : 0,
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 37b: ${insert_hero_SQL}`);

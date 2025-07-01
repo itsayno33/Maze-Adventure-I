@@ -65,8 +65,6 @@ export class C_Hero implements I_JSON_Uniq {
     protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
     protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
 
-    protected is_alive: boolean;
-
     public constructor(a?: JSON_Hero) {
         this.my_id      = 0;
         this.my_name    = 'No Name Hero';
@@ -81,7 +79,7 @@ export class C_Hero implements I_JSON_Uniq {
         this.val        = {};
         this.abi_p      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
         this.abi_m      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
-        this.is_alive   = true;
+//        this.is_alive   = true;
         if (a !== undefined) this.decode(a);
     }
 
@@ -100,6 +98,67 @@ export class C_Hero implements I_JSON_Uniq {
     public set_name(name: string): void {
         this.my_name = name;
     }
+
+
+    public is_alive(): boolean {
+        const hp = this.abi_p.now.get('xp') ?? 0;
+        const hd = this.abi_p.now.get('xd') ?? 0;
+        return hp - hd > 0;
+    }
+
+
+    public hp_damage(dmg: number): void {
+        const xp_now = this.abi_p.now.get('xp') ?? 0;
+        let   xd_now = this.abi_p.now.get('xd') ?? 0;
+        xd_now += dmg;
+        this.abi_p.now.set('xd', xd_now > xp_now ? xp_now : xd_now);
+    }
+    public hp_heal(heal: number): void {
+        let   xd_now = this.abi_p.now.get('xd') ?? 0;
+        xd_now -= heal;
+        this.abi_p.now.set('xd', xd_now < 0 ? 0 : xd_now);
+    }
+
+
+    protected copy_bsc_to_ttl(): void {
+        this.abi_p.ttl.decode(this.abi_p.bsc.encode());
+        this.abi_m.ttl.decode(this.abi_m.bsc.encode());
+    }
+
+    protected copy_ttl_to_now(): void {
+        this.abi_p.now.decode(this.abi_p.ttl.encode());
+        this.abi_m.now.decode(this.abi_m.ttl.encode());
+    }
+
+
+    public random_make(helo_level: number = 0): C_Hero {
+        this.my_id    = 0; // --Hero::$max_id;
+        this.my_name  = "冒険者 " + _random_str(5);
+        this.sex      = _irand( 0,     1); 
+        this.age      = _irand( 15,   25); 
+        this.state    = 0; 
+        this.lv       = helo_level; 
+        this.gold     = _irand( 500, 1000); 
+        this.val      = {
+            skp: {ttl: 0, now: 0}, 
+            exp: {ttl: 0, now: 0},
+            'nxe': 1000
+        };
+
+
+        const abi_p_bsc = this.abi_p.bsc;
+        abi_p_bsc.random_make(helo_level);
+
+        const abi_m_bsc = this.abi_m.bsc;
+        abi_m_bsc.random_make(helo_level);
+
+        this.copy_bsc_to_ttl();
+        this.copy_ttl_to_now();
+
+        return this;
+    }
+
+
     
     public encode(): JSON_Hero {
         const ret: JSON_Hero = {
@@ -120,7 +179,7 @@ export class C_Hero implements I_JSON_Uniq {
             abi_m_ttl: this.abi_m.ttl.encode(),
             abi_p_now: this.abi_p.now.encode(),
             abi_m_now: this.abi_m.now.encode(),
-            is_alive: (this.is_alive) ? 'Y' : 'N', 
+//            is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
     }
@@ -135,6 +194,7 @@ export class C_Hero implements I_JSON_Uniq {
         if (a.state    !== undefined) this.state    = a.state;
         if (a.lv       !== undefined) this.lv       = a.lv;
         if (a.gold     !== undefined) this.gold     = a.gold;
+/*****************
         if (a.is_alive !== undefined) {
             if (typeof a.is_alive === "boolean") {
                 this.is_alive = a.is_alive;
@@ -142,6 +202,8 @@ export class C_Hero implements I_JSON_Uniq {
                 this.is_alive = (a.is_alive != 'N') ? true: false;
             }
         }
+******************/
+
 //        if (a.goods   !== undefined) this.goods.decode(a.goods);
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
@@ -181,32 +243,6 @@ export class C_Hero implements I_JSON_Uniq {
         d.ttl = s.ttl ?? d.ttl;
         d.now = s.now ?? s.ttl ?? d.now;
         return d;
-    }
-
-    public random_make(): C_Hero {
-        this.my_id    = 0; // --Hero::$max_id;
-        this.my_name  = "冒険者 " + _random_str(5);
-        this.sex      = _irand( 0,     1); 
-        this.age      = _irand( 15,   25); 
-        this.state    = 0; 
-        this.lv       = 0; 
-        this.gold     = _irand( 500, 1000); 
-        this.val      = {
-            skp: {ttl: 0, now: 0}, 
-            exp: {ttl: 0, now: 0},
-            'nxe': 1000
-        };
-
-
-        const abi_p_bsc = this.abi_p.bsc;
-        abi_p_bsc.random_make();
-        this.abi_p.bsc = this.abi_p.ttl = this.abi_p.now = abi_p_bsc;
-
-        const abi_m_bsc = this.abi_m.bsc;
-        abi_m_bsc.random_make();
-        this.abi_m.bsc = this.abi_m.ttl = this.abi_m.now = abi_m_bsc;
-
-        return this;
     }
 
     public static encode_heroes(heroes: C_Hero[]): JSON_Hero[] {

@@ -34,17 +34,21 @@ export class C_HeroAbility implements I_JSON {
         for (let idx in this.v) {this.v[idx] = 0;}
         if (a !== undefined) this.decode(a);
     }
-    public set_prp(a: JSON_Hero_Ability): void {
-        this.decode(a);
-    }
+
     public get(key: string): number | undefined {
         if (!(key in this.v)) return undefined;
         return this.v[key];
     }
-    public set(key: string, s: JSON_Hero_Ability): number | undefined {
+    public set(key: string, val: number): number | undefined {
         if (!(key in this.v)) return undefined;
-        this.v[key] = s[key];
-        return s[key];
+        this.v[key] = val;
+        return this.v[key];
+    }
+    public setAny(key: string, s: JSON_Hero_Ability): void {
+        for (let idx in s) {
+            if (!(idx in this.v)) continue;
+            this.v[key] = s[key];
+        }
     }
 
     public add(a: JSON_Hero_Ability): void {
@@ -52,6 +56,7 @@ export class C_HeroAbility implements I_JSON {
             this.v[key] += a[key];
         }
     } 
+
 
     protected calc_xp(): void {
         this.v.xp  =  Math.ceil( 20*this.v.str + 20*this.v.vit + 5*this.v.tec + 5*this.v.luk );
@@ -64,9 +69,9 @@ export class C_HeroAbility implements I_JSON {
         this.v.cnc =  Math.ceil( 3*this.v.luk                + 2*this.v.tec );
     }
 
-    public random_make(): C_HeroAbility {
+    public random_make(helo_level: number = 0): C_HeroAbility {
 
-        const hl = 1; // ヒーローレベルの初期値
+        const hl   = helo_level + 1; // ヒーローレベルの初期値
 
         this.v.str =  _inrand(5,   20, 2.0) * hl;
         this.v.pwr =  _inrand(5,   20, 2.0) * hl;
