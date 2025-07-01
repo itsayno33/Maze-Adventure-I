@@ -102,8 +102,5 @@ export class C_MazeObj implements I_MazeObj {
     public decode(j?: JSON_MazeObj|undefined): I_MazeObj {
         return this.__init(j);
     }
-    public static decode(j?: JSON_MazeObj|undefined): I_MazeObj {
-        return C_MazeObj.newObj(j);
-    }
 }
 

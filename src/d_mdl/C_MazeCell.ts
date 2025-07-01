@@ -6,6 +6,7 @@ import { JSON_Any }  from "./C_SaveInfo";
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { T_Wall }    from './C_Wall';
 import { T_Rect } from "./C_MazeObjView";
+import { new_MazeObj } from "./C_MazeObjCommon";
 
 
 export interface JSON_MazeCell extends JSON_Any {
@@ -37,7 +38,7 @@ export class C_MazeCell  {
         j.obj.clname ??= this.constructor.name;
 
         this.kind   = j.kind ?? T_MzKind.NoDef;
-        this.my_obj = C_MazeObj.newObj(j.obj);
+        this.my_obj = new_MazeObj(j.obj);
     }
     public getObj():  I_MazeObj {return this.my_obj}
     public getKind(): T_MzKind {
