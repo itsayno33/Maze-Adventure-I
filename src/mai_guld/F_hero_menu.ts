@@ -76,34 +76,34 @@ export function hero_info_form_set(hres: C_Hero[], detail: T_Detail, idx: number
     detail['exp']  .innerHTML = '経験値:<br />' +  (hero.val?.['exp']?.now?.toString() ?? '???');
     detail['skp']  .innerHTML = 'ｽｷﾙ値 :<br />' +  (hero.val?.['skp']?.now?.toString() ?? '???');
 
-    detail['hp']   .innerHTML = 'Ｈ　Ｐ:<br />' +  (hero.abi_p_bsc?.['xp']?.toString() ?? '???');
-    detail['mp']   .innerHTML = 'Ｍ　Ｐ:<br />' +  (hero.abi_m_bsc?.['xp']?.toString() ?? '???');
+    detail['hp']   .innerHTML = 'Ｈ　Ｐ:<br />' +  ((hero.abi_p_now?.['xp'] ?? 0) - (hero.abi_p_now?.['xd'] ?? 0)).toString()  + ' / ' +  (hero.abi_p_now?.['xp']?.toString() ?? '???');
+    detail['mp']   .innerHTML = 'Ｍ　Ｐ:<br />' +  ((hero.abi_m_now?.['xp'] ?? 0) - (hero.abi_m_now?.['xd'] ?? 0)).toString()  + ' / ' +  (hero.abi_m_now?.['xp']?.toString() ?? '???');
 
-    detail['atk_p']  .innerHTML = '攻撃力(物理):<br />' + (hero.abi_p_bsc?.['atk']?.toString() ?? '???');
-    detail['def_p']  .innerHTML = '防御力(物理):<br />' + (hero.abi_p_bsc?.['def']?.toString() ?? '???');
-    detail['quc_p']  .innerHTML = '俊敏力(物理):<br />' + (hero.abi_p_bsc?.['quc']?.toString() ?? '???');
-    detail['cnc_p']  .innerHTML = '目敏さ(物理):<br />' + (hero.abi_p_bsc?.['cnc']?.toString() ?? '???');
+    detail['atk_p']  .innerHTML = '攻撃力(物理):<br />' + (hero.abi_p_now?.['atk']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['atk']?.toString() ?? '???');
+    detail['def_p']  .innerHTML = '防御力(物理):<br />' + (hero.abi_p_now?.['def']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['def']?.toString() ?? '???');
+    detail['quc_p']  .innerHTML = '俊敏力(物理):<br />' + (hero.abi_p_now?.['quc']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['quc']?.toString() ?? '???');
+    detail['cnc_p']  .innerHTML = '目敏さ(物理):<br />' + (hero.abi_p_now?.['cnc']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['cnc']?.toString() ?? '???');
 
-    detail['str_p']  .innerHTML = 'ＳＴＲ(物理):<br />' + (hero.abi_p_bsc?.['str']?.toString() ?? '???');
-    detail['pwr_p']  .innerHTML = 'ＰＷＲ(物理):<br />' + (hero.abi_p_bsc?.['pwr']?.toString() ?? '???');
-    detail['vit_p']  .innerHTML = 'ＶＩＴ(物理):<br />' + (hero.abi_p_bsc?.['vit']?.toString() ?? '???');
-    detail['dex_p']  .innerHTML = 'ＤＥＸ(物理):<br />' + (hero.abi_p_bsc?.['dex']?.toString() ?? '???');
-    detail['agi_p']  .innerHTML = 'ＡＧＩ(物理):<br />' + (hero.abi_p_bsc?.['agi']?.toString() ?? '???');
-    detail['tec_p']  .innerHTML = 'ＴＥＣ(物理):<br />' + (hero.abi_p_bsc?.['tec']?.toString() ?? '???');
-    detail['luk_p']  .innerHTML = 'ＬＵＫ(物理):<br />' + (hero.abi_p_bsc?.['luk']?.toString() ?? '???');
+    detail['str_p']  .innerHTML = 'ＳＴＲ(物理):<br />' + (hero.abi_p_now?.['str']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['str']?.toString() ?? '???');
+    detail['pwr_p']  .innerHTML = 'ＰＷＲ(物理):<br />' + (hero.abi_p_now?.['pwr']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['pwr']?.toString() ?? '???');
+    detail['vit_p']  .innerHTML = 'ＶＩＴ(物理):<br />' + (hero.abi_p_now?.['vit']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['vit']?.toString() ?? '???');
+    detail['dex_p']  .innerHTML = 'ＤＥＸ(物理):<br />' + (hero.abi_p_now?.['dex']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['dex']?.toString() ?? '???');
+    detail['agi_p']  .innerHTML = 'ＡＧＩ(物理):<br />' + (hero.abi_p_now?.['agi']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['agi']?.toString() ?? '???');
+    detail['tec_p']  .innerHTML = 'ＴＥＣ(物理):<br />' + (hero.abi_p_now?.['tec']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['tec']?.toString() ?? '???');
+    detail['luk_p']  .innerHTML = 'ＬＵＫ(物理):<br />' + (hero.abi_p_now?.['luk']?.toString() ?? '???') + ' / ' + (hero.abi_p_ttl?.['luk']?.toString() ?? '???');
   
-    detail['atk_m']  .innerHTML = '攻撃力(魔法):<br />' + (hero.abi_m_bsc?.['atk']?.toString() ?? '???');
-    detail['def_m']  .innerHTML = '防御力(魔法):<br />' + (hero.abi_m_bsc?.['def']?.toString() ?? '???');
-    detail['quc_m']  .innerHTML = '俊敏力(魔法):<br />' + (hero.abi_m_bsc?.['quc']?.toString() ?? '???');
-    detail['cnc_m']  .innerHTML = '目敏さ(魔法):<br />' + (hero.abi_m_bsc?.['cnc']?.toString() ?? '???');
+    detail['atk_m']  .innerHTML = '攻撃力(魔法):<br />' + (hero.abi_m_now?.['atk']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['atk']?.toString() ?? '???');
+    detail['def_m']  .innerHTML = '防御力(魔法):<br />' + (hero.abi_m_now?.['def']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['def']?.toString() ?? '???');
+    detail['quc_m']  .innerHTML = '俊敏力(魔法):<br />' + (hero.abi_m_now?.['quc']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['quc']?.toString() ?? '???');
+    detail['cnc_m']  .innerHTML = '目敏さ(魔法):<br />' + (hero.abi_m_now?.['cnc']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['cnc']?.toString() ?? '???');
 
-    detail['str_m']  .innerHTML = 'ＳＴＲ(魔法):<br />' + (hero.abi_m_bsc?.['str']?.toString() ?? '???');
-    detail['pwr_m']  .innerHTML = 'ＰＷＲ(魔法):<br />' + (hero.abi_m_bsc?.['pwr']?.toString() ?? '???');
-    detail['vit_m']  .innerHTML = 'ＶＩＴ(魔法):<br />' + (hero.abi_m_bsc?.['vit']?.toString() ?? '???');
-    detail['dex_m']  .innerHTML = 'ＤＥＸ(魔法):<br />' + (hero.abi_m_bsc?.['dex']?.toString() ?? '???');
-    detail['agi_m']  .innerHTML = 'ＡＧＩ(魔法):<br />' + (hero.abi_m_bsc?.['agi']?.toString() ?? '???');
-    detail['tec_m']  .innerHTML = 'ＴＥＣ(魔法):<br />' + (hero.abi_m_bsc?.['tec']?.toString() ?? '???');
-    detail['luk_m']  .innerHTML = 'ＬＵＫ(魔法):<br />' + (hero.abi_m_bsc?.['luk']?.toString() ?? '???');
+    detail['str_m']  .innerHTML = 'ＳＴＲ(魔法):<br />' + (hero.abi_m_now?.['str']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['str']?.toString() ?? '???');
+    detail['pwr_m']  .innerHTML = 'ＰＷＲ(魔法):<br />' + (hero.abi_m_now?.['pwr']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['pwr']?.toString() ?? '???');
+    detail['vit_m']  .innerHTML = 'ＶＩＴ(魔法):<br />' + (hero.abi_m_now?.['vit']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['vit']?.toString() ?? '???');
+    detail['dex_m']  .innerHTML = 'ＤＥＸ(魔法):<br />' + (hero.abi_m_now?.['dex']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['dex']?.toString() ?? '???');
+    detail['agi_m']  .innerHTML = 'ＡＧＩ(魔法):<br />' + (hero.abi_m_now?.['agi']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['agi']?.toString() ?? '???');
+    detail['tec_m']  .innerHTML = 'ＴＥＣ(魔法):<br />' + (hero.abi_m_now?.['tec']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['tec']?.toString() ?? '???');
+    detail['luk_m']  .innerHTML = 'ＬＵＫ(魔法):<br />' + (hero.abi_m_now?.['luk']?.toString() ?? '???') + ' / ' + (hero.abi_m_ttl?.['luk']?.toString() ?? '???');
 }
 /*******
 function __form_set_abi(hero: JSON_Hero, key: string): string {

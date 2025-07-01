@@ -119,7 +119,7 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_p.now.set('xd', xd_now < 0 ? 0 : xd_now);
     }
 
-
+    
     protected copy_bsc_to_ttl(): void {
         this.abi_p.ttl.decode(this.abi_p.bsc.encode());
         this.abi_m.ttl.decode(this.abi_m.bsc.encode());
@@ -129,7 +129,6 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_p.now.decode(this.abi_p.ttl.encode());
         this.abi_m.now.decode(this.abi_m.ttl.encode());
     }
-
 
     public random_make(helo_level: number = 0): C_Hero {
         this.my_id    = 0; // --Hero::$max_id;
