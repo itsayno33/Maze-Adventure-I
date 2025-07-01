@@ -217,6 +217,7 @@ function stop_double_click(): void {
 
 // 暫定(C_MazeObjのテスト用)
 function install_objs(num: number = 1): void {
+    // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {
         const x = _irand(1, (g_maze.get_x_max() - 1) / 2) * 2 + 1; 
         const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
@@ -226,6 +227,22 @@ function install_objs(num: number = 1): void {
                 layer:   2,
                 letter: '物',
             },
+        });
+        g_maze.add_obj(obj);
+    }
+    // 通り抜けできないオブジェを置く
+    for (let i = 0; i < num; i++) {
+        const x = _irand(1, (g_maze.get_x_max() - 1) / 2) * 2 + 1; 
+        const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
+        const obj = C_MazeObj.newObj({
+            pos:     {x:x, y:y, z:0, d:0},
+            can_thr: '0',
+            view: {
+                layer:   2,
+                letter: '障',
+                show3D:  '1',
+                col_2: '#9999cc', col_L: '#6666ff', 
+            }
         });
         g_maze.add_obj(obj);
     }
