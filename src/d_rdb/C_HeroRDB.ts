@@ -23,6 +23,10 @@ interface I_tbl_hero extends mysql.RowDataPacket {
     nxe:       string;
     abi_p_bsc: string;
     abi_m_bsc: string;
+    abi_p_ttl: string;
+    abi_m_ttl: string;
+    abi_p_now: string;
+    abi_m_now: string;
 //    is_alive:  number;
 }
 interface I_lastInsert extends mysql.RowDataPacket {
@@ -94,7 +98,9 @@ export class C_HeroRDB {
             SELECT 	id, save_id, uniq_id, join_uid, 
                     name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
-                    abi_p_bsc, abi_m_bsc 
+                    abi_p_bsc, abi_m_bsc, 
+                    abi_p_ttl, abi_m_ttl, 
+                    abi_p_now, abi_m_now 
             FROM    tbl_hero
             WHERE   id = :id
         `
@@ -125,7 +131,9 @@ export class C_HeroRDB {
             SELECT 	id, save_id, uniq_id, join_uid, 
                     name, sex, age, gold, state, lv,  
                     skp_ttl, skp_now, exp_ttl, exp_now, nxe, 
-                    abi_p_bsc, abi_m_bsc 
+                    abi_p_bsc, abi_m_bsc, 
+                    abi_p_ttl, abi_m_ttl, 
+                    abi_p_now, abi_m_now 
             FROM    tbl_hero
             WHERE   save_id = :save_id AND join_uid = :join_uid
         `
@@ -164,13 +172,17 @@ export class C_HeroRDB {
                 save_id, uniq_id, join_uid, 
                 name, sex, age, gold, state, lv, 
                 skp_ttl, skp_now, exp_ttl, exp_now, nxe,
-                abi_p_bsc, abi_m_bsc 
+                abi_p_bsc, abi_m_bsc, 
+                abi_p_ttl, abi_m_ttl, 
+                abi_p_now, abi_m_now 
             )
             VALUES ( 
                 :save_id, :uniq_id, :join_uid, 
                 :name, :sex, :age, :gold, :state, :lv, 
                 :skp_ttl, :skp_now, :exp_ttl, :exp_now, :nxe,
-                :abi_p_bsc, :abi_m_bsc 
+                :abi_p_bsc, :abi_m_bsc, 
+                :abi_p_ttl, :abi_m_ttl, 
+                :abi_p_now, :abi_m_now 
             )
         `
         const jsonHero = hero.encode();
@@ -194,7 +206,10 @@ console.error(
     +', nxe='       +(jsonHero.val?.nxe??-1)
     +', abi_p_bsc=' +(JSON.stringify(jsonHero.abi_p_bsc)??'???')
     +', abi_m_bsc=' +(JSON.stringify(jsonHero.abi_m_bsc)??'???')
-    +', is_alive='  +(jsonHero.is_alive !== 'N' ? 1 : 0)
+    +', abi_p_ttl=' +(JSON.stringify(jsonHero.abi_p_ttl)??'???')
+    +', abi_m_ttl=' +(JSON.stringify(jsonHero.abi_m_ttl)??'???')
+    +', abi_p_now=' +(JSON.stringify(jsonHero.abi_p_now)??'???')
+    +', abi_m_now=' +(JSON.stringify(jsonHero.abi_m_now)??'???')
 )
 */
         await db_mai.query(insert_hero_SQL, {
@@ -215,6 +230,10 @@ console.error(
             'nxe':       jsonHero.val?.nxe??-1,
             'abi_p_bsc': JSON.stringify(jsonHero.abi_p_bsc)??'',
             'abi_m_bsc': JSON.stringify(jsonHero.abi_m_bsc)??'',
+            'abi_p_ttl': JSON.stringify(jsonHero.abi_p_ttl)??'',
+            'abi_m_ttl': JSON.stringify(jsonHero.abi_m_ttl)??'',
+            'abi_p_now': JSON.stringify(jsonHero.abi_p_now)??'',
+            'abi_m_now': JSON.stringify(jsonHero.abi_m_now)??'',
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 37b: ${insert_hero_SQL}`);
@@ -321,6 +340,10 @@ console.error(
             },
             abi_p_bsc:     JSON.parse(j.abi_p_bsc),
             abi_m_bsc:     JSON.parse(j.abi_m_bsc),
+            abi_p_ttl:     JSON.parse(j.abi_p_ttl),
+            abi_m_ttl:     JSON.parse(j.abi_m_ttl),
+            abi_p_now:     JSON.parse(j.abi_p_now),
+            abi_m_now:     JSON.parse(j.abi_m_now),
 /*
             abi_p: {
                 bsc: abi_p,
@@ -333,7 +356,7 @@ console.error(
                 now: abi_m,
             },
  */
-            is_alive:  j.is_alive !== 0 ? "Y" : "N",
+//            is_alive:  j.is_alive !== 0 ? "Y" : "N",
         }
         return json;
     }
