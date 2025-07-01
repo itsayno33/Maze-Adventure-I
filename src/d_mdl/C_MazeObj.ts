@@ -16,7 +16,8 @@ export interface JSON_MazeObj extends JSON_Any {
     uniq_id?:   string, 
     pos?:       JSON_PointDir,
     view?:      JSON_MazeObjView|undefined,
-    thr?:       string, 
+    can_thr?:   string, 
+    h_w_dmg?:   number,
 }
 
 
@@ -25,6 +26,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
     canThrough: ()=>boolean;
+    hitWallDmg: ()=>number;
 }
 
 export class C_MazeObj implements I_MazeObj {
@@ -34,6 +36,7 @@ export class C_MazeObj implements I_MazeObj {
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
     protected can_thr:   boolean;
+    protected h_w_dmg:   number;
 
     public static newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
         j ??= {};
@@ -53,6 +56,7 @@ export class C_MazeObj implements I_MazeObj {
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  undefined;
         this.can_thr    =  true;
+        this.h_w_dmg    =  0;
 
         if (j !== undefined) this.__init(j);
     }
@@ -69,6 +73,7 @@ export class C_MazeObj implements I_MazeObj {
             } else this.my_view  = undefined;
         }
         if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
+        if (j.h_w_dmg !== undefined) this.h_w_dmg = j.h_w_dmg;
         return this;
 }
 
@@ -90,6 +95,9 @@ export class C_MazeObj implements I_MazeObj {
         return this.pos.within(p);
     }
 
+    public hitWallDmg() :number {
+        return this.h_w_dmg;
+    }
     public encode(): JSON_MazeObj {
         return {
             uniq_id: this.uniq_id,
@@ -97,6 +105,7 @@ export class C_MazeObj implements I_MazeObj {
             pos:     this.pos.encode(),
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
+            h_w_dmg: this.h_w_dmg,
         }
     }
 

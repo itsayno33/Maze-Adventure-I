@@ -103,7 +103,7 @@ export class C_Team implements I_MazeObj {
     }
     
     public canThrough(): boolean {return true}
-
+    public hitWallDmg(): number  {return 0}
 
     public hres():  C_Hero[] {
         const hres: C_Hero[] = [];

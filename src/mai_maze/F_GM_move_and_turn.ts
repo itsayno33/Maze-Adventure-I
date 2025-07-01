@@ -79,7 +79,7 @@ function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
 
     // 進行方向が壁等なら移動不可
     if (!(cell?.getObj().canThrough() ?? true)) {
-        const damage = _irand(1, 10);
+        const damage = cell?.getObj().hitWallDmg() ??  10;
         return {canMove: false, damage: damage}; // 壁との衝突あり
     }
     const obj = g_maze.get_obj(r.subj);
@@ -90,7 +90,8 @@ function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
         } else {
             // 進行方向にオブジェが有り通り抜け不能
             // 移動せずにオブジェ接近処理(以降の階段処理等はスルー)
-            return {canMove: false, damage: 0}; // オブジェとの衝突あり
+            const damage   = obj.hitWallDmg();
+            return {canMove: false, damage: damage}; // オブジェとの衝突あり
         }
     }
 //    alert('進行方向にオブジェがない');

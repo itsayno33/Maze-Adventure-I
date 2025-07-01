@@ -223,6 +223,8 @@ function install_objs(num: number = 1): void {
         const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
         const obj = C_MazeObj.newObj({
             pos:    {x:x, y:y, z:0, d:0},
+            can_thr: '1',
+            h_w_dmg:  0,
             view: {
                 layer:   2,
                 letter: '物',
@@ -237,6 +239,7 @@ function install_objs(num: number = 1): void {
         const obj = C_MazeObj.newObj({
             pos:     {x:x, y:y, z:0, d:0},
             can_thr: '0',
+            h_w_dmg:  100,
             view: {
                 layer:   2,
                 letter: '障',

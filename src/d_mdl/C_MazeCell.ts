@@ -77,6 +77,7 @@ class C_MazeCellNoDef extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '0';
+        j.obj.h_w_dmg =  100;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '疑', 
@@ -95,6 +96,7 @@ class C_MazeCellUnkwn extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '0';
+        j.obj.h_w_dmg =  100;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '謎', 
@@ -113,6 +115,7 @@ class C_MazeCellEmpty extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '無', 
@@ -131,6 +134,7 @@ class C_MazeCellFloor extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '　', 
@@ -149,6 +153,7 @@ class C_MazeCellUnexp extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '・', 
@@ -167,6 +172,7 @@ class C_MazeCellStone extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '0';
+        j.obj.h_w_dmg =  10;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '＃', 
@@ -185,6 +191,7 @@ class C_MazeCellStrUp extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '上', 
@@ -203,6 +210,7 @@ class C_MazeCellStrDn extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '下', 
@@ -221,6 +229,7 @@ class C_MazeCellStrUD extends C_MazeCell {
         j.obj ??= {};
 
         j.obj.can_thr = '1';
+        j.obj.h_w_dmg =  0;
         j.obj.pos     = {x:j.x, y:j.y, z:j.z};
         j.obj.view    =  {
             layer: 0, letter: '段', 
