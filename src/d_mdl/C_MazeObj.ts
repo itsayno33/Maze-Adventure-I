@@ -42,17 +42,15 @@ export class C_MazeObj implements I_MazeObj {
         j ??= {};
         j.clname ??= C_MazeObj.constructor.name;
         switch (j.clname) {
-            case C_MazeObj.constructor.name: return new C_MazeObj(j);
+            case C_MazeObj    .constructor.name: return new C_MazeObj(j);
+//            case C_MazeObjMono.constructor.name: return new C_MazeObjMono(j);
         }
         return new C_MazeObj(j);
     }
-    public newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
-        return C_MazeObj.newObj(j);
-    }
 
     protected constructor(j?: JSON_MazeObj|undefined) {
-        this.uniq_id    = 'mazeobj_' + _get_uuid();
-        this.clname     =  C_MazeObj.constructor.name;
+        this.clname     =  this.constructor.name;
+        this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  undefined;
         this.can_thr    =  true;
@@ -61,7 +59,7 @@ export class C_MazeObj implements I_MazeObj {
         if (j !== undefined) this.__init(j);
     }
 
-    private __init(j: JSON_MazeObj|undefined): C_MazeObj {
+    protected __init(j: JSON_MazeObj|undefined): C_MazeObj {
         if (j === undefined) return this;
 
         if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;

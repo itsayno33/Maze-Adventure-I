@@ -18,8 +18,8 @@ export interface I_JSON_Uniq extends I_JSON {
 }
 
 export interface I_Abstract {
-    newObj: (j?:JSON_Any)=>I_Abstract|undefined,
-    encode: ()=>JSON_Any,
+    newObj?: (j?:JSON_Any)=>I_Abstract|undefined,
+    encode:  ()=>JSON_Any,
 //  static decode: (j:JSON_Any)=>I_JSON,
 }
 

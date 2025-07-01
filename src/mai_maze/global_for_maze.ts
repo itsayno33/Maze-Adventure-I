@@ -53,6 +53,7 @@ import { C_MazeObj } from "../d_mdl/C_MazeObj";
 
 
 import { C_OnOffButton } from '../d_ctl/C_OnOffButton'
+import { C_MazeObjMono } from "../d_mdl/C_MazeObjEtc";
 export let g_view2: C_OnOffButton;
 
 export function init_before_games(): void {
@@ -221,14 +222,8 @@ function install_objs(num: number = 1): void {
     for (let i = 0; i < num; i++) {
         const x = _irand(1, (g_maze.get_x_max() - 1) / 2) * 2 + 1; 
         const y = _irand(1, (g_maze.get_y_max() - 1) / 2) * 2 + 1; 
-        const obj = C_MazeObj.newObj({
+        const obj = new C_MazeObjMono({
             pos:    {x:x, y:y, z:0, d:0},
-            can_thr: '1',
-            h_w_dmg:  0,
-            view: {
-                layer:   2,
-                letter: '物',
-            },
         });
         g_maze.add_obj(obj);
     }
