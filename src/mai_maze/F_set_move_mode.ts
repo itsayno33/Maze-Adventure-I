@@ -19,7 +19,8 @@ import {
     g_team,
     do_load_bottom_half,
     g_ctls,
-    g_ds, 
+    g_ds,
+    g_hres, 
 } from "./global_for_maze";
 import { can_move_team, can_turn_team } from "./F_GM_move_and_turn";
 
@@ -128,6 +129,8 @@ function move_check(r: I_HopeAction): void {
         if (_rslt.ok) {
             // 進行方向へ進む
             r.doOK();
+            // HP自動回復
+            for (const hero of g_hres) hero.hp_auto_heal();
 
             // 移動先が階段なら階段の処理
             const kind = g_maze.get_cell(r.subj)?.getKind();

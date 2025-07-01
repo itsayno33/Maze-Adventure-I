@@ -38,7 +38,8 @@ export function hp_recover_hero(hero: C_Hero, recover: number): number
 } 
 
 // Team全体の自動回復処理（ＨＰ）
+/*****************
 export function hp_auto_recover_hres() {
     for (const hero of g_hres) hero.hp_auto_heal();
 }
-
+*****************/
