@@ -43,6 +43,7 @@ function isOK(): void {
             mvpt.set_uid(g_maze.uid());
 
             g_save.all_mvpt[mvpt.uid()]   = mvpt;
+            g_save.all_team[g_team.uid()] = g_team;
             g_save.all_maze[g_maze.uid()] = g_maze;
 
             tmp_save().then(()=>{

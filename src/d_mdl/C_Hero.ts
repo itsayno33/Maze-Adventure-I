@@ -107,16 +107,22 @@ export class C_Hero implements I_JSON_Uniq {
     }
 
 
-    public hp_damage(dmg: number): void {
+    public hp_damage(dmg: number): number {
         const xp_now = this.abi_p.now.get('xp') ?? 0;
         let   xd_now = this.abi_p.now.get('xd') ?? 0;
         xd_now += dmg;
-        this.abi_p.now.set('xd', xd_now > xp_now ? xp_now : xd_now);
+
+        const d = xd_now > xp_now ? xp_now : xd_now;
+        this.abi_p.now.set('xd', d);
+        return d;
     }
-    public hp_heal(heal: number): void {
+    public hp_heal(heal: number): number {
         let   xd_now = this.abi_p.now.get('xd') ?? 0;
         xd_now -= heal;
-        this.abi_p.now.set('xd', xd_now < 0 ? 0 : xd_now);
+
+        const d = xd_now < 0 ? 0 : xd_now;
+        this.abi_p.now.set('xd', d);
+        return d;
     }
 
     
@@ -178,7 +184,6 @@ export class C_Hero implements I_JSON_Uniq {
             abi_m_ttl: this.abi_m.ttl.encode(),
             abi_p_now: this.abi_p.now.encode(),
             abi_m_now: this.abi_m.now.encode(),
-//            is_alive: (this.is_alive) ? 'Y' : 'N', 
         }
         return ret;
     }
@@ -193,32 +198,12 @@ export class C_Hero implements I_JSON_Uniq {
         if (a.state    !== undefined) this.state    = a.state;
         if (a.lv       !== undefined) this.lv       = a.lv;
         if (a.gold     !== undefined) this.gold     = a.gold;
-/*****************
-        if (a.is_alive !== undefined) {
-            if (typeof a.is_alive === "boolean") {
-                this.is_alive = a.is_alive;
-            } else {
-                this.is_alive = (a.is_alive != 'N') ? true: false;
-            }
-        }
-******************/
 
 //        if (a.goods   !== undefined) this.goods.decode(a.goods);
         if (a.val     !== undefined) {
             this.__decode_val(this.val, a.val);
         }
-/****************************************************************
-        if (a.abi_p_bsc !== undefined) {
-            this.abi_p.bsc.decode(a.abi_p_bsc);
-            // 暫定
-            this.abi_p.ttl = this.abi_p.now = this.abi_p.bsc;
-        }
-        if (a.abi_m_bsc !== undefined) {
-            this.abi_m.bsc.decode(a.abi_m_bsc);
-            // 暫定
-            this.abi_m.ttl = this.abi_m.now = this.abi_m.bsc;
-        }
-****************************************************************/
+
         if (a.abi_p_bsc !== undefined) this.abi_p.bsc.decode(a.abi_p_bsc);
         if (a.abi_m_bsc !== undefined) this.abi_m.bsc.decode(a.abi_m_bsc);
         if (a.abi_p_ttl !== undefined) this.abi_p.ttl.decode(a.abi_p_ttl);

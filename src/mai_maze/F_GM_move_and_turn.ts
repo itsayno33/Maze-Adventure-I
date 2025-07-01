@@ -15,17 +15,17 @@ import {
     I_HopeResponceTurn
 }                 from "../d_mdl/I_Hope";
 
-import { C_Hero } from "../d_mdl/C_Hero";
-import { get_damage_team } from "./F_GM_damage";
+import { hp_damage_team } from "./F_GM_damage";
+import { _irand }         from "../d_utl/F_Rand";
 
 
 // 移動時の判定   true: 移動可能  false: 移動不可
 export function can_move_team(r: I_HopeAction): I_HopeResponceMove {
-    const _touch = _is_touch_team(r);  // 当たり判定（接触）
+    const _touch = _is_touch_team(r);  // 当たり判定（隣接）
     if (!_touch) {
         // 進行方向にある壁やオブジェとの衝突判定
         const _how_collide  = _how_collide_team(r); // 戻り値 canMove:trueなら移動可、damageは基本ダメージ量
-        if (!_how_collide.canMove) get_damage_team(_how_collide.damage); // ダメージ処理
+        if (!_how_collide.canMove) hp_damage_team(_how_collide.damage); // ダメージ処理
         return {
             ok:  _how_collide.canMove,   // 移動可否
             res: _how_collide.canMove ? 'Move' : 'Block', // 行動結果
@@ -45,7 +45,7 @@ export function can_move_team(r: I_HopeAction): I_HopeResponceMove {
 export function can_turn_team(r: I_HopeAction): I_HopeResponceTurn {
     const _turn = _can_turn_team(r);
     if (_turn) {
-        const _touch =_is_touch_team(r);  // 当たり判定（接触）
+        const _touch =_is_touch_team(r);  // 当たり判定（隣接）
         return {ok: !_touch , hope: r, res: _touch ? 'Block' : 'Turn'}; // ターン可能
     } else {
         return {ok: false,    hope: r, res: 'Block'}; // ターン不可
@@ -57,7 +57,7 @@ export function can_turn_team(r: I_HopeAction): I_HopeResponceTurn {
 function _can_turn_team(r: I_HopeAction): boolean { return true; }
 
 
-// 当たり判定（接触）  true: 接触あり  false: 接触なし
+// 当たり判定（隣接）  true: 接触あり  false: 接触なし
 // ここでは接触はない設定
 function _is_touch_team(r: I_HopeAction): boolean { return false; }
 
@@ -79,7 +79,8 @@ function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
 
     // 進行方向が壁等なら移動不可
     if (!(cell?.getObj().canThrough() ?? true)) {
-        return {canMove: false, damage: 0}; // 壁との衝突あり
+        const damage = _irand(1, 10);
+        return {canMove: false, damage: damage}; // 壁との衝突あり
     }
     const obj = g_maze.get_obj(r.subj);
     if (obj !== null) {

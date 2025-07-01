@@ -15,9 +15,6 @@ import {
     I_HopeResponceTurn
 }                 from "../d_mdl/I_Hope";
 
-import { C_Hero } from "../d_mdl/C_Hero";
-import { get_damage_team } from "./F_GM_damage";
-
 
 // 1. この位置でイベントが起きるか判断
 // 2. 起きる場合はイベント処理
