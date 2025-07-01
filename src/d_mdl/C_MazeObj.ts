@@ -38,17 +38,7 @@ export class C_MazeObj implements I_MazeObj {
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
 
-    public static newObj(j?: JSON_MazeObj|undefined): I_MazeObj {
-        j ??= {};
-        j.clname ??= C_MazeObj.constructor.name;
-        switch (j.clname) {
-            case C_MazeObj    .constructor.name: return new C_MazeObj(j);
-//            case C_MazeObjMono.constructor.name: return new C_MazeObjMono(j);
-        }
-        return new C_MazeObj(j);
-    }
-
-    protected constructor(j?: JSON_MazeObj|undefined) {
+    public constructor(j?: JSON_MazeObj|undefined) {
         this.clname     =  this.constructor.name;
         this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
@@ -76,6 +66,8 @@ export class C_MazeObj implements I_MazeObj {
 }
 
     public uid(): string {return this.uniq_id}
+
+    public className(): string {return this.clname}
 
     public view(): I_MazeObjView|undefined {return this.my_view}
     public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
