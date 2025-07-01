@@ -18,6 +18,7 @@ export interface JSON_MazeObj extends JSON_Any {
     view?:      JSON_MazeObjView|undefined,
     can_thr?:   string, 
     h_w_dmg?:   number,
+    stat?:      string, // C_MazeObjのサブクラスの初期値を保持する 
 }
 
 
@@ -37,6 +38,7 @@ export class C_MazeObj implements I_MazeObj {
     protected my_view:   I_MazeObjView|undefined;
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
+    protected stat:      Object = {}; // C_MazeObjのサブクラスの初期値を保持する
 
     public constructor(j?: JSON_MazeObj|undefined) {
         this.clname     =  this.constructor.name;
@@ -45,6 +47,7 @@ export class C_MazeObj implements I_MazeObj {
         this.my_view    =  undefined;
         this.can_thr    =  true;
         this.h_w_dmg    =  0;
+        this.stat       =  {};
 
         if (j !== undefined) this.__init(j);
     }
@@ -62,6 +65,7 @@ export class C_MazeObj implements I_MazeObj {
         }
         if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
         if (j.h_w_dmg !== undefined) this.h_w_dmg = j.h_w_dmg;
+        if (j.stat    !== undefined) this.stat    = JSON.parse(j.stat) as Object;
         return this;
 }
 
@@ -96,6 +100,7 @@ export class C_MazeObj implements I_MazeObj {
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
             h_w_dmg: this.h_w_dmg,
+            stat:    JSON.stringify(this.stat??'{}'),
         }
     }
 
