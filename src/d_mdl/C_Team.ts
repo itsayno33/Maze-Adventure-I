@@ -56,7 +56,7 @@ export class C_Team implements I_MazeObj {
     protected my_name:   string;
     protected uniq_id:   string;
     protected save_id:   number;
-    protected walker:    C_Walker;
+    protected myWalker:    C_Walker;
     protected gold:      number;
 //    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
@@ -71,9 +71,9 @@ export class C_Team implements I_MazeObj {
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
 
-        this.myView = new C_CurrentTeamView(this) as I_MazeObjView;
-        this.walker = new C_Walker();
-        this.walker.set_tid(this.uid());
+        this.myView    = new C_CurrentTeamView(this) as I_MazeObjView;
+        this.myWalker  = new C_Walker();
+        this.myWalker.set_tid(this.uid());
 
         this.gold   = 0;
 //        this.goods  = new C_GoodsList();
@@ -88,13 +88,13 @@ export class C_Team implements I_MazeObj {
     public uid(): string { return this.uniq_id}
 
     public within(p: C_Point): boolean {
-        const here = this.walker?.get_p();
+        const here = this.myWalker?.get_p();
         return here?.within(p) ?? false; 
     }
 
     public view():  I_MazeObjView|undefined {return this.myView}
     public walk():  C_Walker {
-        return this.walker
+        return this.myWalker
     }
     
     public canThrough(): boolean {return true}
@@ -116,14 +116,14 @@ export class C_Team implements I_MazeObj {
     }
 
     public get_loc(): C_MovablePoint {
-        return this.walker;
+        return this.myWalker;
     }
     public set_loc(loc: C_MovablePoint): void {
-        (this.walker ??= new C_Walker()).decode(loc.encode());
+        (this.myWalker ??= new C_Walker()).decode(loc.encode());
     }
 
     public get_pd(): C_PointDir {
-        return this.walker.get_pd();
+        return this.myWalker.get_pd();
     }
 
 /*
@@ -169,7 +169,7 @@ export class C_Team implements I_MazeObj {
             name:      this.my_name,
             uniq_id:   this.uniq_id,
             save_id:   this.save_id,
-            locate:    this.walker.encode(),
+            locate:    this.myWalker.encode(),
             gold:      this.gold,
 //            goods:     this.goods.encode(),
             heroes:    json_heroes,
@@ -186,7 +186,7 @@ export class C_Team implements I_MazeObj {
         if (a.save_id !== undefined) this.save_id     = a.save_id;
         if (a.motion !== undefined)  this.hope_motion = a.motion;
 
-        if (a.locate !== undefined)  this.walker.decode(a.locate);
+        if (a.locate !== undefined)  this.myWalker.decode(a.locate);
         if (a.gold   !== undefined)  this.gold = a.gold;
 //        if (a.goods  !== undefined)  this.goods.decode(a.goods);
 
@@ -226,14 +226,14 @@ export class C_Team implements I_MazeObj {
             + "\nuniq_id:  "  + (this.uniq_id          ?? '?')
             + "\nname:  "     + (this.my_name          ?? '?')
             + "\nsave_id: "   + (this.save_id          ?? '?')
-            + "\nurl:  "      + (this.walker.url()     ?? '?')
-            + "\nlckd: "      + (this.walker.get_lckd_str() ?? '?')
-            + "\nlcnm: "      + (this.walker.get_name()     ?? '?')
-            + "\nlcid: "      + (this.walker.get_uid()      ?? '?')
-            + "\ncur_x: "     + (this.walker.get_p().x ?? '?')
-            + "\ncur_y: "     + (this.walker.get_p().y ?? '?')
-            + "\ncur_z: "     + (this.walker.get_p().z ?? '?')
-            + "\ncur_d: "     + (this.walker.get_d()   ?? '?')
+            + "\nurl:  "      + (this.myWalker.url()     ?? '?')
+            + "\nlckd: "      + (this.myWalker.get_lckd_str() ?? '?')
+            + "\nlcnm: "      + (this.myWalker.get_name()     ?? '?')
+            + "\nlcid: "      + (this.myWalker.get_uid()      ?? '?')
+            + "\ncur_x: "     + (this.myWalker.get_p().x ?? '?')
+            + "\ncur_y: "     + (this.myWalker.get_p().y ?? '?')
+            + "\ncur_z: "     + (this.myWalker.get_p().z ?? '?')
+            + "\ncur_d: "     + (this.myWalker.get_d()   ?? '?')
             + "\ngold: "      + (Object.keys(this.gold ?? {}).length)
             + "\nheroes: "    + (this.heroes?.length ?? '?')
             + "\n"
