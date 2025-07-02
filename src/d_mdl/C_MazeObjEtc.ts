@@ -22,7 +22,7 @@ export class C_MazeObjMono extends C_MazeObj implements I_MazeObj {
                 letter: '物',
             },
         }
-        this.__init(jj);
+        this.decode(jj);
     }
 }
 
@@ -41,6 +41,6 @@ export class C_MazeObjShogai extends C_MazeObj implements I_MazeObj {
                 col_2: '#9999cc', col_L: '#6666ff', 
             }
         }
-        this.__init(jj);
+        this.decode(jj);
     }
 }

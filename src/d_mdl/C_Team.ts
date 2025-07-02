@@ -56,7 +56,7 @@ export class C_Team implements I_MazeObj {
     protected my_name:   string;
     protected uniq_id:   string;
     protected save_id:   number;
-    protected myWalker:    C_Walker;
+    protected myWalker:  C_Walker;
     protected gold:      number;
 //    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
