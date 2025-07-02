@@ -8,12 +8,6 @@ import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView, T_Rect }  from "./C_Maz
 type T_xy = {x: number, y: number};
 
 export class C_CurrentTeamView  implements I_MazeObjView {
-    public  static newObj(j?: JSON_Team): I_MazeObjView {
-        const team = new C_Team(j);
-        return new C_CurrentTeamView(team);
-    }
-    public  newObj(j?: JSON_Team): I_MazeObjView {return C_CurrentTeamView.newObj(j)}
-
     private my_team: C_Team;
     private my_layer:  number = 99;
     public  constructor(team: C_Team) {

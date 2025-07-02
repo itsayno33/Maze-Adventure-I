@@ -176,7 +176,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
             const exist = this.objs[id];
 
             if (exist.view() === undefined) continue;
-            if (exist.within(p) && exist.view()?.letter() !== null) {
+            if (exist.within(p) && exist.view()?.letter(exist.get_pd().d) !== null) {
                 const exist_layer = exist.view()?.layer()??-99;
                 if (exist_layer > layer) {
                     layer = exist_layer;
@@ -189,7 +189,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public exist_obj(p: C_Point): boolean {
         for (const id in this.objs) {
             const exist = this.objs[id];
-            if (exist.within(p) && exist.view()?.letter() !== null) return true;
+            if (exist.within(p) && exist.view()?.letter(exist.get_pd().d) !== null) return true;
         }
         return false;
     }
@@ -549,7 +549,7 @@ public static from_string_to_objArray(txt: string): {[uid: string]: C_Maze} {
                 if (!debug_mode && this.masks[floor][y][x]) {
                     ret_str += 'Ｘ';
                 } else {
-                    const obj_c = obj?.view()?.letter() ?? null;
+                    const obj_c = obj?.view()?.letter(obj.get_pd().d) ?? null;
                     if (obj === null || obj_c === null) {
                         ret_str += this.cells[floor][y][x].to_letter();
                     } else {

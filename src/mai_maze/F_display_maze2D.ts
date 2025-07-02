@@ -114,14 +114,15 @@ function to_2D(): void {
             };
 
             if (!g_debug.isON() && g_maze.is_masked_xyz(x, y, floor)) {
-                cell_masks.drow2D(rect_2d);
+                cell_masks.drow2D(rect_2d, 0);
             } else {
-                const obj_view = g_maze.get_obj_xyz(x, y, floor)?.view();
-                if (obj_view !== undefined) obj_view?.drow2D(rect_2d);
+                const obj_cell = g_maze.get_obj_xyz(x, y, floor);
+                const obj_view = obj_cell?.view();
+                if (obj_view !== undefined) obj_view?.drow2D(rect_2d, obj_cell?.get_pd().d??0);
                 else {
                     const flr_view = g_maze.get_cell_xyz(x, y, floor)?.getObj()?.view();
-                    if (flr_view !== undefined) flr_view?.drow2D(rect_2d);
-                    else cell_unexp.drow2D(rect_2d);
+                    if (flr_view !== undefined) flr_view?.drow2D(rect_2d, obj_cell?.get_pd().d??0);
+                    else cell_unexp.drow2D(rect_2d, obj_cell?.get_pd().d??0);
                 }
             }
         }

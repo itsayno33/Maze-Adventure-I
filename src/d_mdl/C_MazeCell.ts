@@ -46,7 +46,7 @@ export class C_MazeCell  {
     }
 
     public to_letter(): string {
-        return this.my_obj.view()?.letter() ?? 'Ｘ';
+        return this.my_obj.view()?.letter(0) ?? 'Ｘ';
     }
     public static from_letter(letter: string): number {
         for (const key of Object.keys(T_MzKind)) {
@@ -55,12 +55,12 @@ export class C_MazeCell  {
         return T_MzKind.NoDef;
     }
 
-    public drow2D(rect: T_Rect): void {
-        this.my_obj.view()?.drow2D(rect);
+    public drow2D(rect: T_Rect, dir: number = 0): void {
+        this.my_obj.view()?.drow2D(rect, dir);
     }
 
-    public drow3D(frot: T_Wall, back: T_Wall): void {
-        this.my_obj.view()?.drow3D(frot, back);
+    public drow3D(frot: T_Wall, back: T_Wall, dir: number = 0): void {
+        this.my_obj.view()?.drow3D(frot, back, dir);
     }
 
     public encode(): string {

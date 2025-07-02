@@ -7,12 +7,12 @@ import { T_Wall }               from "../d_mdl/C_Wall";
 export interface I_MazeObjView extends I_Abstract {
     // 表示関係(2Dpre)./C_Wall
     layer:   ()=>number;
-    letter:  ()=>string|null; // null: 見えない、何もない
+    letter:  (dir: number)=>string|null; // null: 見えない、何もない
 
     // 表示関係(3D)
     canShow: ()=>boolean;
-    drow2D:  (floor: T_Rect)=>void;
-    drow3D:  (frot:  T_Wall, back: T_Wall)=>void;
+    drow2D:  (floor: T_Rect, dir: number)=>void;
+    drow3D:  (frot:  T_Wall, back: T_Wall, dir: number)=>void;
 
     pad_t:   ()=>number; //上側の空き(割合: 0から1) 
     pad_d:   ()=>number; //床側の空き(割合: 0から1) 
@@ -71,7 +71,7 @@ export class C_MazeObjView implements I_MazeObjView {
     }
 
 
-    private clname:    string = 'C_MazeObjView';
+    protected clname:    string = 'C_MazeObjView';
 
     private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
@@ -140,7 +140,7 @@ export class C_MazeObjView implements I_MazeObjView {
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
 
-    public letter():  string|null {return this.my_letter}
+    public letter(dir: number = 0):  string|null {return this.my_letter}
     public set_letter(letter: string|null): string|null {return this.my_letter = letter}
 
     public canShow(): boolean {return this.my_show};
@@ -171,11 +171,11 @@ export class C_MazeObjView implements I_MazeObjView {
     public set_col_2(col_2: string|null): string|null {return this.my_col_2 = col_2} 
     public set_col_L(col_L: string|null): string|null {return this.my_col_L = col_L} 
 
-    public drow2D(rect: T_Rect): void {
+    public drow2D(rect: T_Rect, dir: number = 0): void {
         drow2D_cell(rect, this.col_2() ?? '#cccccc', this.col_L() ?? '#9999ff');
     }
 
-    public drow3D(frot: T_Wall, back: T_Wall): void {
+    public drow3D(frot: T_Wall, back: T_Wall, dir: number = 0): void {
         this.drow3D_obj_back      (frot, back);
         this.drow3D_obj_down      (frot, back);
         this.drow3D_obj_top       (frot, back);

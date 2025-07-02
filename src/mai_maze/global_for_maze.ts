@@ -52,7 +52,9 @@ import { _irand } from "../d_utl/F_Rand";
 
 
 import { C_OnOffButton }                    from '../d_ctl/C_OnOffButton'
-import { C_MazeObjShadow, C_MazeObjShogai } from "../d_mdl/C_MazeObjEtc";
+import { C_MazeObjShadow, C_MazeObjShogai } from '../d_mdl/C_MazeObjEtc';
+import { C_WanderWalker } from "../d_mdl/C_WanderWalker";
+import { C_WanderWalkerObj } from "../d_mdl/C_WanderWalkerObj";
 export let g_view2: C_OnOffButton;
 
 export function init_before_games(): void {
@@ -217,20 +219,22 @@ function stop_double_click(): void {
 
 // 暫定(C_MazeObjのテスト用)
 function install_objs(num: number = 1): void {
+    // 通り抜けできないオブジェを置く（移動版）
+    for (let i = 0; i < num; i++) {
+        const x = _irand(0, (g_maze.get_x_max() - 1) / 2 - 1) * 2 + 1; 
+        const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
+
+        const walker = new C_WanderWalker({
+            pos:    {x:x, y:y, z:0, d:0},
+        });
+        const obj = new C_WanderWalkerObj(walker, {});
+        g_maze.add_obj(obj);
+    }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {
         const x = _irand(0, (g_maze.get_x_max() - 1) / 2 - 1) * 2 + 1; 
         const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
         const obj = new C_MazeObjShadow({
-            pos:    {x:x, y:y, z:0, d:0},
-        });
-        g_maze.add_obj(obj);
-    }
-    // 通り抜けできないオブジェを置く
-    for (let i = 0; i < num; i++) {
-        const x = _irand(0, (g_maze.get_x_max() - 1) / 2 - 1) * 2 + 1; 
-        const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
-        const obj = new C_MazeObjShogai({
             pos:     {x:x, y:y, z:0, d:0},
         });
         g_maze.add_obj(obj);

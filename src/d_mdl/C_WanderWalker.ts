@@ -1,20 +1,21 @@
 "use strict";
 
-import { C_MazeObj } from "./C_MazeObj";
-import { C_Walker, JSON_Walker } from "./C_Walker";
-import { I_HopeAction, C_HopeAction } from './C_Hope';
-import { _irand } from "../d_utl/F_Rand";
+import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { JSON_MazeObjView }                   from "./C_MazeObjView";
+import { C_Walker, JSON_Walker }              from "./C_Walker";
+import { C_WanderWalkerView, JSON_WanderWalkerView }                 from './C_WanderWalkerView';
+import { I_HopeAction, C_HopeAction }         from './C_Hope';
+import { _irand }                             from "../d_utl/F_Rand";
 
-export interface JSON_WanderWalker extends JSON_Walker {
-}
+export interface JSON_WanderWalker extends JSON_Walker {}
 
 type T_Condition = {
-    "canMove":  boolean; // 移動可能
-    "canTurn":  boolean; // 向き変更可能
-    "canSlid":  boolean; // スライド可能
-    "canThru":  boolean; // 壁を通過可能
-    "canUpDn":  boolean; // 上下移動可能
-    "careWal":  boolean; // 壁を気にする
+    canMove:  boolean; // 移動可能
+    canTurn:  boolean; // 向き変更可能
+    canSlid:  boolean; // スライド可能
+    canThru:  boolean; // 壁を通過可能
+    canUpDn:  boolean; // 上下移動可能
+    careWal:  boolean; // 壁を気にする
 };
 
 export type T_Action =
@@ -32,31 +33,33 @@ export type T_Action =
     ;
 
 export class C_WanderWalker extends C_Walker {
-    protected mazeObj: C_MazeObj|undefined;
+    protected mazeObj: I_MazeObj|undefined;
     protected cond:    T_Condition = {
-        "canMove":  false,   // 移動可能
-        "canTurn":  false,   // 向き変更可能
-        "canSlid":  false,   // スライド可能
-        "canThru":  false,   // 壁を通過可能
-        "canUpDn":  false,   // 上下移動可能
-        "careWal":  false,   // 壁を気にする
+        canMove:  false,   // 移動可能
+        canTurn:  false,   // 向き変更可能
+        canSlid:  false,   // スライド可能
+        canThru:  false,   // 壁を通過可能
+        canUpDn:  false,   // 上下移動可能
+        careWal:  false,   // 壁を気にする
     }; 
     protected action: T_Action[] = []; // 選択できる行動の配列
 
     constructor(j?: JSON_WanderWalker) {
         super(j);
-        this.mazeObj = new C_MazeObj({
-            can_thr:  '1',
-            h_w_dmg:  0,
-            pos:     {x:1, y:1, z:1},
-            view:    {
-                layer: 0, letter: '　', 
+        const view = new C_WanderWalkerView(this, {
+                layer: 0, letter: '漂', 
                 show3D:  '1',
                 pad_t: 0.0, pad_d: 0.3, pad_s: 0.3,
                 col_f: '', col_b: '', col_s: '', col_t: '#ff66ff', col_d: '', 
                 col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
-            },
-        })
+        } as JSON_WanderWalkerView);
+
+        this.mazeObj = new C_MazeObj({
+            can_thr:  '1',
+            h_w_dmg:  0,
+            pos:     {x:1, y:1, z:0, d:0},
+            view:    view.encode(),
+        } as JSON_MazeObj);
         if (j) {
             this.decode(j);
         }
@@ -136,12 +139,12 @@ export class C_WanderWalker extends C_Walker {
     public decode(a: JSON_WanderWalker): C_WanderWalker {
         if (a === undefined) return this;
         super.decode(a);
-        this.cond.canMove  = a.cond?.canMove  ?? this.cond.canMove;
-        this.cond.canTurn  = a.cond?.canTurn  ?? this.cond.canTurn;
-        this.cond.canThru  = a.cond?.canThru  ?? this.cond.canThru;
-        this.cond.canSlid  = a.cond?.canSlid  ?? this.cond.canSlid;
-        this.cond.canUpDn  = a.cond?.canUpDn  ?? this.cond.canUpDn;
-        this.cond.careWal  = a.cond?.careWal  ?? this.cond.careWal;
+        if (a.cond?.canMove !== undefined) this.cond.canMove  = a.cond.canMove;
+        if (a.cond?.canTurn !== undefined) this.cond.canTurn  = a.cond.canTurn;
+        if (a.cond?.canThru !== undefined) this.cond.canThru  = a.cond.canThru;
+        if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid;
+        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn;
+        if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal;
         if (a.cond?.mazeObj??false) {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
         }

@@ -134,7 +134,7 @@ function drowMazeCell(d: number, w: number): void {
     g_maze?.get_cell(around_j_k)?.drow3D(frot_wall, back_wall);
     if (g_maze.exist_obj(around_j_k)) {
         const obj = g_maze.get_obj(around_j_k);
-        if (obj !== null) obj.view()?.drow3D(frot_wall, back_wall);
+        if (obj !== null) obj.view()?.drow3D(frot_wall, back_wall, obj?.get_pd().d ?? 0);
     }
 }
 

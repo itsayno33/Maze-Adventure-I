@@ -81,7 +81,7 @@ function to_string(): string {
                 if (obj === null || obj.view() === undefined) {
                     ret_str += g_maze.get_cell_xyz(x, y, floor)?.to_letter();
                 } else {
-                    const obj_c = obj.view()?.letter() ?? '謎';
+                    const obj_c = obj.view()?.letter(obj?.get_pd().d??0) ?? '謎';
                     ret_str += obj_c;
                 }
             }
