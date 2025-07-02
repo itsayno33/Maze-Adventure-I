@@ -55,6 +55,7 @@ import { C_OnOffButton }                    from '../d_ctl/C_OnOffButton'
 import { C_MazeObjShadow, C_MazeObjShogai } from '../d_mdl/C_MazeObjEtc';
 import { C_WanderWalker } from "../d_mdl/C_WanderWalker";
 import { C_WanderWalkerObj } from "../d_mdl/C_WanderWalkerObj";
+import { C_WanderWalkerView, JSON_WanderWalkerView } from "../d_mdl/C_WanderWalkerView";
 export let g_view2: C_OnOffButton;
 
 export function init_before_games(): void {
@@ -227,8 +228,18 @@ function install_objs(num: number = 1): void {
         const walker = new C_WanderWalker({
             pos:    {x:x, y:y, z:0, d:0},
         });
-        const obj = new C_WanderWalkerObj(walker, {});
-        g_maze.add_obj(obj);
+
+/*************************
+        const view = new C_WanderWalkerView({
+            pos:    {x:x, y:y, z:0, d:0},
+        } as JSON_WanderWalkerView);
+
+        const obj = new C_WanderWalkerObj({});
+        obj.setView(view);
+**************************/
+        g_maze.add_obj(walker.get_mazeObj());
+
+
     }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {

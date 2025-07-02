@@ -24,6 +24,7 @@ export interface JSON_MazeObj extends JSON_Any {
 
 export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     get_pd:     ()=>C_PointDir;
+    set_pd:     (pd:C_PointDir)=>void;
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
     canThrough: ()=>boolean;

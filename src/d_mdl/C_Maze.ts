@@ -154,7 +154,9 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     }
     
     // メイズ内のオブジェクトやモンスター等の配置
-    public add_obj(obj: I_MazeObj): void {
+    public add_obj(obj: I_MazeObj | undefined): void {
+        if (obj === undefined) return;
+        
         this.objs[obj.uid()] = obj;
     }
     public rmv_obj(obj: I_MazeObj): void {

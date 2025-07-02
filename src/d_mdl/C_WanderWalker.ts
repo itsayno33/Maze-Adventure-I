@@ -6,6 +6,7 @@ import { C_Walker, JSON_Walker }              from "./C_Walker";
 import { C_WanderWalkerView, JSON_WanderWalkerView }                 from './C_WanderWalkerView';
 import { I_HopeAction, C_HopeAction }         from './C_Hope';
 import { _irand }                             from "../d_utl/F_Rand";
+import { C_PointDir } from "./C_PointDir";
 
 export interface JSON_WanderWalker extends JSON_Walker {}
 
@@ -46,7 +47,7 @@ export class C_WanderWalker extends C_Walker {
 
     constructor(j?: JSON_WanderWalker) {
         super(j);
-        const view = new C_WanderWalkerView(this, {
+        const view = new C_WanderWalkerView({
                 layer: 0, letter: '漂', 
                 show3D:  '1',
                 pad_t: 0.0, pad_d: 0.3, pad_s: 0.3,
@@ -63,6 +64,15 @@ export class C_WanderWalker extends C_Walker {
         if (j) {
             this.decode(j);
         }
+    }
+
+    public get_mazeObj(): I_MazeObj|undefined {
+        return this.mazeObj;
+    }
+    public set_pd(pd: C_PointDir): C_PointDir {
+        super.set_pd(pd);
+        if (this.mazeObj !== undefined) this.mazeObj.set_pd(pd);
+        return pd;
     }
 
     public wonder(): I_HopeAction {

@@ -125,6 +125,9 @@ export class C_Team implements I_MazeObj {
     public get_pd(): C_PointDir {
         return this.myWalker.get_pd();
     }
+    public set_pd(pd: C_PointDir): void {
+        this.myWalker.set_pd(pd);
+    }
 
 /*
     public static from_obj_to_string(oa: C_Team): string {

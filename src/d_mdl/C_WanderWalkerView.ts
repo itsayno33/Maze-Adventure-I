@@ -9,7 +9,7 @@ type T_xy = {x: number, y: number};
 export interface JSON_WanderWalkerView extends JSON_MazeObjView {}
 
 export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView {
-    public constructor(walker: C_WanderWalker, j: JSON_MazeObjView) {
+    public constructor(j: JSON_MazeObjView) {
         super(j);
         this.clname    = 'WanderWalkerView';
     }
