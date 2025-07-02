@@ -48,12 +48,12 @@ export async function get_mai_guld(callback?: T_callback): Promise<any|undefined
 
 async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
     return await POST_and_get_JSON3(url, opt)?.then(jsonObj=>{
-        if (jsonObj.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
             g_mes.normal_message('正常にロードされました');
         
             if (jsonObj.save  === undefined) {
                 g_mes.warning_message("保存データが不正な形式でした\n" + jsonObj.emsg);
-                _alert(jsonObj.emsg);
+                _alert((jsonObj.emsg??'??? 不明なエラー ???'));
                 return undefined;
             }
 
@@ -69,7 +69,7 @@ async function _get_new_game(url: string, opt: C_UrlOpt, callback?: T_callback):
             return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
     });
@@ -83,9 +83,9 @@ export function get_new_maze(maze_name: string, callback?: T_callback): Promise<
 
 //    return POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
     return POST_and_get_JSON3(g_url[g_url_get_maze], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode !== 0) {
+        if ((jsonObj.ecode??-99) !== 0) {
             g_mes.warning_message("新迷宮データを受信できませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
         if (jsonObj?.data  === undefined) {
@@ -122,7 +122,7 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
 
 //    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
     return POST_and_get_JSON3(g_url[g_url_get_info], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
             g_mes.normal_message('正常にロードされました');
 
             if (jsonObj.save_info  === undefined) {
@@ -145,7 +145,7 @@ export function get_save_info(callback?: T_callback): Promise<any|undefined> {
             return jsonObj;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
     });
@@ -156,7 +156,7 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
     opt.set('mode',        'maze_info'); 
 //    return await POST_and_get_JSON(g_url[g_url_gt2_maze], opt)?.then(jsonObj=>{
     return await POST_and_get_JSON3(g_url[g_url_all_maze], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.mazeinfo === undefined) {
                 g_mes.warning_message("迷宮情報が不正な形式でした\n" + jsonObj.emsg);
@@ -177,7 +177,7 @@ export async function get_maze_info(callback?: T_callback): Promise<any|undefine
             return jsonObj?.data?.mazeinfo;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
     });
@@ -190,7 +190,7 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
 //    return await POST_and_get_JSON(g_url[g_url_gt2_guld], opt)?.then(jsonObj=>{
     opt.set('nmbr',         num.toString());
     return await POST_and_get_JSON3(g_url[g_url_all_hres], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
             g_mes.normal_message('正常にロードされました');
             if (jsonObj?.data?.hres  === undefined) {
                 g_mes.warning_message("ヒーロー・データが不正な形式でした\n" + jsonObj.emsg);
@@ -207,7 +207,7 @@ export async function get_new_hero(num: number = 20, callback?: T_callback): Pro
             return jsonObj?.data;
         } else {
             g_mes.warning_message("ロードできませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
     });
@@ -258,12 +258,12 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
 
 //    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
     return POST_and_get_JSON3(g_url[g_url_get_data], opt)?.then(jsonObj=>{
-        if (jsonObj.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
             g_mes.normal_message('正常にロードされました');
  
             if (jsonObj?.save  === undefined) {
                 g_mes.warning_message("受信した保存データが不正な形式でした\n" + jsonObj.emsg);
-                _alert(jsonObj.emsg);
+                _alert((jsonObj.emsg??'??? 不明なエラー ???'));
                 return undefined;
             }
     
@@ -279,7 +279,7 @@ function __auto_load(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefine
             return jsonObj;
         } else {
             g_mes.warning_message(`ロードできませんでした${jsonObj.ecode}\n` + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
     });
@@ -345,11 +345,11 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
 
 //    return POST_and_get_JSON(g_url[g_url_gt2_save], opt)?.then(jsonObj=>{
     return POST_and_get_JSON3(g_url[g_url_put_data], opt)?.then(jsonObj=>{
-        if (jsonObj?.ecode === 0) {
+        if ((jsonObj.ecode??-99) === 0) {
  
             if (jsonObj?.save  === undefined) {
                 g_mes.warning_message("受信した保存データが不正な形式でした\n" + jsonObj.emsg);
-                _alert(jsonObj.emsg);
+                _alert((jsonObj.emsg??'??? 不明なエラー ???'));
                 return undefined;
             }
     
@@ -365,7 +365,7 @@ function __save(opt: C_UrlOpt, callback?: T_callback): Promise<any|undefined> {
             return jsonObj;
         } else {
             g_mes.warning_message("セーブできませんでした\n" + jsonObj.emsg);
-            _alert(jsonObj.emsg);
+            _alert((jsonObj.emsg??'??? 不明なエラー ???'));
             return undefined;
         }
         

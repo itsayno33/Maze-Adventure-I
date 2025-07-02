@@ -51,7 +51,7 @@ export class C_MazeRDB {
             return false;
         }
         for (const obje of maze.get_obj_array()) {
-            await C_MazeObjRDB.set_to_rdb(db_mai, mes, save_id, maze.uid(), obje as C_MazeObj);
+            await C_MazeObjRDB.set_to_rdb(db_mai, mes, save_id, maze.uid(), obje);
             if (mes.is_err()) {
                 return false;
             }

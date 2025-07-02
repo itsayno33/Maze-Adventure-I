@@ -292,8 +292,8 @@ function new_team(): Team {
                     <p id='ldsv_data_point'></p>
                 </li>
                 <li>
-                    <label for='ldsv_data_detail'>詳細:</label>
-                    <textarea id='ldsv_data_detail' for='load_data_form' type='text' name='detail' minlength='0' maxlength='99' cols='30' rows='5' placeholder='(任意)' readonly></textarea>
+                    <label for='ldsv_data_detail_'>詳細:</label>
+                    <textarea id='ldsv_data_detail_' for='load_data_form' type='text' name='detail' minlength='0' maxlength='99' cols='30' rows='5' placeholder='(任意)' readonly></textarea>
                 </li>
             </ul>
         </fieldset>

@@ -52,11 +52,6 @@ export function alert_team_info(a: JSON_Team|undefined): void {
 
 
 export class C_Team implements I_MazeObj {
-    public static newObj(j?: JSON_Team): C_Team {
-        return new C_Team(j);
-    }
-    public newObj(j?: JSON_Team): C_Team {return C_Team.newObj(j);}
-
     protected my_id:     number;
     protected my_name:   string;
     protected uniq_id:   string;

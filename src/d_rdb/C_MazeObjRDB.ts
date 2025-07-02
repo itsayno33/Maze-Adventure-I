@@ -1,7 +1,7 @@
 // 利用クラス等の読み込み
 import mysql from 'mysql2/promise';
 import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
-import { C_MazeObj, JSON_MazeObj }         from '../d_mdl/C_MazeObj';
+import { C_MazeObj, I_MazeObj, JSON_MazeObj }         from '../d_mdl/C_MazeObj';
 
 type db_connect = mysql.PoolConnection;
 
@@ -46,7 +46,7 @@ export class C_MazeObjRDB {
         mes: C_DspMessage, 
         save_id: number, 
         maze_uid: string, 
-        obje: C_MazeObj
+        obje: I_MazeObj
     ): Promise<boolean> {
         const mase_id = await C_MazeObjRDB.add_tbl(db_mai, mes, save_id, maze_uid, obje);
         if (mes.is_err()) {
@@ -116,20 +116,18 @@ export class C_MazeObjRDB {
             mes:      C_DspMessage, 
             save_id:  number,
             maze_uid: string,
-            obje:     C_MazeObj
+            obje:     I_MazeObj
         ): Promise<number> {
 
         const insert_obje_SQL = `
             INSERT INTO tbl_obje(
-                id,       save_id,  uniq_id, 
-                maze_uid, cls_name, 
-                pos_x,    pos_y,    pos_z,   pos_d, 
+                save_id,  uniq_id, maze_uid, cls_name, 
+                pos_x,    pos_y,   pos_z,    pos_d, 
                 view,     stat 
             )
             VALUES (
-                :id,       :save_id,  :uniq_id, 
-                :maze_uid, :cls_name, 
-                :pos_x,    :pos_y,    :pos_z,   :pos_d, 
+                :save_id,  :uniq_id, :maze_uid, :cls_name, 
+                :pos_x,    :pos_y,   :pos_z,    :pos_d, 
                 :view,     :stat 
             )
         `
@@ -140,14 +138,14 @@ export class C_MazeObjRDB {
     console.error(
             "save_id="   +    save_id
         + ", uniq_id="   +    j.uniq_id
-        + ", maze_uid="  +    j.maze_uid
-        + ", cls_name="  +    j.cls_name
+        + ", maze_uid="  +    maze_uid
+        + ", cls_name="  +    j.clname
         + ", pos_x="     +   (j.pos?.x)
         + ", pos_y="     +   (j.pos?.y)
         + ", pos_z="     +   (j.pos?.z)
         + ", pos_d="     +   (j.pos?.d)
-        + ", view="      +    j.view
-        + ", stat="      +    j.stat
+        + ", view="      +    JSON.stringify(j.view??{ERROR:'NONE'})
+        + ", stat="      +    JSON.stringify(j.stat??{ERROR:'NONE'})
     )
 */
 
@@ -161,7 +159,7 @@ export class C_MazeObjRDB {
             save_id:     save_id,
             uniq_id:     j.uniq_id,
             maze_uid:    maze_uid,
-            cls_name:    j.cls_name,
+            cls_name:    j.clname,
             pos_x:       j.pos?.x??0,
             pos_y:       j.pos?.y??0,
             pos_z:       j.pos?.z??0,

@@ -10,6 +10,7 @@ import { C_HeroRDB }      from "./C_HeroRDB";
 import { C_MazeRDB }      from "./C_MazeRDB";
 import { C_GuildRDB }     from "./C_GuildRDB";
 import { C_MvptRDB }      from "./C_MvptRDB";
+import { C_MazeObjRDB } from "./C_MazeObjRDB";
 
 type db_connect = mysql.PoolConnection;
 
@@ -194,6 +195,11 @@ export class C_SaveDataRDB {
     
     public static async del_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number): Promise<boolean> {
         await C_HeroRDB.del_tbl_all(db_mai, mes, save_id);
+        if (mes.is_err()) {
+            return false;
+        }
+
+        await C_MazeObjRDB.del_tbl_all(db_mai, mes, save_id);
         if (mes.is_err()) {
             return false;
         }

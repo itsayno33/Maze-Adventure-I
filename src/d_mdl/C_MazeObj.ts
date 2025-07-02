@@ -65,7 +65,7 @@ export class C_MazeObj implements I_MazeObj {
         }
         if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
         if (j.h_w_dmg !== undefined) this.h_w_dmg = j.h_w_dmg;
-        if (j.stat    !== undefined) this.stat    = JSON.parse(j.stat) as Object;
+        if (j.stat    !== undefined) this.stat    = JSON.parse(j.stat??'{}') as Object;
         return this;
 }
 
@@ -100,7 +100,7 @@ export class C_MazeObj implements I_MazeObj {
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
             h_w_dmg: this.h_w_dmg,
-            stat:    JSON.stringify(this.stat??'{}'),
+            stat:    JSON.stringify(this.stat??{}),
         }
     }
 

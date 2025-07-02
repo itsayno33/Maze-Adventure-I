@@ -49,7 +49,6 @@ import {
     init_after_loaded_DOM_in_common 
 } from "../d_cmn/global";
 import { _irand } from "../d_utl/F_Rand";
-import { C_MazeObj } from "../d_mdl/C_MazeObj";
 
 
 import { C_OnOffButton } from '../d_ctl/C_OnOffButton'
