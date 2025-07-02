@@ -23,7 +23,7 @@ export class C_CurrentTeamView  implements I_MazeObjView {
     public layer(): number         {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}
     public letter(): string|null {
-        switch (this.my_team.walk().get_d()) {
+        switch (this.my_team.getWalker().get_d()) {
             case T_Direction.N: return '↑';
             case T_Direction.E: return '→';
             case T_Direction.S: return '↓';
@@ -62,7 +62,7 @@ export class C_CurrentTeamView  implements I_MazeObjView {
         con.fill();
     
         // Draw the arrow
-        switch (this.my_team.walk().get_d()) {
+        switch (this.my_team.getWalker().get_d()) {
             case T_Direction.N:  // ↑
                 this.drow2D_arrow({x: (r.tl.x + r.tr.x)/2, y:r.tl.y}, r.dl, r.dr);break
             case T_Direction.E:  // →

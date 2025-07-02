@@ -204,25 +204,25 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     // 2Dマップのマスク外し関連
     public clear_mask_around_the_team(team: C_Team): void {
         // 現在地と真横は自動的に見える
-        this.__clear_mask(team.walk().get_around(0, -1));
-        this.__clear_mask(team.walk().get_around(0,  0));
-        this.__clear_mask(team.walk().get_around(0,  1));
+        this.__clear_mask(team.getWalker().get_around(0, -1));
+        this.__clear_mask(team.getWalker().get_around(0,  0));
+        this.__clear_mask(team.getWalker().get_around(0,  1));
 
         const depth   =  5; // 2Dマップ用の奥行き限界
 
         // 前方の見通しをチェックしながら見えるところは解放する
         for (var d = 1; d < depth; d++) {
-            const front_pos = team.walk().get_around(d, 0)
+            const front_pos = team.getWalker().get_around(d, 0)
             if (this.is_movable(front_pos)) {
                 // 正面に障害物が無ければ、その両側も見える
-                this.__clear_mask(team.walk().get_around(d, -1));
-                this.__clear_mask(team.walk().get_around(d,  0));
-                this.__clear_mask(team.walk().get_around(d,  1));
+                this.__clear_mask(team.getWalker().get_around(d, -1));
+                this.__clear_mask(team.getWalker().get_around(d,  0));
+                this.__clear_mask(team.getWalker().get_around(d,  1));
             } else {
                 // 正面が障害物でもその手前まで見えてたなら、その壁と両側は見える
-                this.__clear_mask(team.walk().get_around(d, -1));
-                this.__clear_mask(team.walk().get_around(d,  0));
-                this.__clear_mask(team.walk().get_around(d,  1));
+                this.__clear_mask(team.getWalker().get_around(d, -1));
+                this.__clear_mask(team.getWalker().get_around(d,  0));
+                this.__clear_mask(team.getWalker().get_around(d,  1));
                 // 正面に障害物が有ったらその奥は見えないので探索終了
                 break;
             }

@@ -126,7 +126,7 @@ export function display_maze3D(): void {
 
 function drowMazeCell(d: number, w: number): void {
     if (g_ds.wall === null) return;
-    const around_j_k = g_team.walk().get_around(d, w, 0);
+    const around_j_k = g_team.getWalker().get_around(d, w, 0);
     const frot_wall  = g_ds.wall.get(d, w);
     const back_wall  = g_ds.wall.get(d + 1, w);
     const mz_kind    = g_maze.get_kind(around_j_k);
@@ -176,7 +176,7 @@ export function maze3D_blink_on_direction(): void {
     const dir_y = document.getElementById('direction_Y') as HTMLSpanElement;
     if (dir_y === null) return;
 
-    switch (g_team.walk().get_d()) {
+    switch (g_team.getWalker().get_d()) {
         case T_Direction.N:
         case T_Direction.S:
             dir_x.classList.remove('blink');

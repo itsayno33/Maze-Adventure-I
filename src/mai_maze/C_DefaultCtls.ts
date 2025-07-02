@@ -332,8 +332,8 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'KeyU':
                 if (!ne) break;
                 if (g_debug.isON()) {
-                    const z = g_team.walk().get_z();
-                    if (z > 0) g_team.walk().set_z(z - 1);
+                    const z = g_team.getWalker().get_z();
+                    if (z > 0) g_team.getWalker().set_z(z - 1);
                     do_move_bottom_half('blink_off');
 //              } else {
 //                  (document.getElementById('u_arr') as HTMLButtonElement)?.click();
@@ -342,8 +342,8 @@ function key_press_function(e: KeyboardEvent):void  {
         case 'KeyD':
                 if (!ne) break;
                 if (g_debug.isON()) {
-                    const z = g_team.walk().get_z();
-                    if (z < g_maze.get_z_max()-1) g_team.walk().set_z(z + 1);
+                    const z = g_team.getWalker().get_z();
+                    if (z < g_maze.get_z_max()-1) g_team.getWalker().set_z(z + 1);
                     do_move_bottom_half('blink_off');
 //              } else {
 //                  (document.getElementById('u_arr') as HTMLButtonElement)?.click();

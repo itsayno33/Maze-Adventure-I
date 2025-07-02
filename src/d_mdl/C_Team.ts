@@ -93,7 +93,7 @@ export class C_Team implements I_MazeObj {
     }
 
     public view():  I_MazeObjView|undefined {return this.myView}
-    public walk():  C_Walker {
+    public getWalker():  C_Walker {
         return this.myWalker
     }
     
