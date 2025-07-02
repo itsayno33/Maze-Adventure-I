@@ -25,20 +25,25 @@ export function can_move_team(r: I_HopeAction): I_HopeResponceMove {
     if (!_touch) {
         // 進行方向にある壁やオブジェとの衝突判定
         const _how_collide  = _how_collide_team(r); // 戻り値 canMove:trueなら移動可、damageは基本ダメージ量
+
+/***********************
         if (!_how_collide.canMove) {
             // ダメージ処理
             const damage  = _irand(Math.trunc(_how_collide.damage * 0.9), Math.ceil(_how_collide.damage * 1.1));
             hp_damage_hres(damage); 
         }
+************************/
         return {
             ok:  _how_collide.canMove,   // 移動可否
             res: _how_collide.canMove ? 'Move' : 'Block', // 行動結果
+            dmg: _how_collide.damage, // 基本ダメージ値
             hope: r,                     // 希望行動
         }
     } else {
         return {
             ok:      false,     // 移動不能
             res:    'Block',    // 行動結果
+            dmg:    0,          // 基本ダメージ値
             hope:    r,         // 希望行動
         }
     }
@@ -50,9 +55,9 @@ export function can_turn_team(r: I_HopeAction): I_HopeResponceTurn {
     const _turn = _can_turn_team(r);
     if (_turn) {
         const _touch =_is_touch_team(r);  // 当たり判定（隣接）
-        return {ok: !_touch , hope: r, res: _touch ? 'Block' : 'Turn'}; // ターン可能
+        return {ok: !_touch , hope: r, res: _touch ? 'Block' : 'Turn', dmg: 0}; // ターン可能
     } else {
-        return {ok: false,    hope: r, res: 'Block'}; // ターン不可
+        return {ok: false,    hope: r, res: 'Block', dmg: 0}; // ターン不可
     }
 }
 

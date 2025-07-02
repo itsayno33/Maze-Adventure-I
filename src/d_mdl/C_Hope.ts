@@ -71,6 +71,7 @@ export class C_HopeAction implements I_HopeAction {
 export interface I_HopeResponce {
     ok:   boolean,         // 行動可否
     res:  T_HopeResKind,   // 行動結果
+    dmg:  number,          // 基本ダメージ値
     hope: I_HopeAction,    // 希望行動の種類
 }
 

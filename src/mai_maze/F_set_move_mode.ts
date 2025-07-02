@@ -23,6 +23,7 @@ import {
     g_hres, 
 } from "./global_for_maze";
 import { can_move_team, can_turn_team } from "./F_GM_move_and_turn";
+import { _irand } from "../d_utl/F_Rand";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -115,10 +116,14 @@ function tr_L(): void {
 }
 function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
-    // 周囲にオブジェが有ればオブジェ接近処理
-    around_obj(r);
+    //g_maze全体のオブジェ行動の処理
+    action_obj(r);
 
     if (!r.has_hope) return;
+    if (r.hope == 'Wait') {
+        r.doOK();
+        return;
+    }
     if (r.hope == 'Turn') {
         const _rslt = can_turn_team(r);
         if (_rslt.ok) r.doOK();
@@ -142,6 +147,9 @@ function move_check(r: I_HopeAction): void {
             }
         } else {               //   alert ( 'r.res = ' + _rslt.res ); 
             // 進行方向へ進めない
+            // ダメージ処理
+            const damage  = _irand(Math.trunc(_rslt.dmg * 0.9), Math.ceil(_rslt.dmg * 1.1));
+            for (const hero of g_hres) hero.hp_damage(damage);
             dont_move(r);
         }
     }
@@ -189,8 +197,8 @@ function dont_move(r: I_HopeAction): void {
 }
 // オブジェ接近処理
 function around_obj(r: I_HopeAction): void {} 
-// オブジェ処理
-function action_obj(): void {}
+// g_maze全体のオブジェの行動処理
+function action_obj(r: I_HopeAction): void {}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
