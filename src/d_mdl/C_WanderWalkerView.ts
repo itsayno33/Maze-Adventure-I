@@ -23,7 +23,7 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         }
     }
     public drow2D(r: T_Rect, dir: number = 0): void {
-        super.drow2D(r);
+//        super.drow2D(r);
         const con = C_MazeObjView.get_context2D();
         if (con === undefined) return;
     
