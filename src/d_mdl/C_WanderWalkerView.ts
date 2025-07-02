@@ -13,7 +13,7 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         super(j);
         this.clname    = 'WanderWalkerView';
     }
-/**********************
+
     public letter(dir: number = 0): string|null {
         switch (dir) {
             case T_Direction.N: return '👆';
@@ -23,7 +23,6 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
             default: return '🌀';
         }
     }
-***********************/
     public drow2D(r: T_Rect, dir: number = 0): void {
         super.drow2D(r);
         const con = C_MazeObjView.get_context2D();
