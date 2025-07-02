@@ -228,15 +228,6 @@ function install_objs(num: number = 1): void {
         const walker = new C_WanderWalker({
             pos:    {x:x, y:y, z:0, d:0},
         });
-
-/*************************
-        const view = new C_WanderWalkerView({
-            pos:    {x:x, y:y, z:0, d:0},
-        } as JSON_WanderWalkerView);
-
-        const obj = new C_WanderWalkerObj({});
-        obj.setView(view);
-**************************/
         g_maze.add_obj(walker.get_mazeObj());
 
 

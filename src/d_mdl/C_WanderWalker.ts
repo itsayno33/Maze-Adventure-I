@@ -50,20 +50,18 @@ export class C_WanderWalker extends C_Walker {
         const view = new C_WanderWalkerView({
                 layer: 0, letter: '漂', 
                 show3D:  '1',
-                pad_t: 0.0, pad_d: 0.3, pad_s: 0.3,
-                col_f: '', col_b: '', col_s: '', col_t: '#ff66ff', col_d: '', 
+                pad_t: 0.2, pad_d: 0.0, pad_s: 0.38,
+                col_f: '#ff99ff', col_b: '#dd88dd', col_s: '#dd88dd', col_t: '#dd88dd', col_d: '#dd88dd', 
                 col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
         } as JSON_WanderWalkerView);
 
         this.mazeObj = new C_MazeObj({
             can_thr:  '1',
             h_w_dmg:  0,
-            pos:     {x:1, y:1, z:0, d:0},
-            view:    view.encode(),
+            pos:      j?.pos ?? {x:1, y:1, z:0, d:0},
+            view:     view.encode(),
         } as JSON_MazeObj);
-        if (j) {
-            this.decode(j);
-        }
+        if (j !== undefined) this.decode(j);
     }
 
     public get_mazeObj(): I_MazeObj|undefined {
