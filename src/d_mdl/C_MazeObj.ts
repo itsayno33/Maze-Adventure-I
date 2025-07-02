@@ -27,6 +27,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     set_pd:     (pd:C_PointDir)=>void;
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
+    setView:    (view: I_MazeObjView|undefined)=>void;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
 }

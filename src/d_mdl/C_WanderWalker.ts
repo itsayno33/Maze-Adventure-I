@@ -61,6 +61,7 @@ export class C_WanderWalker extends C_Walker {
             pos:      j?.pos ?? {x:1, y:1, z:0, d:0},
             view:     view.encode(),
         } as JSON_MazeObj);
+        this.mazeObj.setView(view);
         if (j !== undefined) this.decode(j);
     }
 

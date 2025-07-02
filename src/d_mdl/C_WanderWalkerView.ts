@@ -2,7 +2,6 @@
 
 import { C_MazeObjView, I_MazeObjView, JSON_MazeObjView, T_Rect } from './C_MazeObjView';
 import { T_Direction } from './C_PointDir';
-import { C_WanderWalker, JSON_WanderWalker } from './C_WanderWalker';
 
 type T_xy = {x: number, y: number};
 

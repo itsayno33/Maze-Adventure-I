@@ -92,7 +92,8 @@ export class C_Team implements I_MazeObj {
         return here?.within(p) ?? false; 
     }
 
-    public view():  I_MazeObjView|undefined {return this.myView}
+    public view():       I_MazeObjView|undefined {return this.myView}
+    public setView(view: I_MazeObjView|undefined): void {this.myView = view}
     public getWalker():  C_Walker {
         return this.myWalker
     }
