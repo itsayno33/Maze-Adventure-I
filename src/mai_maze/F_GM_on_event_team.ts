@@ -13,7 +13,7 @@ import {
     I_HopeAction, 
     I_HopeResponceMove, 
     I_HopeResponceTurn
-}                 from "../d_mdl/I_Hope";
+}                 from "../d_mdl/C_Hope";
 
 
 // 1. この位置でイベントが起きるか判断

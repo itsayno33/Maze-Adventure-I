@@ -13,7 +13,7 @@ import {
     I_HopeAction, 
     I_HopeResponceMove, 
     I_HopeResponceTurn
-}                 from "../d_mdl/I_Hope";
+}                 from "../d_mdl/C_Hope";
 
 import { hp_damage_hres } from "./F_GM_damage";
 import { _irand }         from "../d_utl/F_Rand";
