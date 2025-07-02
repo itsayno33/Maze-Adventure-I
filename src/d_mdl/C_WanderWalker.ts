@@ -53,6 +53,7 @@ export class C_WanderWalker extends C_Walker {
                 pad_t: 0.2, pad_d: 0.0, pad_s: 0.38,
                 col_f: '#ff99ff', col_b: '#dd88dd', col_s: '#dd88dd', col_t: '#dd88dd', col_d: '#dd88dd', 
                 col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
+                col_2_arw: '#338866', col_2_tri: '#cc6666',
         } as JSON_WanderWalkerView);
 
         this.mazeObj = new C_MazeObj({

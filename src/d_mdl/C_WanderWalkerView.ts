@@ -5,12 +5,19 @@ import { T_Direction } from './C_PointDir';
 
 type T_xy = {x: number, y: number};
 
-export interface JSON_WanderWalkerView extends JSON_MazeObjView {}
+export interface JSON_WanderWalkerView extends JSON_MazeObjView {
+    col_2_arw?: string;  // 矢印の色
+    col_2_tri?: string;  // 矢印の輪郭の色
+}
 
 export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView {
-    public constructor(j: JSON_MazeObjView) {
+    public col_2_arw: string|null = null; // 矢印の色
+    public col_2_tri: string|null = null; // 矢印の輪郭の色
+    
+    public constructor(j: JSON_WanderWalkerView) {
         super(j);
         this.clname    = 'WanderWalkerView';
+        if (j !== undefined) this.decode(j);
     }
 
     public letter(dir: number = 0): string|null {
@@ -23,7 +30,7 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         }
     }
     public drow2D(r: T_Rect, dir: number = 0): void {
-//        super.drow2D(r);
+        super.drow2D(r);
         const con = C_MazeObjView.get_context2D();
         if (con === undefined) return;
     
@@ -50,20 +57,20 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         con.lineTo(left.x, left.y);
         con.closePath();
 
-        con.fillStyle   = this.col_2() ?? "#ff3333";
+        con.fillStyle   = this.col_2_arw ?? "#ff3333";
         con.fill();
 
         
-/****************
-        con.strokeStyle = "#ff9999";
-        con.lineWidth   = 3;
+        con.strokeStyle = this.col_2_tri ?? "#ff9999";
+        con.lineWidth   = 2;
         con.stroke();
-****************/        
     }
 
     public encode(): JSON_WanderWalkerView {
         const j = super.encode();
         j.cname = 'WanderWalkerView';  
+        j.col_2_arw = this.col_2_arw ?? null; // 矢印の色
+        j.col_2_tri = this.col_2_tri ?? null; // 矢印の輪郭の色
         
         return j;
     }
@@ -71,7 +78,9 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         if (j === undefined) return this;
 
         super.decode(j);
-        if (j?.clname !== undefined) this.clname = j.clname;
+        if (j?.clname    !== undefined) this.clname   = j.clname;
+        if (j?.col_2_arw !== undefined) this.col_2_arw = j.col_2_arw;
+        if (j?.col_2_tri !== undefined) this.col_2_tri = j.col_2_tri;
 
         return this;
     }
