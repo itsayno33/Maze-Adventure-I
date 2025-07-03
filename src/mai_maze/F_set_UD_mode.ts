@@ -114,13 +114,12 @@ function do_up(): void {
 
     // 上り階段が地下二階以下の場合はセーブしてから上の階に移動する
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
-        rslt.doNG();
         g_mvm.clear_message();
         act_move_mode();
         do_move_bottom_half('blink_off');
     } else {
         do_UD_save().then(()=>{
-            rslt.doOK();
+            g_team.getWalker().set_pd(rslt.subj);
             g_mvm.clear_message();
             act_move_mode();
             do_move_bottom_half('blink_off');
@@ -131,13 +130,12 @@ function do_up(): void {
 function do_down(): void {
     const rslt = g_team.getWalker().hope_p_down();
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
-        rslt.doNG();
         g_mvm.clear_message();
         act_move_mode();
         do_move_bottom_half('blink_off');
     } else {
         do_UD_save().then(()=>{
-            rslt.doOK();
+            g_team.getWalker().set_pd(rslt.subj);
             g_mvm.clear_message();
             act_move_mode();
             do_move_bottom_half('blink_off');

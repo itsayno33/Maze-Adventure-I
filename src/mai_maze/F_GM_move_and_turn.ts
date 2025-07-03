@@ -15,7 +15,6 @@ import {
     I_HopeResponceTurn
 }                 from "../d_mdl/C_Hope";
 
-import { hp_damage_hres } from "./F_GM_damage";
 import { _irand }         from "../d_utl/F_Rand";
 
 
@@ -26,13 +25,6 @@ export function can_move_team(r: I_HopeAction): I_HopeResponceMove {
         // 進行方向にある壁やオブジェとの衝突判定
         const _how_collide  = _how_collide_team(r); // 戻り値 canMove:trueなら移動可、damageは基本ダメージ量
 
-/***********************
-        if (!_how_collide.canMove) {
-            // ダメージ処理
-            const damage  = _irand(Math.trunc(_how_collide.damage * 0.9), Math.ceil(_how_collide.damage * 1.1));
-            hp_damage_hres(damage); 
-        }
-************************/
         return {
             ok:  _how_collide.canMove,   // 移動可否
             res: _how_collide.canMove ? 'Move' : 'Block', // 行動結果
@@ -43,7 +35,7 @@ export function can_move_team(r: I_HopeAction): I_HopeResponceMove {
         return {
             ok:      false,     // 移動不能
             res:    'Block',    // 行動結果
-            dmg:    0,          // 基本ダメージ値
+            dmg:     0,         // 基本ダメージ値
             hope:    r,         // 希望行動
         }
     }

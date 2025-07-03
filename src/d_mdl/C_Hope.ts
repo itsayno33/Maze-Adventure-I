@@ -45,26 +45,18 @@ export class C_HasHope implements I_HasHope {
 
 export interface I_HopeAction extends I_HasHope {
     subj:    C_PointDir,    // 対象の指定(位置)
-    doOK:    ()=>void,      // 許可時の行動(関数)
-    doNG:    ()=>void,      // 不許可時の行動(関数)
 }
 export interface INIT_HopeAction extends JSON_HasHope {
     subj?:   C_PointDir,    // 対象の指定(位置)
-    doOK?:   ()=>void,      // 許可時の行動(関数)
-    doNG?:   ()=>void,      // 不許可時の行動(関数)
 }
 export class C_HopeAction implements I_HopeAction {
     public has_hope: boolean = false;        // 希望行動の有無
     public hope:     T_HopeReqKind = 'Wait'; // 行動の種類
-    public subj:    C_PointDir;              // 対象の指定(位置)
-    public doOK:    ()=>void;                // 許可時の行動(関数)
-    public doNG:    ()=>void;                // 不許可時の行動(関数)
+    public subj:     C_PointDir;             // 対象の指定(位置)
     public constructor(j?: INIT_HopeAction) {
         this.has_hope = j?.has_hope ?? false;
         this.hope     = j?.hope     ?? 'Wait';
         this.subj     = j?.subj     ?? new C_PointDir();
-        this.doOK     = j?.doOK     ?? (()=>{});
-        this.doNG     = j?.doNG     ?? (()=>{});
     }
 }
 

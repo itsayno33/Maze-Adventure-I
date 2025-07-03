@@ -118,23 +118,24 @@ function tr_L(): void {
 function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
     //g_maze全体のオブジェ行動の処理
-    action_obj(r);
+    action_obj();
 
     if (!r.has_hope) return;
     if (r.hope == 'Wait') {
-        r.doOK();
+//        g_team.getWalker().set_pd(r.subj);
         return;
     }
     if (r.hope == 'Turn') {
         const _rslt = can_turn_team(r);
-        if (_rslt.ok) r.doOK();
+        if (_rslt.ok) g_team.getWalker().set_pd(r.subj);
+;
         return;
     }
     if (r.hope == 'Move') {
         const _rslt = can_move_team(r);
         if (_rslt.ok) {
             // 進行方向へ進む
-            r.doOK();
+            g_team.getWalker().set_pd(r.subj)
             // HP自動回復
             for (const hero of g_hres) hero.hp_auto_heal();
 
@@ -193,22 +194,20 @@ function move_check(r: I_HopeAction): void {
 } 
 function dont_move(r: I_HopeAction): void {
     g_mvm.normal_message('進めない！（笑）');
-    r.doNG();
     return;
 }
 // オブジェ接近処理
 function around_obj(r: I_HopeAction): void {} 
 // g_maze全体のオブジェの行動処理
-function action_obj(r: I_HopeAction): void {
+function action_obj(): void {
     for (const ww of g_ww) {
         if (ww.get_mazeObj() === undefined) continue;
         const act = ww.wonder();
         if (act.has_hope) {
             g_mes.normal_message(`近くのWanderWalkerが(x:${ww.get_pd().x},y:${ww.get_pd().y})(向:${ww.get_pd().d})に${act.hope}しました。`);
-            act.doOK();
+            ww.set_pd(act.subj)
         } else {
             g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
-            act.doNG();
         }
     }
 }
