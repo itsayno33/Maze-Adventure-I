@@ -86,7 +86,7 @@ export class C_Location implements I_JSON {
         return this.loc_pos.d;
     }
     public set_pd  (pd: C_PointDir): C_PointDir|undefined {
-        if (this.loc_kind !== T_Lckd.Maze)    return undefined;
+//        if (this.loc_kind !== T_Lckd.Maze)    return undefined;
         if (this.loc_pos.set_pd(pd) === undefined) return undefined;
 
         return this.loc_pos;

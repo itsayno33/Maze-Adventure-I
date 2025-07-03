@@ -48,6 +48,8 @@ export class C_WanderWalker extends C_Walker {
 
     constructor(j?: JSON_WanderWalker) {
         super(j);
+        // Viewの初期化
+        // ViewはJSON_WanderWalkerViewを使用して初期化する
         const view = new C_WanderWalkerView({
                 layer: 0, letter: '漂', 
                 show3D:  '1',
@@ -57,10 +59,17 @@ export class C_WanderWalker extends C_Walker {
                 col_2_arw: '#338866', col_2_tri: '#cc6666',
         } as JSON_WanderWalkerView);
 
+        // 初期位置を設定
+        const loc_pos = j?.loc_pos ?? {x:1, y:1, z:0, d:0};
+
+        // Walkerの初期位置を設定
+        super.set_pd(new C_PointDir(loc_pos));
+        
+        // MazeObjの初期化（初期位置も併せて設定）
         this.mazeObj = new C_MazeObj({
             can_thr:  '1',
             h_w_dmg:  0,
-            pos:      j?.pos ?? {x:1, y:1, z:0, d:0},
+            pos:      loc_pos,
             view:     view.encode(),
         } as JSON_MazeObj);
         this.mazeObj.setView(view);
@@ -159,6 +168,11 @@ export class C_WanderWalker extends C_Walker {
         if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal;
         if (a.cond?.mazeObj??false) {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
+        }
+        if (a.loc_pos !== undefined) {
+            const loc_pos = new C_PointDir(a.loc_pos);
+            this.set_pd(loc_pos);
+//            this.mazeObj?.set_pd(loc_pos);
         }
         return this;
     }
