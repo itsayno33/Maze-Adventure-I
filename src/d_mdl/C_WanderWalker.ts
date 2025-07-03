@@ -3,7 +3,7 @@
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { JSON_MazeObjView }                   from "./C_MazeObjView";
 import { C_Walker, JSON_Walker }              from "./C_Walker";
-import { C_WanderWalkerView, JSON_WanderWalkerView }                 from './C_WanderWalkerView';
+import { C_WanderView, JSON_WanderView }      from './C_WanderView';
 import { I_HopeAction, C_HopeAction }         from './C_Hope';
 import { _irand }                             from "../d_utl/F_Rand";
 import { C_PointDir } from "./C_PointDir";
@@ -50,14 +50,14 @@ export class C_WanderWalker extends C_Walker {
         super(j);
         // Viewの初期化
         // ViewはJSON_WanderWalkerViewを使用して初期化する
-        const view = new C_WanderWalkerView({
+        const view = new C_WanderView({
                 layer: 0, letter: '漂', 
                 show3D:  '1',
                 pad_t: 0.2, pad_d: 0.0, pad_s: 0.38,
                 col_f: '#ff99ff', col_b: '#dd88dd', col_s: '#dd88dd', col_t: '#dd88dd', col_d: '#dd88dd', 
                 col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
                 col_2_arw: '#338866', col_2_tri: '#cc6666',
-        } as JSON_WanderWalkerView);
+        } as JSON_WanderView);
 
         // 初期位置を設定
         const loc_pos = j?.loc_pos ?? {x:1, y:1, z:0, d:0};

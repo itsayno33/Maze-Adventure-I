@@ -5,18 +5,18 @@ import { T_Direction } from './C_PointDir';
 
 type T_xy = {x: number, y: number};
 
-export interface JSON_WanderWalkerView extends JSON_MazeObjView {
+export interface JSON_WanderView extends JSON_MazeObjView {
     col_2_arw?: string;  // 矢印の色
     col_2_tri?: string;  // 矢印の輪郭の色
 }
 
-export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView {
+export class C_WanderView  extends C_MazeObjView implements I_MazeObjView {
     public col_2_arw: string|null = null; // 矢印の色
     public col_2_tri: string|null = null; // 矢印の輪郭の色
     
-    public constructor(j: JSON_WanderWalkerView) {
+    public constructor(j: JSON_WanderView) {
         super(j);
-        this.clname    = 'WanderWalkerView';
+        this.clname    = 'WanderView';
         if (j !== undefined) this.decode(j);
     }
 
@@ -66,15 +66,15 @@ export class C_WanderWalkerView  extends C_MazeObjView implements I_MazeObjView 
         con.stroke();
     }
 
-    public encode(): JSON_WanderWalkerView {
+    public encode(): JSON_WanderView {
         const j = super.encode();
-        j.cname = 'WanderWalkerView';  
+        j.cname = 'WanderView';  
         j.col_2_arw = this.col_2_arw ?? null; // 矢印の色
         j.col_2_tri = this.col_2_tri ?? null; // 矢印の輪郭の色
         
         return j;
     }
-    public decode(j: JSON_WanderWalkerView|undefined): I_MazeObjView {
+    public decode(j: JSON_WanderView|undefined): I_MazeObjView {
         if (j === undefined) return this;
 
         super.decode(j);
