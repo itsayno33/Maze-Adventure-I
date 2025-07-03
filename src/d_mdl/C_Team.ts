@@ -12,6 +12,7 @@ import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { C_Good,  T_GoodKind }   from "./C_Good";
 import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
+import { C_WanderWalker } from "./C_WanderWalker";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -57,6 +58,7 @@ export class C_Team implements I_MazeObj {
     protected uniq_id:   string;
     protected save_id:   number;
     protected myWalker:  C_Walker;
+    protected myWkWalker:C_WanderWalker|undefined;
     protected gold:      number;
 //    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
@@ -95,9 +97,9 @@ export class C_Team implements I_MazeObj {
     public view():       I_MazeObjView|undefined {return this.myView}
     public setView(view: I_MazeObjView|undefined): void {this.myView = view}
     
-    public walker(): C_Walker|undefined {return this.myWalker}
+    public walker(): C_WanderWalker|undefined {return this.myWkWalker}
     public getWalker():  C_Walker {
-        return this.myWalker
+        return this.myWalker;
     }
     
     public canThrough(): boolean {return true}
