@@ -9,6 +9,7 @@ import {
     I_MazeObjView, 
     JSON_MazeObjView 
 } from "./C_MazeObjView";
+import { C_Walker } from "./C_Walker";
 
 
 export interface JSON_MazeObj extends JSON_Any {
@@ -28,6 +29,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
     setView:    (view: I_MazeObjView|undefined)=>void;
+    walker:     ()=>C_Walker|undefined;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
 }
@@ -77,6 +79,8 @@ export class C_MazeObj implements I_MazeObj {
 
     public view(): I_MazeObjView|undefined {return this.my_view}
     public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
+
+    public walker(): C_Walker|undefined {return undefined;}
 
     public canThrough(): boolean {return this.can_thr}
     public setThrough(thr: boolean): boolean {return this.can_thr = thr}

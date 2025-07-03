@@ -94,6 +94,8 @@ export class C_Team implements I_MazeObj {
 
     public view():       I_MazeObjView|undefined {return this.myView}
     public setView(view: I_MazeObjView|undefined): void {this.myView = view}
+    
+    public walker(): C_Walker|undefined {return this.myWalker}
     public getWalker():  C_Walker {
         return this.myWalker
     }

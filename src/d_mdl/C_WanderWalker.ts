@@ -48,36 +48,14 @@ export class C_WanderWalker extends C_Walker {
 
     constructor(j?: JSON_WanderWalker) {
         super(j);
-        // Viewの初期化
-        // ViewはJSON_WanderWalkerViewを使用して初期化する
-        const view = new C_WanderView({
-                layer: 0, letter: '漂', 
-                show3D:  '1',
-                pad_t: 0.2, pad_d: 0.0, pad_s: 0.38,
-                col_f: '#ff99ff', col_b: '#dd88dd', col_s: '#dd88dd', col_t: '#dd88dd', col_d: '#dd88dd', 
-                col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
-                col_2_arw: '#338866', col_2_tri: '#cc6666',
-        } as JSON_WanderView);
-
-        // 初期位置を設定
-        const loc_pos = j?.loc_pos ?? {x:1, y:1, z:0, d:0};
-
-        // Walkerの初期位置を設定
-        super.set_pd(new C_PointDir(loc_pos));
-        
-        // MazeObjの初期化（初期位置も併せて設定）
-        this.mazeObj = new C_MazeObj({
-            can_thr:  '1',
-            h_w_dmg:  0,
-            pos:      loc_pos,
-            view:     view.encode(),
-        } as JSON_MazeObj);
-        this.mazeObj.setView(view);
         if (j !== undefined) this.decode(j);
     }
 
     public get_mazeObj(): I_MazeObj|undefined {
         return this.mazeObj;
+    }
+    public set_mazeObj(mo: I_MazeObj): void {
+        this.mazeObj = mo;
     }
 
     public set_pd(pd: C_PointDir): C_PointDir {                                 g_mes.normal_message(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
@@ -152,7 +130,9 @@ export class C_WanderWalker extends C_Walker {
             canSlid:  this.cond.canSlid, 
             canUpDn:  this.cond.canUpDn,
             careWal:  this.cond.careWal,
+/**         mazeObjをエンコードすると無限ループになる。向こうでもこのクラスをencodeするので。
             mazeObj:  this.mazeObj?.encode()??{},
+**/
         }
 
         return j;
@@ -166,9 +146,11 @@ export class C_WanderWalker extends C_Walker {
         if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid;
         if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn;
         if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal;
+/**     mazeObjをデコードすると無限ループになる。向こうでもこのクラスをdecodeするので。
         if (a.cond?.mazeObj??false) {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
         }
+**/
         if (a.loc_pos !== undefined) {
             const loc_pos = new C_PointDir(a.loc_pos);
             this.set_pd(loc_pos);

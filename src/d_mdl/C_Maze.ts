@@ -191,6 +191,7 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
     public exist_obj(p: C_Point): boolean {
         for (const id in this.objs) {
             const exist = this.objs[id];
+            if (exist === undefined) continue;
             if (exist.within(p) && exist.view()?.letter(exist.get_pd().d) !== null) return true;
         }
         return false;

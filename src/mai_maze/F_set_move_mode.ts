@@ -201,7 +201,7 @@ function around_obj(r: I_HopeAction): void {}
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
     for (const ww of g_ww) {
-        if (ww.get_mazeObj() === undefined) continue;
+        if (ww === undefined) continue;
         const act = ww.wonder();
         if (act.has_hope) {
             g_mes.normal_message(`近くのWanderWalkerが(x:${ww.get_pd().x},y:${ww.get_pd().y})(向:${ww.get_pd().d})に${act.hope}しました。`);
