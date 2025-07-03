@@ -4,6 +4,7 @@ import { C_PointDir, T_Direction }           from "./C_PointDir";
 import { C_MovablePoint, JSON_MovablePoint } from "./C_MovablePoint";
 import { I_Locate }     from "./C_Location";
 import { I_HopeAction } from "./C_Hope";
+import { g_mes } from "../html/js/mai_guld";
 
 
 export interface JSON_Walker extends JSON_MovablePoint {
@@ -79,7 +80,7 @@ export class C_Walker extends C_MovablePoint {
             has_hope: true, 
             hope: "Turn",
             subj: this.get_pd(),
-            doOK: ()=>{this.turn_r();},
+            doOK: ()=>{this.turn_r()},
             doNG: ()=>{this.isNG();},
         };
     }
@@ -88,7 +89,7 @@ export class C_Walker extends C_MovablePoint {
             has_hope: true, 
             hope: "Turn",
             subj: this.get_pd(),
-            doOK: ()=>{this.turn_l();},
+            doOK: ()=>{this.turn_l()},
             doNG: ()=>{this.isNG();},
         };
     }

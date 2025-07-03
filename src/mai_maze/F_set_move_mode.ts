@@ -1,7 +1,7 @@
 import { T_MzKind }                   from "../d_mdl/T_MzKind";
 import { I_HopeAction }               from "../d_mdl/C_Hope";
 import { C_Point }                    from "../d_mdl/C_Point";
-import { g_debug }                    from "../d_cmn/global";
+import { g_debug, g_mes }                    from "../d_cmn/global";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
 import { act_menu_mode }                         from "./F_set_menu_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
@@ -20,7 +20,8 @@ import {
     do_load_bottom_half,
     g_ctls,
     g_ds,
-    g_hres, 
+    g_hres,
+    g_ww, 
 } from "./global_for_maze";
 import { can_move_team, can_turn_team } from "./F_GM_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
@@ -198,7 +199,19 @@ function dont_move(r: I_HopeAction): void {
 // オブジェ接近処理
 function around_obj(r: I_HopeAction): void {} 
 // g_maze全体のオブジェの行動処理
-function action_obj(r: I_HopeAction): void {}
+function action_obj(r: I_HopeAction): void {
+    for (const ww of g_ww) {
+        if (ww.get_mazeObj() === undefined) continue;
+        const act = ww.wonder();
+        if (act.has_hope) {
+            g_mes.normal_message(`近くのWanderWalkerが(x:${ww.get_pd().x},y:${ww.get_pd().y})(向:${ww.get_pd().d})に${act.hope}しました。`);
+            act.doOK();
+        } else {
+            g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
+            act.doNG();
+        }
+    }
+}
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
