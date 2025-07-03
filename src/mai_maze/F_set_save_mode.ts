@@ -521,7 +521,7 @@ export function decode_all(jsonObj: any): void {
     // WanderWalker関連のデコード
     for (const i in g_ww) delete g_ww[i];
     for (const ww of g_maze.get_obj_array()) 
-        if (ww instanceof C_WanderWalker) g_ww.push(ww);
+        if (ww.walker() instanceof C_WanderWalker) g_ww.push(ww.walker());
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj); 

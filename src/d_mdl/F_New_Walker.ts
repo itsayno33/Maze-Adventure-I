@@ -7,7 +7,7 @@ export function new_walker(j?: JSON_WanderWalker): C_WanderWalker|undefined {
     // jはJSON_WanderWalker形式であることを期待する
     if (j === undefined) return undefined;
     switch (j?.clname??'') {
-        case 'C_WanderWalker': new C_WanderWalker(j);
+        case C_WanderWalker.constructor.name: new C_WanderWalker(j);
     }
     return undefined; // ここに到達することはないが、型の整合性のためにundefinedを返す
 }

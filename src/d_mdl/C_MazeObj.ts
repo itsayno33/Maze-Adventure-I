@@ -42,7 +42,7 @@ export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
-    protected my_walker: C_WanderWalker|undefined; // C_Walkerオブジェクト
+    protected my_walker: C_WanderWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
     protected stat:      Object = {}; // C_MazeObjのサブクラスの初期値を保持する
@@ -118,7 +118,6 @@ export class C_MazeObj implements I_MazeObj {
             clname:  this.clname,
             pos:     this.pos.encode(),
             view:    this.my_view?.encode() ?? {},
-            worker:  this.my_walker?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
             h_w_dmg: this.h_w_dmg,
             stat:    JSON.stringify(this.stat??{}),

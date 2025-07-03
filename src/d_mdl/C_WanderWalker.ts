@@ -35,6 +35,7 @@ export type T_Action =
     ;
 
 export class C_WanderWalker extends C_Walker {
+    protected clname: string = this.constructor.name; // クラス名
     protected mazeObj: I_MazeObj|undefined;
     protected cond:    T_Condition = {
         canMove:  true,   // 移動可能
@@ -123,13 +124,14 @@ export class C_WanderWalker extends C_Walker {
     public encode(): JSON_WanderWalker {
         const j = super.encode() as JSON_WanderWalker;
 
+        j.clname = this.clname;
         j.cond  = {
-            canMove:  this.cond.canMove,
-            canTurn:  this.cond.canTurn,
-            canThru:  this.cond.canThru,
-            canSlid:  this.cond.canSlid, 
-            canUpDn:  this.cond.canUpDn,
-            careWal:  this.cond.careWal,
+            canMove:  this.cond.canMove ? '1' : '0',
+            canTurn:  this.cond.canTurn ? '1' : '0',
+            canThru:  this.cond.canThru ? '1' : '0',
+            canSlid:  this.cond.canSlid ? '1' : '0',
+            canUpDn:  this.cond.canUpDn ? '1' : '0',
+            careWal:  this.cond.careWal ? '1' : '0',
 /**         mazeObjをエンコードすると無限ループになる。向こうでもこのクラスをencodeするので。
             mazeObj:  this.mazeObj?.encode()??{},
 **/
@@ -140,12 +142,14 @@ export class C_WanderWalker extends C_Walker {
     public decode(a: JSON_WanderWalker): C_WanderWalker {
         if (a === undefined) return this;
         super.decode(a);
-        if (a.cond?.canMove !== undefined) this.cond.canMove  = a.cond.canMove;
-        if (a.cond?.canTurn !== undefined) this.cond.canTurn  = a.cond.canTurn;
-        if (a.cond?.canThru !== undefined) this.cond.canThru  = a.cond.canThru;
-        if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid;
-        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn;
-        if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal;
+        if (a.clname !== undefined) this.clname = a.clname;
+
+        if (a.cond?.canMove !== undefined) this.cond.canMove  = a.cond.canMove !== '0' ? true : false;
+        if (a.cond?.canTurn !== undefined) this.cond.canTurn  = a.cond.canTurn !== '0' ? true : false;
+        if (a.cond?.canThru !== undefined) this.cond.canThru  = a.cond.canThru !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal !== '0' ? true : false;
 /**     mazeObjをデコードすると無限ループになる。向こうでもこのクラスをdecodeするので。
         if (a.cond?.mazeObj??false) {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
