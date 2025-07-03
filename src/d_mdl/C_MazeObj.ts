@@ -71,11 +71,13 @@ export class C_MazeObj implements I_MazeObj {
                 this.my_view ??= C_MazeObjView.newObj(j.view); 
             } else this.my_view  = undefined;
         }
-        if (j.worker  !== undefined) {
-//            this.my_walker = new_walker(j.worker);
-            this.my_walker?.set_mazeObj(this as I_MazeObj); // Walkerに自分自身を設定
+/***************************
+    // WanderObj専用の処理
+    if (j.wdwalk  !== undefined) {
+            const walker = new_walker(j.wdwalk);
+            if (walker !== undefined)  this.my_walker = walker;
         }
-        
+***************************/        
         if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
         if (j.h_w_dmg !== undefined) this.h_w_dmg = j.h_w_dmg;
         if (j.stat    !== undefined) this.stat    = JSON.parse(j.stat??'{}') as Object;

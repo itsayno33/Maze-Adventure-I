@@ -4,6 +4,7 @@ import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { C_PointDir } from "./C_PointDir";
 import { C_WanderView, JSON_WanderView } from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
+import { new_walker } from "./F_New_Walker";
 
 export interface JSON_WanderObj extends JSON_MazeObj {
     clname?:    string,
@@ -57,7 +58,7 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
     public decode(j: JSON_WanderObj): C_WanderObj {
         super.decode(j)
         if (j.clname !== undefined) this.clname    = j.clname;
-        if (j.wdwalk !== undefined) this.wdwalk    = new C_WanderWalker(j.wdwalk);
+        if (j.wdwalk !== undefined) this.wdwalk    = new_walker(j.wdwalk);
  
         return this;
     }
