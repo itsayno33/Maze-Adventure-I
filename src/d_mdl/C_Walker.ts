@@ -97,41 +97,17 @@ export class C_Walker extends C_MovablePoint {
         };
     }
 
-    public move_p_up(): void {
-        this.set_p_up();
-    }
-    public move_p_down(): void {
-        this.set_p_down();
-    }
-
-    public isNG(): void {
-        return;
-    }
-
-
     public get_p_fwd(): C_PointDir {
         return this.__get_p_move(1, 0);
-    }
-    public set_p_fwd(): void {
-        this.set_pd(this.get_p_fwd());
     }
     public get_p_bak(): C_PointDir {
         return this.__get_p_move(-1, 0);
     }
-    public set_p_bak(): void {
-        this.set_pd(this.get_p_bak());
-    }
     public get_p_lft(): C_PointDir {
         return this.__get_p_move(0, -1);
     }
-    public set_p_lft(): void {
-        this.set_pd(this.get_p_lft());
-    }
     public get_p_rgt(): C_PointDir {
         return this.__get_p_move(0, 1);
-    }
-    public set_p_rgt(): void {
-        this.set_pd(this.get_p_rgt());
     }
     public get_t_rgt(): C_PointDir {
         const pd = new C_PointDir(this.loc_pos);
@@ -158,16 +134,10 @@ export class C_Walker extends C_MovablePoint {
         p.z--;
         return p;
     }
-    public set_p_up() {
-        this.set_pd(this.get_p_up());
-    }
     public get_p_down(): C_PointDir {
         const p = new C_PointDir(this.loc_pos);
         p.z++;
         return p;
-    }
-    public set_p_down() {
-        this.set_pd(this.get_p_down());
     }
     protected __get_p_move(offsetFB: number, offsetLR: number): C_PointDir {
         const p = new C_PointDir(this.loc_pos);
@@ -212,30 +182,6 @@ export class C_Walker extends C_MovablePoint {
                 break;
         }
         return new C_PointDir({x: target_x, y: target_y, z: target_z, d: this.loc_pos.d});
-    }
-    public turn_r(): void {
-        switch (this.loc_pos.d) {
-            case T_Direction.N: this.loc_pos.d = T_Direction.E;break;
-            case T_Direction.E: this.loc_pos.d = T_Direction.S;break;
-            case T_Direction.S: this.loc_pos.d = T_Direction.W;break;
-            case T_Direction.W: this.loc_pos.d = T_Direction.N;break;
-        }
-    }
-    public turn_l(): void {
-        switch (this.loc_pos.d) {
-            case T_Direction.N: this.loc_pos.d = T_Direction.W;break;
-            case T_Direction.E: this.loc_pos.d = T_Direction.N;break;
-            case T_Direction.S: this.loc_pos.d = T_Direction.E;break;
-            case T_Direction.W: this.loc_pos.d = T_Direction.S;break;
-        }
-    }
-    public turn_b(): void {
-        switch (this.loc_pos.d) {
-            case T_Direction.N: this.loc_pos.d = T_Direction.S;break;
-            case T_Direction.E: this.loc_pos.d = T_Direction.W;break;
-            case T_Direction.S: this.loc_pos.d = T_Direction.N;break;
-            case T_Direction.W: this.loc_pos.d = T_Direction.W;break;
-        }
     }
     public encode(): JSON_Walker {
         const j = super.encode() as JSON_Walker;
