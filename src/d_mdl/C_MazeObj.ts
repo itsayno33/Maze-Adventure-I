@@ -72,7 +72,7 @@ export class C_MazeObj implements I_MazeObj {
             } else this.my_view  = undefined;
         }
         if (j.worker  !== undefined) {
-            this.my_walker = new_walker(j.worker);
+//            this.my_walker = new_walker(j.worker);
             this.my_walker?.set_mazeObj(this as I_MazeObj); // Walkerに自分自身を設定
         }
         
