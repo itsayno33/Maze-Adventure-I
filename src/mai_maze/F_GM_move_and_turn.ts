@@ -78,8 +78,9 @@ interface _I_how_collide_team_rslt {
 function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
     const cell = g_maze.get_cell(r.subj);
 
+    // 進行方向が迷宮外なら移動不可
     // 進行方向が壁等なら移動不可
-    if (!(cell?.getObj().canThrough() ?? true)) {
+    if (!g_maze.within(r.subj) || !(cell?.getObj().canThrough() ?? true)) {
         const damage = cell?.getObj().hitWallDmg() ??  10;
         return {canMove: false, damage: damage}; // 壁との衝突あり
     }
