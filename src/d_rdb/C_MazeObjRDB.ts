@@ -136,8 +136,8 @@ export class C_MazeObjRDB {
         j.wdwalk ??= {};
 
         //Debug
-/***************************
-    for (const key in j) console.log(`C_MazeObjRDB: ${key} = ${j[key]}`);
+/***************************/
+    for (const key in j) console.log(`C_MazeObjRDB: ${key} = ` + JSON?.stringify(j[key]));
 
     console.error(
             "save_id="   +    save_id
@@ -152,13 +152,15 @@ export class C_MazeObjRDB {
         + ", walker="    +    JSON.stringify(j?.wdwalk)
         + ", stat="      +    JSON.stringify(j?.stat)
     )
-****************************/
+/****************************/
 
+/********************
     // SQLにセットする値を指定
     const stat = {
         can_thr:   j.can_thr ? '1' : '0', // C_MazeObjの初期値
         h_w_dmg:   j.h_w_dmg,             // C_MazeObjの初期値
     }
+********************/
 
     await db_mai.query(insert_obje_SQL, {
             save_id:     save_id,
@@ -171,7 +173,7 @@ export class C_MazeObjRDB {
             pos_d:       j.pos?.d??0,
             view:        JSON?.stringify(j.view)??"{}",
             walker:      JSON?.stringify(j.wdwalk)??"{}", // C_MazeObjの初期値
-            stat:        JSON?.stringify(stat)??'"{}"',
+            stat:        JSON?.stringify(j.stat)??"{}",
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 3: ${insert_obje_SQL}`);

@@ -11,6 +11,7 @@ export interface JSON_WanderView extends JSON_MazeObjView {
 }
 
 export class C_WanderView  extends C_MazeObjView implements I_MazeObjView {
+    public clname: string = 'WanderView'; // クラス名
     public col_2_arw: string|null = null; // 矢印の色
     public col_2_tri: string|null = null; // 矢印の輪郭の色
     
@@ -68,7 +69,6 @@ export class C_WanderView  extends C_MazeObjView implements I_MazeObjView {
 
     public encode(): JSON_WanderView {
         const j = super.encode();
-        j.cname = 'WanderView';  
         j.col_2_arw = this.col_2_arw ?? null; // 矢印の色
         j.col_2_tri = this.col_2_tri ?? null; // 矢印の輪郭の色
         

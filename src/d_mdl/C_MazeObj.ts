@@ -9,10 +9,12 @@ import {
     I_MazeObjView, 
     JSON_MazeObjView 
 } from "./C_MazeObjView";
-import { C_Walker } from "./C_Walker";
 import { C_WanderWalker } from "./C_WanderWalker";
-import { new_walker } from "./F_New_Walker";
 
+export interface JSON_MazeObjSTAT {
+    can_thr?:   string, 
+    h_w_dmg?:   number,
+}
 
 export interface JSON_MazeObj extends JSON_Any {
     clname?:    string,
@@ -21,9 +23,8 @@ export interface JSON_MazeObj extends JSON_Any {
     view?:      JSON_MazeObjView|undefined,
     can_thr?:   string, 
     h_w_dmg?:   number,
-    stat?:      string, // C_MazeObjのサブクラスの初期値を保持する 
+    stat?:      JSON_MazeObjSTAT, // C_MazeObjのサブクラスの初期値を保持する
 }
-
 
 export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     get_pd:     ()=>C_PointDir;
@@ -45,17 +46,16 @@ export class C_MazeObj implements I_MazeObj {
     protected my_walker: C_WanderWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
-    protected stat:      Object = {}; // C_MazeObjのサブクラスの初期値を保持する
 
     public constructor(j?: JSON_MazeObj|undefined) {
-        this.clname     =  this.constructor.name;
+        this.clname     =  'C_MazeObj'; // クラス名
+        if (j?.clname !== undefined) this.clname = j.clname; //
         this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  undefined;
         this.my_walker  =  undefined; // C_Walkerオブジェクトは初期化しない
         this.can_thr    =  true;
         this.h_w_dmg    =  0;
-        this.stat       =  {};
 
         if (j !== undefined) this.__init(j);
     }
@@ -77,10 +77,14 @@ export class C_MazeObj implements I_MazeObj {
             const walker = new_walker(j.wdwalk);
             if (walker !== undefined)  this.my_walker = walker;
         }
-***************************/        
+***************************/
+        if (j.stat    !== undefined) {
+            // データベースからのプロパティの復元(j.statはJSON形式)
+            if (j?.stat?.can_thr !== undefined) this.can_thr = j.stat.can_thr !== '0' ? true : false;
+            if (j?.stat?.h_w_dmg !== undefined) this.h_w_dmg = j.stat.h_w_dmg;
+        }
         if (j.can_thr !== undefined) this.can_thr = j.can_thr !== '0' ? true : false;
         if (j.h_w_dmg !== undefined) this.h_w_dmg = j.h_w_dmg;
-        if (j.stat    !== undefined) this.stat    = JSON.parse(j.stat??'{}') as Object;
         return this;
 }
 
@@ -113,6 +117,10 @@ export class C_MazeObj implements I_MazeObj {
         return this.h_w_dmg;
     }
     public encode(): JSON_MazeObj {
+        const stat = {
+            can_thr: this.can_thr ? '1' : '0',
+            h_w_dmg: this.h_w_dmg,
+        }
         return {
             uniq_id: this.uniq_id,
             clname:  this.clname,
@@ -120,12 +128,11 @@ export class C_MazeObj implements I_MazeObj {
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
             h_w_dmg: this.h_w_dmg,
-            stat:    JSON.stringify(this.stat??{}),
+            stat:    stat,
         }
     }
 
-    public decode(j?: JSON_MazeObj|undefined): I_MazeObj {
+    public decode(j?: JSON_MazeObj|undefined): C_MazeObj {
         return this.__init(j);
     }
 }
-

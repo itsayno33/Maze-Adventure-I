@@ -1,19 +1,27 @@
 "use strict";
 
-import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { C_MazeObj, I_MazeObj, JSON_MazeObj, JSON_MazeObjSTAT } from "./C_MazeObj";
 import { C_PointDir } from "./C_PointDir";
 import { C_WanderView, JSON_WanderView } from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
 import { new_walker } from "./F_New_Walker";
 
+export interface JSON_WanderObjSTAT extends JSON_MazeObjSTAT {
+    wo?: {
+        dmy?:       string, // ダミー変数
+    }
+}
 export interface JSON_WanderObj extends JSON_MazeObj {
     clname?:    string,
-    wdwalk?:    JSON_WanderWalker,
+    wdwalk?:    JSON_WanderWalker|undefined,
+    stat?:      JSON_WanderObjSTAT, // C_WanderObjのサブクラスの初期値を保持する
 }
 
 export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
     protected clname: string = 'C_WanderObj';
     protected wdwalk: C_WanderWalker|undefined; // WanderWalkerオブジェクト
+    private   dmy:    string = ''; // ダミー変数
+
     public constructor(j?: JSON_MazeObj) {
         super(j);
         this.clname    = 'C_WanderObj';
@@ -50,16 +58,20 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
     public set_walker(wdwalk: C_WanderWalker): void {this.wdwalk = wdwalk;}
 
     public encode(): JSON_WanderObj {
-        const j = super.encode();
+        const j = super.encode() as JSON_WanderObj;
         j.clname = this.clname;
-        j.wdwalk = this.wdwalk?.encode() ?? "{}";
+        j.wdwalk = this.wdwalk?.encode() ?? undefined;
+        j.stat   ??= {};
+        j.stat.wo  = {dmy: this.dmy}; // ダミー変
         return j;
     }
     public decode(j: JSON_WanderObj): C_WanderObj {
         super.decode(j)
-        if (j.clname !== undefined) this.clname    = j.clname;
-        if (j.wdwalk !== undefined) this.wdwalk    = new_walker(j.wdwalk);
- 
+        if (j.clname   !== undefined) this.clname    = j.clname;
+        if (j.wdwalk   !== undefined) this.wdwalk    = new_walker(j.wdwalk);
+        if (j.stat?.wo !== undefined) {
+            this.dmy = j.stat.wo.dmy ?? ''; // ダミー変数
+        }
         return this;
     }
 }

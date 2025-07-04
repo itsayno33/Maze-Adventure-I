@@ -60,7 +60,7 @@ export class C_MazeObjView implements I_MazeObjView {
 
     public static newObj(j?: JSON_MazeObjView|undefined): I_MazeObjView {
         j ??= {};
-        j.clname ??= C_MazeObjView.constructor.name;
+        j.clname ??= 'C_MazeObjView';
         switch (j.clname) {
             case C_MazeObjView.constructor.name:     return new C_MazeObjView(j);
         } 
@@ -92,7 +92,7 @@ export class C_MazeObjView implements I_MazeObjView {
     private my_col_L:  string|null; // 2Dマップの線のCSSカラー 
 
     protected constructor(j?: JSON_MazeObjView|undefined) {
-        this.clname     =  this.constructor.name;
+        this.clname     =  'C_MazeObjView';
 
         this.my_layer   =  -2;
         this.my_letter  =  null;
@@ -290,7 +290,7 @@ export class C_MazeObjView implements I_MazeObjView {
 
     public encode(): JSON_MazeObjView {
         return {
-            cname:   this.clname,
+            clname:  this.clname,
             layer:   this.my_layer,
             letter:  this.my_letter ?? '',
             pad_t:   this.my_pad_t, 

@@ -35,7 +35,7 @@ export type T_Action =
     ;
 
 export class C_WanderWalker extends C_Walker {
-    protected clname: string = this.constructor.name; // クラス名
+    protected clname: string = 'C_WanderWalker'; // クラス名
     protected mazeObj: I_MazeObj|undefined;
     protected cond:    T_Condition = {
         canMove:  true,   // 移動可能
