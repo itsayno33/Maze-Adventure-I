@@ -14,7 +14,7 @@ export function new_mazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
         case C_WanderObj    .constructor.name: return new C_WanderObj    (j as JSON_WanderObj);
         case C_MazeObjShadow.constructor.name: return new C_MazeObjShadow(j as JSON_MazeObjShadow);
         case C_MazeObjShogai.constructor.name: return new C_MazeObjShogai(j as JSON_MazeObjShogai);
-        default: return new C_MazeObj(j); // ここに到達することはないが、型の整合性のためにC_MazeObjを返す
+        default: return new C_MazeObj(j); // C_TeamやC_MazeCell系の場合等
     }
 }
 
