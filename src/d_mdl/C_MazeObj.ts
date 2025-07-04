@@ -10,6 +10,7 @@ import {
     JSON_MazeObjView 
 } from "./C_MazeObjView";
 import { C_WanderWalker } from "./C_WanderWalker";
+import { new_mazeObj } from "./F_NewMazeObj";
 
 export interface JSON_MazeObjSTAT {
     can_thr?:   string, 
@@ -132,7 +133,7 @@ export class C_MazeObj implements I_MazeObj {
         }
     }
 
-    public decode(j?: JSON_MazeObj|undefined): C_MazeObj {
-        return this.__init(j);
+    public decode(j?: JSON_MazeObj|undefined): I_MazeObj {
+        return new_mazeObj(j);
     }
 }

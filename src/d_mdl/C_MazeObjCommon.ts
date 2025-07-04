@@ -3,7 +3,7 @@
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from './C_MazeObj';
 import { C_MazeObjShadow, C_MazeObjShogai, JSON_MazeObjShadow, JSON_MazeObjShogai } from './C_MazeObjEtc';
 
-export function new_MazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
+function new_MazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
     if (j === undefined) {
         return new C_MazeObj(j);
     }

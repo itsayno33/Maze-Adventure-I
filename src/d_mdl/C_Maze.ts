@@ -13,7 +13,7 @@ import { _min } from "../d_utl/F_Math";
 import { C_PointDir } from "./C_PointDir";
 import { T_Direction } from "./T_Direction";
 import { C_PointLink2D, C_PointSet2D } from "./C_PointSet2D";
-import { new_MazeObj } from "./C_MazeObjCommon";
+import { new_mazeObj } from "./F_NewMazeObj";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,
@@ -626,7 +626,7 @@ public static from_string_to_objArray(txt: string): {[uid: string]: C_Maze} {
         if (a.objs    !== undefined) {
             this.objs = {};
             for (const json_obj of a.objs) {
-                const new_obj = new_MazeObj(json_obj);
+                const new_obj = new_mazeObj(json_obj);
                 this.objs[new_obj.uid()] = new_obj;
             }
         }

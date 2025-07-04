@@ -3,7 +3,6 @@ import mysql from 'mysql2/promise';
 import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { C_Maze, JSON_Maze } from "../d_mdl/C_Maze";
 import { C_MazeObjRDB }      from './C_MazeObjRDB';
-import { C_MazeObj }         from '../d_mdl/C_MazeObj';
 
 type db_connect = mysql.PoolConnection;
 

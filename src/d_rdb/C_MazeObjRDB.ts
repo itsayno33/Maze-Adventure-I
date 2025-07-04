@@ -132,7 +132,7 @@ export class C_MazeObjRDB {
                 :view,     :walker,  :stat 
             )
         `
-        const j    = obje.encode();
+        const j  = obje.encode();
         j.wdwalk ??= {};
 
         //Debug

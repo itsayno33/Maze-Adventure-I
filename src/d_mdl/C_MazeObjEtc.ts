@@ -1,13 +1,14 @@
 "use strict";
 
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
+import { JSON_PointDir } from "./C_PointDir";
 
 export interface JSON_MazeObjShadow extends JSON_MazeObj {
-    pos:   {x: number, y: number, z: number, d: number},
+    pos?:   JSON_PointDir,
 }
 
 export interface JSON_MazeObjShogai extends JSON_MazeObj {
-    pos:   {x: number, y: number, z: number, d: number},
+    pos?:   JSON_PointDir,
 }
 
 export class C_MazeObjShadow extends C_MazeObj implements I_MazeObj {
