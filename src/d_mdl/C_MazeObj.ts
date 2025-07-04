@@ -49,8 +49,8 @@ export class C_MazeObj implements I_MazeObj {
     protected h_w_dmg:   number;
 
     public constructor(j?: JSON_MazeObj|undefined) {
-        this.clname     =  C_MazeObj.constructor.name; // クラス名
-        if (j?.clname !== undefined) this.clname = j.clname; //
+        this.clname     =  'C_MazeObj'; // クラス名
+        if (j?.clname  !== undefined) this.clname = j.clname; //
         this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  undefined;
@@ -134,6 +134,6 @@ export class C_MazeObj implements I_MazeObj {
     }
 
     public decode(j?: JSON_MazeObj|undefined): I_MazeObj {
-        return new_mazeObj(j);
+        return this.__init(j);
     }
 }
