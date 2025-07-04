@@ -47,8 +47,8 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
         
         // Walkerの初期化
         // loc_posはC_WanderWalkerの初期位置に使用される
-        this.wdwalk      = new C_WanderWalker();
-        this.wdwalk.set_pd(loc_pos);
+        this.wdwalk      = new_walker(loc_pos);              // new C_WanderWalker(loc_pos)を使用して初期化？？？
+//        this.wdwalk.set_pd(loc_pos);
         this.wdwalk.set_mazeObj(this); // Walkerに自分自身を設定
 
         if (j !== undefined) this.decode(j);
