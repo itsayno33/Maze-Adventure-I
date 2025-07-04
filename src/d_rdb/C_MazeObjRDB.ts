@@ -136,7 +136,7 @@ export class C_MazeObjRDB {
         j.wdwalk ??= {};
 
         //Debug
-
+/***************************
     for (const key in j) console.log(`C_MazeObjRDB: ${key} = ${j[key]}`);
 
     console.error(
@@ -152,7 +152,7 @@ export class C_MazeObjRDB {
         + ", walker="    +    JSON.stringify(j?.wdwalk)
         + ", stat="      +    JSON.stringify(j?.stat)
     )
-
+****************************/
 
     // SQLにセットする値を指定
     const stat = {
