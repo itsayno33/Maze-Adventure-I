@@ -10,7 +10,7 @@ interface I_tbl_obje extends mysql.RowDataPacket {
     save_id:     number,
     uniq_id:     string,
     maze_uid:    string,  // マップのユニークID
-    cls_name:    string,  // クラス名
+    cl_name:     string,  // クラス名
     pos_x:       number,  // X座標
     pos_y:       number,  // y座標
     pos_z:       number,  // z座標
@@ -86,7 +86,7 @@ export class C_MazeObjRDB {
     ): Promise<C_MazeObj[]> {
         const get_obje_SQL = `
             SELECT 	id,       save_id,  uniq_id, 
-                    maze_uid, cls_name, 
+                    maze_uid, cl_name, 
                     pos_x,    pos_y,    pos_z,   pos_d, 
                     view,     walker,   stat 
             FROM tbl_obje
@@ -122,25 +122,28 @@ export class C_MazeObjRDB {
 
         const insert_obje_SQL = `
             INSERT INTO tbl_obje(
-                save_id,  uniq_id, maze_uid, cls_name, 
+                save_id,  uniq_id, maze_uid, cl_name, 
                 pos_x,    pos_y,   pos_z,    pos_d, 
                 view,     walker,  stat 
             )
             VALUES (
-                :save_id,  :uniq_id, :maze_uid, :cls_name, 
+                :save_id,  :uniq_id, :maze_uid, :cl_name, 
                 :pos_x,    :pos_y,   :pos_z,    :pos_d, 
                 :view,     :walker,  :stat 
             )
         `
         const j = obje.encode();
+        j.wdwalk ??= {};
 
         //Debug
+
+    for (const key in j) console.log(`C_MazeObjRDB: ${key} = ${j[key]}`);
 
     console.error(
             "save_id="   +    save_id
         + ", uniq_id="   +    j.uniq_id
         + ", maze_uid="  +    maze_uid
-        + ", cls_name="  +    j.clname
+        + ", cl_name="   +    j.clname
         + ", pos_x="     +   (j.pos?.x)
         + ", pos_y="     +   (j.pos?.y)
         + ", pos_z="     +   (j.pos?.z)
@@ -161,14 +164,14 @@ export class C_MazeObjRDB {
             save_id:     save_id,
             uniq_id:     j.uniq_id,
             maze_uid:    maze_uid,
-            cls_name:    j.clname,
+            cl_name:     j.clname,
             pos_x:       j.pos?.x??0,
             pos_y:       j.pos?.y??0,
             pos_z:       j.pos?.z??0,
             pos_d:       j.pos?.d??0,
-            view:        JSON.stringify(j.view),
-            walker:      JSON.stringify(j.wdwalk), // C_MazeObjの初期値
-            stat:        JSON.stringify(stat),
+            view:        JSON?.stringify(j.view)??"{}",
+            walker:      JSON?.stringify(j.wdwalk)??"{}", // C_MazeObjの初期値
+            stat:        JSON?.stringify(stat)??'"{}"',
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 3: ${insert_obje_SQL}`);
@@ -225,7 +228,7 @@ export class C_MazeObjRDB {
     public static from_stringArray_to_JSON(j: I_tbl_obje): JSON_MazeObj {
         const jj = JSON.parse(j.stat??'{}') as any; // C_MazeObjの初期値
         return {
-                clname:    j.cls_name,
+                clname:    j.cl_name,
                 uniq_id:   j.uniq_id, 
                 maze_uid:  j.maze_uid,
                 pos:       {x: j.pos_x, y: j.pos_y, z: j.pos_z, d: j.pos_d},

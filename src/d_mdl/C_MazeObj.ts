@@ -72,7 +72,7 @@ export class C_MazeObj implements I_MazeObj {
             } else this.my_view  = undefined;
         }
 /***************************
-    // WanderObj専用の処理
+    // WanderObj専用の処理  コメントアウトすると実行時エラーになる
     if (j.wdwalk  !== undefined) {
             const walker = new_walker(j.wdwalk);
             if (walker !== undefined)  this.my_walker = walker;
