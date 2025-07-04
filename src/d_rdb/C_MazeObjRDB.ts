@@ -132,26 +132,13 @@ export class C_MazeObjRDB {
                 :view,     :walker,  :stat 
             )
         `
-        const j = obje.encode();
+        const j    = obje.encode();
         j.wdwalk ??= {};
 
         //Debug
 /***************************/
-    for (const key in j) console.log(`C_MazeObjRDB: ${key} = ` + JSON?.stringify(j[key]));
-
-    console.error(
-            "save_id="   +    save_id
-        + ", uniq_id="   +    j.uniq_id
-        + ", maze_uid="  +    maze_uid
-        + ", cl_name="   +    j.clname
-        + ", pos_x="     +   (j.pos?.x)
-        + ", pos_y="     +   (j.pos?.y)
-        + ", pos_z="     +   (j.pos?.z)
-        + ", pos_d="     +   (j.pos?.d)
-        + ", view="      +    JSON.stringify(j?.view)
-        + ", walker="    +    JSON.stringify(j?.wdwalk)
-        + ", stat="      +    JSON.stringify(j?.stat)
-    )
+    console.log("C_MazeObjRDB: add_tbl() called:");
+    for (const key in j) console.warn(`: ${key} = ` + JSON?.stringify(j[key]));
 /****************************/
 
 /********************

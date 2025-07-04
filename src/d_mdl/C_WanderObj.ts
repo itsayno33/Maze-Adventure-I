@@ -61,8 +61,8 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
         const j = super.encode() as JSON_WanderObj;
         j.clname = this.clname;
         j.wdwalk = this.wdwalk?.encode() ?? undefined;
-        j.stat   ??= {};
-        j.stat.wo  = {dmy: this.dmy}; // ダミー変
+        j.stat     ??= {};
+        j.stat.wo  = {dmy: this.dmy}; // ダミー変数
         return j;
     }
     public decode(j: JSON_WanderObj): C_WanderObj {

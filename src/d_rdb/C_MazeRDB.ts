@@ -46,7 +46,7 @@ export class C_MazeRDB {
 
 
     public static async set_to_rdb(db_mai: db_connect, mes: C_DspMessage, save_id: number, maze: C_Maze): Promise<boolean> {
-        const mase_id = await C_MazeRDB.add_tbl(db_mai, mes, save_id, maze);
+        const maze_id = await C_MazeRDB.add_tbl(db_mai, mes, save_id, maze);
         if (mes.is_err()) {
             return false;
         }
