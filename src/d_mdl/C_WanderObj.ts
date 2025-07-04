@@ -18,7 +18,14 @@ export interface JSON_WanderObj extends JSON_MazeObj {
     stat?:      JSON_WanderObjSTAT, // C_WanderObjのサブクラスの初期値を保持する
 }
 
-export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
+export interface I_WanderObj extends I_MazeObj {
+    walker(): C_WanderWalker|undefined;       // C_WanderWalkerオブジェクトを呼出
+    set_walker(wdwalk: C_WanderWalker): void; // C_WanderWalkerオブジェクトを設定
+    encode(): JSON_WanderObj;                 // JSON_WanderObj形式でエンコード
+    decode(j: JSON_WanderObj): C_WanderObj;   // JSON_WanderObj形式でデコード
+}
+
+export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
     protected clname: string = 'C_WanderObj';
     protected wdwalk: C_WanderWalker|undefined; // WanderWalkerオブジェクト
     private   dmy:    string = ''; // ダミー変数
@@ -64,7 +71,7 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
         return j;
     }
-    public decode(j: JSON_WanderObj): C_MazeObj {
+    public decode(j: JSON_WanderObj): C_WanderObj {
         super.decode(j);
         if (j?.clname   !== undefined) this.clname    = j.clname;
 
