@@ -24,7 +24,7 @@ export class C_WanderObj  extends C_MazeObj implements I_MazeObj {
 
     public constructor(j?: JSON_MazeObj) {
         super(j);
-        this.clname    = 'C_WanderObj';
+        this.clname    = C_WanderObj.constructor.name;
 
         this.can_thr = true; // 壁を通過可能
         this.h_w_dmg = 0;    // 壁に当たったときのダメージ無し

@@ -6,7 +6,7 @@ import { JSON_Any }  from "./C_SaveInfo";
 import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { T_Wall }    from './C_Wall';
 import { T_Rect } from "./C_MazeObjView";
-import { new_mazeObj } from "./F_NewMazeObj";
+import { new_mazeObj } from "./F_New_MazeObj";
 
 
 export interface JSON_MazeCell extends JSON_Any {

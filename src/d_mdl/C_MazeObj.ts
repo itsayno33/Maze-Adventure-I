@@ -10,7 +10,7 @@ import {
     JSON_MazeObjView 
 } from "./C_MazeObjView";
 import { C_WanderWalker } from "./C_WanderWalker";
-import { new_mazeObj } from "./F_NewMazeObj";
+import { new_mazeObj } from "./F_New_MazeObj";
 
 export interface JSON_MazeObjSTAT {
     can_thr?:   string, 
@@ -49,7 +49,7 @@ export class C_MazeObj implements I_MazeObj {
     protected h_w_dmg:   number;
 
     public constructor(j?: JSON_MazeObj|undefined) {
-        this.clname     =  'C_MazeObj'; // クラス名
+        this.clname     =  C_MazeObj.constructor.name; // クラス名
         if (j?.clname !== undefined) this.clname = j.clname; //
         this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});

@@ -2,6 +2,7 @@
 import mysql from 'mysql2/promise';
 import { C_DspMessage }      from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { C_MazeObj, I_MazeObj, JSON_MazeObj }         from '../d_mdl/C_MazeObj';
+import { new_mazeObj } from '../d_mdl/F_New_MazeObj';
 
 type db_connect = mysql.PoolConnection;
 
@@ -33,7 +34,7 @@ export class C_MazeObjRDB {
         mes:      C_DspMessage, 
         save_id:  number,
         join_uid: string
-    ): Promise<C_MazeObj[]> {
+    ): Promise<I_MazeObj[]> {
         const obje_array = await C_MazeObjRDB.get_from_tbl_all(db_mai, mes, save_id, join_uid);
         if (mes.is_err()) {
             return [];
@@ -83,7 +84,7 @@ export class C_MazeObjRDB {
             mes:      C_DspMessage, 
             save_id:  number,
             maze_uid: string
-    ): Promise<C_MazeObj[]> {
+    ): Promise<I_MazeObj[]> {
         const get_obje_SQL = `
             SELECT 	id,       save_id,  uniq_id, 
                     maze_uid, cl_name, 
@@ -101,9 +102,9 @@ export class C_MazeObjRDB {
         if (resultRecordSet.length < 1) {
             return [];
         }
-        const obje_array = [] as C_MazeObj[];
+        const obje_array = [] as I_MazeObj[];
         for (const rr of resultRecordSet) {
-            obje_array.push(new C_MazeObj(C_MazeObjRDB.from_stringArray_to_JSON(rr)));
+            obje_array.push(new_mazeObj(C_MazeObjRDB.from_stringArray_to_JSON(rr))); /*** ココ！！！ ***/
         }
         return obje_array;
     }
