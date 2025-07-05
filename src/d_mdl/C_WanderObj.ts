@@ -9,8 +9,8 @@ import {
 
 import { C_WanderView, JSON_WanderView }      from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
-import { new_walker }                         from "./F_New_Walker";
 import { C_PointDir } from './C_PointDir';
+import { new_walker } from "./F_new_Walker";
 
 export interface JSON_WanderObjSTAT extends JSON_MazeObjSTAT {
     wo?: {
@@ -34,7 +34,7 @@ export interface I_WanderObj extends I_MazeObj {
 export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
     public clname: string = 'C_WanderObj';
     protected wdwalk: C_WanderWalker|undefined; // WanderWalkerオブジェクト
-    private   dmy:    string = ''; // ダミー変数
+    private   dmy:    string = 'ダミー'; // ダミー変数
 
     public constructor(j?: JSON_MazeObj) {
         super(j);
@@ -71,12 +71,14 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
     public walker(): C_WanderWalker|undefined {return this.wdwalk;}
     public set_walker(wdwalk: C_WanderWalker): void {this.wdwalk = wdwalk;}
 
-    public encode(): JSON_WanderObj {                                    //alert('C_WanderObj.encode()');
+    public encode(): JSON_WanderObj {
         const j = super.encode() as JSON_WanderObj;
         j.clname = this.clname;
         j.wdwalk = this.wdwalk?.encode() ?? undefined;
         j.stat     ??= {};
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
+                                                            //alert(`j = ${JSON.stringify(j?.wdwalk,null,'\t')}`);
+                                                            //alert(`j = ${JSON.stringify(j?.stat,null,'\t')}`);
         return j;
     }
     public decode(j: JSON_WanderObj|undefined): C_WanderObj {

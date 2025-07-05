@@ -2,7 +2,7 @@
 import mysql                       from 'mysql2/promise';
 import { C_DspMessage }            from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { I_MazeObj, JSON_MazeObj } from '../d_mdl/C_MazeObj';
-import { new_mazeObj }             from '../d_mdl/F_New_MazeObj';
+import { new_mazeObj }             from '../d_mdl/F_new_MazeObj';
 
 type db_connect = mysql.PoolConnection;
 

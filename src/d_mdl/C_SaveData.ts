@@ -114,7 +114,6 @@ export class C_SaveData extends C_SaveInfo implements I_JSON {
             save_data.all_maze = this._encode_all_data(this.all_maze); 
             save_data.all_team = this._encode_all_data(this.all_team); 
             save_data.all_guld = this._encode_all_data(this.all_guld);
-
             return save_data;
         } catch (err) {
             alert('SaveData Encode Error: ' + err);
