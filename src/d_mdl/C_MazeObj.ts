@@ -37,6 +37,8 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     walker:     ()=>I_WanderWalker|undefined;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
+    encode:     ()=>JSON_MazeObj;
+    decode:     (j?: JSON_MazeObj|undefined)=>I_MazeObj;
 }
 
 export class C_MazeObj implements I_MazeObj {
@@ -118,7 +120,7 @@ export class C_MazeObj implements I_MazeObj {
     public hitWallDmg() :number {
         return this.h_w_dmg;
     }
-    public encode(): JSON_MazeObj {
+    public encode(): JSON_MazeObj {                    //alert('C_MazeObj.encode()');
         const stat = {
             can_thr: this.can_thr ? '1' : '0',
             h_w_dmg: this.h_w_dmg,

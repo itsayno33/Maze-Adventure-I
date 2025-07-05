@@ -28,11 +28,11 @@ export interface I_WanderObj extends I_MazeObj {
     walker(): C_WanderWalker|undefined;       // C_WanderWalkerオブジェクトを呼出
     set_walker(wdwalk: C_WanderWalker): void; // C_WanderWalkerオブジェクトを設定
     encode(): JSON_WanderObj;                 // JSON_WanderObj形式でエンコード
-    decode(j: JSON_WanderObj): C_WanderObj;   // JSON_WanderObj形式でデコード
+    decode(j: JSON_WanderObj|undefined): C_WanderObj;   // JSON_WanderObj形式でデコード
 }
 
 export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
-    protected clname: string = 'C_WanderObj';
+    public clname: string = 'C_WanderObj';
     protected wdwalk: C_WanderWalker|undefined; // WanderWalkerオブジェクト
     private   dmy:    string = ''; // ダミー変数
 
@@ -71,7 +71,7 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
     public walker(): C_WanderWalker|undefined {return this.wdwalk;}
     public set_walker(wdwalk: C_WanderWalker): void {this.wdwalk = wdwalk;}
 
-    public encode(): JSON_WanderObj {
+    public encode(): JSON_WanderObj {                                    //alert('C_WanderObj.encode()');
         const j = super.encode() as JSON_WanderObj;
         j.clname = this.clname;
         j.wdwalk = this.wdwalk?.encode() ?? undefined;
@@ -79,8 +79,9 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
         return j;
     }
-    public decode(j: JSON_WanderObj): C_WanderObj {
+    public decode(j: JSON_WanderObj|undefined): C_WanderObj {
         super.decode(j);
+        if (j === undefined) return this;
         if (j?.clname   !== undefined) this.clname    = j.clname;
 
         // loc_posが未定義の場合は初期位置を設定

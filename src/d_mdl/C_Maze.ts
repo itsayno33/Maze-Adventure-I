@@ -597,8 +597,10 @@ public static from_string_to_objArray(txt: string): {[uid: string]: C_Maze} {
         }
         const mask_str = z_array.join('Z');
 
-        let objs = [];
-        for (const ii in this.objs) objs.push(this.objs[ii].encode());
+        let objs = [] as JSON_MazeObj[];
+        for (const ii in this.objs) {
+            objs.push(this.objs[ii].encode());
+        }
 
         return {
             id:      this.maze_id,

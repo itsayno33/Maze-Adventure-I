@@ -78,7 +78,7 @@ export function init_before_games(): void {
 export function init_before_new_games(): void {
     get_mai_maze().then((jsonObj:any)=>{
         decode_all(jsonObj?.save);
-        install_objs(5);                   // 暫定(C_objsのテスト用)
+        install_objs(1);                   // 暫定(C_objsのテスト用)
         do_load_bottom_half('');
     });
 }
@@ -222,7 +222,7 @@ function stop_double_click(): void {
 // 暫定(C_MazeObjのテスト用)
 function install_objs(num: number = 1): void {
     // 通り抜けできないオブジェを置く（移動版）
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < num; i++) {
         const x = _irand(0, (g_maze.get_x_max() - 1) / 2 - 1) * 2 + 1; 
         const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
 
