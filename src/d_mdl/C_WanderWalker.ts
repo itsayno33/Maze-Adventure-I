@@ -79,10 +79,8 @@ export class C_WanderWalker extends C_Walker {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
         }
     **/
-        if (a.loc_pos !== undefined) {
-            const loc_pos = new C_PointDir(a.loc_pos);
-            this.set_pd(loc_pos);
-        }
+        if (a.loc_pos !== undefined) this.set_pd(new C_PointDir(a.loc_pos));
+
         return this;
     }
 
