@@ -44,7 +44,8 @@ export class C_CurrentTeamView  implements I_MazeObjView {
 
         const con = C_MazeObjView.get_context2D();
         if (con === undefined) return;
-    
+   
+    /*******************
         con.beginPath();
         con.moveTo(r.tl.x, r.tl.y);
         con.lineTo(r.tr.x, r.tr.y);
@@ -54,7 +55,8 @@ export class C_CurrentTeamView  implements I_MazeObjView {
     
         con.fillStyle   = "#ff3333";
         con.fill();
-    
+    ********************/
+
         // Draw the arrow
         switch (this.my_team.getWalker().get_d()) {
             case T_Direction.N:  // ↑
@@ -82,8 +84,8 @@ export class C_CurrentTeamView  implements I_MazeObjView {
         con.fillStyle   = "#ff6666";
         con.fill();
 
-        con.strokeStyle = "#ff9999";
-        con.lineWidth   = 3;
+        con.strokeStyle = "#ff3333";
+        con.lineWidth   = 2;
         con.stroke();
         
     }
