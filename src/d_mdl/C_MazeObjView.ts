@@ -172,7 +172,7 @@ export class C_MazeObjView implements I_MazeObjView {
     public set_col_L(col_L: string|null): string|null {return this.my_col_L = col_L} 
 
     public drow2D(rect: T_Rect, dir: number = 0): void {
-        drow2D_cell(rect, this.col_2() ?? '#cccccc', this.col_L() ?? '#9999ff');
+        drow2D_cell(rect, this.col_2(), this.col_L() ?? '#9999ff');
     }
 
     public drow3D(frot: T_Wall, back: T_Wall, dir: number = 0): void {
