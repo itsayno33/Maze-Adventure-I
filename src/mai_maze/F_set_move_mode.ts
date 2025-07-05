@@ -204,8 +204,8 @@ function action_obj(): void {
         if (ww === undefined) continue;
         const act = ww.wonder();
         if (act.has_hope) {
+            ww.set_pd(act.subj);
             g_mes.normal_message(`近くのWanderWalkerが(x:${ww.get_pd().x},y:${ww.get_pd().y})(向:${ww.get_pd().d})に${act.hope}しました。`);
-            ww.set_pd(act.subj)
         } else {
             g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
         }

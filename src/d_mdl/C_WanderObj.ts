@@ -91,6 +91,7 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         if (j?.wdwalk   !== undefined) {
             j.wdwalk.loc_pos ??= j?.pos ?? {x:1, y:1, z:0, d:0}
             this.wdwalk        = new_walker(j.wdwalk);
+            this.wdwalk.set_mazeObj(this); // MazeObjを設定
         }
 
         if (j?.stat?.wo !== undefined) {
