@@ -1,16 +1,17 @@
 "use strict";
 
-import { C_Point }                   from "./C_Point";
-import { C_PointDir, JSON_PointDir } from "./C_PointDir";
-import { I_Abstract, I_JSON_Uniq, JSON_Any }     from "./C_SaveInfo";
-import { _get_uuid }                 from "../d_utl/F_Rand";
+import { C_Point }                           from "./C_Point";
+import { C_PointDir, JSON_PointDir }         from "./C_PointDir";
+import { I_Abstract, I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
+import { _get_uuid }                         from "../d_utl/F_Rand";
 import { 
     C_MazeObjView, 
     I_MazeObjView, 
     JSON_MazeObjView 
 } from "./C_MazeObjView";
-import { C_WanderWalker } from "./C_WanderWalker";
-import { new_mazeObj } from "./F_New_MazeObj";
+
+import { I_WanderWalker } from "./C_WanderWalker";
+
 
 export interface JSON_MazeObjSTAT {
     can_thr?:   string, 
@@ -33,7 +34,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
     setView:    (view: I_MazeObjView|undefined)=>void;
-    walker:     ()=>C_WanderWalker|undefined;
+    walker:     ()=>I_WanderWalker|undefined;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
 }
@@ -44,7 +45,7 @@ export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
-    protected my_walker: C_WanderWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
+    protected my_walker: I_WanderWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
 
@@ -96,8 +97,8 @@ export class C_MazeObj implements I_MazeObj {
     public view(): I_MazeObjView|undefined {return this.my_view}
     public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
 
-    public walker(): C_WanderWalker|undefined {return this.my_walker;}
-    public setWalker(walker: C_WanderWalker|undefined): void {
+    public walker(): I_WanderWalker|undefined {return this.my_walker;}
+    public setWalker(walker: I_WanderWalker|undefined): void {
         this.my_walker = walker;
     }
 

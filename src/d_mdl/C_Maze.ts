@@ -1,19 +1,19 @@
 "use strict";
 
-import { T_MzKind }              from "./T_MzKind";
-import { C_MazeCell }            from "./C_MazeCell";
-import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { C_Point }               from "./C_Point";
-import { I_Locate, T_Lckd }      from "./C_Location";
-import { C_Range }               from "./C_Range";
-import { C_Team, JSON_Team }     from "./C_Team";
-import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
-import { _get_uuid, _igrand, _irand }             from "../d_utl/F_Rand";
-import { _min } from "../d_utl/F_Math";
-import { C_PointDir } from "./C_PointDir";
-import { T_Direction } from "./T_Direction";
+import { T_MzKind }                    from "./T_MzKind";
+import { C_MazeCell }                  from "./C_MazeCell";
+import { I_MazeObj, JSON_MazeObj }     from "./C_MazeObj";
+import { C_Point }                     from "./C_Point";
+import { I_Locate, T_Lckd }            from "./C_Location";
+import { C_Range }                     from "./C_Range";
+import { C_Team, JSON_Team }           from "./C_Team";
+import { I_JSON_Uniq, JSON_Any }       from "./C_SaveInfo";
+import { _get_uuid, _igrand, _irand }  from "../d_utl/F_Rand";
+import { _min }                        from "../d_utl/F_Math";
+import { C_PointDir }                  from "./C_PointDir";
+import { T_Direction }                 from "./T_Direction";
 import { C_PointLink2D, C_PointSet2D } from "./C_PointSet2D";
-import { new_mazeObj } from "./F_New_MazeObj";
+import { new_mazeObj }                 from "./F_New_MazeObj";
 
 export interface JSON_Maze extends JSON_Any {
     id?:      number,

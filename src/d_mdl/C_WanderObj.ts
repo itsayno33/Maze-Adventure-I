@@ -1,10 +1,15 @@
 "use strict";
 
-import { C_MazeObj, I_MazeObj, JSON_MazeObj, JSON_MazeObjSTAT } from "./C_MazeObj";
-import { C_PointDir } from "./C_PointDir";
-import { C_WanderView, JSON_WanderView } from "./C_WanderView";
+import { 
+    C_MazeObj, 
+    I_MazeObj, 
+    JSON_MazeObj, 
+    JSON_MazeObjSTAT 
+} from "./C_MazeObj";
+
+import { C_WanderView, JSON_WanderView }      from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
-import { new_walker } from "./F_New_Walker";
+import { new_walker }                         from "./F_New_Walker";
 
 export interface JSON_WanderObjSTAT extends JSON_MazeObjSTAT {
     wo?: {

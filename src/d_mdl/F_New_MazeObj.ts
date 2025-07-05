@@ -1,8 +1,19 @@
 "use strict";
 
-import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { C_MazeObjShadow, C_MazeObjShogai, JSON_MazeObjShadow, JSON_MazeObjShogai }   from './C_MazeObjEtc';
-import { C_WanderObj, JSON_WanderObj }                        from "./C_WanderObj";
+import { 
+    C_MazeObj, 
+    I_MazeObj, 
+    JSON_MazeObj 
+} from "./C_MazeObj";
+
+import { 
+    C_MazeObjShadow, 
+    C_MazeObjShogai, 
+    JSON_MazeObjShadow, 
+    JSON_MazeObjShogai 
+}   from './C_MazeObjEtc';
+
+import { C_WanderObj, JSON_WanderObj } from "./C_WanderObj";
 
 export function new_mazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
     // C_MazeObjのインスタンスを生成する

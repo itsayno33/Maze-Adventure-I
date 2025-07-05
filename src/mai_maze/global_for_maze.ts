@@ -25,8 +25,8 @@ export const g_team = new C_Team();
 import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
-import { C_WanderWalker } from "../d_mdl/C_WanderWalker";
-export const g_ww: (C_WanderWalker|undefined)[] = []; // WanderWalkerの配列
+import { I_WanderWalker } from "../d_mdl/C_WanderWalker";
+export const g_ww: (I_WanderWalker|undefined)[] = []; // WanderWalkerの配列
 
 
 import { C_DefaultCtls }            from './C_DefaultCtls';

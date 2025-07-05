@@ -10,7 +10,7 @@ import { C_HeroRDB }      from "./C_HeroRDB";
 import { C_MazeRDB }      from "./C_MazeRDB";
 import { C_GuildRDB }     from "./C_GuildRDB";
 import { C_MvptRDB }      from "./C_MvptRDB";
-import { C_MazeObjRDB } from "./C_MazeObjRDB";
+import { C_MazeObjRDB }   from "./C_MazeObjRDB";
 
 type db_connect = mysql.PoolConnection;
 

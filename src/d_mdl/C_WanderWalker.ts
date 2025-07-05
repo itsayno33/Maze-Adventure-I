@@ -1,13 +1,12 @@
 "use strict";
 
-import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
-import { JSON_MazeObjView }                   from "./C_MazeObjView";
-import { C_Walker, JSON_Walker }              from "./C_Walker";
-import { C_WanderView, JSON_WanderView }      from './C_WanderView';
-import { I_HopeAction, C_HopeAction }         from './C_Hope';
-import { _irand }                             from "../d_utl/F_Rand";
-import { C_PointDir } from "./C_PointDir";
-import { g_mes } from "../d_cmn/global";
+import { I_MazeObj }                  from "./C_MazeObj";
+import { C_Walker, JSON_Walker }      from "./C_Walker";
+import { I_HopeAction, C_HopeAction } from './C_Hope';
+import { C_PointDir }                 from "./C_PointDir";
+import { I_JSON_Uniq }                from "./C_SaveInfo";
+import { _irand }                     from "../d_utl/F_Rand";
+import { g_mes }                      from "../d_cmn/global";
 
 export interface JSON_WanderWalker extends JSON_Walker {}
 
@@ -34,6 +33,17 @@ export type T_Action =
     | 'FlorD'      // 下に移動
     ;
 
+export interface I_WanderWalker extends I_JSON_Uniq {
+    get_pd(): C_PointDir;               // C_PointDirを取得
+    set_pd(pd: C_PointDir): C_PointDir; // C_PointDirを設定
+    encode(): JSON_WanderWalker;        // JSON_WanderWalker形式でエンコード
+    decode(j: JSON_WanderWalker): C_WanderWalker; // JSON_WanderWalker形式でデコード
+    
+    get_mazeObj(): I_MazeObj|undefined; // I_MazeObjを取得
+    set_mazeObj(mo: I_MazeObj): void;   // I_MazeObjを設定
+    wonder(): I_HopeAction;             // ランダムに行動を選択
+}
+
 export class C_WanderWalker extends C_Walker {
     protected clname: string = 'C_WanderWalker'; // クラス名
     protected mazeObj: I_MazeObj|undefined;
@@ -59,7 +69,7 @@ export class C_WanderWalker extends C_Walker {
         this.mazeObj = mo;
     }
 
-    public set_pd(pd: C_PointDir): C_PointDir {                                 g_mes.normal_message(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
+    public set_pd(pd: C_PointDir): C_PointDir {
         super.set_pd(pd);
         if (this.mazeObj !== undefined) this.mazeObj.set_pd(pd);
         return pd;
