@@ -267,9 +267,9 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         return false;
     }    
 
-    public get_x_max(): number {return this.size.size_x();}
-    public get_y_max(): number {return this.size.size_y();}
-    public get_z_max(): number {return this.size.size_z();}
+    public get_x_max(): number {return this.size.size_x()}
+    public get_y_max(): number {return this.size.size_y()}
+    public get_z_max(): number {return this.size.size_z()}
     public get_kind (p: C_Point): T_MzKind {
         if (this.size.within(p)) return this.cells[p.z][p.y][p.x].getKind();
         return T_MzKind.NoDef;

@@ -68,7 +68,7 @@ export class C_WanderWalker extends C_Walker {
         this.mazeObj = mo;
     }
 
-    public set_pd(pd: C_PointDir): C_PointDir {                                 alert(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
+    public set_pd(pd: C_PointDir): C_PointDir {                               //  alert(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
         super.set_pd(pd);
         if (this.mazeObj !== undefined) this.mazeObj.set_pd(pd);
         return pd;
