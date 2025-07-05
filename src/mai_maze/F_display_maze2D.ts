@@ -83,26 +83,27 @@ export function display_maze2D(): void {
     }
 }
 
+const cell_masks = C_MazeObjView.newObj({
+    layer: 0, letter: 'Ｘ', 
+    show3D: '1',
+    pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+    col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+    col_l: '#0000ff', col_2: '#333333', col_L: '#6666ff', 
+})
+
+const cell_unexp = C_MazeObjView.newObj({
+        layer: 0, letter: '謎', 
+        show3D:  '1',
+        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
+        col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
+        col_l: '#0000ff', col_2: '#ff00ff', col_L: '#6666ff', 
+})
+
+
 function to_2D(): void {
     const size_x = g_maze.get_x_max();
     const size_y = g_maze.get_y_max();
     const floor  = g_team.get_pd().z
-
-    const cell_masks = C_MazeObjView.newObj({
-        layer: 0, letter: 'Ｘ', 
-        show3D: '1',
-        pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-        col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-        col_l: '#0000ff', col_2: '#333333', col_L: '#6666ff', 
-    })
-
-    const cell_unexp = C_MazeObjView.newObj({
-            layer: 0, letter: '謎', 
-            show3D:  '1',
-            pad_t: 0.0, pad_d: 0.0, pad_s: 0.0,
-            col_f: '', col_b: '', col_s: '', col_t: '', col_d: '', 
-            col_l: '#0000ff', col_2: '#ff00ff', col_L: '#6666ff', 
-    })
 
     for (let y = 0; y < size_y; y++) {
         for (let x = 0; x < size_x; x++) {
@@ -118,17 +119,15 @@ function to_2D(): void {
                 cell_masks.drow2D(rect_2d, 0);
             } else { 
                 // マスクされていないセルは、通常表示
+
+                // 床のビューを描写
+                const flr_view = g_maze.get_cell_xyz(x, y, floor)?.getObj()?.view();
+                flr_view?.drow2D(rect_2d, 0);
+
+                // オブジェクトが存在する場合は、そのビューを描画
                 const obj_cell = g_maze.get_obj_xyz(x, y, floor);
                 const obj_view = obj_cell?.view();
-                // オブジェクトが存在する場合は、そのビューを描画
                 if (obj_view !== undefined) obj_view?.drow2D(rect_2d, obj_cell?.get_pd().d??0);
-                else {
-                    // オブジェクトが存在しない場合は、床のビューを描画
-                    // 床のビューがない場合は『不明なセル』を表示
-                    const flr_view = g_maze.get_cell_xyz(x, y, floor)?.getObj()?.view();
-                    if (flr_view !== undefined) flr_view?.drow2D(rect_2d, obj_cell?.get_pd().d??0);
-                    else cell_unexp.drow2D(rect_2d, obj_cell?.get_pd().d??0);
-                }
             }
         }
     }

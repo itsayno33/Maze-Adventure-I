@@ -6,7 +6,6 @@ import { I_HopeAction, C_HopeAction } from './C_Hope';
 import { C_PointDir }                 from "./C_PointDir";
 import { I_JSON_Uniq }                from "./C_SaveInfo";
 import { _irand }                     from "../d_utl/F_Rand";
-import { g_mes }                      from "../d_cmn/global";
 
 export interface JSON_WanderWalker extends JSON_Walker {}
 
@@ -69,7 +68,7 @@ export class C_WanderWalker extends C_Walker {
         this.mazeObj = mo;
     }
 
-    public set_pd(pd: C_PointDir): C_PointDir {
+    public set_pd(pd: C_PointDir): C_PointDir {                                 alert(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
         super.set_pd(pd);
         if (this.mazeObj !== undefined) this.mazeObj.set_pd(pd);
         return pd;
