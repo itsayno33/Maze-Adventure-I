@@ -10,6 +10,7 @@ import {
 import { C_WanderView, JSON_WanderView }      from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
 import { new_walker }                         from "./F_New_Walker";
+import { C_PointDir } from './C_PointDir';
 
 export interface JSON_WanderObjSTAT extends JSON_MazeObjSTAT {
     wo?: {
@@ -46,7 +47,7 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
 
 
         // loc_posが未定義の場合は初期位置を設定。decode(j)でthis.set_pd()を呼び出す
-        if (j.loc_pos === undefined) j.loc_pos ??= j.wdwalk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
+        if (j.pos === undefined) j.pos ??= j.wdwalk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
 
         // viewが未定義の場合はこれを初期化
         // Viewはdecode(j)でJSON_WanderWalkerViewを使用して生成する
@@ -81,13 +82,13 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         if (j?.clname   !== undefined) this.clname    = j.clname;
 
         // loc_posが未定義の場合は初期位置を設定
-        if (j?.loc_pos  === undefined && j.wdwalk.loc_pos  !== undefined)  j.loc_pos = j.wdwalk.loc_pos; 
-        if (j?.loc_pos  !== undefined)  this.set_pd(j.loc_pos); 
+        if (j?.pos  === undefined && j.wdwalk.loc_pos  !== undefined)  j.pos = j.wdwalk.loc_pos; 
+        if (j?.pos  !== undefined)  this.set_pd(new C_PointDir(j.pos)); 
 
         if (j?.view     !== undefined) this.setView(new C_WanderView(j.view));
 
         if (j?.wdwalk   !== undefined) {
-            j.wdwalk.loc_pos ??= j?.loc_pos ?? {x:1, y:1, z:0, d:0}
+            j.wdwalk.loc_pos ??= j?.pos ?? {x:1, y:1, z:0, d:0}
             this.wdwalk        = new_walker(j.wdwalk);
         }
 

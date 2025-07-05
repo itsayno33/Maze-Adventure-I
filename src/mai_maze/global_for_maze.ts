@@ -227,7 +227,7 @@ function install_objs(num: number = 1): void {
         const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
 
         const obje = new C_WanderObj({
-            loc_pos:    {x:x, y:y, z:0, d:0},
+            pos:    {x:x, y:y, z:0, d:0},
         });
         g_maze.add_obj(obje);
         g_ww.push(obje?.walker()); // WanderWalkerの配列に追加
