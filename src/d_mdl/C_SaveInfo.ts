@@ -96,7 +96,23 @@ export class C_SaveInfo implements I_JSON {
 
         this.mypos     = new C_MovablePoint();
 
-        if (a !== undefined) this.decode(a);
+        if (a !== undefined) this.__init(a);
+    }
+    protected __init(s: JSON_SaveInfo): C_SaveInfo {
+        this.save_id   = s.save_id   ?? this.save_id;
+        this.player_id = s.player_id ?? this.player_id; 
+        this.uniq_no   = s.uniq_no   ?? this.uniq_no;
+        this.title     = s.title     ?? this.title;
+        this.detail    = s.detail    ?? this.detail;
+        this.point     = s.point     ?? this.point;
+        if (s.auto_mode === undefined) this.auto_mode; else s.auto_mode !== '0' ? true : false;
+        if (s.is_active === undefined) this.is_active; else s.is_active !== '0' ? true : false;
+        if (s.is_delete === undefined) this.is_delete; else s.is_delete !== '0' ? true : false;
+        if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
+
+        if (s.mypos     !== undefined) this.mypos.decode(s.mypos); 
+
+        return this;
     }
 
     public static new(a?: JSON_SaveInfo): C_SaveInfo {
@@ -132,20 +148,7 @@ export class C_SaveInfo implements I_JSON {
     }
 
     public decode(s: JSON_SaveInfo): C_SaveInfo {
-        this.save_id   = s.save_id   ?? this.save_id;
-        this.player_id = s.player_id ?? this.player_id; 
-        this.uniq_no   = s.uniq_no   ?? this.uniq_no;
-        this.title     = s.title     ?? this.title;
-        this.detail    = s.detail    ?? this.detail;
-        this.point     = s.point     ?? this.point;
-        if (s.auto_mode === undefined) this.auto_mode; else s.auto_mode !== '0' ? true : false;
-        if (s.is_active === undefined) this.is_active; else s.is_active !== '0' ? true : false;
-        if (s.is_delete === undefined) this.is_delete; else s.is_delete !== '0' ? true : false;
-        if (s.save_time !== undefined) this.save_time = new Date(s.save_time); 
-
-        if (s.mypos     !== undefined) this.mypos.decode(s.mypos); 
-
-        return this;
+        return this.__init(s);
     }
     
     public alert(): void {

@@ -47,9 +47,9 @@ export class C_WanderWalker extends C_Walker {
     protected clname: string = 'C_WanderWalker'; // クラス名
     protected mazeObj: I_MazeObj|undefined;
     protected cond:    T_Condition = {
-        canMove:  true,   // 移動可能
-        canTurn:  true,   // 向き変更可能
-        canSlid:  true,   // スライド可能
+        canMove:  true,    // 移動可能
+        canTurn:  true,    // 向き変更可能
+        canSlid:  true,    // スライド可能
         canUpDn:  false,   // 上下移動可能
         canThru:  false,   // 壁を通過可能
         careWal:  false,   // 壁を気にする
@@ -58,8 +58,32 @@ export class C_WanderWalker extends C_Walker {
 
     constructor(j?: JSON_WanderWalker) {
         super(j);
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
+    protected __init(a?: JSON_WanderWalker): C_WanderWalker {
+        super.__init(a);
+        if (a === undefined) return this;
+        if (a.clname !== undefined) this.clname = a.clname;
+                                                                           //console.log(`C_WanderWalkerのコンストラクタが呼ばれました。クラス名: ${this.clname} : ${a.clname}`);
+
+        if (a.cond?.canMove !== undefined) this.cond.canMove  = a.cond.canMove !== '0' ? true : false;
+        if (a.cond?.canTurn !== undefined) this.cond.canTurn  = a.cond.canTurn !== '0' ? true : false;
+        if (a.cond?.canThru !== undefined) this.cond.canThru  = a.cond.canThru !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn !== '0' ? true : false;
+        if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal !== '0' ? true : false;
+    /**     mazeObjをデコードすると無限ループになる。向こうでもこのクラスをdecodeするので。
+        if (a.cond?.mazeObj??false) {
+            this.mazeObj = new C_MazeObj(a.cond.mazeObj);
+        }
+    **/
+        if (a.loc_pos !== undefined) {
+            const loc_pos = new C_PointDir(a.loc_pos);
+            this.set_pd(loc_pos);
+        }
+        return this;
+    }
+
 
     public get_mazeObj(): I_MazeObj|undefined {
         return this.mazeObj;
@@ -148,26 +172,7 @@ export class C_WanderWalker extends C_Walker {
 
         return j;
     }
-    public decode(a: JSON_WanderWalker): C_WanderWalker {
-        if (a === undefined) return this;
-        super.decode(a);
-        if (a.clname !== undefined) this.clname = a.clname;
-
-        if (a.cond?.canMove !== undefined) this.cond.canMove  = a.cond.canMove !== '0' ? true : false;
-        if (a.cond?.canTurn !== undefined) this.cond.canTurn  = a.cond.canTurn !== '0' ? true : false;
-        if (a.cond?.canThru !== undefined) this.cond.canThru  = a.cond.canThru !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.canSlid  = a.cond.canSlid !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = a.cond.canUpDn !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.careWal  = a.cond.careWal !== '0' ? true : false;
-/**     mazeObjをデコードすると無限ループになる。向こうでもこのクラスをdecodeするので。
-        if (a.cond?.mazeObj??false) {
-            this.mazeObj = new C_MazeObj(a.cond.mazeObj);
-        }
-**/
-        if (a.loc_pos !== undefined) {
-            const loc_pos = new C_PointDir(a.loc_pos);
-            this.set_pd(loc_pos);
-        }
-        return this;
+    public decode(a?: JSON_WanderWalker): C_WanderWalker {
+        return this.__init(a);
     }
 }

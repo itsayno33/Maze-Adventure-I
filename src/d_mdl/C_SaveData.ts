@@ -98,36 +98,10 @@ export class C_SaveData extends C_SaveInfo implements I_JSON {
         this.all_team  = {}
         this.all_guld  = {};
 
-        if (a !== undefined) this.decode(a);
+        if (a !== undefined) this.__init(a);
     }
-
-    public static new(a?: JSON_SaveData): C_SaveData {
-        return new C_SaveData(a);
-    }
-
-    public encode(): JSON_SaveData {
-        let save_date: string;
-        try {
-            const save_data    = super.encode() as JSON_SaveData;
-
-            save_data.all_mvpt = this._encode_all_data(this.all_mvpt); 
-            save_data.all_maze = this._encode_all_data(this.all_maze); 
-            save_data.all_team = this._encode_all_data(this.all_team); 
-            save_data.all_guld = this._encode_all_data(this.all_guld);
-            return save_data;
-        } catch (err) {
-            alert('SaveData Encode Error: ' + err);
-            return {};
-        }
-    }
-    protected _encode_all_data(all_data: {[uid:string]:I_JSON}): JSON_Any[] {
-        const all_JSON: JSON_Any[] = [];
-        for (let i in all_data) all_JSON.push(all_data[i].encode());
-        return all_JSON;
-    }
-
-    public decode(s: JSON_SaveData): C_SaveData {
-        super.decode(s);
+    protected __init(s: JSON_SaveData): C_SaveData {
+        super.__init(s);
 
         if (s.all_mvpt  !== undefined) {
             this.all_mvpt = {};
@@ -158,6 +132,35 @@ export class C_SaveData extends C_SaveInfo implements I_JSON {
            }
         } 
         return this;
+    }
+
+    public static new(a?: JSON_SaveData): C_SaveData {
+        return new C_SaveData(a);
+    }
+
+    public encode(): JSON_SaveData {
+        let save_date: string;
+        try {
+            const save_data    = super.encode() as JSON_SaveData;
+
+            save_data.all_mvpt = this._encode_all_data(this.all_mvpt); 
+            save_data.all_maze = this._encode_all_data(this.all_maze); 
+            save_data.all_team = this._encode_all_data(this.all_team); 
+            save_data.all_guld = this._encode_all_data(this.all_guld);
+            return save_data;
+        } catch (err) {
+            alert('SaveData Encode Error: ' + err);
+            return {};
+        }
+    }
+    protected _encode_all_data(all_data: {[uid:string]:I_JSON}): JSON_Any[] {
+        const all_JSON: JSON_Any[] = [];
+        for (let i in all_data) all_JSON.push(all_data[i].encode());
+        return all_JSON;
+    }
+
+    public decode(s: JSON_SaveData): C_SaveData {
+        return this.__init(s);
     }
     
     public alert(): void {

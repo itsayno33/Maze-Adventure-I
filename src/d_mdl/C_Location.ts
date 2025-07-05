@@ -37,7 +37,17 @@ export class C_Location implements I_JSON {
     protected loc_pos:  C_PointDir = new C_PointDir();
 
     public constructor(json?: JSON_Location) {
-        if (json !== undefined) this.decode(json);
+        if (json !== undefined) this.__init(json);
+    }
+    protected __init(j?: JSON_Location): C_Location {
+        if (j === undefined) return this;
+        if (j.kind === undefined || !(j.kind in T_Lckd)) return this;
+
+        if (j.kind    !== undefined) this.loc_kind = T_Lckd[j.kind];
+        if (j.name    !== undefined) this.loc_name = j.name;
+        if (j.loc_uid !== undefined) this.loc_uid  = j.loc_uid;
+        if (j.loc_pos !== undefined) this.loc_pos.decode(j.loc_pos);
+        return this;
     }
 
     public get_lckd_str(): string  {return _lckd_key(this.loc_kind);}
@@ -102,14 +112,7 @@ export class C_Location implements I_JSON {
         };
     }
     public decode(j?: JSON_Location): C_Location {
-        if (j === undefined) return this;
-        if (j.kind === undefined || !(j.kind in T_Lckd)) return this;
-
-        if (j.kind    !== undefined) this.loc_kind = T_Lckd[j.kind];
-        if (j.name    !== undefined) this.loc_name = j.name;
-        if (j.loc_uid !== undefined) this.loc_uid  = j.loc_uid;
-        if (j.loc_pos !== undefined) this.loc_pos.decode(j.loc_pos);
-        return this;
+        return this.__init(j);
     }
 }
 
