@@ -115,7 +115,7 @@ export class C_MazeObjView implements I_MazeObjView {
 
         if (j !== undefined) this.__init(j);
     }
-    private __init(j: JSON_MazeObjView|undefined): I_MazeObjView {
+    protected __init(j: JSON_MazeObjView|undefined): I_MazeObjView {
         if (j === undefined) return this;
 
         if (j.clname  !== undefined) this.clname    = j.clname;

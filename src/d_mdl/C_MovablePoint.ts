@@ -1,6 +1,6 @@
 "use strict";
 
-import { C_Location, JSON_Location } from "./C_Location";
+import { C_Location, JSON_Location, T_Lckd } from "./C_Location";
 import { I_JSON_Uniq }               from "./C_SaveInfo";
 import { _get_uuid }                 from "../d_utl/F_Rand";
 
@@ -35,6 +35,8 @@ export class C_MovablePoint extends C_Location implements I_JSON_Uniq {
     protected team_uid: string|undefined;
     public constructor(json?: JSON_MovablePoint) {
         super(json);
+        this.loc_kind = T_Lckd.Maze;
+
         this.uniq_id  = 'MvPoint#' + _get_uuid();
         this.cur_url  = '';
         this.team_uid = undefined;

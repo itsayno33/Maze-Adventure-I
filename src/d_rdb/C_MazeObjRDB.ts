@@ -137,10 +137,10 @@ export class C_MazeObjRDB {
         j.wdwalk ??= {};
 
         //Debug
-/***************************
+/***************************/
     console.log("C_MazeObjRDB: add_tbl() called:");
     for (const key in j) console.warn(`: ${key} = ` + JSON?.stringify(j[key]));
-****************************/
+/****************************/
 
 /********************
     // SQLにセットする値を指定

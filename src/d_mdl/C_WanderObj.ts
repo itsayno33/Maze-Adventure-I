@@ -65,24 +65,10 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         // Walkerの初期化。decode(j)にて新しいC_WanderWalkerを生成
         j.wdwalk ??= {} as JSON_WanderWalker; // 初期化
 
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
-
-    public walker(): C_WanderWalker|undefined {return this.wdwalk;}
-    public set_walker(wdwalk: C_WanderWalker): void {this.wdwalk = wdwalk;}
-
-    public encode(): JSON_WanderObj {
-        const j = super.encode() as JSON_WanderObj;
-        j.clname = this.clname;
-        j.wdwalk = this.wdwalk?.encode() ?? undefined;
-        j.stat     ??= {};
-        j.stat.wo  = {dmy: this.dmy}; // ダミー変数
-                                                            //alert(`j = ${JSON.stringify(j?.wdwalk,null,'\t')}`);
-                                                            //alert(`j = ${JSON.stringify(j?.stat,null,'\t')}`);
-        return j;
-    }
-    public decode(j: JSON_WanderObj|undefined): C_WanderObj {
-        super.decode(j);
+    protected __init(j: JSON_WanderObj|undefined): C_WanderObj {
+        super.__init(j);
         if (j === undefined) return this;
         if (j?.clname   !== undefined) this.clname    = j.clname;
 
@@ -102,5 +88,22 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
             this.dmy = j.stat.wo.dmy ?? ''; // ダミー変数
         }
         return this;
+    }
+
+    public walker(): C_WanderWalker|undefined {return this.wdwalk;}
+    public set_walker(wdwalk: C_WanderWalker): void {this.wdwalk = wdwalk;}
+
+    public encode(): JSON_WanderObj {
+        const j = super.encode() as JSON_WanderObj;
+        j.clname = this.clname;
+        j.wdwalk = this.wdwalk?.encode() ?? undefined;
+        j.stat     ??= {};
+        j.stat.wo  = {dmy: this.dmy}; // ダミー変数
+                                                            //alert(`j = ${JSON.stringify(j?.wdwalk,null,'\t')}`);
+                                                            //alert(`j = ${JSON.stringify(j?.stat,null,'\t')}`);
+        return j;
+    }
+    public decode(j: JSON_WanderObj|undefined): C_WanderObj {
+        return this.__init(j);
     }
 }

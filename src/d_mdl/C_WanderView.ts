@@ -18,7 +18,17 @@ export class C_WanderView  extends C_MazeObjView implements I_MazeObjView {
     public constructor(j: JSON_WanderView) {
         super(j);
         this.clname    = 'WanderView';
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
+    }
+    protected __init(j: JSON_WanderView|undefined): I_MazeObjView {
+        if (j === undefined) return this;
+
+        super.__init(j);
+        if (j?.clname    !== undefined) this.clname   = j.clname;
+        if (j?.col_2_arw !== undefined) this.col_2_arw = j.col_2_arw;
+        if (j?.col_2_tri !== undefined) this.col_2_tri = j.col_2_tri;
+
+        return this;
     }
 
     public letter(dir: number = 0): string|null {
@@ -75,14 +85,7 @@ export class C_WanderView  extends C_MazeObjView implements I_MazeObjView {
         return j;
     }
     public decode(j: JSON_WanderView|undefined): I_MazeObjView {
-        if (j === undefined) return this;
-
-        super.decode(j);
-        if (j?.clname    !== undefined) this.clname   = j.clname;
-        if (j?.col_2_arw !== undefined) this.col_2_arw = j.col_2_arw;
-        if (j?.col_2_tri !== undefined) this.col_2_tri = j.col_2_tri;
-
-        return this;
+        return this.__init(j);
     }
 }
 
