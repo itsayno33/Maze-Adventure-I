@@ -127,7 +127,7 @@ export function init_after_loaded_DOM(): void {
     g_vsw  = C_SwitchView.getObj(); 
 
     const btn = document.getElementById('view3_mode') as HTMLButtonElement;
-    g_view3 = C_CycleButton.getObj(btn, {});
+    g_view3 = C_CycleButton.getObj(btn);
 
     init_debug_mode();
     init_view3_mode();
@@ -180,7 +180,7 @@ function toggle_debug_mode(yn: boolean): void {
 export function init_view3_mode(): void {
     try {
         g_view3.setObj({
-            seq:      0,
+            at:       0,
             ccName:   ['3D', '2D','Ch'],
             ccClass:  ['d3', 'd2','ch'],
         });

@@ -1,16 +1,16 @@
 import { _get_uuid } from "../d_utl/F_Rand";
 
 type  T_CycleOption = {
-    seq?:      number,
+    at?:       number,
     ccName?:   string[],
     ccClass?:  string[],
-    fnc?:      _T_Fnc,
+    fnc?:      _T_Fnc[],
 }
 
 type  _T_CycleOption = {
     ccName:    string[],
     ccClass:   string[],
-    fnc?:      _T_Fnc,
+    fnc?:      _T_Fnc[],
 }
 
 type _T_Fnc = (seq: number)=>(void|boolean);
@@ -46,15 +46,19 @@ export class C_CycleButton {
     }
     public setObj(cco: T_CycleOption): C_CycleButton {
         try {
-            this.seq = cco.seq ?? 0;
-
-            this.cco = {...cco} as _T_CycleOption;
-
+            this.seq = cco.at ?? 0;
             if (cco.ccName !== undefined)  this.cco.ccName  = [...cco.ccName];
             else                           this.cco.ccName  = [...this.def_cco.ccName];
 
             if (cco.ccClass !== undefined) this.cco.ccClass = [...cco.ccClass];
             else                           this.cco.ccClass = [...this.def_cco.ccClass];
+
+            if (cco.fnc !== undefined) {
+                for (const i in cco.fnc) {
+                    if (cco.fnc[i] === undefined) continue
+                    if (typeof cco.fnc[i] === 'function') this.fnc[i] = cco.fnc[i];
+                }
+            }
 
             this._setStyle(this.seq);
         } catch {}
@@ -70,10 +74,10 @@ export class C_CycleButton {
         this.elm.classList.add   (cco.ccClass[this.seq]);
     }
     public cycle(): boolean|void {
-        this.seq++;
-        if (this.seq >= this.cco.ccName.length) this.seq = 0;
-        if (this.seq <  0                     ) this.seq = this.cco.ccName.length - 1;
-        this._setStyle(this.seq);
+        let seq = this.seq + 1;
+        if (seq >= this.cco.ccName.length) seq = 0;
+        if (seq <  0                     ) seq = this.cco.ccName.length - 1;
+        this._setStyle(seq);
 
         let rslt:boolean|void = true; 
         for (const i in this.fnc) rslt &&= this.fnc[i](this.seq); 
