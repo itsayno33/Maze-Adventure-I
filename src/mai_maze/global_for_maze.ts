@@ -169,6 +169,7 @@ export function init_debug_mode(): void {
 function toggle_debug_mode(yn: boolean): void {
     display_mazeCh();
     display_maze2D();
+    display_maze3D();
 
     const alert = document.getElementById('alert_mode');
     const display = yn ? 'block' : 'none';
@@ -181,8 +182,8 @@ export function init_view3_mode(): void {
     try {
         g_view3.setObj({
             at:       0,
-            ccName:   ['3D', '2D','Ch'],
-            ccClass:  ['d3', 'd2','ch'],
+            ccName:   ['3D', '2D', 'Ch'],
+            ccClass:  ['d3', 'd2', 'ch'],
         });
         g_view3.addFnc(cycle_view3_mode);//g_view3.setON();
 

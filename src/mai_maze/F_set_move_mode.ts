@@ -1,7 +1,7 @@
 import { T_MzKind }                   from "../d_mdl/T_MzKind";
 import { I_HopeAction }               from "../d_mdl/C_Hope";
 import { C_Point }                    from "../d_mdl/C_Point";
-import { g_debug, g_mes }                    from "../d_cmn/global";
+import { g_mes }                      from "../d_cmn/global";
 import { instant_load, instant_save } from "../d_cmn/F_load_and_save";
 import { act_menu_mode }                         from "./F_set_menu_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
