@@ -33,7 +33,7 @@ body {
 /* 探索画面のレイアウト関係 */
 body.move {
     display: grid;
-    gap:                   var(--body_move_gap, 1rem 1.5rem);
+    /*gap:                   var(--body_move_gap, 1rem 1.5rem);*/
     grid-template-columns: var(--body_move_cols);
     grid-template-rows:    var(--body_move_rows);
 }
@@ -97,8 +97,8 @@ body.ldsv {
 
 
 #pane_header    {grid-area: header;}
-#pane_maze_vw2D {grid-area: view2d;}
 #pane_maze_vw3D {grid-area: view3d;}
+#pane_maze_info {grid-area: inform;}
 #pane_menu_list {grid-area: menu_l;}
 #pane_ldsv_list {grid-area: ldsv_l;}
 #pane_ldsv_data {grid-area: ldsv_d;}

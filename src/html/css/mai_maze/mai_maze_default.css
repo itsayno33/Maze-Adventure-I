@@ -40,20 +40,20 @@
 
     --body_move_gap: 1rem 1.5rem;
     --body_move_cols: 
-            var(--body_lyt_left_gap, 3rem)
+            /*var(--body_lyt_left_gap, 3rem)*/
             [header-start footer-start view3d-start message-start maze_m-start]
-            auto
-            [view3d-end message-end view2d-start contls-start]
-            auto
-            [header-end footer-end maze_m-end view2d-end contls-end]
-            var(--body_lyt_right_gap, 3rem)
+            5fr
+            [view3d-end message-end maze_m-end inform-start contls-start]
+            1fr
+            [header-end footer-end inform-end contls-end]
+            /*var(--body_lyt_right_gap, 3rem)*/
             ;
     --body_move_rows:
             [header-start]
             var(--body_lyt_row_header_height,  100px)
-            [header-end view3d-start view2d-start]
+            [header-end view3d-start inform-start]
             1fr
-            [view3d-end view2d-end maze_m-start contls-start] 
+            [view3d-end inform-end maze_m-start contls-start] 
             auto
             [maze_m-end message-start]
             1fr

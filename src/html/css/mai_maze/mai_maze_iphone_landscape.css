@@ -80,29 +80,27 @@
 
 --body_move_gap: 1rem 1.5rem;
 --body_move_cols: 
-        var(--body_lyt_left_gap, 3rem)
-        [header-start footer-start viewCh-start message-start maze_m-start]
-        auto
-        [viewCh-end message-end view3d-start]
-        auto
-        [view3d-end maze_m-end contls-start]
-        auto
-        [header-end footer-end viewCh-end contls-end]
-        var(--body_lyt_right_gap, 3rem)
-        ;
+            /*var(--body_lyt_left_gap, 3rem)*/
+            [header-start footer-start view3d-start message-start maze_m-start]
+            5fr
+            [view3d-end message-end maze_m-end inform-start contls-start]
+            1fr
+            [header-end footer-end inform-end contls-end]
+            /*var(--body_lyt_right_gap, 3rem)*/
+            ;
 --body_move_rows:
-        [header-start]
-        var(--body_lyt_row_header_height,  100px)
-        [header-end viewCh-start view3d-start contls-start]
-        1fr
-        [viewCh-end view3d-end maze_m-start] 
-        auto
-        [contls-end maze_m-end message-start]
-        auto
-        [message-end footer-start]
-        var(--body_lyt_row_footer_height,  100px)
-        [footer-end]
-        ;
+            [header-start]
+            var(--body_lyt_row_header_height,  100px)
+            [header-end view3d-start inform-start]
+            1fr
+            [view3d-end inform-end maze_m-start contls-start] 
+            auto
+            [maze_m-end message-start]
+            1fr
+            [message-end contls-end footer-start]
+            var(--body_lyt_row_footer_height,  100px)
+            [footer-end]
+            ;
 
 
 --body_menu_gap: 1rem 1.5rem;
