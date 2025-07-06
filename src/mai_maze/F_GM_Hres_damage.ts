@@ -1,18 +1,10 @@
+"use strict";
+
 // とりあえず未使用 2025-07-02
 
 import { 
-    g_mvm, 
-    g_vsw, 
-    g_maze, 
-    g_team,
     g_hres,
 } from "./global_for_maze";
-
-import { 
-    I_HopeAction, 
-    I_HopeResponceMove, 
-    I_HopeResponceTurn
-}                 from "../d_mdl/C_Hope";
 
 import { C_Hero } from "../d_mdl/C_Hero";
 import { _irand } from "../d_utl/F_Rand";

@@ -22,8 +22,8 @@ import {
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
-import { C_WanderView } from "../d_mdl/C_WanderView";
-import { C_WanderWalker } from "../d_mdl/C_WanderWalker";
+import { C_WndrView } from "../d_mdl/C_WndrView";
+import { C_WndrWalker } from "../d_mdl/C_WndrWalker";
 
 let   for_save: boolean  = false;
 
@@ -518,10 +518,10 @@ export function decode_all(jsonObj: any): void {
     for (const i in g_hres) delete g_hres[i]; 
     for (const hero of g_team.hres())  g_hres.push(hero); 
 
-    // WanderWalker関連のデコード
+    // WndrWalker関連のデコード
     for (const i in g_ww) delete g_ww[i];
     for (const ww of g_maze.get_obj_array()) 
-        if (ww.walker() instanceof C_WanderWalker) g_ww.push(ww.walker());
+        if (ww.walker() instanceof C_WndrWalker) g_ww.push(ww.walker());
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj); 

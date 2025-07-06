@@ -23,7 +23,7 @@ import {
     g_hres,
     g_ww, 
 } from "./global_for_maze";
-import { can_move_team, can_turn_team } from "./F_GM_move_and_turn";
+import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
 
 const ctls_move_nor = {

@@ -10,7 +10,7 @@ import {
     JSON_MazeObjView 
 } from "./C_MazeObjView";
 
-import { I_WanderWalker } from "./C_WanderWalker";
+import { I_WndrWalker } from "./C_WndrWalker";
 
 
 export interface JSON_MazeObjSTAT {
@@ -34,7 +34,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     within:     (p: C_Point)=>boolean;
     view:       ()=>I_MazeObjView|undefined;
     setView:    (view: I_MazeObjView|undefined)=>void;
-    walker:     ()=>I_WanderWalker|undefined;
+    walker:     ()=>I_WndrWalker|undefined;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
     encode:     ()=>JSON_MazeObj;
@@ -47,7 +47,7 @@ export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
-    protected my_walker: I_WanderWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
+    protected my_walker: I_WndrWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
 
@@ -76,7 +76,7 @@ export class C_MazeObj implements I_MazeObj {
             } else this.my_view  = undefined;
         }
 /***************************
-    // WanderObj専用の処理  コメントアウトすると実行時エラーになる
+    // WndrObj専用の処理  コメントアウトすると実行時エラーになる
     if (j.wdwalk  !== undefined) {
             const walker = new_walker(j.wdwalk);
             if (walker !== undefined)  this.my_walker = walker;
@@ -99,8 +99,8 @@ export class C_MazeObj implements I_MazeObj {
     public view(): I_MazeObjView|undefined {return this.my_view}
     public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
 
-    public walker(): I_WanderWalker|undefined {return this.my_walker;}
-    public setWalker(walker: I_WanderWalker|undefined): void {
+    public walker(): I_WndrWalker|undefined {return this.my_walker;}
+    public setWalker(walker: I_WndrWalker|undefined): void {
         this.my_walker = walker;
     }
 

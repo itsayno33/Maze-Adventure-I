@@ -1,12 +1,7 @@
-import { T_MzKind }                   from "../d_mdl/T_MzKind";
-import { C_Point }                    from "../d_mdl/C_Point";
-import { g_debug }                    from "../d_cmn/global";
+"use strict";
 
 import { 
-    g_mvm, 
-    g_vsw, 
     g_maze, 
-    g_team,
 } from "./global_for_maze";
 
 import { 

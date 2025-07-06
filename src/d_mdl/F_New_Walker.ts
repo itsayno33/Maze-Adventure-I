@@ -1,15 +1,15 @@
 "use strict";
 
-import { C_WanderWalker, JSON_WanderWalker } from "./C_WanderWalker";
+import { C_WndrWalker, JSON_WndrWalker } from "./C_WndrWalker";
 
-export function new_walker(j?: JSON_WanderWalker): C_WanderWalker {
-    // C_WanderWalkerのインスタンスを生成する
-    // jはJSON_WanderWalker形式であることを期待する
-    if (j === undefined) return new C_WanderWalker(j);
+export function new_walker(j?: JSON_WndrWalker): C_WndrWalker {
+    // C_WndrWalkerのインスタンスを生成する
+    // jはJSON_WndrWalker形式であることを期待する
+    if (j === undefined) return new C_WndrWalker(j);
     switch (j?.clname??'') {
-        case C_WanderWalker.constructor.name: new C_WanderWalker(j);
+        case C_WndrWalker.constructor.name: new C_WndrWalker(j);
     }
-    return new C_WanderWalker(j); // ここに到達することはないが、型の整合性のためにC_WanderWalkerを返す
+    return new C_WndrWalker(j); // ここに到達することはないが、型の整合性のためにC_WndrWalkerを返す
 }
 
 

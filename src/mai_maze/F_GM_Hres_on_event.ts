@@ -1,18 +1,7 @@
-import { T_MzKind }                   from "../d_mdl/T_MzKind";
-import { C_Point }                    from "../d_mdl/C_Point";
-import { g_debug }                    from "../d_cmn/global";
-
-import { 
-    g_mvm, 
-    g_vsw, 
-    g_maze, 
-    g_team,
-} from "./global_for_maze";
+"use strict";
 
 import { 
     I_HopeAction, 
-    I_HopeResponceMove, 
-    I_HopeResponceTurn
 }                 from "../d_mdl/C_Hope";
 
 

@@ -25,8 +25,8 @@ export const g_team = new C_Team();
 import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
-import { I_WanderWalker } from "../d_mdl/C_WanderWalker";
-export const g_ww: (I_WanderWalker|undefined)[] = []; // WanderWalkerの配列
+import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
+export const g_ww: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
 
 
 import { C_DefaultCtls }            from './C_DefaultCtls';
@@ -56,7 +56,7 @@ import { _irand } from "../d_utl/F_Rand";
 
 import { C_OnOffButton }                    from '../d_ctl/C_OnOffButton'
 import { C_MazeObjShadow, C_MazeObjShogai } from '../d_mdl/C_MazeObjEtc';
-import { C_WanderObj } from "../d_mdl/C_WanderObj";
+import { C_WndrObj } from "../d_mdl/C_WndrObj";
 export let g_view2: C_OnOffButton;
 
 export function init_before_games(): void {
@@ -226,11 +226,11 @@ function install_objs(num: number = 1): void {
         const x = _irand(0, (g_maze.get_x_max() - 1) / 2 - 1) * 2 + 1; 
         const y = _irand(0, (g_maze.get_y_max() - 1) / 2 - 1) * 2 + 1; 
 
-        const obje = new C_WanderObj({
+        const obje = new C_WndrObj({
             pos:    {x:x, y:y, z:0, d:0},
         });
         g_maze.add_obj(obje);
-        g_ww.push(obje?.walker()); // WanderWalkerの配列に追加
+        g_ww.push(obje?.walker()); // WndrWalkerの配列に追加
     }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {

@@ -13,7 +13,7 @@ import {
     JSON_MazeObjShogai 
 }   from './C_MazeObjEtc';
 
-import { C_WanderObj, JSON_WanderObj } from "./C_WanderObj";
+import { C_WndrObj, JSON_WndrObj } from "./C_WndrObj";
 
 export function new_mazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
     // C_MazeObjのインスタンスを生成する
@@ -22,7 +22,7 @@ export function new_mazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
 
     switch (j.clname) {
         case 'C_MazeObj'      : return new C_MazeObj(j);
-        case 'C_WanderObj'    : return new C_WanderObj    (j as JSON_WanderObj);
+        case 'C_WndrObj'    : return new C_WndrObj    (j as JSON_WndrObj);
         case 'C_MazeObjShadow': return new C_MazeObjShadow(j as JSON_MazeObjShadow);
         case 'C_MazeObjShogai': return new C_MazeObjShogai(j as JSON_MazeObjShogai);
         default: return new C_MazeObj(j); // C_TeamやC_MazeCell系の場合等

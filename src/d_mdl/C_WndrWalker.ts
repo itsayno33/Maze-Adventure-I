@@ -8,7 +8,7 @@ import { I_JSON_Uniq }                from "./C_SaveInfo";
 import { _irand }                     from "../d_utl/F_Rand";
 import { _json_output } from "../d_utl/F_Utility";
 
-export interface JSON_WanderWalker extends JSON_Walker {}
+export interface JSON_WndrWalker extends JSON_Walker {}
 
 type T_Condition = {
     canMove:  boolean; // 移動可能
@@ -33,19 +33,19 @@ export type T_Action =
     | 'FlorD'      // 下に移動
     ;
 
-export interface I_WanderWalker extends I_JSON_Uniq {
+export interface I_WndrWalker extends I_JSON_Uniq {
     get_pd(): C_PointDir;               // C_PointDirを取得
     set_pd(pd: C_PointDir): C_PointDir; // C_PointDirを設定
-    encode(): JSON_WanderWalker;        // JSON_WanderWalker形式でエンコード
-    decode(j: JSON_WanderWalker): C_WanderWalker; // JSON_WanderWalker形式でデコード
+    encode(): JSON_WndrWalker;        // JSON_WndrrWalker形式でエンコード
+    decode(j: JSON_WndrWalker): C_WndrWalker; // JSON_WndrWalker形式でデコード
     
     get_mazeObj(): I_MazeObj|undefined; // I_MazeObjを取得
     set_mazeObj(mo: I_MazeObj): void;   // I_MazeObjを設定
     wonder(): I_HopeAction;             // ランダムに行動を選択
 }
 
-export class C_WanderWalker extends C_Walker {
-    protected clname: string = 'C_WanderWalker'; // クラス名
+export class C_WndrWalker extends C_Walker {
+    protected clname: string = 'C_WndrWalker'; // クラス名
     protected mazeObj: I_MazeObj|undefined;
     protected cond:    T_Condition = {
         canMove:  true,    // 移動可能
@@ -57,14 +57,14 @@ export class C_WanderWalker extends C_Walker {
     }; 
     protected action: T_Action[] = []; // 選択できる行動の配列
 
-    constructor(j?: JSON_WanderWalker) {
+    constructor(j?: JSON_WndrWalker) {
         super(j);
         if (j !== undefined) this.__init(j);
     }
-    protected __init(a?: JSON_WanderWalker): C_WanderWalker {
+    protected __init(a?: JSON_WndrWalker): C_WndrWalker {
         super.__init(a);
         if (a === undefined) return this;
-                                                                           //_json_output(a,`C_WanderWalkerのコンストラクタが呼ばれました。クラス ＝ : `); // デバッグ用：コンストラクタの引数を出力
+                                                                           //_json_output(a,`C_WndrWalkerのコンストラクタが呼ばれました。クラス ＝ : `); // デバッグ用：コンストラクタの引数を出力
 
         if (a.clname        !== undefined) this.clname = a.clname;
         
@@ -155,8 +155,8 @@ export class C_WanderWalker extends C_Walker {
         }
     }
 
-    public encode(): JSON_WanderWalker {
-        const j = super.encode() as JSON_WanderWalker;
+    public encode(): JSON_WndrWalker {
+        const j = super.encode() as JSON_WndrWalker;
 
         j.clname = this.clname;
         j.cond  = {
@@ -173,7 +173,7 @@ export class C_WanderWalker extends C_Walker {
 
         return j;
     }
-    public decode(a?: JSON_WanderWalker): C_WanderWalker {
+    public decode(a?: JSON_WndrWalker): C_WndrWalker {
         return this.__init(a);
     }
 }
