@@ -9,8 +9,9 @@ import {
 
 import { C_WanderView, JSON_WanderView }      from "./C_WanderView";
 import { C_WanderWalker, JSON_WanderWalker }  from "./C_WanderWalker";
-import { C_PointDir } from './C_PointDir';
-import { new_walker } from "./F_new_Walker";
+import { C_PointDir }   from './C_PointDir';
+import { new_walker }   from "./F_new_Walker";
+import { _json_output } from "../d_utl/F_Utility";
 
 export interface JSON_WanderObjSTAT extends JSON_MazeObjSTAT {
     wo?: {
@@ -43,6 +44,8 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         this.can_thr = true; // 壁を通過可能
         this.h_w_dmg = 0;    // 壁に当たったときのダメージ無し
 
+                                                                   //console.log('##############');_json_output(j??{}); // デバッグ用：C_WanderObjの初期化時にjの内容を出力
+
         j ??= {} as JSON_WanderObj; // jが未定義の場合は空のオブジェクトを用意
 
 
@@ -63,6 +66,7 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         } as JSON_WanderView;
         
         // Walkerの初期化。decode(j)にて新しいC_WanderWalkerを生成
+        // j.wdwalkが未定義の場合は空のオブジェクトを用意
         j.wdwalk ??= {} as JSON_WanderWalker; // 初期化
 
         if (j !== undefined) this.__init(j);
@@ -80,6 +84,9 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
 
         if (j?.wdwalk   !== undefined) {
             j.wdwalk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定
+
+                                                                        //console.log('C_WanderObj.__init() json_output = ');_json_output(j); // デバッグ用：wdwalkの内容を出力
+
             this.wdwalk        = new_walker(j.wdwalk);
             this.wdwalk.set_mazeObj(this); // MazeObjを設定
         }
@@ -99,8 +106,6 @@ export class C_WanderObj  extends C_MazeObj implements I_WanderObj {
         j.wdwalk = this.wdwalk?.encode() ?? undefined;
         j.stat     ??= {};
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
-                                                            //alert(`j = ${JSON.stringify(j?.wdwalk,null,'\t')}`);
-                                                            //alert(`j = ${JSON.stringify(j?.stat,null,'\t')}`);
         return j;
     }
     public decode(j: JSON_WanderObj|undefined): C_WanderObj {

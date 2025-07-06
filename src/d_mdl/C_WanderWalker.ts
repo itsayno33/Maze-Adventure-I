@@ -6,6 +6,7 @@ import { I_HopeAction, C_HopeAction } from './C_Hope';
 import { C_PointDir }                 from "./C_PointDir";
 import { I_JSON_Uniq }                from "./C_SaveInfo";
 import { _irand }                     from "../d_utl/F_Rand";
+import { _json_output } from "../d_utl/F_Utility";
 
 export interface JSON_WanderWalker extends JSON_Walker {}
 
@@ -63,7 +64,7 @@ export class C_WanderWalker extends C_Walker {
     protected __init(a?: JSON_WanderWalker): C_WanderWalker {
         super.__init(a);
         if (a === undefined) return this;
-                                                                           console.log(`C_WanderWalkerのコンストラクタが呼ばれました。クラス＝: ` + JSON.stringify(a,null,'\t'));
+                                                                           //_json_output(a,`C_WanderWalkerのコンストラクタが呼ばれました。クラス ＝ : `); // デバッグ用：コンストラクタの引数を出力
 
         if (a.clname        !== undefined) this.clname = a.clname;
         
@@ -92,7 +93,7 @@ export class C_WanderWalker extends C_Walker {
         this.mazeObj = mo;
     }
 
-    public set_pd(pd: C_PointDir): C_PointDir {                               //  alert(`WanderWalkerの位置を(x:${pd.x??-2},y:${pd.y??-2},z:${pd.z??-2},d:${pd.d??-88})に設定しました。`);
+    public set_pd(pd: C_PointDir): C_PointDir {
         super.set_pd(pd);
         if (this.mazeObj !== undefined) this.mazeObj.set_pd(pd);
         return pd;

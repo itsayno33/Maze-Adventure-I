@@ -3,6 +3,7 @@ import mysql                       from 'mysql2/promise';
 import { C_DspMessage }            from '../d_utl/C_DspMessage'; // 画面メッセージの表示用クラス
 import { I_MazeObj, JSON_MazeObj } from '../d_mdl/C_MazeObj';
 import { new_mazeObj }             from '../d_mdl/F_new_MazeObj';
+import { _json_to_str } from '../d_utl/F_Utility';
 
 type db_connect = mysql.PoolConnection;
 
@@ -137,9 +138,9 @@ export class C_MazeObjRDB {
         j.wdwalk ??= {};
 
         //Debug
-/***************************/
+/***************************
     console.log("C_MazeObjRDB: add_tbl() called:");
-    for (const key in j) console.warn(`: ${key} = ` + JSON?.stringify(j[key]));
+    for (const key in j) console.warn(`: ${key} = ` + _json_to_str(j[key]));
 /****************************/
 
 /********************
