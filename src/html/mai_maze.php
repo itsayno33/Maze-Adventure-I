@@ -254,14 +254,14 @@ function new_team(): Team {
             <p id='maze_view3D_maze_name_info'></p>
             <p id='maze_view3D_direction_info'></p>
         </div>
-    </article>
-    <article id='pane_maze_vw2D'>
         <div id='div_maze_vwCh'>
             <pre id='maze_viewCh_pre'></pre>
         </div>
         <div id='div_maze_vw2D'>
             <canvas id='maze_view2D_canvas' width='320' height='320'></canvas>
         </div>
+    </article>
+    <article id='pane_maze_vw2D'>
     </article>
     <article id='pane_menu_list'>
         <ul id='menu_list'>
