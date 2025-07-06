@@ -58,7 +58,7 @@ import { C_OnOffButton }   from '../d_ctl/C_OnOffButton'
 import { C_MazeObjShadow } from '../d_mdl/C_MazeObjEtc';
 import { C_WndrObj }       from "../d_mdl/C_WndrObj";
 import { C_CycleButton }   from "../d_ctl/C_CycleButton";
-export let g_view2: C_CycleButton;
+export let g_view3: C_CycleButton;
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -126,11 +126,11 @@ export function init_after_loaded_DOM(): void {
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
 
-    const btn = document.getElementById('view2_mode') as HTMLButtonElement;
-    g_view2 = C_CycleButton.getObj(btn, {});
+    const btn = document.getElementById('view3_mode') as HTMLButtonElement;
+    g_view3 = C_CycleButton.getObj(btn, {});
 
     init_debug_mode();
-    init_view2_mode();
+    init_view3_mode();
     stop_double_click(); 
 
     init_all_mode();
@@ -177,16 +177,16 @@ function toggle_debug_mode(yn: boolean): void {
 }
 
 
-export function init_view2_mode(): void {
+export function init_view3_mode(): void {
     try {
-        g_view2.setObj({
+        g_view3.setObj({
             seq:      0,
             ccName:   ['3D', '2D','Ch'],
             ccClass:  ['d3', 'd2','ch'],
         });
-        g_view2.addFnc(cycle_view2_mode);//g_view2.setON();
+        g_view3.addFnc(cycle_view3_mode);//g_view3.setON();
 
-        const btn = document.getElementById('view2_mode') as HTMLButtonElement;
+        const btn = document.getElementById('view3_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
                 case "Digit3":
@@ -194,17 +194,17 @@ export function init_view2_mode(): void {
                     btn.click();
             }
         });
-        cycle_view2_mode(0); // 初期状態は3D表示
+        cycle_view3_mode(0); // 初期状態は3D表示
     } catch (err) {return};
 }
 
-function cycle_view2_mode(seq: number): void {
+function cycle_view3_mode(seq: number): void {
 
     const d3 = document.getElementById('div_maze_vw3D') as HTMLDivElement;
     const d2 = document.getElementById('div_maze_vw2D') as HTMLDivElement;
     const ch = document.getElementById('div_maze_vwCh') as HTMLDivElement;
 
-    switch (g_view2.at()) {
+    switch (g_view3.at()) {
         case 0: // 3D表示
             d3.style.setProperty('display', 'block');
             d2.style.setProperty('display', 'none');
