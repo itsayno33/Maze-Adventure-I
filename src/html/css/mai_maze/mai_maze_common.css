@@ -406,15 +406,15 @@ article#pane_ctls_boad #div_ctls_boad {
         var(--lr_arr_width, calc(var(--ctl_font_size, 2.0rem) * 1.1))
         [l_arr-end n_btn-end s_btn-end u_arr-start d_arr-start alert_btn-end debug_btn-start]
         var(--ud_arr_width, calc(var(--ctl_font_size, 2.0rem) * 1.1))
-        [u_arr-end d_arr-end debug_btn-end r_arr-start r_btn-start y_btn-start view2_btn-start]
+        [u_arr-end d_arr-end debug_btn-end r_arr-start r_btn-start y_btn-start view3_btn-start]
         var(--lr_arr_width, calc(var(--ctl_font_size, 2.0rem) * 1.1))
-        [r_arr-end r_btn-end y_btn-end m_btn-end view2_btn-end]
+        [r_arr-end r_btn-end y_btn-end m_btn-end view3_btn-end]
         ;
 
     grid-template-rows: 
-        [alert_btn-start debug_btn-start view2_btn-start]
+        [alert_btn-start debug_btn-start view3_btn-start]
         var(--debug_btn_height, calc(var(--ctl_font_size, 2.0rem) * 1.1))
-        [alert_btn-end debug_btn-end view2_btn-end s_btn-start r_btn-start]
+        [alert_btn-end debug_btn-end view3_btn-end s_btn-start r_btn-start]
         var(--r_btn_height,     calc(var(--ctl_font_size, 2.0rem) * 1.1))
         [s_btn-end r_btn-end u_arr-start]
         var(--ud_arr_height,    calc(var(--ctl_font_size, 2.0rem) * 1.1))
@@ -436,7 +436,7 @@ article#pane_ctls_boad #div_ctls_boad {
 
 #debug_mode { grid-area: debug_btn;}
 #alert_mode { grid-area: alert_btn;}
-#view2_mode { grid-area: view2_btn;}
+#view3_mode { grid-area: view3_btn;}
 
 #u_arr {grid-area: u_arr;}
 #d_arr {grid-area: d_arr;}
@@ -473,11 +473,11 @@ article#pane_ctls_boad #div_ctls_boad {
 #view2_mode {
     font-size: x-small;
 }
-#view2_mode.ch {
+#view3_mode.ch {
     color: #ffffff;
     background-color:#ff0000;
 }
-#view2_mode.d2 {
+#view3_mode.d2 {
     color: #008000;
     background-color:#f0f8ff;
 }
