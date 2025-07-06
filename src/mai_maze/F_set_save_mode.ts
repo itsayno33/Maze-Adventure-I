@@ -18,7 +18,7 @@ import {
     g_maze, 
     g_team, 
     g_hres,
-    g_ww, 
+    g_wndr, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
@@ -519,9 +519,9 @@ export function decode_all(jsonObj: any): void {
     for (const hero of g_team.hres())  g_hres.push(hero); 
 
     // WndrWalker関連のデコード
-    for (const i in g_ww) delete g_ww[i];
+    for (const i in g_wndr) delete g_wndr[i];
     for (const ww of g_maze.get_obj_array()) 
-        if (ww.walker() instanceof C_WndrWalker) g_ww.push(ww.walker());
+        if (ww.walker() instanceof C_WndrWalker) g_wndr.push(ww.walker());
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj); 

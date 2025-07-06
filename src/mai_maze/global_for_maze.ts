@@ -3,7 +3,7 @@ export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
 import { init_mazeCh, display_mazeCh } from "./F_display_mazeCh";
 import { init_maze2D, display_maze2D } from "./F_display_maze2D";
-import { init_maze3D, T_DrowSet }            from "./F_display_maze3D";
+import { display_maze3D, init_maze3D, T_DrowSet }            from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
 import { C_SwitchView }          from "./C_SwitchView";
@@ -26,7 +26,7 @@ import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
 import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
-export const g_ww: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
+export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
 
 
 import { C_DefaultCtls }            from './C_DefaultCtls';
@@ -54,10 +54,11 @@ import {
 import { _irand } from "../d_utl/F_Rand";
 
 
-import { C_OnOffButton }                    from '../d_ctl/C_OnOffButton'
-import { C_MazeObjShadow, C_MazeObjShogai } from '../d_mdl/C_MazeObjEtc';
-import { C_WndrObj } from "../d_mdl/C_WndrObj";
-export let g_view2: C_OnOffButton;
+import { C_OnOffButton }   from '../d_ctl/C_OnOffButton'
+import { C_MazeObjShadow } from '../d_mdl/C_MazeObjEtc';
+import { C_WndrObj }       from "../d_mdl/C_WndrObj";
+import { C_CycleButton }   from "../d_ctl/C_CycleButton";
+export let g_view2: C_CycleButton;
 
 export function init_before_games(): void {
     switch (g_start_env.mode) {
@@ -126,7 +127,7 @@ export function init_after_loaded_DOM(): void {
     g_vsw  = C_SwitchView.getObj(); 
 
     const btn = document.getElementById('view2_mode') as HTMLButtonElement;
-    g_view2 = C_OnOffButton.getObj(btn, {});
+    g_view2 = C_CycleButton.getObj(btn, {});
 
     init_debug_mode();
     init_view2_mode();
@@ -179,38 +180,49 @@ function toggle_debug_mode(yn: boolean): void {
 export function init_view2_mode(): void {
     try {
         g_view2.setObj({
-            yn:        true,
-            onName:   '2D',
-            offName:  'Ch',
-            onClass:  'd2',
-            offClass: 'ch',
+            seq:      0,
+            ccName:   ['3D', '2D','Ch'],
+            ccClass:  ['d3', 'd2','ch'],
         });
-        g_view2.addFnc(toggle_view2_mode);//g_view2.setON();
+        g_view2.addFnc(cycle_view2_mode);//g_view2.setON();
 
         const btn = document.getElementById('view2_mode') as HTMLButtonElement;
         window.addEventListener("keydown",(event)=>{
             switch (event.code) {
-                case "Digit2":
+                case "Digit3":
                 case "KeyV":
                     btn.click();
             }
         });
-        toggle_view2_mode(true); // 初期状態は2D表示
+        cycle_view2_mode(0); // 初期状態は3D表示
     } catch (err) {return};
 }
 
-function toggle_view2_mode(yn: boolean): void {
+function cycle_view2_mode(seq: number): void {
 
-    const ch = document.getElementById('div_maze_vwCh') as HTMLDivElement;
+    const d3 = document.getElementById('div_maze_vw3D') as HTMLDivElement;
     const d2 = document.getElementById('div_maze_vw2D') as HTMLDivElement;
-    if (yn) {
-        ch.style.setProperty('display', 'none');
-        d2.style.setProperty('display', 'block');
-        display_maze2D();
-    } else {
-        ch.style.setProperty('display', 'block');
-        d2.style.setProperty('display', 'none');
-        display_mazeCh();
+    const ch = document.getElementById('div_maze_vwCh') as HTMLDivElement;
+
+    switch (g_view2.at()) {
+        case 0: // 3D表示
+            d3.style.setProperty('display', 'block');
+            d2.style.setProperty('display', 'none');
+            ch.style.setProperty('display', 'none');
+            display_maze3D();
+            break;
+        case 1: // 2D表示
+            d3.style.setProperty('display', 'none');
+            d2.style.setProperty('display', 'block');
+            ch.style.setProperty('display', 'none');
+            display_maze2D();
+            break;
+        case 2: // 文字表示
+            d3.style.setProperty('display', 'none');
+            d2.style.setProperty('display', 'none');
+            ch.style.setProperty('display', 'block');
+            display_mazeCh();
+            break;
     }
 }
 
@@ -230,7 +242,7 @@ function install_objs(num: number = 1): void {
             pos:    {x:x, y:y, z:0, d:0},
         });
         g_maze.add_obj(obje);
-        g_ww.push(obje?.walker()); // WndrWalkerの配列に追加
+        g_wndr.push(obje?.walker()); // WndrWalkerの配列に追加
     }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {

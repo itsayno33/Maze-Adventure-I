@@ -21,7 +21,7 @@ import {
     g_ctls,
     g_ds,
     g_hres,
-    g_ww, 
+    g_wndr, 
 } from "./global_for_maze";
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
@@ -204,12 +204,12 @@ function dont_move(r: I_HopeAction): void {
 function around_obj(r: I_HopeAction): void {} 
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
-    for (const ww of g_ww) {
-        if (ww === undefined) continue;
-        const act = ww.wonder();
+    for (const wndr of g_wndr) {
+        if (wndr === undefined) continue;
+        const act = wndr.wonder();
         if (act.has_hope) {
-            ww.set_pd(act.subj);
-            g_mes.normal_message(`近くのWanderWalkerが(x:${ww.get_pd().x},y:${ww.get_pd().y})(向:${ww.get_pd().d})に${act.hope}しました。`);
+            wndr.set_pd(act.subj);
+            g_mes.normal_message(`近くのWanderWalkerが(x:${wndr.get_pd().x},y:${wndr.get_pd().y})(向:${wndr.get_pd().d})に${act.hope}しました。`);
         } else {
             g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
         }
