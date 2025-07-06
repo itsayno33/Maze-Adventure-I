@@ -137,7 +137,11 @@ function move_check(r: I_HopeAction): void {
             // 進行方向へ進む
             g_team.getWalker().set_pd(r.subj)
             // HP自動回復
-            for (const hero of g_hres) hero.hp_auto_heal();
+            for (const hero of g_hres) {
+                if (hero === undefined) continue;
+                if (!hero.is_alive())   continue;
+                hero.hp_auto_heal();
+            }
 
             // 移動先が階段なら階段の処理
             const kind = g_maze.get_cell(r.subj)?.getKind();
