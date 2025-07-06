@@ -15,6 +15,7 @@ import {
 } 
 from "./global_for_guild";
 import { C_PointDir } from "../d_mdl/C_PointDir";
+import { C_Guild } from "../d_mdl/C_Guild";
 
 
 
@@ -442,9 +443,16 @@ export function post_load_function(jsonObj: any): boolean {
 //loc
     g_team.decode(g_save.all_team[g_save.mypos.tid() as string].encode()); 
 
+//Guild
 //    g_guld.decode(g_save.all_guld[g_team.get_loc().get_uid()].encode());
-    const [guld_id, guld_val] = Object.entries(g_all_guld)[0]
-    g_guld.decode(guld_val.encode());
+    for (let uid in g_all_guld) {
+        if (g_all_guld[uid] instanceof C_Guild) {
+            g_guld.decode(g_all_guld[uid].encode());
+            break;
+        }
+    }
+    //const [guld_id, guld_val] = Object.entries(g_all_guld)[0]
+    //g_guld.decode(guld_val.encode());
 
 //loc
 /*
