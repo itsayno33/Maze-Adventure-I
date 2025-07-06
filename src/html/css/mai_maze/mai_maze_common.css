@@ -241,6 +241,7 @@ button#r_cp1 {
     font-size:  var(--view_button_font_size, 0.8rem);
 }
 
+
 #div_maze_vw2D {
     display:      grid;
     width:        var(--view2D_wdth,        320px);
@@ -270,6 +271,7 @@ pre#maze_viewCh_pre {
     text-align:   center;
     position:     relative;
 }
+
 
 #pane_maze_vw3D {
     text-align: center;
