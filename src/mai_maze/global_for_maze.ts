@@ -79,7 +79,7 @@ export function init_before_games(): void {
 export function init_before_new_games(): void {
     get_mai_maze().then((jsonObj:any)=>{
         decode_all(jsonObj?.save);
-        install_objs(1);                   // 暫定(C_objsのテスト用)
+//        install_objs(1);                   // 暫定(C_objsのテスト用)
         do_load_bottom_half('');
     });
 }

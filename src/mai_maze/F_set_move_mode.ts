@@ -155,7 +155,11 @@ function move_check(r: I_HopeAction): void {
             // 進行方向へ進めない
             // ダメージ処理
             const damage  = _irand(Math.trunc(_rslt.dmg * 0.9), Math.ceil(_rslt.dmg * 1.1));
-            for (const hero of g_hres) hero.hp_damage(damage);
+            for (const hero of g_hres) {
+                if (hero === undefined) continue;
+                if (!hero.is_alive())   continue;
+                hero.hp_damage(damage);
+            }
             dont_move(r);
         }
     }
