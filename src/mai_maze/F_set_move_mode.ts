@@ -21,7 +21,9 @@ import {
     g_ctls,
     g_ds,
     g_hres,
-    g_wndr, 
+    g_wndr,
+    g_view2D,
+    g_view2M, 
 } from "./global_for_maze";
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
@@ -235,7 +237,9 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
             else                     alert('この階を制覇しました！！');
         }
     }
-    display_maze2D();
+    //display_maze2D();
+    g_view2D.drow_map2X(g_team.get_pd(), g_maze);  alert('g_view2D =' + JSON.stringify(g_view2D,null,'\t'));
+    g_view2M.drow_map2X(g_team.get_pd(), g_maze);  alert('g_view2M =' + JSON.stringify(g_view2M,null,'\t'));
     display_mazeCh();
 }
 

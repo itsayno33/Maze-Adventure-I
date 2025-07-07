@@ -25,6 +25,10 @@ export const g_team = new C_Team();
 import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
+import { C_DrowMap2D, C_DrowMap2M, C_DrowMap2X } from "./C_DrowMap2X";
+export const g_view2D: C_DrowMap2D = C_DrowMap2X.getObj({div_id: 'div_maze_vw2D', canvas_id: 'maze_view2D_canvas', x_min: 15, y_min: 15}) as C_DrowMap2D;
+export const g_view2M: C_DrowMap2M = C_DrowMap2X.getObj({div_id: 'div_maze_vw2M', canvas_id: 'maze_view2M_canvas', x_min:  5, y_min:  5}) as C_DrowMap2M;
+
 import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
 export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
 
@@ -54,9 +58,9 @@ import {
 import { _irand } from "../d_utl/F_Rand";
 
 
-import { C_OnOffButton }   from '../d_ctl/C_OnOffButton'
 import { C_MazeObjShadow } from '../d_mdl/C_MazeObjEtc';
 import { C_WndrObj }       from "../d_mdl/C_WndrObj";
+
 import { C_CycleButton }   from "../d_ctl/C_CycleButton";
 export let g_view3: C_CycleButton;
 
@@ -216,7 +220,8 @@ function cycle_view3_mode(seq: number): void {
             d3.style.setProperty('display', 'none');
             d2.style.setProperty('display', 'block');
             ch.style.setProperty('display', 'none');
-            display_maze2D();
+            //display_maze2D();
+            g_view2D.drow_map2X(g_team.get_pd(), g_maze, true);
             break;
         case 2: // 文字表示
             d3.style.setProperty('display', 'none');
