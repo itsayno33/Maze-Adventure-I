@@ -11,6 +11,7 @@ import {
 } from "./C_MazeObjView";
 
 import { I_WndrWalker } from "./C_WndrWalker";
+import { C_MazeObjView2X, I_MazeObjView2X } from "./C_MazeObjView2X";
 
 
 export interface JSON_MazeObjSTAT {
@@ -32,6 +33,10 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     get_pd:     ()=>C_PointDir;
     set_pd:     (pd:C_PointDir)=>void;
     within:     (p: C_Point)=>boolean;
+    view2D:     ()=>I_MazeObjView2X|undefined;
+    setView2D:  (view: I_MazeObjView2X|undefined)=>void;
+    view2M:     ()=>I_MazeObjView2X|undefined;
+    setView2M:  (view: I_MazeObjView2X|undefined)=>void;
     view:       ()=>I_MazeObjView|undefined;
     setView:    (view: I_MazeObjView|undefined)=>void;
     walker:     ()=>I_WndrWalker|undefined;
@@ -47,6 +52,8 @@ export class C_MazeObj implements I_MazeObj {
     private   uniq_id:   string;
     protected pos:       C_PointDir;
     protected my_view:   I_MazeObjView|undefined;
+    protected my_view2D: I_MazeObjView2X|undefined;
+    protected my_view2M: I_MazeObjView2X|undefined;
     protected my_walker: I_WndrWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected h_w_dmg:   number;
@@ -57,6 +64,8 @@ export class C_MazeObj implements I_MazeObj {
         this.uniq_id    =  this.clname + '_' + _get_uuid();
         this.pos        =  new C_PointDir({x:0, y:0, z:0, d:0});
         this.my_view    =  undefined;
+        this.my_view2D  =  undefined;
+        this.my_view2M  =  undefined;
         this.my_walker  =  undefined; // C_Walkerオブジェクトは初期化しない
         this.can_thr    =  true;
         this.h_w_dmg    =  0;
@@ -71,10 +80,10 @@ export class C_MazeObj implements I_MazeObj {
         if (j.clname  !== undefined) this.clname    = j.clname;
         if (j.pos     !== undefined) this.pos.decode(j.pos);
         if (j.view    !== undefined) {
-            if (Object.keys(j.view).length > 0) {
-                this.my_view ??= C_MazeObjView.newObj(j.view); 
-            } else this.my_view  = undefined;
-        }
+            this.my_view   = C_MazeObjView  .newObj(j.view); 
+            this.my_view2D = C_MazeObjView2X.newObj(j.view); 
+            this.my_view2M = C_MazeObjView2X.newObj(j.view); 
+        };
 /***************************
     // WndrObj専用の処理  コメントアウトすると実行時エラーになる
     if (j.wdwalk  !== undefined) {
@@ -98,6 +107,12 @@ export class C_MazeObj implements I_MazeObj {
 
     public view(): I_MazeObjView|undefined {return this.my_view}
     public setView(view: I_MazeObjView|undefined): void {this.my_view = view}
+
+    public view2D(): I_MazeObjView2X|undefined {return this.my_view2D}
+    public setView2D(view2D: I_MazeObjView2X|undefined): void {this.my_view2D = view2D}
+
+    public view2M(): I_MazeObjView2X|undefined {return this.my_view2M}
+    public setView2M(view2M: I_MazeObjView2X|undefined): void {this.my_view2M = view2M}
 
     public walker(): I_WndrWalker|undefined {return this.my_walker;}
     public setWalker(walker: I_WndrWalker|undefined): void {

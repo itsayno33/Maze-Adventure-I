@@ -13,6 +13,7 @@ import { C_Good,  T_GoodKind }   from "./C_Good";
 import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { C_WndrWalker }          from "./C_WndrWalker";
+import { I_MazeObjView2X } from "./C_MazeObjView2X";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -63,7 +64,9 @@ export class C_Team implements I_MazeObj {
 //    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
 
-    protected myView:    I_MazeObjView|undefined;
+    protected myView:    I_MazeObjView  |undefined;
+    protected myView2D:  I_MazeObjView2X|undefined;
+    protected myView2M:  I_MazeObjView2X|undefined;
     protected hope_motion: string;
 
     public constructor(j?: JSON_Team) {
@@ -96,6 +99,12 @@ export class C_Team implements I_MazeObj {
 
     public view():       I_MazeObjView|undefined {return this.myView}
     public setView(view: I_MazeObjView|undefined): void {this.myView = view}
+
+    public view2D():         I_MazeObjView2X|undefined {return this.myView2D}
+    public setView2D(view2D: I_MazeObjView2X|undefined): void {this.myView2D = view2D}
+
+    public view2M():         I_MazeObjView2X|undefined {return this.myView2M}
+    public setView2M(view2M: I_MazeObjView2X|undefined): void {this.myView2M = view2M}
     
     public walker(): C_WndrWalker|undefined {return this.myWkWalker}
     public getWalker():  C_Walker {
@@ -183,6 +192,8 @@ export class C_Team implements I_MazeObj {
             heroes:    json_heroes,
             motion:    this.hope_motion,
             view:      this.myView?.encode() ?? {},
+            view2D:    this.myView2D?.encode() ?? {},
+            view2M:    this.myView2M?.encode() ?? {},
         };
     }
     public decode(a: JSON_Team|undefined): C_Team {

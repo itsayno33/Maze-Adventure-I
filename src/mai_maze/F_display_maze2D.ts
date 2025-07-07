@@ -1,3 +1,5 @@
+"use strict";
+
 import { g_debug, g_mes } from "../d_cmn/global";
 import { C_MazeObjView, T_Rect } from "../d_mdl/C_MazeObjView";
 import { _min, _round, _max } from '../d_utl/F_Math';

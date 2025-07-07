@@ -73,23 +73,23 @@ export class C_MazeObjView implements I_MazeObjView {
 
     protected clname:    string = 'C_MazeObjView';
 
-    private my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
-    private my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
+    protected my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
+    protected my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
-    private my_show: boolean;
-    private my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
-    private my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
-    private my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
+    protected my_show: boolean;
+    protected my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
+    protected my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
+    protected my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
 
-    private my_col_f:  string|null; // オブジェクト正面のCSSカラー 
-    private my_col_b:  string|null; // オブジェクト正面のCSSカラー 
-    private my_col_s:  string|null; // オブジェクト側面のCSSカラー 
-    private my_col_t:  string|null; // オブジェクト上面のCSSカラー 
-    private my_col_d:  string|null; // オブジェクト底面のCSSカラー 
-    private my_col_l:  string|null; // オブジェクトの線のCSSカラー 
+    protected my_col_f:  string|null; // オブジェクト正面のCSSカラー 
+    protected my_col_b:  string|null; // オブジェクト正面のCSSカラー 
+    protected my_col_s:  string|null; // オブジェクト側面のCSSカラー 
+    protected my_col_t:  string|null; // オブジェクト上面のCSSカラー 
+    protected my_col_d:  string|null; // オブジェクト底面のCSSカラー 
+    protected my_col_l:  string|null; // オブジェクトの線のCSSカラー 
 
-    private my_col_2:  string|null; // 2Dマップの面のCSSカラー 
-    private my_col_L:  string|null; // 2Dマップの線のCSSカラー 
+    protected my_col_2:  string|null; // 2Dマップの面のCSSカラー 
+    protected my_col_L:  string|null; // 2Dマップの線のCSSカラー 
 
     protected constructor(j?: JSON_MazeObjView|undefined) {
         this.clname     =  'C_MazeObjView';

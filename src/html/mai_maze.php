@@ -262,6 +262,9 @@ function new_team(): Team {
             <p id='maze_view3D_direction_info'></p>
     </article>
     <article id='pane_maze_info'>
+        <div id='div_maze_vw2M'>
+            <canvas id='maze_view2M_canvas' width='48' height='48'></canvas>
+        </div>
     </article>
     <article id='pane_menu_list'>
         <ul id='menu_list'>

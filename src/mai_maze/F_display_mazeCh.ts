@@ -1,3 +1,5 @@
+"use strict";
+
 import { g_debug, g_mes } from "../d_cmn/global";
 import { _min, _round, _max } from '../d_utl/F_Math';
 import { g_maze, g_team } from "./global_for_maze";

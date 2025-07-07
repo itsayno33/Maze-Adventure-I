@@ -22,7 +22,7 @@ export function new_mazeObj(j: JSON_MazeObj|undefined): I_MazeObj {
 
     switch (j.clname) {
         case 'C_MazeObj'      : return new C_MazeObj(j);
-        case 'C_WndrObj'    : return new C_WndrObj    (j as JSON_WndrObj);
+        case 'C_WndrObj'      : return new C_WndrObj      (j as JSON_WndrObj);
         case 'C_MazeObjShadow': return new C_MazeObjShadow(j as JSON_MazeObjShadow);
         case 'C_MazeObjShogai': return new C_MazeObjShogai(j as JSON_MazeObjShogai);
         default: return new C_MazeObj(j); // C_TeamやC_MazeCell系の場合等
