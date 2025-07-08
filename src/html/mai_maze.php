@@ -256,7 +256,7 @@ function new_team(): Team {
             <pre id='maze_viewCh_pre'></pre>
         </div>
         <div id='div_maze_vw2D'>
-            <canvas id='maze_view2D_canvas' width='480' height='480'></canvas>
+            <canvas id='maze_view2D_canvas' width='320' height='320'></canvas>
         </div>
             <p id='maze_view3D_maze_name_info'></p>
             <p id='maze_view3D_direction_info'></p>

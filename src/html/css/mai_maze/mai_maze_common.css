@@ -244,16 +244,16 @@ button#r_cp1 {
 
 #div_maze_vw2D {
     display:      grid;
-    width:        var(--view2D_wdth,        auto);
-    height:       var(--view2D_hght,        auto);
+    width:        var(--view2D_wdth,        300px);
+    height:       var(--view2D_hght,        300px);
     border:       thick double #ccaa33;
     overflow:     hidden;
 }
 
 #div_maze_vw2M {
     display:      grid;
-    width:        var(--view2M_wdth,       inherit);
-    height:       var(--view2M_hght,       inherit);
+    width:        var(--view2M_wdth,       100px);
+    height:       var(--view2M_hght,       100px);
 /*    border:       thick double #ccaa33; */
     overflow:     hidden;
 }

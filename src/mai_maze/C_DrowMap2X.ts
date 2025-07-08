@@ -94,9 +94,6 @@ export class C_DrowMap2X {
         this.div = document.getElementById(a.div_id)    as HTMLDivElement;
         if (this.div === null) return;
 
-        this.view_wdth  = this.div.clientWidth;
-        this.view_hght  = this.div.clientHeight;
-
         this.cvs = document.getElementById(a.canvas_id) as HTMLCanvasElement;
         if (this.cvs === null) return;
 
@@ -107,20 +104,22 @@ export class C_DrowMap2X {
     }
 
     public set_xy(a: T_DrowMap2X_Opt): void {
-        const col = g_maze.get_x_max();
-        const row = g_maze.get_y_max();
-
-        if (col   < 3   || row   < 3  ) return;
         if (a.x_min < 3 || a.y_min < 3) return;
 
         if (this.div === null || this.cvs === null) return;
         this.px_min_x = a.x_min;
         this.px_min_y = a.y_min; 
-        this._calc_map_size(col, row);
+        this._calc_map_size();
     }
 
-    protected _calc_map_size(col: number, row: number): void {
+    protected _calc_map_size(): void {
         if (this.div === null || this.cvs === null) return;
+
+        this.view_wdth  = this.div.clientWidth;
+        this.view_hght  = this.div.clientHeight;
+
+        const col = g_maze.get_x_max() + 0;
+        const row = g_maze.get_y_max() + 0;
 
         const col_px = this.cvs.width  / col;
         const row_px = this.cvs.height / row;
@@ -128,14 +127,18 @@ export class C_DrowMap2X {
         this.px_size_x = _max([this.px_min_x, _round(1.00 *  _min([col_px, row_px]), 2)]);
         this.px_size_y = _max([this.px_min_y, _round(1.00 *  _min([col_px, row_px]), 2)]);
 
-        this.map_wdth     = this.px_size_x * col;
-        this.map_hght     = this.px_size_y * col;
+        this.map_wdth     = this.px_size_x * _min([col, row]);
+        this.map_hght     = this.px_size_y * _min([col, row]);
 
         this.cvs.setAttribute('width',  this.map_wdth.toString());
         this.cvs.setAttribute('height', this.map_hght.toString());
     }
 
-    public calc_map_top(): void {
+    public drow_map2X(): void { 
+        if (this.cvs !== null) {this._to_2X();this._calc_map_top()};
+    }
+
+    protected _calc_map_top(): void {
         const pd = g_team.get_pd();
 
         this.view_wdth  = this.div?.clientWidth  ?? -1;
@@ -156,12 +159,8 @@ export class C_DrowMap2X {
     //        alert(`View2D: ${top_x}px * ${top_y}px, PD: ${pd.x},${pd.y},${pd.z}`);
     }
 
-    public drow_map2X(pd: C_PointDir, maze: C_Maze, is_masked: boolean = true): void { 
-        if (this.cvs !== null) {this.to_2X();this.calc_map_top()};
-    }
 
-
-    public to_2X(): void {
+    protected _to_2X(): void {
         const size_x = g_maze.get_x_max();
         const size_y = g_maze.get_y_max();
         const pd     = g_team.get_pd();
@@ -198,7 +197,7 @@ export class C_DrowMap2X {
         return;
     }
 
-    // 2Dか2Mか。サブクラスで実装
+    // 2Dか2Mか。サブクラスで実装(呼ばれることが無い抽象メソッド)
     protected obje_view2X(obj_cell: I_MazeObj|null): I_MazeObjView2X| undefined {
         return undefined
     }

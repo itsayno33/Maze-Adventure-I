@@ -177,9 +177,11 @@ export function init_debug_mode(): void {
                 case "NumpadMultiply":
                 case "Escape":
                     btn.click();
-                    g_view2D.drow_map2X(g_team.get_pd(), g_maze);
-                    g_view2M.drow_map2X(g_team.get_pd(), g_maze);
-            toggle_debug_mode(g_debug.isON())}
+                    g_view2D.drow_map2X();
+                    g_view2M.drow_map2X();
+                    toggle_debug_mode(g_debug.isON());
+                    break;
+            }
         })
     } catch (err) {return};
 }
@@ -235,7 +237,8 @@ function cycle_view3_mode(seq: number): void {
             d2.style.setProperty('display', 'block');
             ch.style.setProperty('display', 'none');
             //display_maze2D();
-            g_view2D.drow_map2X(g_team.get_pd(), g_maze, true);
+            g_view2D.drow_map2X();
+            g_view2M.drow_map2X();
             break;
         case 2: // 文字表示
             d3.style.setProperty('display', 'none');
