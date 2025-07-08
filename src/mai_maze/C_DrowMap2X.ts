@@ -1,5 +1,7 @@
 "use strict";
 
+// 注意：　このクラス群ではグローバル変数 g_maze, g_team を使用している。
+
 import { C_PointDir }         from "../d_mdl/C_PointDir";
 import { C_Maze }             from '../d_mdl/C_Maze';
 import { I_MazeObjView2X, T_Rect } from "../d_mdl/C_MazeObjView2X";

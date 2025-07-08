@@ -254,7 +254,7 @@ button#r_cp1 {
     display:      grid;
     width:        var(--view2M_wdth,       inherit);
     height:       var(--view2M_hght,       inherit);
-    border:       thick double #ccaa33;
+/*    border:       thick double #ccaa33; */
     overflow:     hidden;
 }
 
