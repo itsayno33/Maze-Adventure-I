@@ -14,6 +14,7 @@ import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
 import { C_WndrWalker }          from "./C_WndrWalker";
 import { I_MazeObjView2X } from "./C_MazeObjView2X";
+import { C_CurrentTeamView2X } from "./C_TeamView2X";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -76,7 +77,10 @@ export class C_Team implements I_MazeObj {
         this.uniq_id   = 'mai_team#' + _get_uuid();
         this.save_id   =  0;
 
-        this.myView    = new C_CurrentTeamView(this) as I_MazeObjView;
+        this.myView    = new C_CurrentTeamView  (this) as I_MazeObjView;
+        this.myView2D  = new C_CurrentTeamView2X(this) as I_MazeObjView2X;
+        this.myView2M  = new C_CurrentTeamView2X(this) as I_MazeObjView2X;
+
         this.myWalker  = new C_Walker();
         this.myWalker.set_tid(this.uid());
 
