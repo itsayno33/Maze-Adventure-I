@@ -262,6 +262,10 @@ canvas#maze_view2D_canvas {
     position:     relative;
 }
 
+canvas#maze_view2M_canvas {
+    position:     relative;
+}
+
 #div_maze_vwCh {
     display:      grid;
     width:        var(--viewCh_pre_wdth,        320px);

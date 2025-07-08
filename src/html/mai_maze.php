@@ -250,20 +250,20 @@ function new_team(): Team {
     </header>
     <article id='pane_maze_vw3D'>
         <div id='div_maze_vw3D'>
-            <canvas id='maze_view3D_canvas' width='480' height='400'></canvas>
+            <canvas id='maze_view3D_canvas'></canvas>
         </div>
         <div id='div_maze_vwCh'>
             <pre id='maze_viewCh_pre'></pre>
         </div>
         <div id='div_maze_vw2D'>
-            <canvas id='maze_view2D_canvas' width='320' height='320'></canvas>
+            <canvas id='maze_view2D_canvas'></canvas>
         </div>
             <p id='maze_view3D_maze_name_info'></p>
             <p id='maze_view3D_direction_info'></p>
     </article>
     <article id='pane_maze_info'>
         <div id='div_maze_vw2M'>
-            <canvas id='maze_view2M_canvas' width='48' height='48'></canvas>
+            <canvas id='maze_view2M_canvas' width='100' height='100'></canvas>
         </div>
     </article>
     <article id='pane_menu_list'>

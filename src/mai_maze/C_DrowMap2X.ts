@@ -132,7 +132,7 @@ export class C_DrowMap2X {
 
         this.cvs.setAttribute('width',  this.map_wdth.toString());
         this.cvs.setAttribute('height', this.map_hght.toString());
-    }  
+    }
 
     public drow_map2X(): void { 
         if (this.cvs !== null) {this._to_2X();this._calc_map_top()};
@@ -141,8 +141,8 @@ export class C_DrowMap2X {
     protected _calc_map_top(): void {
         const pd = g_team.get_pd();
 
-        this.view_wdth  = this.div?.clientWidth  ?? -1;
-        this.view_hght  = this.div?.clientHeight ?? -1;
+        this.view_wdth  = this.div?.clientWidth  ?? 0;
+        this.view_hght  = this.div?.clientHeight ?? 0;
 
         let top_x =  this.view_wdth / 2 - pd.x * this.px_size_x;
         if (top_x > 0) top_x = 0; // 左端制限
