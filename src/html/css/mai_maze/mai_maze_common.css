@@ -98,6 +98,7 @@ body.ldsv {
 
 #pane_header    {grid-area: header;}
 #pane_maze_vw3D {grid-area: view3d;}
+#pane_maze_vw2m {grid-area: view2m;}
 #pane_maze_info {grid-area: inform;}
 #pane_menu_list {grid-area: menu_l;}
 #pane_ldsv_list {grid-area: ldsv_l;}

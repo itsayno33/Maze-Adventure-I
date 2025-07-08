@@ -66,13 +66,13 @@
 
 --body_move_gap: 1.5rem 0.5rem;
 --body_move_cols: 
-        /*1rem*/
-        [header-start footer-start view3d-start inform-start maze_m-start message-start]
+        2rem
+        [header-start footer-start view3d-start view2m-start inform-start maze_m-start message-start]
         auto
-        [inform-end contls-start]
+        [view2m-end inform-end contls-start]
         auto
         [header-end footer-end view3d-end maze_m-end contls-end message-end]
-        /*1rem*/
+        2rem
         ;
 --body_move_rows:
         [header-start]
@@ -81,7 +81,9 @@
         auto
         [view3d-end maze_m-start]
         auto
-        [maze_m-end Inform-start contls-start]
+        [maze_m-end view2m-start inform-end]
+        auto
+        [contls-start]
         auto
         [inform-end contls-end message-start] 
         auto

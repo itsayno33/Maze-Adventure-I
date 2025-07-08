@@ -83,17 +83,19 @@
             /*var(--body_lyt_left_gap, 3rem)*/
             [header-start footer-start view3d-start message-start maze_m-start]
             2.5fr
-            [view3d-end message-end maze_m-end inform-start contls-start]
+            [view3d-end message-end maze_m-end view2m-start inform-start contls-start]
             1fr
-            [header-end footer-end inform-end contls-end]
+            [header-end footer-end view2m-end inform-end contls-end]
             /*var(--body_lyt_right_gap, 3rem)*/
             ;
 --body_move_rows:
             [header-start]
             var(--body_lyt_row_header_height,  100px)
-            [header-end view3d-start inform-start]
+            [header-end view3d-start view2m-start]
             1fr
-            [view3d-end inform-end maze_m-start contls-start] 
+            [view2m-end inform-start] 
+            auto
+            [view3d-end inform-end maze_m-start contls-start]
             auto
             [maze_m-end message-start]
             1fr
