@@ -177,8 +177,6 @@ export function init_debug_mode(): void {
                 case "NumpadMultiply":
                 case "Escape":
                     btn.click();
-                    g_view2D.drow_map2X();
-                    g_view2M.drow_map2X();
                     toggle_debug_mode(g_debug.isON());
                     break;
             }
@@ -188,7 +186,9 @@ export function init_debug_mode(): void {
 
 function toggle_debug_mode(yn: boolean): void {
     display_mazeCh();
-    display_maze2D();
+    //display_maze2D();
+    g_view2D.drow_map2X();
+    g_view2M.drow_map2X();
     display_maze3D();
 
     const alert = document.getElementById('alert_mode');

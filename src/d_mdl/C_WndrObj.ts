@@ -12,6 +12,7 @@ import { C_WndrWalker, JSON_WndrWalker }  from "./C_WndrWalker";
 import { C_PointDir }   from './C_PointDir';
 import { new_walker }   from "./F_new_Walker";
 import { _json_output } from "../d_utl/F_Utility";
+import { C_WndrView2X } from "./C_WndrView2X";
 
 export interface JSON_WndrObjSTAT extends JSON_MazeObjSTAT {
     wo?: {
@@ -80,7 +81,11 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         if (j?.pos  === undefined && j.wdwalk.loc_pos  !== undefined)  j.pos = j.wdwalk.loc_pos; 
         if (j?.pos  !== undefined)  this.set_pd(new C_PointDir(j.pos)); 
 
-        if (j?.view     !== undefined) this.setView(new C_WndrView(j.view));
+        if (j?.view     !== undefined) {
+            this.setView  (new C_WndrView  (j.view));
+            this.setView2D(new C_WndrView2X(j.view));
+            this.setView2M(new C_WndrView2X(j.view));
+        }
 
         if (j?.wdwalk   !== undefined) {
             j.wdwalk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定

@@ -42,7 +42,7 @@
     --body_move_cols: 
             /*var(--body_lyt_left_gap, 3rem)*/
             [header-start footer-start view3d-start message-start maze_m-start]
-            5fr
+            2.5fr
             [view3d-end message-end maze_m-end inform-start contls-start]
             1fr
             [header-end footer-end inform-end contls-end]

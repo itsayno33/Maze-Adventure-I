@@ -55,7 +55,7 @@ export class C_MazeObjView2X implements I_MazeObjView2X {
     protected my_col_2:  string|null; // 2Dマップの面のCSSカラー 
     protected my_col_L:  string|null; // 2Dマップの線のCSSカラー 
 
-    protected constructor(j?: JSON_MazeObjView2X|undefined) {
+    public constructor(j?: JSON_MazeObjView2X|undefined) {
         this.clname     =  'C_MazeObjView2X';
 
         this.my_layer   =  -2;

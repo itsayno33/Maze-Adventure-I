@@ -2,6 +2,7 @@
 
 import { I_Abstract, JSON_Any } from "./C_SaveInfo";
 import { T_Wall }               from "../d_mdl/C_Wall";
+import { C_MazeObjView2X } from "./C_MazeObjView2X";
 
 
 export interface I_MazeObjView extends I_Abstract {
@@ -62,7 +63,7 @@ export class C_MazeObjView implements I_MazeObjView {
         j ??= {};
         j.clname ??= 'C_MazeObjView';
         switch (j.clname) {
-            case C_MazeObjView.constructor.name:     return new C_MazeObjView(j);
+            case C_MazeObjView  .constructor.name:     return new C_MazeObjView(j);
         } 
         return new C_MazeObjView(j);
     }
