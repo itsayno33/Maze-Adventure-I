@@ -132,7 +132,7 @@ export class C_DrowMap2X {
 
         this.cvs.setAttribute('width',  this.map_wdth.toString());
         this.cvs.setAttribute('height', this.map_hght.toString());
-    }
+    }  
 
     public drow_map2X(): void { 
         if (this.cvs !== null) {this._to_2X();this._calc_map_top()};
