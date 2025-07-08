@@ -201,7 +201,6 @@ export class C_DrowMap2X {
     protected obje_view2X(obj_cell: I_MazeObj|null): I_MazeObjView2X| undefined {
         return undefined
     }
-
 }
 
 
