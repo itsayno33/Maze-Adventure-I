@@ -69,7 +69,8 @@ export class C_DrowMap2X {
     })
 ****************/
 
-    div: HTMLDivElement;
+    
+    div: HTMLDivElement| null = null;
     cvs: HTMLCanvasElement|null = null;
     ctx: CanvasRenderingContext2D|null = null;
 
@@ -84,9 +85,15 @@ export class C_DrowMap2X {
     map_wdth:  number = 0;
     map_hght:  number = 0;
 
-    protected constructor(a: T_DrowMap2X) {                  alert('a.div_id = ' + a.div_id + ', a.canvas_id = ' + a.canvas_id);
+    protected constructor(a: T_DrowMap2X) {
+        this.init(a);
+    }
+    public init(a: T_DrowMap2X): void {
         this.div = document.getElementById(a.div_id)    as HTMLDivElement;
         if (this.div === null) return;
+
+        this.view_wdth  = this.div.clientWidth;
+        this.view_hght  = this.div.clientHeight;
 
         this.cvs = document.getElementById(a.canvas_id) as HTMLCanvasElement;
         if (this.cvs === null) return;
@@ -129,8 +136,8 @@ export class C_DrowMap2X {
     public calc_map_top(): void {
         const pd = g_team.get_pd();
 
-        this.view_wdth  = this.div.clientWidth;
-        this.view_hght  = this.div.clientHeight;
+        this.view_wdth  = this.div?.clientWidth  ?? -1;
+        this.view_hght  = this.div?.clientHeight ?? -1;
 
         let top_x =  this.view_wdth / 2 - pd.x * this.px_size_x;
         if (top_x > 0) top_x = 0; // 左端制限

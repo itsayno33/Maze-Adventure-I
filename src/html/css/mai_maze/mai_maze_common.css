@@ -244,8 +244,16 @@ button#r_cp1 {
 
 #div_maze_vw2D {
     display:      grid;
-    width:        var(--view2D_wdth,        320px);
-    height:       var(--view2D_hght,        320px); 
+    width:        var(--view2D_wdth,        auto);
+    height:       var(--view2D_hght,        auto);
+    border:       thick double #ccaa33;
+    overflow:     hidden;
+}
+
+#div_maze_vw2M {
+    display:      grid;
+    width:        var(--view2M_wdth,       inherit);
+    height:       var(--view2M_hght,       inherit);
     border:       thick double #ccaa33;
     overflow:     hidden;
 }

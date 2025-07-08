@@ -18,12 +18,15 @@ import {
     g_maze, 
     g_team, 
     g_hres,
-    g_wndr, 
+    g_wndr,
+    g_view2D,
+    g_view2M, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
 import { C_WndrView } from "../d_mdl/C_WndrView";
 import { C_WndrWalker } from "../d_mdl/C_WndrWalker";
+import { C_DrowMap2D, C_DrowMap2X } from "./C_DrowMap2X";
 
 let   for_save: boolean  = false;
 
@@ -525,6 +528,18 @@ export function decode_all(jsonObj: any): void {
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj); 
+
+    // View2X関連を初期化
+    g_view2D.init({
+        div_id:    'div_maze_vw2D', 
+        canvas_id: 'maze_view2D_canvas', 
+        x_min: 15, y_min: 15
+    });
+    g_view2M.init({
+        div_id:    'div_maze_vw2M',
+        canvas_id: 'maze_view2M_canvas',
+        x_min:  5, y_min:  5
+    });
 }
 
 // 新規ゲームの初期データの読み込み(暫定)
@@ -550,6 +565,18 @@ export function decode_maze(jsonObj: any): void {
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj);
+
+    // View2X関連を初期化
+    g_view2D.init({
+        div_id:    'div_maze_vw2D', 
+        canvas_id: 'maze_view2D_canvas', 
+        x_min: 15, y_min: 15
+    });
+    g_view2M.init({
+        div_id:    'div_maze_vw2M',
+        canvas_id: 'maze_view2M_canvas',
+        x_min:  5, y_min:  5
+    });
 
     // SaveDataのベースの作成
     g_save.mypos = g_team.get_loc();

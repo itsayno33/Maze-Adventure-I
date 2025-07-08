@@ -238,8 +238,8 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
         }
     }
     //display_maze2D();
-    g_view2D.drow_map2X(g_team.get_pd(), g_maze);  alert('g_view2D =' + JSON.stringify(g_view2D,null,'\t'));
-    g_view2M.drow_map2X(g_team.get_pd(), g_maze);  alert('g_view2M =' + JSON.stringify(g_view2M,null,'\t'));
+    g_view2D.drow_map2X(g_team.get_pd(), g_maze);  //alert('g_view2D =' + JSON.stringify(g_view2D,null,'\t'));
+    g_view2M.drow_map2X(g_team.get_pd(), g_maze);  //alert('g_view2M =' + JSON.stringify(g_view2M,null,'\t'));
     display_mazeCh();
 }
 

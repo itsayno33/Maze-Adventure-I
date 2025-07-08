@@ -26,8 +26,8 @@ import { C_Guild } from "../d_mdl/C_Guild";
 export const g_guld = new C_Guild();
 
 import { C_DrowMap2D, C_DrowMap2M, C_DrowMap2X } from "./C_DrowMap2X";
-export const g_view2D: C_DrowMap2D = C_DrowMap2X.getObj({div_id: 'div_maze_vw2D', canvas_id: 'maze_view2D_canvas', x_min: 15, y_min: 15}) as C_DrowMap2D;
-export const g_view2M: C_DrowMap2M = C_DrowMap2X.getObj({div_id: 'div_maze_vw2M', canvas_id: 'maze_view2M_canvas', x_min:  5, y_min:  5}) as C_DrowMap2M;
+export let g_view2D: C_DrowMap2D;
+export let g_view2M: C_DrowMap2M;
 
 import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
 export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
@@ -130,6 +130,18 @@ export function init_after_loaded_DOM(): void {
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
 
+    g_view2D = C_DrowMap2X.getObj({
+        div_id:    'div_maze_vw2D', 
+        canvas_id: 'maze_view2D_canvas', 
+        x_min: 15, y_min: 15
+    }) as C_DrowMap2D;
+
+    g_view2M = C_DrowMap2X.getObj({
+        div_id:    'div_maze_vw2M', 
+        canvas_id: 'maze_view2M_canvas', 
+        x_min:  5, y_min:  5
+    }) as C_DrowMap2M;
+
     const btn = document.getElementById('view3_mode') as HTMLButtonElement;
     g_view3 = C_CycleButton.getObj(btn);
 
@@ -165,7 +177,9 @@ export function init_debug_mode(): void {
                 case "NumpadMultiply":
                 case "Escape":
                     btn.click();
-            }
+                    g_view2D.drow_map2X(g_team.get_pd(), g_maze);
+                    g_view2M.drow_map2X(g_team.get_pd(), g_maze);
+            toggle_debug_mode(g_debug.isON())}
         })
     } catch (err) {return};
 }
