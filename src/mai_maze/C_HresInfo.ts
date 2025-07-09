@@ -14,10 +14,8 @@ type _T_HeroInfo = {
 type _T_InfoTR = {
     name: HTMLTableCellElement;
     stat: HTMLTableCellElement;
-    nwHp: HTMLTableCellElement;
-    nwMp: HTMLTableCellElement;
-    mxHp: HTMLTableCellElement;
-    mxMp: HTMLTableCellElement;
+    hpCh: HTMLTableCellElement;
+    mpCh: HTMLTableCellElement;
 }
 
 const max_hres = 4;
@@ -31,7 +29,7 @@ export class C_HresInfo {
 
     constructor(eid: string, hres?: C_Hero[]) {
         this.init(eid);
-        this.set_hres(hres);
+        this.update(hres);
     }
 
     public init(eid: string) {
@@ -44,9 +42,9 @@ export class C_HresInfo {
         this._createTable();
     }
 
-    public set_hres(hres: C_Hero[]|undefined) {
+    public update(hres: C_Hero[]|undefined) {
         if (hres !== undefined && hres.length > 0) this.myHres = hres;
-        this.update();
+        this._update();
     }
 
     public hres(): C_Hero[] {return this.myHres}
@@ -55,6 +53,7 @@ export class C_HresInfo {
         if (this.elm === undefined || this.elm === null) return;
         if (this.tbl === undefined || this.tbl === null) return;
 
+        this.tbl.setAttribute('id',      this.elm.id + '_table');
         this.tbl.setAttribute('display', 'none');
 
         const tbody = document.createElement("tbody");
@@ -85,16 +84,25 @@ export class C_HresInfo {
     }
     protected _createTD(tr: HTMLTableRowElement): _T_InfoTR { // ここは順番が大事（表示順）
         const tds:_T_InfoTR = {} as _T_InfoTR;
-        tds.name = document.createElement('td'); tr.appendChild(tds.name);
-        tds.stat = document.createElement('td'); tr.appendChild(tds.stat);
-        tds.nwHp = document.createElement('td'); tr.appendChild(tds.nwHp);
-        tds.mxHp = document.createElement('td'); tr.appendChild(tds.mxHp);
-        tds.nwMp = document.createElement('td'); tr.appendChild(tds.nwMp);
-        tds.mxMp = document.createElement('td'); tr.appendChild(tds.mxMp);
+        tds.name = document.createElement('td');
+        tds.stat = document.createElement('td');
+        tds.hpCh = document.createElement('td');
+        tds.mpCh = document.createElement('td');
+/**
+        tds.name.style.setProperty('white-space', 'nowrap');
+        tds.stat.style.setProperty('white-space', 'nowrap');
+        tds.hpCh.style.setProperty('white-space', 'nowrap');
+        tds.mpCh.style.setProperty('white-space', 'nowrap');
+**/
+        tr.appendChild(tds.name);
+        tr.appendChild(tds.stat);
+        tr.appendChild(tds.hpCh);
+        tr.appendChild(tds.mpCh);
+
         return tds;
     }
 
-    public update(): void {
+    protected _update(): void {
         for (let ii = 0; ii < this.myHres.length; ii++) { // 順番が大事なのでfor inは使わない
             this._setInfo (ii);
             this._updateTR(ii);
@@ -126,12 +134,16 @@ export class C_HresInfo {
         if (this.cols === undefined || this.cols.length < 0) return;
 
         if (this.info !== undefined  &&  this.info[idx] !== undefined) {
-            this.cols[idx].name.innerHTML = this.info[idx].name ?? '';
-            this.cols[idx].stat.innerHTML = this.info[idx].stat ?? '';
-            this.cols[idx].nwHp.innerHTML = this.info[idx].nwHp?.toString() ?? '';
-            this.cols[idx].mxHp.innerHTML = this.info[idx].mxHp?.toString() ?? '';
-            this.cols[idx].nwMp.innerHTML = this.info[idx].nwMp?.toString() ?? '';
-            this.cols[idx].mxMp.innerHTML = this.info[idx].mxMp?.toString() ?? '';
+            this.cols[idx].name.innerHTML =  this.info[idx].name ?? '';
+            this.cols[idx].stat.innerHTML =  this.info[idx].stat ?? '';
+            this.cols[idx].hpCh.innerHTML = (this.info[idx].nwHp?.toString() ?? '???')
+                                          + ' / '
+                                          + (this.info[idx].mxHp?.toString() ?? '???')
+                                          ;
+            this.cols[idx].mpCh.innerHTML = (this.info[idx].nwMp?.toString() ?? '???')
+                                          + ' / '
+                                          + (this.info[idx].mxMp?.toString() ?? '???')
+                                          ;
         }
     }
 }

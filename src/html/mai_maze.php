@@ -265,10 +265,10 @@ function new_team(): Team {
         <div id='div_maze_vw2M'>
             <canvas id='maze_view2M_canvas'></canvas>
         </div>
-    </article>
-    <article id='pane_hres_info'>
         <div id='div_hres_info'>
         </div>
+    </article>
+    <article id='pane_hres_info'>
     </article>
     <article id='pane_menu_list'>
         <ul id='menu_list'>

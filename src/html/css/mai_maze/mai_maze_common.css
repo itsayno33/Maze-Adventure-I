@@ -39,6 +39,7 @@ body.move {
 }
 
 #pane_maze_vw2D.move,
+#pane_maze_vw2m.move,
 #pane_maze_vw3D.move,
 #pane_maze_mesg.move,
 #pane_ctls_boad.move,
@@ -67,6 +68,7 @@ body.menu {
 {display: block;}
 
 #pane_maze_vw2D.menu,
+#pane_maze_vw2m.menu,
 #pane_maze_vw3D.menu,
 #pane_ldsv_list.menu,
 #pane_ldsv_data.menu,
@@ -90,6 +92,7 @@ body.ldsv {
 {display: block;}
 
 #pane_maze_vw2D.ldsv,
+#pane_maze_vw2m.ldsv,
 #pane_maze_vw3D.ldsv,
 #pane_menu_list.ldsv,
 #pane_maze_mesg.ldsv 
@@ -337,6 +340,12 @@ p#maze_view3D_direction_info span#direction_X {
 
 p#maze_view3D_direction_info span#direction_Y {
     color: #ffa500;
+}
+
+table#div_hres_info_table td {
+    white-space: nowrap;
+    color:brown;
+    font-size: small;
 }
 
 .blink {

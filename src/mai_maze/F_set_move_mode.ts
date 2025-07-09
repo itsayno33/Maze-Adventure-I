@@ -48,7 +48,7 @@ export function init_move_mode(): void {
 export function act_move_mode(): void {
     g_ctls.act(ctls_move_nor);
     g_vsw.view(g_vsw.Move());                                               ///////////////////////
-    g_hresInfo?.set_hres(g_hres);
+    g_hresInfo?.update(g_hres);
     setCanvas3DClick();
 }
 
@@ -166,7 +166,8 @@ function move_check(r: I_HopeAction): void {
                 hero.hp_damage(damage);
             }
             dont_move(r);
-        }
+        }                                               alert('update!!! ' + g_hres[0].get_abi_p_now('xp'));
+        g_hresInfo.update(g_hres);
     }
 /******************
         const cell = g_maze.get_cell(r.subj);

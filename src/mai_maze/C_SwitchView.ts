@@ -28,7 +28,7 @@ export class C_SwitchView {
 
             C_SwitchView.article.view3d = document.getElementById('pane_maze_vw3D') as HTMLElement;
             C_SwitchView.article.view2d = document.getElementById('pane_maze_vw2D') as HTMLElement;
-//            C_SwitchView.article.viewCh = document.getElementById('pane_maze_vwCh') as HTMLElement;
+            C_SwitchView.article.view2m = document.getElementById('pane_maze_vw2m') as HTMLElement;
             C_SwitchView.article.menu_l = document.getElementById('pane_menu_list') as HTMLElement;
             C_SwitchView.article.ldsv_l = document.getElementById('pane_ldsv_list') as HTMLElement;
             C_SwitchView.article.ldsv_d = document.getElementById('pane_ldsv_data') as HTMLElement;

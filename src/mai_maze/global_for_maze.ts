@@ -32,7 +32,7 @@ import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
 export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
 
 import { C_HresInfo } from "./C_HresInfo";
-export let g_hresInfo: C_HresInfo|undefined = undefined;
+export let g_hresInfo: C_HresInfo;
 
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
