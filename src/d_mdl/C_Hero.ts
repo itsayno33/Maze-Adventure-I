@@ -80,7 +80,7 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_p      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
         this.abi_m      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
 //        this.is_alive   = true;
-        if (a !== undefined) this.decode(a);
+        if (a !== undefined) this.__init(a);
     }
 
     public set_prp(arg : JSON_Hero) {
@@ -205,7 +205,9 @@ export class C_Hero implements I_JSON_Uniq {
         }
         return ret;
     }
-    public decode(a: JSON_Hero|undefined): C_Hero {
+    public decode(a: JSON_Hero|undefined): C_Hero {return this.__init(a)}
+
+    protected __init(a: JSON_Hero|undefined): C_Hero {
         if (a === undefined) return this;
         if (a.id       !== undefined) this.my_id    = a.id;
         if (a.name     !== undefined) this.my_name  = a.name;
