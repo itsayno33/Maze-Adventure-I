@@ -10,7 +10,7 @@ import {
     JSON_MazeObjView 
 } from "./C_MazeObjView";
 
-import { I_WndrWalker } from "./C_WndrWalker";
+import { C_WndrWalker, I_WndrWalker } from "./C_WndrWalker";
 import { C_MazeObjView2X, I_MazeObjView2X } from "./C_MazeObjView2X";
 
 
@@ -40,6 +40,7 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     view:       ()=>I_MazeObjView|undefined;
     setView:    (view: I_MazeObjView|undefined)=>void;
     walker:     ()=>I_WndrWalker|undefined;
+    set_walker: (wdwalk: I_WndrWalker|undefined)=>void;
     canThrough: ()=>boolean;
     hitWallDmg: ()=>number;
     encode:     ()=>JSON_MazeObj;
@@ -115,7 +116,7 @@ export class C_MazeObj implements I_MazeObj {
     public setView2M(view2M: I_MazeObjView2X|undefined): void {this.my_view2M = view2M}
 
     public walker(): I_WndrWalker|undefined {return this.my_walker;}
-    public setWalker(walker: I_WndrWalker|undefined): void {
+    public set_walker(walker: I_WndrWalker|undefined): void {
         this.my_walker = walker;
     }
 

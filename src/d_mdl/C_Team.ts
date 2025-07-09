@@ -12,7 +12,7 @@ import { I_MazeObjView, JSON_MazeObjView }  from "./C_MazeObjView";
 import { C_Good,  T_GoodKind }   from "./C_Good";
 import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
 import { _get_uuid }             from "../d_utl/F_Rand";
-import { C_WndrWalker }          from "./C_WndrWalker";
+import { C_WndrWalker, I_WndrWalker }          from "./C_WndrWalker";
 import { I_MazeObjView2X } from "./C_MazeObjView2X";
 import { C_CurrentTeamView2X } from "./C_TeamView2X";
 
@@ -60,7 +60,7 @@ export class C_Team implements I_MazeObj {
     protected uniq_id:   string;
     protected save_id:   number;
     protected myWalker:  C_Walker;
-    protected myWkWalker:C_WndrWalker|undefined;
+    protected myWkWalker:I_WndrWalker|undefined;
     protected gold:      number;
 //    protected goods:     C_GoodsList;
     protected heroes:    {[uid: string]: C_Hero};
@@ -110,10 +110,11 @@ export class C_Team implements I_MazeObj {
     public view2M():         I_MazeObjView2X|undefined {return this.myView2M}
     public setView2M(view2M: I_MazeObjView2X|undefined): void {this.myView2M = view2M}
     
-    public walker(): C_WndrWalker|undefined {return this.myWkWalker}
     public getWalker():  C_Walker {
         return this.myWalker;
     }
+    public walker(): I_WndrWalker|undefined {return this.myWkWalker}
+    public set_walker(wdwalker: I_WndrWalker|undefined): void {this.myWkWalker = wdwalker}
     
     public canThrough(): boolean {return true}
     public hitWallDmg(): number  {return 0}

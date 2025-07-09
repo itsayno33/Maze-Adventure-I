@@ -25,7 +25,7 @@ import {
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
 import { C_WndrView } from "../d_mdl/C_WndrView";
-import { C_WndrWalker } from "../d_mdl/C_WndrWalker";
+import { C_WndrWalker, I_WndrWalker } from '../d_mdl/C_WndrWalker';
 import { C_DrowMap2D, C_DrowMap2X } from "./C_DrowMap2X";
 
 let   for_save: boolean  = false;
@@ -523,8 +523,10 @@ export function decode_all(jsonObj: any): void {
 
     // WndrWalker関連のデコード
     for (const i in g_wndr) delete g_wndr[i];
-    for (const ww of g_maze.get_obj_array()) 
-        if (ww.walker() instanceof C_WndrWalker) g_wndr.push(ww.walker());
+    for (const obje of g_maze.get_obj_array()) {
+        if (obje.walker() === undefined) continue;
+        g_wndr.push(obje);
+    }
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj); 

@@ -8,11 +8,11 @@ import {
 } from "./C_MazeObj";
 
 import { C_WndrView, JSON_WndrView }      from "./C_WndrView";
-import { C_WndrWalker, JSON_WndrWalker }  from "./C_WndrWalker";
+import { C_WndrWalker, I_WndrWalker, JSON_WndrWalker }  from "./C_WndrWalker";
 import { C_PointDir }   from './C_PointDir';
-import { new_walker }   from "./F_new_Walker";
 import { _json_output } from "../d_utl/F_Utility";
 import { C_WndrView2X } from "./C_WndrView2X";
+import { new_walker } from "./F_new_Walker";
 
 export interface JSON_WndrObjSTAT extends JSON_MazeObjSTAT {
     wo?: {
@@ -27,15 +27,15 @@ export interface JSON_WndrObj extends JSON_MazeObj {
 }
 
 export interface I_WndrObj extends I_MazeObj {
-    walker(): C_WndrWalker|undefined;       // C_WndrWalkerオブジェクトを呼出
-    set_walker(wdwalk: C_WndrWalker): void; // C_WndrWalkerオブジェクトを設定
+    walker(): I_WndrWalker|undefined;       // C_WndrWalkerオブジェクトを呼出
+    set_walker(wdwalk: I_WndrWalker|undefined): void; // C_WndrWalkerオブジェクトを設定
     encode(): JSON_WndrObj;                 // JSON_WndrObj形式でエンコード
-    decode(j: JSON_WndrObj|undefined): C_WndrObj;   // JSON_WndrObj形式でデコード
+    decode(j: JSON_WndrObj|undefined): I_WndrObj;   // JSON_WndrObj形式でデコード
 }
 
 export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     public clname: string = 'C_WndrObj';
-    protected wdwalk: C_WndrWalker|undefined; // WndrWalkerオブジェクト
+    protected wdwalk: I_WndrWalker|undefined; // WndrWalkerオブジェクト
     private   dmy:    string = 'ダミー'; // ダミー変数
 
     public constructor(j?: JSON_MazeObj) {
@@ -66,9 +66,6 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
 //                col_2_arw: '#338866', col_2_tri: '#cc6666',
         } as JSON_WndrView;
         
-        // Walkerの初期化。decode(j)にて新しいC_WndrWalkerを生成
-        // j.wdwalkが未定義の場合は空のオブジェクトを用意
-        j.wdwalk ??= {} as JSON_WndrWalker; // 初期化
 
         if (j !== undefined) this.__init(j);
     }
@@ -102,8 +99,8 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         return this;
     }
 
-    public walker(): C_WndrWalker|undefined {return this.wdwalk;}
-    public set_walker(wdwalk: C_WndrWalker): void {this.wdwalk = wdwalk;}
+    public walker(): I_WndrWalker|undefined {return this.wdwalk;}
+    public set_walker(wdwalk: I_WndrWalker|undefined): void {this.wdwalk = wdwalk;}
 
     public encode(): JSON_WndrObj {
         const j = super.encode() as JSON_WndrObj;
@@ -113,7 +110,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
         return j;
     }
-    public decode(j: JSON_WndrObj|undefined): C_WndrObj {
+    public decode(j: JSON_WndrObj|undefined): I_WndrObj {
         return this.__init(j);
     }
 }

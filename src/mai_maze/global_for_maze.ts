@@ -28,8 +28,8 @@ import { C_DrowMap2D, C_DrowMap2M, C_DrowMap2X } from "./C_DrowMap2X";
 export let g_view2D: C_DrowMap2D;
 export let g_view2M: C_DrowMap2M;
 
-import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
-export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
+import { C_WndrObj, I_WndrObj }       from "../d_mdl/C_WndrObj";
+export const g_wndr: (I_WndrObj|undefined)[] = []; // WndrObjの配列
 
 import { C_HresInfo } from "./C_HresInfo";
 export let g_hresInfo: C_HresInfo;
@@ -60,7 +60,6 @@ import { _irand } from "../d_utl/F_Rand";
 
 
 import { C_MazeObjShadow } from '../d_mdl/C_MazeObjEtc';
-import { C_WndrObj }       from "../d_mdl/C_WndrObj";
 
 import { C_CycleButton }   from "../d_ctl/C_CycleButton";
 import { display_maze2D, init_maze2D } from "./F_display_maze2D";
@@ -263,8 +262,8 @@ function install_objs(num: number = 1): void {
         const obje = new C_WndrObj({
             pos:    {x:x, y:y, z:0, d:0},
         });
-        g_maze.add_obj(obje);
-        g_wndr.push(obje?.walker()); // WndrWalkerの配列に追加
+        g_maze.add_obj(obje as I_WndrObj);
+        g_wndr.push(obje); // WndrObjの配列に追加
     }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {

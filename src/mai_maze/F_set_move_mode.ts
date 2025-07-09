@@ -214,12 +214,13 @@ function dont_move(r: I_HopeAction): void {
 function around_obj(r: I_HopeAction): void {} 
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
-    for (const wndr of g_wndr) {
-        if (wndr === undefined) continue;
-        const act = wndr.wonder();
+    for (const obje of g_wndr) {
+        const walker = obje?.walker();
+        if (walker === undefined) continue;
+        const act = walker.wonder();
         if (act.has_hope) {
-            wndr.set_pd(act.subj);
-            g_mes.normal_message(`近くのWanderWalkerが(x:${wndr.get_pd().x},y:${wndr.get_pd().y})(向:${wndr.get_pd().d})に${act.hope}しました。`);
+            walker.set_pd(act.subj);
+            g_mes.normal_message(`近くのWanderWalkerが(x:${walker.get_pd().x},y:${walker.get_pd().y})(向:${walker.get_pd().d})に${act.hope}しました。`);
         } else {
             g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
         }
