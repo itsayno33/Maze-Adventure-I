@@ -115,9 +115,9 @@ export class C_HresInfo {
             this.info[idx].name = this.myHres[idx].name();
             this.info[idx].stat = this.myHres[idx].is_alive() ? '　正常　' : '行動不能';
             this.info[idx].nwHp = this.myHres[idx].get_abi_p_now("xp") - this.myHres[idx].get_abi_p_now("xd");
-            this.info[idx].mxHp = this.myHres[idx].get_abi_p_ttl("xp");
+            this.info[idx].mxHp = this.myHres[idx].get_abi_p_now("xp");
             this.info[idx].nwMp = this.myHres[idx].get_abi_m_now("xp") - this.myHres[idx].get_abi_m_now("xd");
-            this.info[idx].mxMp = this.myHres[idx].get_abi_m_ttl("xp");
+            this.info[idx].mxMp = this.myHres[idx].get_abi_m_now("xp");
         } else {
             this.info[idx] = undefined;
         }
