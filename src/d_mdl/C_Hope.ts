@@ -1,6 +1,6 @@
 "use strict";
 
-import { C_PointDir } from "./C_PointDir"
+import { C_PointDir, JSON_PointDir } from "./C_PointDir"
 
 export type T_HopeReqKind =
      'Wait'      // 待機
@@ -46,17 +46,17 @@ export class C_HasHope implements I_HasHope {
 export interface I_HopeAction extends I_HasHope {
     subj:    C_PointDir,    // 対象の指定(位置)
 }
-export interface INIT_HopeAction extends JSON_HasHope {
-    subj?:   C_PointDir,    // 対象の指定(位置)
+export interface JSON_HopeAction extends JSON_HasHope {
+    subj?:   JSON_PointDir,    // 対象の指定(位置)
 }
 export class C_HopeAction implements I_HopeAction {
     public has_hope: boolean = false;        // 希望行動の有無
     public hope:     T_HopeReqKind = 'Wait'; // 行動の種類
     public subj:     C_PointDir;             // 対象の指定(位置)
-    public constructor(j?: INIT_HopeAction) {
+    public constructor(j?: JSON_HopeAction) {
         this.has_hope = j?.has_hope ?? false;
         this.hope     = j?.hope     ?? 'Wait';
-        this.subj     = j?.subj     ?? new C_PointDir();
+        this.subj     = j?.subj !== undefined ? new C_PointDir(j.subj) : new C_PointDir();
     }
 }
 
