@@ -47,6 +47,7 @@ export interface I_WndrWalker extends I_JSON_Uniq {
 export class C_WndrWalker extends C_Walker {
     protected clname: string = 'C_WndrWalker'; // クラス名
     protected mazeObj: I_MazeObj|undefined;
+    
     protected cond:    T_Condition = {
         canMove:  true,    // 移動可能
         canTurn:  true,    // 向き変更可能
@@ -55,6 +56,13 @@ export class C_WndrWalker extends C_Walker {
         canThru:  false,   // 壁を通過可能
         careWal:  false,   // 壁を気にする
     }; 
+    public canMove(): boolean {return this.cond.canMove}
+    public canTurn(): boolean {return this.cond.canTurn}
+    public canSlid(): boolean {return this.cond.canSlid}
+    public canUpDn(): boolean {return this.cond.canUpDn}
+    public canThru(): boolean {return this.cond.canThru}
+    public careWal(): boolean {return this.cond.careWal}
+
     protected action: T_Action[] = []; // 選択できる行動の配列
 
     constructor(j?: JSON_WndrWalker) {
