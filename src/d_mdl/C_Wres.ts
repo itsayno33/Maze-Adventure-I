@@ -4,11 +4,11 @@ import { _get_uuid } from "../d_utl/F_Rand";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
 
-export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
-
 export interface JSON_Wres extends JSON_Any {
     wres?:  JSON_Wndr[];
 }
+
+export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
 
 export interface I_Wres extends I_JSON_Uniq {
     wres:     ()=>I_Wndr[],
