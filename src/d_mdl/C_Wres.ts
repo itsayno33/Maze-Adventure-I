@@ -9,8 +9,8 @@ import { new_walker } from "./F_new_Walker";
 
 export interface JSON_Wres extends JSON_Any {
     uniq_id?: string;
-    wres?:    JSON_Wndr[];               // C_Wndrオブジェクト
-    wonwlk?:  JSON_WndrWalker|undefined; // C_WndrWalkerオブジェクト
+//ww    wres?:    JSON_Wndr[];               // C_Wndrオブジェクト
+    wowalk?:  JSON_WndrWalker|undefined; // C_WndrWalkerオブジェクト
 }
 
 export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
@@ -21,14 +21,14 @@ export interface I_Wres extends I_JSON_Uniq {
     clr_wres:   ()=>void,
     add_wres:   (wndr: I_Wndr)=>void,
     walker:     ()=>I_WndrWalker|undefined,
-    set_walker: (wonwlk: I_WndrWalker|undefined)=>void
+    set_walker: (wowalk: I_WndrWalker|undefined)=>void
     doAll:      (fnc: T_WresDoAllFnc, arg?:{[key:string]: any})=>boolean|void
 }
 
 export class C_Wres  implements I_Wres {
     protected uniq_id: string;
     protected myWres:  I_Wndr[]|undefined;
-    protected wonwlk:  I_WndrWalker|undefined; // WndrWalkerオブジェクト
+    protected wowalk:  I_WndrWalker|undefined; // WndrWalkerオブジェクト
     
 
     public constructor(j?: JSON_Wres) {
@@ -36,9 +36,9 @@ export class C_Wres  implements I_Wres {
 
         j ??= {} as JSON_WndrObj; // jが未定義の場合は空のオブジェクトを用意
 
-        // C_WonderWalkerは__init()で*必ず*生成される
-        // よって未定義のまま呼び出さないように初期値を設定する
-        j.wonwlk ??= {} as JSON_WndrWalker;
+//ww        // C_WonderWalkerは__init()で*必ず*生成される
+//ww        // よって未定義のまま呼び出さないように初期値を設定する
+//ww        j.wowalk ??= {} as JSON_WndrWalker;
         
         this.__init(j);
     }
@@ -49,8 +49,8 @@ export class C_Wres  implements I_Wres {
     public clr_wres():void                {this.myWres = [];}
     public add_wres(wndr: I_Wndr):void    {if (wndr !== undefined) this.myWres?.push(wndr)}
 
-    public walker(): I_WndrWalker|undefined {return this.wonwlk;}
-    public set_walker(wonwlk: I_WndrWalker|undefined): void {this.wonwlk = wonwlk;}
+    public walker(): I_WndrWalker|undefined {return this.wowalk;}
+    public set_walker(wowalk: I_WndrWalker|undefined): void {this.wowalk = wowalk;}
 
     public doAll(fnc: T_WresDoAllFnc, arg?:{[key:string]: any}): boolean|void {
         if (fnc === undefined) return false;
@@ -69,7 +69,7 @@ export class C_Wres  implements I_Wres {
         const j = {
             uniq_id: this.uniq_id,
             wres:    wres,
-            wonwlk:  this.wonwlk?.encode() ?? undefined,
+//ww            wowalk:  this.wowalk?.encode() ?? undefined,
         }
         return {}
     }
@@ -83,13 +83,12 @@ export class C_Wres  implements I_Wres {
             for (const wres of j.wres) this.myWres.push(new C_Wndr(wres));
         }
 
-        if (j?.wonwlk   !== undefined) {
-            j.wonwlk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定
-
+//ww        if (j?.wowalk   !== undefined) {
+//ww            j.wowalk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定
             //console.log('C_WndrObj.__init() json_output = ');_json_output(j); // デバッグ用：wdwalkの内容を出力
 
-            this.wonwlk        = new_walker(j.wonwlk);
-        }
+//ww            this.wowalk        = new_walker(j.wowalk);
+//ww        }
 
         return this;
     }
