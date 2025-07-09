@@ -15,6 +15,7 @@ import { _get_uuid }             from "../d_utl/F_Rand";
 import { C_WndrWalker, I_WndrWalker }          from "./C_WndrWalker";
 import { I_MazeObjView2X } from "./C_MazeObjView2X";
 import { C_CurrentTeamView2X } from "./C_TeamView2X";
+import { I_Wres } from "./C_Wres";
 
 export interface JSON_Team extends JSON_Any {
     id?:        number, 
@@ -115,7 +116,10 @@ export class C_Team implements I_MazeObj {
     }
     public walker(): I_WndrWalker|undefined {return this.myWkWalker}
     public set_walker(wdwalker: I_WndrWalker|undefined): void {this.myWkWalker = wdwalker}
-    
+
+    public wres():   I_Wres|undefined {return undefined}
+    public set_wres(wres: I_Wres|undefined): void {return}
+
     public canThrough(): boolean {return true}
     public hitWallDmg(): number  {return 0}
 
