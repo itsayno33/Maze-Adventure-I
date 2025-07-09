@@ -20,10 +20,10 @@ import {
     g_ctls,
     g_ds,
     g_hres,
-    g_wndr,
     g_view2D,
     g_view2M,
-    g_hresInfo, 
+    g_hresInfo,
+    g_obje, 
 } from "./global_for_maze";
 
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
@@ -214,7 +214,7 @@ function dont_move(r: I_HopeAction): void {
 function around_obj(r: I_HopeAction): void {} 
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
-    for (const obje of g_wndr) {
+    for (const obje of g_obje) {
         const walker = obje?.walker();
         if (walker === undefined) continue;
         const act = walker.wonder();

@@ -18,9 +18,9 @@ import {
     g_maze, 
     g_team, 
     g_hres,
-    g_wndr,
     g_view2D,
-    g_view2M, 
+    g_view2M,
+    g_obje, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
@@ -522,10 +522,10 @@ export function decode_all(jsonObj: any): void {
     for (const hero of g_team.hres())  g_hres.push(hero); 
 
     // WndrWalker関連のデコード
-    for (const i in g_wndr) delete g_wndr[i];
+    for (const i in g_obje) delete g_obje[i];
     for (const obje of g_maze.get_obj_array()) {
         if (obje.walker() === undefined) continue;
-        g_wndr.push(obje);
+        g_obje.push(obje);
     }
 
     // MazeにTeamを追加
