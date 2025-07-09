@@ -4,11 +4,19 @@ import { _get_uuid } from "../d_utl/F_Rand";
 import { I_JSON_Uniq, JSON_Any } from "./C_SaveInfo";
 import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
 
+export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
+
 export interface JSON_Wres extends JSON_Any {
     wres?:  JSON_Wndr[];
 }
 
-export interface I_Wres extends I_JSON_Uniq {}
+export interface I_Wres extends I_JSON_Uniq {
+    wres:     ()=>I_Wndr[],
+    set_wres: (wres: I_Wres[])=>void,
+    clr_wres: ()=>void,
+    add_wres: (wndr: I_Wndr)=>void,
+    doAll:    (fnc: T_WresDoAllFnc, arg?:{[key:string]: any})=>boolean|void
+}
 
 export class C_Wres  implements I_Wres {
     protected uniq_id: string;
@@ -20,6 +28,21 @@ export class C_Wres  implements I_Wres {
         this.__init(j);
     }
     uid():string {return this.uniq_id}
+
+    public wres(): I_Wndr[]               {return this.myWres??[]};
+    public set_wres(wres: I_Wres[]):void  {if (wres !== undefined && wres.length > 0) this.myWres = wres;}
+    public clr_wres():void                {this.myWres = [];}
+    public add_wres(wndr: I_Wndr):void    {if (wndr !== undefined) this.myWres?.push(wndr)}
+
+    public doAll(fnc: T_WresDoAllFnc, arg?:{[key:string]: any}): boolean|void {
+        if (fnc === undefined) return false;
+        let rsltAll = true;
+        for (const wndr of this.myWres??[]) {
+            const rslt  = fnc(wndr, arg);
+            if (typeof rslt === 'boolean') rsltAll &&= rslt;
+        }
+        return rsltAll;
+    }
 
     public encode(): JSON_Wres {
         const wres: JSON_Wndr[] = [];
