@@ -66,13 +66,13 @@
 
 --body_move_gap: 1.5rem 0.5rem;
 --body_move_cols: 
-        2rem
-        [header-start footer-start view3d-start view2m-start inform-start maze_m-start message-start]
+        0.5rem
+        [header-start footer-start view3d-start contls-start view2m-start inform-start maze_m-start message-start]
         auto
-        [view2m-end inform-end contls-start]
+        [view2m-end inform-end]
         auto
         [header-end footer-end view3d-end maze_m-end contls-end message-end]
-        2rem
+        0.5rem
         ;
 --body_move_rows:
         [header-start]
@@ -81,11 +81,11 @@
         auto
         [view3d-end maze_m-start]
         auto
-        [maze_m-end view2m-start inform-end]
+        [maze_m-end view2m-start inform-start]
         auto
-        [contls-start]
+        [view2m-end inform-end contls-start] 
         auto
-        [inform-end contls-end message-start] 
+        [contls-end message-start]
         auto
         [message-end footer-start]
         var(--body_lyt_row_footer_height,  100px)
