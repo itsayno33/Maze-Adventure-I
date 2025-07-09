@@ -1,5 +1,6 @@
 "use strict";
 
+import { _get_uuid } from "../d_utl/F_Rand";
 import { C_Hero, JSON_Hero } from "./C_Hero";
 import { I_JSON_Uniq } from './C_SaveInfo';
 
@@ -16,6 +17,10 @@ export class C_Wndr extends C_Hero implements I_Wndr {
 
     protected __init(j?: JSON_Wndr): C_Wndr {
         super.__init(j);
+
+        this.my_name    = 'No Name Wonder';
+        this.uniq_id    = 'mai_wndr#' + _get_uuid();
+        
         return this;
     }
 
