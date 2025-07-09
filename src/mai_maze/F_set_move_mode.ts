@@ -7,7 +7,6 @@ import { act_menu_mode }                         from "./F_set_menu_mode";
 import { act_Up_mode, act_Dn_mode, act_UD_mode } from "./F_set_UD_mode";
 import { decode_all, set_g_save }                from "./F_set_save_mode";
 import { display_mazeCh }                        from "./F_display_mazeCh"; 
-import { display_maze2D }                        from "./F_display_maze2D";
 import { display_maze3D, 
          maze3D_blink_on_direction, 
          maze3D_blink_off_direction 
@@ -23,11 +22,13 @@ import {
     g_hres,
     g_wndr,
     g_view2D,
-    g_view2M, 
+    g_view2M,
+    g_hresInfo, 
 } from "./global_for_maze";
 
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
+import { display_maze2D } from "./F_display_maze2D";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -46,7 +47,8 @@ export function init_move_mode(): void {
 
 export function act_move_mode(): void {
     g_ctls.act(ctls_move_nor);
-    g_vsw.view(g_vsw.Move());
+    g_vsw.view(g_vsw.Move());                                               ///////////////////////
+    g_hresInfo?.set_hres(g_hres);
     setCanvas3DClick();
 }
 
@@ -238,9 +240,7 @@ export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor
             else                     alert('この階を制覇しました！！');
         }
     }
-    //display_maze2D();
-    g_view2D.drow_map2X();  //alert('g_view2D =' + JSON.stringify(g_view2D,null,'\t'));
-    g_view2M.drow_map2X();  //alert('g_view2M =' + JSON.stringify(g_view2M,null,'\t'));
+    display_maze2D();
     display_mazeCh();
 }
 

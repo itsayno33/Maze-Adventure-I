@@ -2,7 +2,6 @@ import { T_CtlsMode }    from "./T_CtlsMode";
 export const g_ctls_mode: T_CtlsMode[] = new Array(1) as T_CtlsMode[];
 
 import { init_mazeCh, display_mazeCh } from "./F_display_mazeCh";
-import { init_maze2D, display_maze2D } from "./F_display_maze2D";
 import { display_maze3D, init_maze3D, T_DrowSet }            from "./F_display_maze3D";
 export var g_ds: T_DrowSet   = {canvas: null, con: null, depth: 0, wall: null};
 
@@ -32,6 +31,8 @@ export let g_view2M: C_DrowMap2M;
 import { I_WndrWalker } from "../d_mdl/C_WndrWalker";
 export const g_wndr: (I_WndrWalker|undefined)[] = []; // WndrWalkerの配列
 
+import { C_HresInfo } from "./C_HresInfo";
+export let g_hresInfo: C_HresInfo|undefined = undefined;
 
 import { C_DefaultCtls }            from './C_DefaultCtls';
 export let g_ctls: C_DefaultCtls;
@@ -62,6 +63,7 @@ import { C_MazeObjShadow } from '../d_mdl/C_MazeObjEtc';
 import { C_WndrObj }       from "../d_mdl/C_WndrObj";
 
 import { C_CycleButton }   from "../d_ctl/C_CycleButton";
+import { display_maze2D, init_maze2D } from "./F_display_maze2D";
 export let g_view3: C_CycleButton;
 
 export function init_before_games(): void {
@@ -113,7 +115,7 @@ function init_before_mvpt_games(): void {
 
 export function do_load_bottom_half(msg: string): void{
     init_mazeCh();
-    init_maze2D();                                              //     ***** 変更予定地 *****
+    init_maze2D();
     g_ds = init_maze3D(); 
 
     g_mvm.notice_message(msg); 
@@ -129,6 +131,7 @@ export function init_after_loaded_DOM(): void {
     g_cvm  = C_OneLineViewMessage.getObj('menu_mesg'); 
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
+    g_hresInfo = new C_HresInfo('div_hres_info');
 
     g_view2D = C_DrowMap2X.getObj({
         div_id:    'div_maze_vw2D', 
@@ -186,9 +189,7 @@ export function init_debug_mode(): void {
 
 function toggle_debug_mode(yn: boolean): void {
     display_mazeCh();
-    //display_maze2D();
-    g_view2D.drow_map2X();
-    g_view2M.drow_map2X();
+    display_maze2D();
     display_maze3D();
 
     const alert = document.getElementById('alert_mode');
@@ -236,9 +237,7 @@ function cycle_view3_mode(seq: number): void {
             d3.style.setProperty('display', 'none');
             d2.style.setProperty('display', 'block');
             ch.style.setProperty('display', 'none');
-            //display_maze2D();
-            g_view2D.drow_map2X();
-            g_view2M.drow_map2X();
+            display_maze2D();
             break;
         case 2: // 文字表示
             d3.style.setProperty('display', 'none');

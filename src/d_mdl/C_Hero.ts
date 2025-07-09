@@ -106,6 +106,14 @@ export class C_Hero implements I_JSON_Uniq {
         return hp - hd > 0;
     }
 
+    public get_abi_p_bsc(key: string): number {return this.abi_p.bsc.get(key)??0}
+    public get_abi_p_ttl(key: string): number {return this.abi_p.ttl.get(key)??0}
+    public get_abi_p_now(key: string): number {return this.abi_p.now.get(key)??0}
+
+    public get_abi_m_bsc(key: string): number {return this.abi_m.bsc.get(key)??0}
+    public get_abi_m_ttl(key: string): number {return this.abi_m.ttl.get(key)??0}
+    public get_abi_m_now(key: string): number {return this.abi_m.now.get(key)??0}
+
     public hero_bonus(n: number): number {
         return n * ( this.lv + 1 );
     }

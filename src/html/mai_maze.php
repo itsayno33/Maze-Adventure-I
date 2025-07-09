@@ -263,11 +263,11 @@ function new_team(): Team {
     </article>
     <article id='pane_maze_vw2m'>
         <div id='div_maze_vw2M'>
-            <canvas id='maze_view2M_canvas' width='100' height='100'></canvas>
+            <canvas id='maze_view2M_canvas'></canvas>
         </div>
     </article>
     <article id='pane_hres_info'>
-        <div id='div_hres_vw2M'>
+        <div id='div_hres_info'>
         </div>
     </article>
     <article id='pane_menu_list'>
