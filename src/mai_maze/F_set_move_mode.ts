@@ -166,7 +166,7 @@ function move_check(r: I_HopeAction): void {
                 hero.hp_damage(damage);
             }
             dont_move(r);
-        }                                               alert('update!!! ' + g_hres[0].get_abi_p_now('xp'));
+        }
         g_hresInfo.update(g_hres);
     }
 /******************

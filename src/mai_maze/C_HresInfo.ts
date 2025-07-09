@@ -88,12 +88,7 @@ export class C_HresInfo {
         tds.stat = document.createElement('td');
         tds.hpCh = document.createElement('td');
         tds.mpCh = document.createElement('td');
-/**
-        tds.name.style.setProperty('white-space', 'nowrap');
-        tds.stat.style.setProperty('white-space', 'nowrap');
-        tds.hpCh.style.setProperty('white-space', 'nowrap');
-        tds.mpCh.style.setProperty('white-space', 'nowrap');
-**/
+
         tr.appendChild(tds.name);
         tr.appendChild(tds.stat);
         tr.appendChild(tds.hpCh);
@@ -120,9 +115,9 @@ export class C_HresInfo {
             this.info[idx] = {
                 name: this.myHres[idx].name(),
                 stat: this.myHres[idx].is_alive() ? '　正常　' : '行動不能',
-                nwHp: this.myHres[idx].get_abi_p_now("xp"),
+                nwHp: this.myHres[idx].get_abi_p_now("xp") - this.myHres[idx].get_abi_p_now("xd"),
                 mxHp: this.myHres[idx].get_abi_p_ttl("xp"),
-                nwMp: this.myHres[idx].get_abi_m_now("xp"),
+                nwMp: this.myHres[idx].get_abi_m_now("xp") - this.myHres[idx].get_abi_m_now("xd"),
                 mxMp: this.myHres[idx].get_abi_m_ttl("xp"),
             }
         } else {
@@ -136,11 +131,13 @@ export class C_HresInfo {
         if (this.info !== undefined  &&  this.info[idx] !== undefined) {
             this.cols[idx].name.innerHTML =  this.info[idx].name ?? '';
             this.cols[idx].stat.innerHTML =  this.info[idx].stat ?? '';
-            this.cols[idx].hpCh.innerHTML = (this.info[idx].nwHp?.toString() ?? '???')
+            this.cols[idx].hpCh.innerHTML = 'HP：'
+                                          + (this.info[idx].nwHp?.toString() ?? '???')
                                           + ' / '
                                           + (this.info[idx].mxHp?.toString() ?? '???')
                                           ;
-            this.cols[idx].mpCh.innerHTML = (this.info[idx].nwMp?.toString() ?? '???')
+            this.cols[idx].mpCh.innerHTML = 'MP：'
+                                          + (this.info[idx].nwMp?.toString() ?? '???')
                                           + ' / '
                                           + (this.info[idx].mxMp?.toString() ?? '???')
                                           ;
