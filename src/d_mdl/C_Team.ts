@@ -121,7 +121,7 @@ export class C_Team implements I_MazeObj {
     public set_wres(wres: I_Wres|undefined): void {return}
 
     public canThrough(): boolean {return true}
-    public hitWallDmg(): number  {return 0}
+    public hitDamage(): number  {return 0}
 
     public hres():  C_Hero[] {
         const hres: C_Hero[] = [];

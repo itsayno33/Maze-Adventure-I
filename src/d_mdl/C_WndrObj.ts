@@ -49,7 +49,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         this.clname    = 'C_WndrObj';
 
         this.can_thr = true; // 壁を通過可能
-        this.h_w_dmg = 0;    // 壁に当たったときのダメージ無し
+        this.hit_dmg = 0;    // 壁に当たったときのダメージ無し
 
                                                                    //console.log('##############');_json_output(j??{}); // デバッグ用：C_WndrObjの初期化時にjの内容を出力
 

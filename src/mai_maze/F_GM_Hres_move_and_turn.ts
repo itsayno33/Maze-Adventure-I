@@ -65,7 +65,7 @@ function _is_touch_team(r: I_HopeAction): boolean { return false; }
 // canMove: trueなら移動可能、falseなら移動不可
 interface _I_how_collide_team_rslt {
     canMove: boolean; // 移動可能か
-    damage: number;   // 基本ダメージ値（仮設定）
+    damage:  number;   // 基本ダメージ値（仮設定）
 }
 
 
@@ -79,7 +79,7 @@ function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
     // 進行方向が迷宮外なら移動不可
     // 進行方向が壁等なら移動不可
     if (!g_maze.within(r.subj) || !(cell?.getObj().canThrough() ?? true)) {
-        const damage = cell?.getObj().hitWallDmg() ??  10;
+        const damage = cell?.getObj().hitDamage() ??  10;
         return {canMove: false, damage: damage}; // 壁との衝突あり
     }
     const obj = g_maze.get_obj(r.subj);
@@ -90,7 +90,7 @@ function _how_collide_team(r: I_HopeAction): _I_how_collide_team_rslt {
         } else {
             // 進行方向にオブジェが有り通り抜け不能
             // 移動せずにオブジェ接近処理(以降の階段処理等はスルー)
-            const damage   = obj.hitWallDmg();
+            const damage   = obj.hitDamage();
             return {canMove: false, damage: damage}; // オブジェとの衝突あり
         }
     }
