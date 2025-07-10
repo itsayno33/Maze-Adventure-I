@@ -1,5 +1,8 @@
 "use strict";
 
+// 大域変数使用
+// g_maze
+
 import { 
     g_maze, 
 } from "./global_for_maze";

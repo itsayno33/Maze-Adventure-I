@@ -102,6 +102,26 @@ export function _selectItem(items: T_SelectItem[], rand: T_frand = frand): T_Sel
     return undefined;
 }
 
+// 確率に基づく要素選択（本命）
+export type T_SelectItem2 = {
+    key:   string,
+    ratio: number,
+}
+export function _selectItem2(items: T_SelectItem2[], rand: T_frand = frand): string | undefined {
+    var ttl:number = 0;
+    for (let item of items) ttl += item.ratio;
+
+    const target = _irand(0, ttl);
+    var sum = 0;
+    for (const item of items) {
+        sum += item.ratio;
+        if (target < sum) {
+          return item.key;
+        }
+    };
+    return items[items.length - 1].key;
+}
+
 // 配列のシャッフル
 export function _shuffleArray<T>(array: T[], rand: T_frand = frand): T[] {
     let shuffledArray = [...array]; // 元の配列を変更しないようにコピーする

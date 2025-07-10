@@ -9,7 +9,7 @@ export function _json_output(j: JSON_Any, title: string = '************\n'): voi
 }
 
 // JSONを文字列に変換（第二引数：true=>タブ整形あり、false=>タブ整形無し）
-export function _json_to_str(j: JSON_Any, tab?:string): string {
+export function _json_to_str(j: any, tab?:string): string {
     if (tab === undefined) {
         return JSON.stringify(j, null, '\t'); // タブ整形あり
     } else {
