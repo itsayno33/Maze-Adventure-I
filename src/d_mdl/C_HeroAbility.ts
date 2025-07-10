@@ -69,9 +69,9 @@ export class C_HeroAbility implements I_JSON {
         this.v.cnc =  Math.ceil( 3*this.v.luk                + 2*this.v.tec );
     }
 
-    public random_make(helo_level: number = 0): C_HeroAbility {
+    public random_make(hero_level: number = 0): C_HeroAbility {
 
-        const hl   = helo_level + 1; // ヒーローレベルの初期値
+        const hl   = hero_level + 1; // ヒーローレベルの初期値
 
         this.v.str =  _inrand(5,   20, 2.0) * hl;
         this.v.pwr =  _inrand(5,   20, 2.0) * hl;

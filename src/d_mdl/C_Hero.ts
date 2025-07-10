@@ -154,13 +154,13 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_m.now.decode(this.abi_m.ttl.encode());
     }
 
-    public random_make(helo_level: number = 0): C_Hero {
+    public random_make(hero_level: number = 0): C_Hero {
         this.my_id    = 0; // --Hero::$max_id;
         this.my_name  = "冒険者 " + _random_str(5);
         this.sex      = _irand( 0,     1); 
         this.age      = _irand( 15,   25); 
         this.state    = 0; 
-        this.lv       = helo_level; 
+        this.lv       = hero_level; 
         this.gold     = _irand( 500, 1000); 
         this.val      = {
             skp: {ttl: 0, now: 0}, 
@@ -170,10 +170,10 @@ export class C_Hero implements I_JSON_Uniq {
 
 
         const abi_p_bsc = this.abi_p.bsc;
-        abi_p_bsc.random_make(helo_level);
+        abi_p_bsc.random_make(hero_level);
 
         const abi_m_bsc = this.abi_m.bsc;
-        abi_m_bsc.random_make(helo_level);
+        abi_m_bsc.random_make(hero_level);
 
         this.copy_bsc_to_ttl();
         this.copy_ttl_to_now();
