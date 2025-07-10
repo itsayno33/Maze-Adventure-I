@@ -1,6 +1,6 @@
 "use strict";
 
-import { I_HopeAction, I_HopeResponceMove } from "../d_mdl/C_Hope";
+import { I_HopeAction, I_HopeResponceMove, I_HopeResponceTurn } from "../d_mdl/C_Hope";
 import { C_WndrWalker } from "../d_mdl/C_WndrWalker";
 import { g_maze } from "./global_for_maze";
 
@@ -33,6 +33,22 @@ export function can_move_wndr(walk: C_WndrWalker, r: I_HopeAction): I_HopeRespon
 // 当たり判定（隣接）  true: 接触あり  false: 接触なし
 // ここでは接触はない設定
 function _is_touch_wndr(r: I_HopeAction): boolean { return false; }
+
+
+// ターン時の判定  true: ターン可能  false: ターン不可
+export function can_turn_wndr(r: I_HopeAction): I_HopeResponceTurn {
+    const _turn = _can_turn_wndr(r);
+    if (_turn) {
+        const _touch =_is_touch_wndr(r);  // 当たり判定（隣接）
+        return {ok: !_touch , hope: r, res: _touch ? 'Block' : 'Turn', dmg: 0}; // ターン可能
+    } else {
+        return {ok: false,    hope: r, res: 'Block', dmg: 0}; // ターン不可
+    }
+}
+
+// ターン可否  true:可, false:不可
+function _can_turn_wndr(r: I_HopeAction): boolean { return true; }
+
 
 
 // 当たり判定の結果
