@@ -47,6 +47,14 @@ export interface I_WndrWalker extends I_JSON_Uniq {
     get_wait(): T_WndrWalkerAction;
     set_wait(wait: T_WndrWalkerAction): void;
     wonder(): I_HopeAction;             // ランダムに行動を選択
+
+    canMove(): boolean;
+    canTurn(): boolean;
+    canSlid(): boolean;
+    canUpDn(): boolean;
+    canThru(): boolean;
+    careWal(): boolean;
+
 }
 
 export class C_WndrWalker extends C_Walker {

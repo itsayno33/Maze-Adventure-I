@@ -29,6 +29,7 @@ import {
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
 import { _irand } from "../d_utl/F_Rand";
 import { display_maze2D } from "./F_display_maze2D";
+import { can_move_wndr } from "./F_GM_Wndr_move_and_turn";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -212,8 +213,41 @@ function dont_move(r: I_HopeAction): void {
 }
 // オブジェ接近処理
 function around_obj(r: I_HopeAction): void {} 
+
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
+    for (const obje of g_obje) {
+        if (obje === undefined) continue;
+
+        const walker = obje.walker();
+        if (walker === undefined) continue;
+
+        const hope = walker.wonder();
+        if (!hope.has_hope) {
+            g_mes.normal_message(`近くのWanderWalkerはやる気がありません。`);
+            continue;
+        }
+
+        const action = can_move_wndr(walker, hope);
+        switch (action.res) {
+            case 'Move':
+            case 'Turn':
+                if (action.ok) {
+                    walker.set_pd(hope.subj);
+                    g_mes.normal_message(`近くのWanderWalkerが(x:${walker.get_pd().x},y:${walker.get_pd().y})(向:${walker.get_pd().d})に${hope.hope}しました。`);
+
+                    // 本来はここでダメージ処理
+                    continue;
+                } else {
+                    g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
+                    continue;
+                }
+        } 
+    }
+}
+
+// g_maze全体のオブジェの行動処理
+function action_obj_old(): void {
     for (const obje of g_obje) {
         const walker = obje?.walker();
         if (walker === undefined) continue;
