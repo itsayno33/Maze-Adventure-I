@@ -132,20 +132,11 @@ export function init_after_loaded_DOM(): void {
     g_vsw  = C_SwitchView.getObj(); 
     g_hresInfo = new C_HresInfo();
 
-    g_view2D = C_DrowMap2X.getObj({
-        div_id:    'div_maze_vw2D', 
-        canvas_id: 'maze_view2D_canvas', 
-        x_min: 15, y_min: 15
-    }) as C_DrowMap2D;
-
-    g_view2M = C_DrowMap2X.getObj({
-        div_id:    'div_maze_vw2M', 
-        canvas_id: 'maze_view2M_canvas', 
-        x_min:  5, y_min:  5
-    }) as C_DrowMap2M;
 
     const btn = document.getElementById('view3_mode') as HTMLButtonElement;
     g_view3 = C_CycleButton.getObj(btn);
+
+    init_g_view2X(); // 2D/2Mの初期化
 
     init_debug_mode();
     init_view3_mode();
@@ -259,6 +250,20 @@ export function clr_g_hres(): void {
 
 export function clr_g_obje(): void {
     g_obje = [];
+}
+
+export function init_g_view2X(): void {
+    g_view2D = C_DrowMap2X.getObj({
+        div_id:    'div_maze_vw2D', 
+        canvas_id: 'maze_view2D_canvas', 
+        x_min: 15, y_min: 15
+    }) as C_DrowMap2D;
+
+    g_view2M = C_DrowMap2X.getObj({
+        div_id:    'div_maze_vw2M', 
+        canvas_id: 'maze_view2M_canvas', 
+        x_min:  5, y_min:  5
+    }) as C_DrowMap2M;
 }
 
 
