@@ -519,8 +519,11 @@ export function decode_all(jsonObj: any): void {
         g_maze.decode(g_save.all_maze[loc.get_uid()].encode()); 
     }
 
+    // 各種初期設定
+    decode_common();
+
+/**********************************************************************
     //Hero関連のデコード
-//    for (const i in g_hres) delete g_hres[i]; 
     clr_g_hres();
     for (const hero of g_team.hres())  g_hres.push(hero); 
 
@@ -547,6 +550,7 @@ export function decode_all(jsonObj: any): void {
         canvas_id: 'maze_view2M_canvas',
         x_min:  5, y_min:  5
     });
+***********************************************************************/
 }
 
 // 新規ゲームの初期データの読み込み(暫定)
@@ -565,8 +569,10 @@ export function decode_maze(jsonObj: any): void {
         g_team.getWalker().set_place(g_maze, g_my_url, pos);
         g_save.mypos = g_team.get_loc();
     }
-
-    // Hero関連のデコード
+    // 各種初期設定
+    decode_common();
+/************************************************************************
+// Hero関連のデコード
 //    for (const i in g_hres) delete g_hres[i];
     clr_g_hres();
     for (const hero of g_team.hres()) g_hres.push(hero);
@@ -574,6 +580,7 @@ export function decode_maze(jsonObj: any): void {
     g_hresInfo.init();
 
     // WndrWalker関連のデコード
+    for (const i in g_obje) delete g_obje[i];
     init_g_wres();
 
     // MazeにTeamを追加
@@ -590,11 +597,39 @@ export function decode_maze(jsonObj: any): void {
         canvas_id: 'maze_view2M_canvas',
         x_min:  5, y_min:  5
     });
-
+*********************************************************/
     // SaveDataのベースの作成
     g_save.mypos = g_team.get_loc();
     g_save.all_maze[g_maze.uid()] = g_maze;
     g_save.all_team[g_team.uid()] = g_team;
+}
+
+function decode_common(): void {
+    // Hero関連のデコード
+    clr_g_hres();
+    for (const hero of g_team.hres()) g_hres.push(hero);
+
+    g_hresInfo.init();
+
+    // WndrWalker関連のデコード
+    for (const i in g_obje) delete g_obje[i];
+    init_g_wres();
+
+
+    // MazeにTeamを追加
+    g_maze.add_obj(g_team as I_MazeObj);
+
+    // View2X関連を初期化
+    g_view2D.init({
+        div_id:    'div_maze_vw2D', 
+        canvas_id: 'maze_view2D_canvas', 
+        x_min: 15, y_min: 15
+    });
+    g_view2M.init({
+        div_id:    'div_maze_vw2M',
+        canvas_id: 'maze_view2M_canvas',
+        x_min:  5, y_min:  5
+    });
 }
 
 export function set_g_save (
