@@ -71,7 +71,11 @@ export function act_Up_mode(): void {
 }
 
 export function act_Dn_mode(): void {
-    g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
+    if (g_team.getWalker().get_z() < g_maze.get_z_max() - 1) {
+        g_mvm.notice_message('下りテレポーターが有ります。降りますか？降りる ⇒ 〇 降りない ⇒ ✖');
+    } else {
+        g_mvm.notice_message('迷宮探索を終了しますか？（街に戻ります）戻る ⇒ 〇 戻らない ⇒ ✖');
+    }
 
     canUp = false;
     canDn = true;
@@ -129,6 +133,23 @@ function do_up(): void {
 
 function do_down(): void {
     const rslt = g_team.getWalker().hope_p_down();
+
+    //　下り階段が地下最終階の場合はセーブしてから街(冒険者ギルド)へ移動する
+    if (rslt.has_hope && rslt.subj.z >= g_maze.get_z_max()) {
+        do_UD_save().then(async ()=>{
+            return await tmp_save();
+        }).then(()=>{
+            const opt = new C_UrlOpt();
+            opt.set('mode', 'load');
+            opt.set('pid',   g_start_env.pid);
+            opt.set('opt',   100);
+            POST_and_move_page(g_url[g_url_mai_guld], opt);
+            return;
+        });
+        return;
+    }
+
+    // 下り階段が地下最終階未満の場合はセーブしてから下の階に移動する
     if (!rslt.has_hope || !g_maze.within(rslt.subj)) {
         g_mvm.clear_message();
         act_move_mode();

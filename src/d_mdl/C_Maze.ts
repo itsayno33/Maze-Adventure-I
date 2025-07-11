@@ -321,13 +321,6 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
 
 
 
-
-
-
-
-
-
-
 public fill_cell(kind: T_MzKind, floor:number): void {
     for (let h = 0; h < this.size.size_y(); h++)
     for (let w = 0; w < this.size.size_x(); w++)
@@ -357,7 +350,34 @@ public set_box(kind: T_MzKind, top_x:number, top_y: number, size_x: number, size
     return;
 }
 
-// 階上と階下に階段を設置する
+// 階上と階下に階段を設置する(没版)
+public create_stair2(floor:number): C_PointDir {
+    const H_size_x = (this.size.size_x() - 1) / 2;
+    const H_size_y = (this.size.size_y() - 1) / 2;
+    const pos_x    = 2 * _irand(0, H_size_x - 1) + 1;
+    const pos_y    = 2 * _irand(0, H_size_y - 1) + 1;
+    const pos_d    = 1 * _irand(0, T_Direction.MAX);
+
+    // 乱数で得た座標に階段を置く
+    // 下への階段(floorの階に設置)
+    if (this.get_cell_xyz(pos_x, pos_y, floor)?.getKind() !== T_MzKind.StrUp) {
+        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrDn);
+    } else {
+        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUD);
+    }
+    // 上への階段(floorの下の階に設置)
+    if (floor < this.get_z_max()) {
+        if (this.get_cell_xyz(pos_x, pos_y, floor + 1)?.getKind() !== T_MzKind.StrDn) {
+            this.set_cell_xyz(pos_x, pos_y, floor + 1,  T_MzKind.StrUp);
+        } else {
+            this.set_cell_xyz(pos_x, pos_y, floor + 1,  T_MzKind.StrUD);
+        }
+    }
+
+    return new C_PointDir({x: pos_x, y: pos_y, z: floor, d: pos_d});
+}
+
+// 階上と階下に階段を設置する（旧版）
 public create_stair(floor:number): C_PointDir {
     const H_size_x = (this.size.size_x() - 1) / 2;
     const H_size_y = (this.size.size_y() - 1) / 2;
@@ -366,6 +386,7 @@ public create_stair(floor:number): C_PointDir {
     const pos_d    = 1 * _irand(0, T_Direction.MAX);
 
     // 乱数で得た座標に階段を置く
+    // 下への階段(floorの上階に設置)
     if (floor >= 1) {
         if (this.get_cell_xyz(pos_x, pos_y, floor - 1)?.getKind() !== T_MzKind.StrUp) {
             this.set_cell_xyz(pos_x, pos_y, floor - 1,  T_MzKind.StrDn);
@@ -373,10 +394,14 @@ public create_stair(floor:number): C_PointDir {
             this.set_cell_xyz(pos_x, pos_y, floor - 1,  T_MzKind.StrUD);
         }
     }
-    if (this.get_cell_xyz(pos_x, pos_y, floor)?.getKind() !== T_MzKind.StrDn) {
-        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUp);
-    } else {
-        this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUD);
+
+    // 上への階段(floorの階に設置)
+    if (floor < this.get_z_max()) {
+        if (this.get_cell_xyz(pos_x, pos_y, floor)?.getKind() !== T_MzKind.StrDn) {
+            this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUp);
+        } else {
+            this.set_cell_xyz(pos_x, pos_y, floor,  T_MzKind.StrUD);
+        }
     }
 
     return new C_PointDir({x: pos_x, y: pos_y, z: floor, d: pos_d});
