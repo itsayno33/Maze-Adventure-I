@@ -30,12 +30,13 @@ export interface JSON_WndrObj extends JSON_MazeObj {
 }
 
 export interface I_WndrObj extends I_MazeObj {
+    free():    void;
     walker():  I_WndrWalker|undefined;       // C_WndrWalkerオブジェクトを呼出
     set_walker(wowalk: I_WndrWalker|undefined): void; // C_WndrWalkerオブジェクトを設定
     wres():    I_Wres|undefined;       // C_WndrWalkerオブジェクトを呼出
     set_wres  (wres:   I_Wres|undefined):       void; // C_WndrWalkerオブジェクトを設定
-    encode(): JSON_WndrObj;                 // JSON_WndrObj形式でエンコード
-    decode(j: JSON_WndrObj|undefined): I_WndrObj;   // JSON_WndrObj形式でデコード
+    encode():  JSON_WndrObj;                 // JSON_WndrObj形式でエンコード
+    decode(j:  JSON_WndrObj|undefined): I_WndrObj;   // JSON_WndrObj形式でデコード
 }
 
 export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
@@ -68,8 +69,6 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
                 col_f: '#ff99ff', col_b: '#dd88dd', col_s: '#dd88dd', col_t: '#dd88dd', col_d: '#dd88dd', 
                 col_l: '#9999ff', col_2: '',        col_L: '#6666ff', 
                 col_2_arw: '#ffffff', col_2_tri: '#cc6666',
-//                col_l: '#9999ff', col_2: '#ff33ff', col_L: '#6666ff', 
-//                col_2_arw: '#338866', col_2_tri: '#cc6666',
         } as JSON_WndrView;
         
         j.wowalk ??= {} as JSON_WndrWalker;
@@ -109,6 +108,10 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
             this.dmy = j.stat.wo.dmy ?? ''; // ダミー変数
         }
         return this;
+    }
+    public free():void {
+        this.wowalk?.free(); this.wowalk = undefined;
+        this.myWres?.free(); this.myWres = undefined;
     }
 
     public walker(): I_WndrWalker|undefined {return this.wowalk;}

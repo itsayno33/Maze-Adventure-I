@@ -19,6 +19,9 @@ export class C_Wndr extends C_Hero implements I_Wndr {
         super.__init(j);
         return this;
     }
+    public free() {
+        super.free();
+    }
 
     public random_make(hero_level?: number): C_Wndr {
         super.random_make(hero_level);

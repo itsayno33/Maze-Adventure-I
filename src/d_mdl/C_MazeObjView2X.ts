@@ -5,6 +5,7 @@ import { I_Abstract, JSON_Any } from "./C_SaveInfo";
 
 
 export interface I_MazeObjView2X extends I_Abstract {
+    free:    ()=>void;
     // 表示関係(2Dpre)./C_Wall
     layer:   ()=>number;
     letter:  (dir: number)=>string|null; // null: 見えない、何もない
@@ -50,7 +51,7 @@ export class C_MazeObjView2X implements I_MazeObjView2X {
     protected my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     protected my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
-    protected my_show: boolean;
+    protected my_show:   boolean;
 
     protected my_col_2:  string|null; // 2Dマップの面のCSSカラー 
     protected my_col_L:  string|null; // 2Dマップの線のCSSカラー 
@@ -80,6 +81,8 @@ export class C_MazeObjView2X implements I_MazeObjView2X {
 
         return this;
     }
+
+    public free(): void {}
 
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}

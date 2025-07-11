@@ -37,10 +37,11 @@ export type T_Action =
 export type T_WndrWalkerAction = {[action: string]: number}
 
 export interface I_WndrWalker extends I_JSON_Uniq {
-    get_pd(): C_PointDir;               // C_PointDirを取得
-    set_pd(pd: C_PointDir): C_PointDir; // C_PointDirを設定
-    encode(): JSON_WndrWalker;        // JSON_WndrrWalker形式でエンコード
-    decode(j: JSON_WndrWalker): C_WndrWalker; // JSON_WndrWalker形式でデコード
+    free():    void;
+    get_pd():  C_PointDir;               // C_PointDirを取得
+    set_pd(pd: C_PointDir): C_PointDir;  // C_PointDirを設定
+    encode():  JSON_WndrWalker;          // JSON_WndrrWalker形式でエンコード
+    decode(j:  JSON_WndrWalker): C_WndrWalker; // JSON_WndrWalker形式でデコード
     
     get_mazeObj(): I_MazeObj|undefined; // I_MazeObjを取得
     set_mazeObj(mo: I_MazeObj): void;   // I_MazeObjを設定
@@ -122,6 +123,7 @@ export class C_WndrWalker extends C_Walker {
 
         return this;
     }
+    public free(): void {}
 
 
     public get_mazeObj(): I_MazeObj|undefined {

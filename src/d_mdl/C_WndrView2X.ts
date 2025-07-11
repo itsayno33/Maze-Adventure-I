@@ -34,6 +34,7 @@ export class C_WndrView2X  extends C_MazeObjView2X implements I_MazeObjView2X {
 
         return this;
     }
+    public free(): void {}
 
     public letter(dir: number = 0): string|null {
         switch (dir) {

@@ -31,6 +31,7 @@ export interface JSON_MazeObj extends JSON_Any {
 }
 
 export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
+    free:       ()=>void;
     get_pd:     ()=>C_PointDir;
     set_pd:     (pd:C_PointDir)=>void;
     within:     (p: C_Point)=>boolean;
@@ -54,7 +55,7 @@ export class C_MazeObj implements I_MazeObj {
     protected clname:    string = 'C_MazeObj';
 
     private   uniq_id:   string;
-    protected pos:       C_PointDir;
+    protected pos:       C_PointDir|undefined;
     protected my_view:   I_MazeObjView|undefined;
     protected my_view2D: I_MazeObjView2X|undefined;
     protected my_view2M: I_MazeObjView2X|undefined;
@@ -82,19 +83,13 @@ export class C_MazeObj implements I_MazeObj {
 
         if (j.uniq_id !== undefined) this.uniq_id   = j.uniq_id;
         if (j.clname  !== undefined) this.clname    = j.clname;
-        if (j.pos     !== undefined) this.pos.decode(j.pos);
+        if (j.pos     !== undefined) this.pos?.decode(j.pos);
         if (j.view    !== undefined) {
             this.my_view   = C_MazeObjView  .newObj(j.view); 
             this.my_view2D = C_MazeObjView2X.newObj(j.view); 
             this.my_view2M = C_MazeObjView2X.newObj(j.view); 
         };
-/***************************
-    // WndrObj専用の処理  コメントアウトすると実行時エラーになる
-    if (j.wdwalk  !== undefined) {
-            const walker = new_walker(j.wdwalk);
-            if (walker !== undefined)  this.my_walker = walker;
-        }
-***************************/
+
         if (j.stat    !== undefined) {
             // データベースからのプロパティの復元(j.statはJSON形式)
             if (j?.stat?.can_thr !== undefined) this.can_thr = j.stat.can_thr !== '0' ? true : false;
@@ -104,6 +99,14 @@ export class C_MazeObj implements I_MazeObj {
         if (j.hit_dmg !== undefined) this.hit_dmg = j.hit_dmg;
         return this;
 }
+
+    public free(): void {
+        this.pos = undefined;
+        this.my_view  ?.free();this.my_view    =  undefined;
+        this.my_view2D?.free();this.my_view2D  =  undefined;
+        this.my_view2M?.free();this.my_view2M  =  undefined;
+        this.my_walker?.free();this.my_walker  =  undefined; // C_Walkerオブジェクトは初期化しない
+    }
 
     public uid(): string {return this.uniq_id}
 
@@ -138,7 +141,7 @@ export class C_MazeObj implements I_MazeObj {
         this.pos = p;
     }
     public within(p: C_Point): boolean {
-        return this.pos.within(p);
+        return this.pos?.within(p) ?? false;
     }
 
     public hitDamage() :number {
@@ -152,7 +155,7 @@ export class C_MazeObj implements I_MazeObj {
         return {
             uniq_id: this.uniq_id,
             clname:  this.clname,
-            pos:     this.pos.encode(),
+            pos:     this.pos?.encode()??{x:0,y:0,z:0,d:99},
             view:    this.my_view?.encode() ?? {},
             can_thr: this.can_thr ? '1' : '0',
             hit_dmg: this.hit_dmg,

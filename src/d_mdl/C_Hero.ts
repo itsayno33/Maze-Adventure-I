@@ -29,30 +29,32 @@ export interface JSON_Hero_Value extends JSON_Any {
 }
 
 export interface I_Hero {
-        set_prp(arg : JSON_Hero): void;
+    free(): void;
 
-        uid():  string;
-        name(): string;
-        set_name(name: string): void
+    set_prp(arg : JSON_Hero): void;
 
-        is_alive(): boolean;
+    uid():  string;
+    name(): string;
+    set_name(name: string): void
 
-        get_abi_p_bsc(key: string): number;
-        get_abi_p_ttl(key: string): number;
-        get_abi_p_now(key: string): number;
-    
-        get_abi_m_bsc(key: string): number;
-        get_abi_m_ttl(key: string): number;
-        get_abi_m_now(key: string): number;
-    
-        hero_bonus(n: number):  number;
-        hp_damage(dmg: number): number;
-        hp_heal(heal: number):  number;
-        hp_auto_heal():         number;
-        random_make(hero_level: number): C_Hero;
+    is_alive(): boolean;
 
-        encode(): JSON_Hero;
-        decode(j: JSON_Hero):void;
+    get_abi_p_bsc(key: string): number;
+    get_abi_p_ttl(key: string): number;
+    get_abi_p_now(key: string): number;
+
+    get_abi_m_bsc(key: string): number;
+    get_abi_m_ttl(key: string): number;
+    get_abi_m_now(key: string): number;
+
+    hero_bonus(n: number):  number;
+    hp_damage(dmg: number): number;
+    hp_heal(heal: number):  number;
+    hp_auto_heal():         number;
+    random_make(hero_level: number): C_Hero;
+
+    encode(): JSON_Hero;
+    decode(j: JSON_Hero):void;
 }
 
 export function alert_hres_info(a: (JSON_Hero|undefined)[]|undefined): void { 
@@ -88,9 +90,9 @@ export class C_Hero implements I_JSON_Uniq {
     // bsc(Basic)は当人の基本値。ttl(Total)は装備等を加減算したもの。nowはバフ等のターン制のも加減算したもの
     protected gold:     number; 
 //    protected goods:    C_GoodsList; 
-    protected val:      JSON_Hero_Value;
-    protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
-    protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility};
+    protected val:      JSON_Hero_Value|undefined;
+    protected abi_p:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility}|undefined;
+    protected abi_m:      {bsc: C_HeroAbility, ttl: C_HeroAbility, now: C_HeroAbility}|undefined;
 
     public constructor(a?: JSON_Hero) {
         this.my_id      = 0;
@@ -108,6 +110,11 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_m      = {bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
 //        this.is_alive   = true;
         if (a !== undefined) this.__init(a);
+    }
+    public free() {
+        this.val        = undefined;
+        this.abi_p      = undefined;const a={bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
+        this.abi_m      = undefined;const b={bsc: new C_HeroAbility(), ttl: new C_HeroAbility(), now: new C_HeroAbility()};
     }
 
     public set_prp(arg : JSON_Hero) {
@@ -128,57 +135,57 @@ export class C_Hero implements I_JSON_Uniq {
 
 
     public is_alive(): boolean {
-        const hp = this.abi_p.now.get('xp') ?? 0;
-        const hd = this.abi_p.now.get('xd') ?? 0;
+        const hp = this.abi_p?.now.get('xp') ?? 0;
+        const hd = this.abi_p?.now.get('xd') ?? 0;
         return hp - hd > 0;
     }
 
-    public get_abi_p_bsc(key: string): number {return this.abi_p.bsc.get(key)??0}
-    public get_abi_p_ttl(key: string): number {return this.abi_p.ttl.get(key)??0}
-    public get_abi_p_now(key: string): number {return this.abi_p.now.get(key)??0}
+    public get_abi_p_bsc(key: string): number {return this.abi_p?.bsc.get(key)??0}
+    public get_abi_p_ttl(key: string): number {return this.abi_p?.ttl.get(key)??0}
+    public get_abi_p_now(key: string): number {return this.abi_p?.now.get(key)??0}
 
-    public get_abi_m_bsc(key: string): number {return this.abi_m.bsc.get(key)??0}
-    public get_abi_m_ttl(key: string): number {return this.abi_m.ttl.get(key)??0}
-    public get_abi_m_now(key: string): number {return this.abi_m.now.get(key)??0}
+    public get_abi_m_bsc(key: string): number {return this.abi_m?.bsc.get(key)??0}
+    public get_abi_m_ttl(key: string): number {return this.abi_m?.ttl.get(key)??0}
+    public get_abi_m_now(key: string): number {return this.abi_m?.now.get(key)??0}
 
     public hero_bonus(n: number): number {
         return n * ( this.lv + 1 );
     }
 
     public hp_damage(dmg: number): number {
-        const xp_now  = this.abi_p.now.get('xp') ?? 0;
-        let   xd_now  = this.abi_p.now.get('xd') ?? 0;
+        const xp_now  = this.abi_p?.now.get('xp') ?? 0;
+        let   xd_now  = this.abi_p?.now.get('xd') ?? 0;
 
-        xd_now += dmg - Math.round( this.hero_bonus((this.abi_p.now.get('vit') ?? 0) / 10.0) );
+        xd_now += dmg - Math.round( this.hero_bonus((this.abi_p?.now.get('vit') ?? 0) / 10.0) );
 
         const d = xd_now > xp_now ? xp_now : xd_now;
-        this.abi_p.now.set('xd', d);
+        this.abi_p?.now.set('xd', d);
         return d;
     }
     public hp_heal(heal: number): number {
-        let   xd_now = this.abi_p.now.get('xd') ?? 0;
+        let   xd_now = this.abi_p?.now.get('xd') ?? 0;
         if (xd_now <= 0) return 0;
 
         xd_now -= heal;
 
         const d = xd_now < 0 ? 0 : xd_now;
-        this.abi_p.now.set('xd', d);
+        this.abi_p?.now.set('xd', d);
         return d;
     }
     public hp_auto_heal(): number {
-        const heal = Math.ceil( this.hero_bonus((this.abi_p.now.get('vit') ?? 0) / 10.0) );
+        const heal = Math.ceil( this.hero_bonus((this.abi_p?.now.get('vit') ?? 0) / 10.0) );
         return this.hp_heal(heal);
     }
 
     
     protected copy_bsc_to_ttl(): void {
-        this.abi_p.ttl.decode(this.abi_p.bsc.encode());
-        this.abi_m.ttl.decode(this.abi_m.bsc.encode());
+        this.abi_p?.ttl.decode(this.abi_p?.bsc.encode()??{});
+        this.abi_m?.ttl.decode(this.abi_m?.bsc.encode()??{});
     }
 
     protected copy_ttl_to_now(): void {
-        this.abi_p.now.decode(this.abi_p.ttl.encode());
-        this.abi_m.now.decode(this.abi_m.ttl.encode());
+        this.abi_p?.now.decode(this.abi_p?.ttl.encode()??{});
+        this.abi_m?.now.decode(this.abi_m?.ttl.encode()??{});
     }
 
     public random_make(hero_level: number = 0): C_Hero {
@@ -196,11 +203,11 @@ export class C_Hero implements I_JSON_Uniq {
         };
 
 
-        const abi_p_bsc = this.abi_p.bsc;
-        abi_p_bsc.random_make(hero_level);
+        const abi_p_bsc = this.abi_p?.bsc;
+        abi_p_bsc?.random_make(hero_level);
 
-        const abi_m_bsc = this.abi_m.bsc;
-        abi_m_bsc.random_make(hero_level);
+        const abi_m_bsc = this.abi_m?.bsc;
+        abi_m_bsc?.random_make(hero_level);
 
         this.copy_bsc_to_ttl();
         this.copy_ttl_to_now();
@@ -223,12 +230,12 @@ export class C_Hero implements I_JSON_Uniq {
             gold:      this.gold, 
 //            goods:     this.goods.encode(), 
             val:       this.val,
-            abi_p_bsc: this.abi_p.bsc.encode(),
-            abi_m_bsc: this.abi_m.bsc.encode(),
-            abi_p_ttl: this.abi_p.ttl.encode(),
-            abi_m_ttl: this.abi_m.ttl.encode(),
-            abi_p_now: this.abi_p.now.encode(),
-            abi_m_now: this.abi_m.now.encode(),
+            abi_p_bsc: this.abi_p?.bsc.encode()??{},
+            abi_m_bsc: this.abi_m?.bsc.encode()??{},
+            abi_p_ttl: this.abi_p?.ttl.encode()??{},
+            abi_m_ttl: this.abi_m?.ttl.encode()??{},
+            abi_p_now: this.abi_p?.now.encode()??{},
+            abi_m_now: this.abi_m?.now.encode()??{},
         }
         return ret;
     }
@@ -248,15 +255,15 @@ export class C_Hero implements I_JSON_Uniq {
 
 //        if (a.goods   !== undefined) this.goods.decode(a.goods);
         if (a.val     !== undefined) {
-            this.__decode_val(this.val, a.val);
+            this.__decode_val(this.val??{}, a.val);
         }
 
-        if (a.abi_p_bsc !== undefined) this.abi_p.bsc.decode(a.abi_p_bsc);
-        if (a.abi_m_bsc !== undefined) this.abi_m.bsc.decode(a.abi_m_bsc);
-        if (a.abi_p_ttl !== undefined) this.abi_p.ttl.decode(a.abi_p_ttl);
-        if (a.abi_m_ttl !== undefined) this.abi_m.ttl.decode(a.abi_m_ttl);
-        if (a.abi_p_now !== undefined) this.abi_p.now.decode(a.abi_p_now);
-        if (a.abi_m_now !== undefined) this.abi_m.now.decode(a.abi_m_now);
+        if (a.abi_p_bsc !== undefined) this.abi_p?.bsc.decode(a.abi_p_bsc);
+        if (a.abi_m_bsc !== undefined) this.abi_m?.bsc.decode(a.abi_m_bsc);
+        if (a.abi_p_ttl !== undefined) this.abi_p?.ttl.decode(a.abi_p_ttl);
+        if (a.abi_m_ttl !== undefined) this.abi_m?.ttl.decode(a.abi_m_ttl);
+        if (a.abi_p_now !== undefined) this.abi_p?.now.decode(a.abi_p_now);
+        if (a.abi_m_now !== undefined) this.abi_m?.now.decode(a.abi_m_now);
 
         return this;
     }

@@ -15,6 +15,7 @@ export interface JSON_Wres extends JSON_Any {
 export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
 
 export interface I_Wres extends I_JSON_Uniq {
+    free:       ()=>void,
     wres:       ()=>I_Wndr[],
     set_wres:   (wres: I_Wndr[])=>void,
     clr_wres:   ()=>void,
@@ -41,6 +42,14 @@ export class C_Wres  implements I_Wres {
         
         this.__init(j);
     }
+    public free():void {
+        for (const wndr of this?.myWres??[]) {
+            wndr?.free();
+        }
+        this.myWres = [];
+        this.wowalk?.free(); this.wowalk = undefined;
+    }
+
     uid():string {return this.uniq_id}
 
     public wres(): I_Wndr[]               {return this.myWres??[]};

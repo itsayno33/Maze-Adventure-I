@@ -91,6 +91,7 @@ export class C_Team implements I_MazeObj {
         this.hope_motion = 'NOP';    
         if (j !== undefined) this.decode(j);
     }
+    public free():void {};
     public set_prp(arg : JSON_Team) {
         this.decode(arg);
     }

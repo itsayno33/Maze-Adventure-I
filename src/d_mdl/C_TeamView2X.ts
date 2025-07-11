@@ -13,6 +13,7 @@ export class C_CurrentTeamView2X  implements I_MazeObjView2X {
     public  constructor(team: C_Team) {
         this.my_team = team;
     }
+    public free(): void {}
 
     public layer(): number         {return this.my_layer;}
     public set_layer(layer: number): void {this.my_layer = layer;}

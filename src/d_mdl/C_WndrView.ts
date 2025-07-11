@@ -30,6 +30,7 @@ export class C_WndrView  extends C_MazeObjView implements I_MazeObjView {
 
         return this;
     }
+    public free(): void {}
 
     public letter(dir: number = 0): string|null {
         switch (dir) {

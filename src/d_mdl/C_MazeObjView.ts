@@ -6,6 +6,7 @@ import { C_MazeObjView2X } from "./C_MazeObjView2X";
 
 
 export interface I_MazeObjView extends I_Abstract {
+    free:    ()=>void;
     // 表示関係(2Dpre)./C_Wall
     layer:   ()=>number;
     letter:  (dir: number)=>string|null; // null: 見えない、何もない
@@ -77,7 +78,7 @@ export class C_MazeObjView implements I_MazeObjView {
     protected my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     protected my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
 
-    protected my_show: boolean;
+    protected my_show:   boolean;
     protected my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
     protected my_pad_d:  number; // オブジェクト下部の隙間の割合(0.0 から 1.0) 
     protected my_pad_s:  number; // オブジェクト周囲の隙間の割合(0.0 から 1.0) 
@@ -137,6 +138,8 @@ export class C_MazeObjView implements I_MazeObjView {
 
         return this;
     }
+
+    public free():void {}
 
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
