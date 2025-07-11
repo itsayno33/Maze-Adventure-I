@@ -127,8 +127,17 @@ export class C_DrowMap2X {
         this.px_size_x = _max([this.px_min_x, _round(1.00 *  _min([col_px, row_px]), 2)]);
         this.px_size_y = _max([this.px_min_y, _round(1.00 *  _min([col_px, row_px]), 2)]);
 
-        this.map_wdth     = this.px_size_x * _min([col, row]);
-        this.map_hght     = this.px_size_y * _min([col, row]);
+        this.map_wdth  = this.px_size_x * _min([col, row]);
+        this.map_hght  = this.px_size_y * _min([col, row]);
+
+        if (this.map_wdth < this.view_wdth) {
+            this.map_wdth = this.view_wdth;
+            this.px_size_x  = _round(this.view_wdth / col, 0);
+        }
+        if (this.map_hght < this.view_hght) {
+            this.map_hght = this.view_hght;
+            this.px_size_y  = _round(this.view_hght / row, 0);
+        }
 
         this.cvs.setAttribute('width',  this.map_wdth.toString());
         this.cvs.setAttribute('height', this.map_hght.toString());
