@@ -160,6 +160,8 @@ export class C_Hero implements I_JSON_Uniq {
 
         const d = xd_now > xp_now ? xp_now : xd_now;
         this.abi_p?.now.set('xd', d);
+        this.abi_p?.ttl.set('xd', d);
+        this.abi_p?.bsc.set('xd', d);
         return d;
     }
     public hp_heal(heal: number): number {
@@ -170,6 +172,8 @@ export class C_Hero implements I_JSON_Uniq {
 
         const d = xd_now < 0 ? 0 : xd_now;
         this.abi_p?.now.set('xd', d);
+        this.abi_p?.ttl.set('xd', d);
+        this.abi_p?.bsc.set('xd', d);
         return d;
     }
     public hp_auto_heal(): number {
