@@ -5,7 +5,6 @@ import { I_JSON_Uniq, JSON_Any }     from "./C_SaveInfo";
 import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
 import { JSON_WndrObj } from "./C_WndrObj";
 import { I_WndrWalker, JSON_WndrWalker } from "./C_WndrWalker";
-import { new_walker } from "./F_new_Walker";
 
 export interface JSON_Wres extends JSON_Any {
     uniq_id?: string;
@@ -17,7 +16,7 @@ export type T_WresDoAllFnc = (wndr: I_Wndr, arg?:{[key:string]: any})=>boolean;
 
 export interface I_Wres extends I_JSON_Uniq {
     wres:       ()=>I_Wndr[],
-    set_wres:   (wres: I_Wres[])=>void,
+    set_wres:   (wres: I_Wndr[])=>void,
     clr_wres:   ()=>void,
     add_wres:   (wndr: I_Wndr)=>void,
     walker:     ()=>I_WndrWalker|undefined,
@@ -45,7 +44,7 @@ export class C_Wres  implements I_Wres {
     uid():string {return this.uniq_id}
 
     public wres(): I_Wndr[]               {return this.myWres??[]};
-    public set_wres(wres: I_Wres[]):void  {if (wres !== undefined && wres.length > 0) this.myWres = wres;}
+    public set_wres(wres: I_Wndr[]):void  {if (wres !== undefined && wres.length > 0) this.myWres = wres;}
     public clr_wres():void                {this.myWres = [];}
     public add_wres(wndr: I_Wndr):void    {if (wndr !== undefined) this.myWres?.push(wndr)}
 
@@ -64,7 +63,7 @@ export class C_Wres  implements I_Wres {
 
     public encode(): JSON_Wres {
         const wres: JSON_Wndr[] = [];
-        for (const wndr of this.myWres??[]) wres.push(wndr);
+        for (const wndr of this.myWres??[]) wres.push(wndr.encode());
 
         const j = {
             uniq_id: this.uniq_id,

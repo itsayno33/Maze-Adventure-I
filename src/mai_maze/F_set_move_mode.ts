@@ -222,6 +222,9 @@ function action_obj(): void {
         const walker = obje.walker();
         if (walker === undefined) continue;
 
+        const wres   = obje.wres();
+        if (wres   === undefined) continue;
+
         const hope = walker.wonder();
         if (!hope.has_hope) {
             g_mes.normal_message(`近くのWanderWalkerはやる気がありません。`);
@@ -235,13 +238,23 @@ function action_obj(): void {
                 if (action.ok) {
                     walker.set_pd(hope.subj);
                     g_mes.normal_message(`近くのWanderWalkerが(x:${walker.get_pd().x},y:${walker.get_pd().y})(向:${walker.get_pd().d})に${hope.hope}しました。`);
-
-                    // 本来はここでダメージ処理
                     continue;
                 } else {
                     g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
                     continue;
                 }
+                case 'Block':
+                    const wnderers = wres.wres();
+                    // ここでダメージ処理
+                    for (const wndr of wnderers) {
+                        if (wndr === undefined) continue;
+                        if (!wndr.is_alive())   continue;
+                        wndr.hp_damage(action.dmg);
+                    }
+                    g_mes.normal_message(`近くのWanderWalkerはぶつかりました＞＜`);
+                    continue;
+                case 'Wait':
+                    continue;
         } 
     }
 }

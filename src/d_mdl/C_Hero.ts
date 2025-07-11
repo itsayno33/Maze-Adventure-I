@@ -28,6 +28,33 @@ export interface JSON_Hero_Value extends JSON_Any {
     nxe?: number,                   // 次回のヒーローレベルアップに必要な経験値
 }
 
+export interface I_Hero {
+        set_prp(arg : JSON_Hero): void;
+
+        uid():  string;
+        name(): string;
+        set_name(name: string): void
+
+        is_alive(): boolean;
+
+        get_abi_p_bsc(key: string): number;
+        get_abi_p_ttl(key: string): number;
+        get_abi_p_now(key: string): number;
+    
+        get_abi_m_bsc(key: string): number;
+        get_abi_m_ttl(key: string): number;
+        get_abi_m_now(key: string): number;
+    
+        hero_bonus(n: number):  number;
+        hp_damage(dmg: number): number;
+        hp_heal(heal: number):  number;
+        hp_auto_heal():         number;
+        random_make(hero_level: number): C_Hero;
+
+        encode(): JSON_Hero;
+        decode(j: JSON_Hero):void;
+}
+
 export function alert_hres_info(a: (JSON_Hero|undefined)[]|undefined): void { 
     if (a === undefined) return;
     alert('Number of Hero = ' + a.length.toString());
