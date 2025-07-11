@@ -22,7 +22,8 @@ import {
     g_view2M,
     g_obje,
     g_hresInfo,
-    clr_g_hres, 
+    clr_g_hres,
+    clr_g_obje, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
@@ -612,9 +613,9 @@ function decode_common(): void {
     g_hresInfo.init();
 
     // WndrWalker関連のデコード
-    for (const i in g_obje) delete g_obje[i];
+    //for (const i in g_obje) delete g_obje[i];
+    clr_g_obje()
     init_g_wres();
-
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj);

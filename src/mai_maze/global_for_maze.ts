@@ -29,7 +29,7 @@ export let g_view2D: C_DrowMap2D;
 export let g_view2M: C_DrowMap2M;
 
 import { C_WndrObj, I_WndrObj }       from "../d_mdl/C_WndrObj";
-export const g_obje: (I_WndrObj|undefined)[] = []; // WndrObjの配列
+export let g_obje: (I_WndrObj|undefined)[] = []; // WndrObjの配列
 
 import { C_HresInfo } from "./C_HresInfo";
 export let g_hresInfo: C_HresInfo;
@@ -257,7 +257,9 @@ export function clr_g_hres(): void {
     g_hres = [];
 }
 
-
+export function clr_g_obje(): void {
+    g_obje = [];
+}
 
 
 // 暫定(C_MazeObjのテスト用)
