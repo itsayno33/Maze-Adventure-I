@@ -23,7 +23,8 @@ import {
     g_view2D,
     g_view2M,
     g_hresInfo,
-    g_obje, 
+    g_obje,
+    clr_g_obje, 
 } from "./global_for_maze";
 
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
@@ -241,7 +242,7 @@ function hero_on_event(): void {
         }
     }
     //g_objeの更新
-    for (const i in g_obje) delete g_obje[i];
+    clr_g_obje();
     init_g_wres();
 };
 
