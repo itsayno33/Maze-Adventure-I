@@ -168,9 +168,9 @@ function move_check(r: I_HopeAction): void {
             }
             dont_move(r);
         }
-        g_hresInfo.update(g_hres);
-        hero_on_event();
     }
+    hero_on_event();
+    g_hresInfo.update(g_hres);
 } 
 
 function dont_move(r: I_HopeAction): void {
@@ -231,10 +231,21 @@ function action_obj(): void {
 function hero_on_event(): void {
     const pos  = g_team.get_pd();
     const objs = g_maze.get_any_obj(pos);
-    for (let o in objs) {
-        if (objs[o] === undefined) continue;
+    for (let o of objs) {
+        if (o === undefined) continue;
         // 各オブジェクトのイベントを処理
+        if (o.within(pos)) {
+            o.free();
+            g_maze.rmv_obj(o);
+        }
     }
+    //g_objeの更新
+    for (const i in g_obje) delete g_obje[i];
+    for (const obje of g_maze.get_obj_array()) {
+        if (obje.walker() === undefined) continue;
+        g_obje.push(obje);
+    }
+
 };
 
 
