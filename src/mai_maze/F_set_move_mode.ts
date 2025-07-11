@@ -169,48 +169,15 @@ function move_check(r: I_HopeAction): void {
             dont_move(r);
         }
         g_hresInfo.update(g_hres);
+        hero_on_event();
     }
-/******************
-        const cell = g_maze.get_cell(r.subj);
-
-        // 進行方向が壁等なら移動不可
-        if (!cell?.getObj().canThrough()) {
-            dont_move(r);return;
-        }
-        const obj = g_maze.get_obj(r.subj);
-        if (obj !== null) {
-            if (obj.canThrough()) {
-                // 進行方向にオブジェが有り通り抜け可能なら
-                // 移動してオブジェ処理
-                r.doOK();
-                action_obj();
-            } else {
-                // 進行方向にオブジェが有り通り抜け不能なら
-                // 移動せずにオブジェ接近処理(以降の階段処理等はスルー)
-                dont_move(r);
-                around_obj(r);
-                return;
-            }
-        } else {
-            // 進行方向にオブジェが無ければ移動
-            r.doOK();
-        }
-        // 移動先が階段なら階段の処理
-        const kind = cell?.getKind();
-        switch (kind) {
-            case T_MzKind.StrUp:
-            case T_MzKind.StrDn:
-            case T_MzKind.StrUD:
-                do_stairs_motion(kind);
-        }
-        return;
-    }
-****************/
 } 
+
 function dont_move(r: I_HopeAction): void {
     g_mvm.normal_message('進めない！（笑）');
     return;
 }
+
 // オブジェ接近処理
 function around_obj(r: I_HopeAction): void {} 
 
@@ -259,20 +226,17 @@ function action_obj(): void {
     }
 }
 
-// g_maze全体のオブジェの行動処理
-function action_obj_old(): void {
-    for (const obje of g_obje) {
-        const walker = obje?.walker();
-        if (walker === undefined) continue;
-        const act = walker.wonder();
-        if (act.has_hope) {
-            walker.set_pd(act.subj);
-            g_mes.normal_message(`近くのWanderWalkerが(x:${walker.get_pd().x},y:${walker.get_pd().y})(向:${walker.get_pd().d})に${act.hope}しました。`);
-        } else {
-            g_mes.normal_message(`近くのWanderWalkerは何もしませんでした。`);
-        }
+
+// Heroesがオブジェと同じ位置に来た時のイベント処理
+function hero_on_event(): void {
+    const pos  = g_team.get_pd();
+    const objs = g_maze.get_any_obj(pos);
+    for (let o in objs) {
+        if (objs[o] === undefined) continue;
+        // 各オブジェクトのイベントを処理
     }
-}
+};
+
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());

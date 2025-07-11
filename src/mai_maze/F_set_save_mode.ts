@@ -565,6 +565,13 @@ export function decode_maze(jsonObj: any): void {
     for (const i in g_hres) delete g_hres[i];
     for (const hero of g_team.hres()) g_hres.push(hero);
 
+    // WndrWalker関連のデコード
+    for (const i in g_obje) delete g_obje[i];
+    for (const obje of g_maze.get_obj_array()) {
+        if (obje.walker() === undefined) continue;
+        g_obje.push(obje);
+    }
+
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj);
 

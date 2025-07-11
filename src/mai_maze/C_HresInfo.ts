@@ -43,8 +43,10 @@ export class C_HresInfo {
     }
 
     public update(hres: C_Hero[]|undefined) {
-        if (hres !== undefined && hres.length > 0) this.myHres = hres;
-        this._update();
+        if (hres !== undefined && hres.length > 0) {
+            this.myHres = hres;
+            this._update();
+        }
     }
 
     public hres(): C_Hero[] {return this.myHres}
@@ -99,6 +101,7 @@ export class C_HresInfo {
 
     protected _update(): void {
         for (let ii = 0; ii < this.myHres.length; ii++) { // 順番が大事なのでfor inは使わない
+            if (this.myHres[ii] === undefined || this.myHres[ii] === null) continue;
             this._setInfo (ii);
             this._updateTR(ii);
         }
