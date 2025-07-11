@@ -128,47 +128,46 @@ function move_check(r: I_HopeAction): void {
     action_obj();
 
     if (!r.has_hope) return;
-    if (r.hope == 'Wait') {
-//        g_team.getWalker().set_pd(r.subj);
-        return;
-    }
-    if (r.hope == 'Turn') {
-        const _rslt = can_turn_team(r);
-        if (_rslt.ok) g_team.getWalker().set_pd(r.subj);
+    switch (r.hope) {
+        case 'Wait':
+    //        g_team.getWalker().set_pd(r.subj);
+            break;
+        case 'Turn':
+            const _turn_rslt = can_turn_team(r);
+            if (_turn_rslt.ok) g_team.getWalker().set_pd(r.subj);
+            break;
+        case 'Move':
+            const _move_rslt = can_move_team(r);
+            if (_move_rslt.ok) {
+                // 進行方向へ進む
+                g_team.getWalker().set_pd(r.subj)
+                // HP自動回復
+                for (const hero of g_hres) {
+                    if (hero === undefined) continue;
+                    if (!hero.is_alive())   continue;
+                    hero.hp_auto_heal();
+                }
 
-        return;
-    }
-    if (r.hope == 'Move') {
-        const _rslt = can_move_team(r);
-        if (_rslt.ok) {
-            // 進行方向へ進む
-            g_team.getWalker().set_pd(r.subj)
-            // HP自動回復
-            for (const hero of g_hres) {
-                if (hero === undefined) continue;
-                if (!hero.is_alive())   continue;
-                hero.hp_auto_heal();
+                // 移動先が階段なら階段の処理
+                const kind = g_maze.get_cell(r.subj)?.getKind();
+                switch (kind) {
+                    case T_MzKind.StrUp:
+                    case T_MzKind.StrDn:
+                    case T_MzKind.StrUD:
+                        do_stairs_motion(kind);
+                }
+            } else {               //   alert ( 'r.res = ' + _rslt.res ); 
+                // 進行方向へ進めない
+                // ダメージ処理
+                const damage  = _irand(Math.trunc(_move_rslt.dmg * 0.9), Math.ceil(_move_rslt.dmg * 1.1));
+                for (const hero of g_hres) {
+                    if (hero === undefined) continue;
+                    if (!hero.is_alive())   continue;
+                    hero.hp_damage(damage);
+                }
+                dont_move(r);
             }
-
-            // 移動先が階段なら階段の処理
-            const kind = g_maze.get_cell(r.subj)?.getKind();
-            switch (kind) {
-                case T_MzKind.StrUp:
-                case T_MzKind.StrDn:
-                case T_MzKind.StrUD:
-                    do_stairs_motion(kind);
-            }
-        } else {               //   alert ( 'r.res = ' + _rslt.res ); 
-            // 進行方向へ進めない
-            // ダメージ処理
-            const damage  = _irand(Math.trunc(_rslt.dmg * 0.9), Math.ceil(_rslt.dmg * 1.1));
-            for (const hero of g_hres) {
-                if (hero === undefined) continue;
-                if (!hero.is_alive())   continue;
-                hero.hp_damage(damage);
-            }
-            dont_move(r);
-        }
+            break;
     }
     hero_on_event();
     g_hresInfo.update(g_hres);
