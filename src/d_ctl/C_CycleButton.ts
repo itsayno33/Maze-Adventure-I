@@ -75,6 +75,13 @@ export class C_CycleButton {
     }
     public cycle(): boolean|void {
         let seq = this.seq + 1;
+        return this._shift(seq);
+    }
+    public reverce(): boolean|void {
+        let seq = this.seq - 1;
+        return this._shift(seq);
+    }
+    protected _shift(seq: number): boolean|void {
         if (seq >= this.cco.ccName.length) seq = 0;
         if (seq <  0                     ) seq = this.cco.ccName.length - 1;
         this._setStyle(seq);
