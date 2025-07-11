@@ -266,6 +266,34 @@ function new_team(): Team {
             <canvas id='maze_view2M_canvas'></canvas>
         </div>
         <div id='div_hres_info'>
+            <table id='div_hres_info_table'>
+                <tbody id="div_hres_info_tbody">
+                    <tr id="div_hres_info_tr0">
+                        <td id="div_hres_info_tr0_name"></td>
+                        <td id="div_hres_info_tr0_stat"></td>
+                        <td id="div_hres_info_tr0_hpCh"></td>
+                        <td id="div_hres_info_tr0_mpCh"></td>
+                    </tr>
+                    <tr id="div_hres_info_tr1">
+                        <td id="div_hres_info_tr1_name"></td>
+                        <td id="div_hres_info_tr1_stat"></td>
+                        <td id="div_hres_info_tr1_hpCh"></td>
+                        <td id="div_hres_info_tr1_mpCh"></td>
+                    </tr>
+                    <tr id="div_hres_info_tr2">
+                        <td id="div_hres_info_tr2_name"></td>
+                        <td id="div_hres_info_tr2_stat"></td>
+                        <td id="div_hres_info_tr2_hpCh"></td>
+                        <td id="div_hres_info_tr2_mpCh"></td>
+                    </tr>
+                    <tr id="div_hres_info_tr3">
+                        <td id="div_hres_info_tr3_name"></td>
+                        <td id="div_hres_info_tr3_stat"></td>
+                        <td id="div_hres_info_tr3_hpCh"></td>
+                        <td id="div_hres_info_tr3_mpCh"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </article>
     <article id='pane_hres_info'>

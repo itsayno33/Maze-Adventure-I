@@ -50,7 +50,7 @@ export function init_move_mode(): void {
 export function act_move_mode(): void {
     g_ctls.act(ctls_move_nor);
     g_vsw.view(g_vsw.Move());                                               ///////////////////////
-    g_hresInfo?.update(g_hres);
+    g_hresInfo?.update();
     setCanvas3DClick();
 }
 
@@ -170,7 +170,7 @@ function move_check(r: I_HopeAction): void {
             break;
     }
     hero_on_event();
-    g_hresInfo.update(g_hres);
+    g_hresInfo.update();
 } 
 
 function dont_move(r: I_HopeAction): void {
@@ -242,12 +242,15 @@ function hero_on_event(): void {
     }
     //g_objeの更新
     for (const i in g_obje) delete g_obje[i];
+    init_g_wres();
+};
+
+export function init_g_wres(): void {
     for (const obje of g_maze.get_obj_array()) {
         if (obje.walker() === undefined) continue;
         g_obje.push(obje);
     }
-
-};
+}
 
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);

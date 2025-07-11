@@ -9,7 +9,7 @@ import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 import { act_menu_mode }       from "./F_set_menu_mode";
-import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
+import { act_move_mode, do_move_bottom_half, init_g_wres } from "./F_set_move_mode";
 import { 
     g_ctls,
     g_cvm, 
@@ -20,7 +20,9 @@ import {
     g_hres,
     g_view2D,
     g_view2M,
-    g_obje, 
+    g_obje,
+    g_hresInfo,
+    clr_g_hres, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
@@ -518,8 +520,11 @@ export function decode_all(jsonObj: any): void {
     }
 
     //Hero関連のデコード
-    for (const i in g_hres) delete g_hres[i]; 
+//    for (const i in g_hres) delete g_hres[i]; 
+    clr_g_hres();
     for (const hero of g_team.hres())  g_hres.push(hero); 
+
+    g_hresInfo.init();
 
     // WndrWalker関連のデコード
     for (const i in g_obje) delete g_obje[i];
@@ -562,15 +567,14 @@ export function decode_maze(jsonObj: any): void {
     }
 
     // Hero関連のデコード
-    for (const i in g_hres) delete g_hres[i];
+//    for (const i in g_hres) delete g_hres[i];
+    clr_g_hres();
     for (const hero of g_team.hres()) g_hres.push(hero);
 
+    g_hresInfo.init();
+
     // WndrWalker関連のデコード
-    for (const i in g_obje) delete g_obje[i];
-    for (const obje of g_maze.get_obj_array()) {
-        if (obje.walker() === undefined) continue;
-        g_obje.push(obje);
-    }
+    init_g_wres();
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj);

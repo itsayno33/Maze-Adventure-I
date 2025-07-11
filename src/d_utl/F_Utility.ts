@@ -13,7 +13,7 @@ export function _json_console(j: any, title: string = '************\n'): void {
 }
 
 // ブラウザでJSONファイルを出力(alert)
-export function _json_alert(j: JSON_Any, title: string = '************\n'): void {
+export function _json_alert(j: any, title: string = '************\n'): void {
     alert(`${title} = ${_json_to_str(j)}`); // タブ整形ありで出力
 }
 

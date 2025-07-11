@@ -13,7 +13,7 @@ export var g_mvm: C_OneLineViewMessage;
 export var g_cvm: C_OneLineViewMessage;
 
 import { C_Hero } from "../d_mdl/C_Hero";
-export const g_hres: C_Hero[] = [];
+export let g_hres: C_Hero[] = [];
 
 import { C_Maze } from "../d_mdl/C_Maze";
 export const g_maze = new C_Maze();
@@ -130,7 +130,7 @@ export function init_after_loaded_DOM(): void {
     g_cvm  = C_OneLineViewMessage.getObj('menu_mesg'); 
     g_ctls = C_DefaultCtls.getObj(); 
     g_vsw  = C_SwitchView.getObj(); 
-    g_hresInfo = new C_HresInfo('div_hres_info');
+    g_hresInfo = new C_HresInfo();
 
     g_view2D = C_DrowMap2X.getObj({
         div_id:    'div_maze_vw2D', 
@@ -251,6 +251,14 @@ function cycle_view3_mode(seq: number): void {
 function stop_double_click(): void {
     window.addEventListener('dblclick',(evt: MouseEvent) =>{evt.preventDefault();})
 }
+
+
+export function clr_g_hres(): void {
+    g_hres = [];
+}
+
+
+
 
 // 暫定(C_MazeObjのテスト用)
 function install_objs(num: number = 1): void {

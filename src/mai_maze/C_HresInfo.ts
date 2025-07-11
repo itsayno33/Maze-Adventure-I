@@ -1,7 +1,9 @@
 "use strict";
 
 import { C_Hero } from "../d_mdl/C_Hero";
+import { g_hres } from "./global_for_maze";
 
+// g_hresからの抜粋
 type _T_HeroInfo = {
     name: string|undefined;
     stat: string|undefined;
@@ -11,11 +13,12 @@ type _T_HeroInfo = {
     mxMp: number|undefined;
 }
 
+// 表組みのTDと対応
 type _T_InfoTR = {
-    name: HTMLTableCellElement;
-    stat: HTMLTableCellElement;
-    hpCh: HTMLTableCellElement;
-    mpCh: HTMLTableCellElement;
+    "name": HTMLTableCellElement|null;
+    "stat": HTMLTableCellElement|null;
+    "hpCh": HTMLTableCellElement|null;
+    "mpCh": HTMLTableCellElement|null;
 }
 
 const max_hres = 4;
@@ -23,125 +26,104 @@ const max_hres = 4;
 export class C_HresInfo {
     protected elm:    HTMLDivElement|null = null;
     protected myHres: C_Hero[] = [];
-    protected tbl:    HTMLTableElement|null   = null;
-    protected cols:   _T_InfoTR[]|undefined   = undefined;
-    protected info:  (_T_HeroInfo|undefined)[]|undefined = undefined;
+    protected tbody:  HTMLTableSectionElement|null   = null;
+    protected hres:  (_T_HeroInfo|undefined)[]|undefined = undefined;
+    protected rows:   _T_InfoTR[]|undefined   = undefined;
 
-    constructor(eid: string, hres?: C_Hero[]) {
-        this.init(eid);
-        this.update(hres);
+    constructor() {
+        this.init();
     }
 
-    public init(eid: string) {
-        this.elm = document.getElementById(eid) as HTMLDivElement;
-        if (this.elm === null) return;
 
-        this.tbl = document.createElement("table");
-        if (this.tbl === null) return;
-
-        this._createTable();
+    public init(): void {
+        this.rows = []; this._init_rows();
     }
 
-    public update(hres: C_Hero[]|undefined) {
-        if (hres !== undefined && hres.length > 0) {
-            this.myHres = hres;
-            this._update();
+    protected _init_rows(): void {
+        for (let idx = 0; idx < max_hres; idx++) this._init_a_row(idx); // 並び順が重要なので for で回す
+    }
+    protected _init_a_row(idx: number): void {
+        if (this.rows === undefined || this.rows.length < 0) return;
+        this._init_a_col(idx, "name");
+        this._init_a_col(idx, "stat");
+        this._init_a_col(idx, "hpCh");
+        this._init_a_col(idx, "mpCh");
+    }
+
+    protected _init_a_col(idx: number, key: string): void {
+        if (this.rows === undefined || this.rows.length < 0) return;
+
+        this.rows[idx] ??= {} as _T_InfoTR;
+        this.rows[idx][key as keyof _T_InfoTR] 
+            = document.getElementById(`div_hres_info_tr${idx.toString()}_${key}`) as HTMLTableCellElement;
+    }
+
+
+    public update(): void {
+        this._init_hres();
+        this._hres_to_rows();
+    }
+
+    protected _init_hres(): void {
+        this.hres = [];
+        let idx = 0;
+        for (let idx = 0; idx < max_hres; idx++) {
+            this._init_a_hero(idx); // 並び順が重要なので for で回す
         }
     }
 
-    public hres(): C_Hero[] {return this.myHres}
+    protected _init_a_hero(idx: number): void {
+        if (g_hres[idx] === undefined) return;
+        if (this.hres   === undefined || this.hres.length < 0) return;
 
-    protected _createTable(): void {
-        if (this.elm === undefined || this.elm === null) return;
-        if (this.tbl === undefined || this.tbl === null) return;
+        this.hres[idx] = {} as _T_HeroInfo;
 
-        this.tbl.setAttribute('id',      this.elm.id + '_table');
-        this.tbl.setAttribute('display', 'none');
-
-        const tbody = document.createElement("tbody");
-
-        for (let ii = 0; ii < max_hres; ii++) { // 順番が大事なのでfor inは使わない。人数も分からないし
-            this._createTR(ii, tbody);
-            this._updateTR(ii);
-        }
-
-        this.tbl.appendChild(tbody);
-        this.tbl.setAttribute('display', 'block');
-        this.elm?.appendChild(this.tbl);
-    }
-
-    protected _createTR(idx: number, tbody: HTMLTableSectionElement): void {
-        if (idx < 0 || idx >= max_hres) return;
-
-        const tr = document.createElement("tr");
-        tr.setAttribute('display', 'hidden');
-
-        this.cols      ??= [];
-        this.cols[idx] ??= {} as _T_InfoTR;
-        this.cols[idx]   = this._createTD(tr);
-
-        tr.setAttribute('display', 'block');
-        tbody.appendChild(tr);
-
-    }
-    protected _createTD(tr: HTMLTableRowElement): _T_InfoTR { // ここは順番が大事（表示順）
-        const tds:_T_InfoTR = {} as _T_InfoTR;
-        tds.name = document.createElement('td');
-        tds.stat = document.createElement('td');
-        tds.hpCh = document.createElement('td');
-        tds.mpCh = document.createElement('td');
-
-        tr.appendChild(tds.name);
-        tr.appendChild(tds.stat);
-        tr.appendChild(tds.hpCh);
-        tr.appendChild(tds.mpCh);
-
-        return tds;
-    }
-
-    protected _update(): void {
-        for (let ii = 0; ii < this.myHres.length; ii++) { // 順番が大事なのでfor inは使わない
-            if (this.myHres[ii] === undefined || this.myHres[ii] === null) continue;
-            this._setInfo (ii);
-            this._updateTR(ii);
-        }
-    }
-
-
-    protected _setInfo(idx: number): void {
-        if (idx < 0 || idx >= max_hres) return;
-
-        this.info ??= [];
-        this.info[idx] ??= {} as _T_HeroInfo;
-
-        if (idx < this.myHres.length) {
-            this.info[idx].name = this.myHres[idx].name();
-            this.info[idx].stat = this.myHres[idx].is_alive() ? '　正常　' : '行動不能';
-            this.info[idx].nwHp = this.myHres[idx].get_abi_p_now("xp") - this.myHres[idx].get_abi_p_now("xd");
-            this.info[idx].mxHp = this.myHres[idx].get_abi_p_now("xp");
-            this.info[idx].nwMp = this.myHres[idx].get_abi_m_now("xp") - this.myHres[idx].get_abi_m_now("xd");
-            this.info[idx].mxMp = this.myHres[idx].get_abi_m_now("xp");
+        if (idx < g_hres.length) {
+            this.hres[idx].name = g_hres[idx].name();
+            this.hres[idx].stat = g_hres[idx].is_alive() ? '　正常　' : '行動不能';
+            this.hres[idx].nwHp = g_hres[idx].get_abi_p_now("xp") - g_hres[idx].get_abi_p_now("xd");
+            this.hres[idx].mxHp = g_hres[idx].get_abi_p_now("xp");
+            this.hres[idx].nwMp = g_hres[idx].get_abi_m_now("xp") - g_hres[idx].get_abi_m_now("xd");
+            this.hres[idx].mxMp = g_hres[idx].get_abi_m_now("xp");
         } else {
-            this.info[idx] = undefined;
+            this.hres[idx] = undefined;
         }
     }
 
-    protected _updateTR(idx: number): void {
-        if (this.cols === undefined || this.cols.length < 0) return;
+    protected _hres_to_rows(): void {
+        for (let idx = 0; idx < max_hres; idx++) this._hero_to_a_row(idx); // 並び順が重要なので for で回す
+    }
+    protected _hero_to_a_row(idx: number): void {
+        if (this.rows === undefined || this.rows.length < 0) return;
 
-        if (this.info !== undefined  &&  this.info[idx] !== undefined) {
-            this.cols[idx].name.innerHTML =  this.info[idx].name ?? '';
-            this.cols[idx].stat.innerHTML =  this.info[idx].stat ?? '';
-            this.cols[idx].hpCh.innerHTML = 'HP：'
-                                          + (this.info[idx].nwHp?.toString() ?? '???')
+        if (this.rows[idx]?.name === undefined) return;
+        if (this.rows[idx]?.stat === undefined) return;
+        if (this.rows[idx]?.hpCh === undefined) return;
+        if (this.rows[idx]?.mpCh === undefined) return;
+
+        if (this.rows[idx].name === null) return;
+        if (this.rows[idx].stat === null) return;
+        if (this.rows[idx].hpCh === null) return;
+        if (this.rows[idx].mpCh === null) return;
+
+        if (this.hres !== undefined  &&  this.hres[idx] !== undefined) {
+            this.rows[idx].name.innerHTML =  this.hres[idx].name ?? '';
+            this.rows[idx].stat.innerHTML =  this.hres[idx].stat ?? '';
+            this.rows[idx].hpCh.innerHTML = 'HP：'
+                                          + (this.hres[idx].nwHp?.toString() ?? '???')
                                           + ' / '
-                                          + (this.info[idx].mxHp?.toString() ?? '???')
+                                          + (this.hres[idx].mxHp?.toString() ?? '???')
                                           ;
-            this.cols[idx].mpCh.innerHTML = 'MP：'
-                                          + (this.info[idx].nwMp?.toString() ?? '???')
+            this.rows[idx].mpCh.innerHTML = 'MP：'
+                                          + (this.hres[idx].nwMp?.toString() ?? '???')
                                           + ' / '
-                                          + (this.info[idx].mxMp?.toString() ?? '???')
+                                          + (this.hres[idx].mxMp?.toString() ?? '???')
                                           ;
+        } else {
+            this.rows[idx].name.innerHTML = '';
+            this.rows[idx].stat.innerHTML = '';
+            this.rows[idx].hpCh.innerHTML = '';
+            this.rows[idx].mpCh.innerHTML = '';
         }
     }
 }
