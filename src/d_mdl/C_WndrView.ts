@@ -36,8 +36,8 @@ export class C_WndrView  extends C_MazeObjView implements I_MazeObjView {
         switch (dir) {
             case T_Direction.N: return '👆';
             case T_Direction.E: return '👉';
-            case T_Direction.S: return '👈';
-            case T_Direction.W: return '👇';
+            case T_Direction.S: return '👇';
+            case T_Direction.W: return '👈';
             default: return '🌀';
         }
     }
