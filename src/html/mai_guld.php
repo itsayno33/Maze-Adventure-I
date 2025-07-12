@@ -240,13 +240,23 @@ function new_team(): Team {
         <h2>街の入り口</h2>
         <ul id='guld_menu_list'>
             <li id='guld_hres'>冒険者ギルド
-                <p>　仲間を募れます</p></li>
+                <p>　仲間を募れます</p>
+            </li>
+            <li id='guld_tmpl'>寺院
+                <p>　冒険者の治療や解呪をします</p>
+            </li>
+            <li id='guld_load'>故売屋
+                <p>　武器やアイテムの売り買いができます</p>
+            </li>
             <li id='guld_load'>冒険の呼び出し
-                <p>　冒険情報をロードできます</p></li>
+                <p>　冒険情報をロードできます</p>
+            </li>
             <li id='guld_save'>冒険の記録
-                <p>　冒険情報をセーブできます</p></li>
+                <p>　冒険情報をセーブできます</p>
+            </li>
             <li id='guld_tomz'>冒険出発
-                <p>　ダンジョンに出発します</p></li>
+                <p>　ダンジョンに出発します</p>
+            </li>
         </ul>
     </article>
     <article id='guld_hres_list_pane'>
@@ -276,6 +286,60 @@ function new_team(): Team {
         <fieldset id='hres_hero_fields'>
             <legend>冒険者の詳細情報</legend>
             <ul id='hres_hero_info'></ul>
+        </fieldset>
+    </article>
+    <article id='guld_tmpl_list_pane'>
+        <h2>寺院</h2>
+        <fieldset id='tmpl_team_fields'>
+            <legend>パーティ・メンバー</legend>
+            <ul id='tmpl_list'></ul>
+        </fieldset>
+        <fieldset id='tmpl_guld_fields'>
+            <legend>ギルド・メンバー</legend>
+            <ul id='tmpl_guld_list'></ul>
+        </fieldset>
+        <fieldset id='tmpl_appd_fields'>
+            <legend>求人募集メンバー</legend>
+            <ul id='tmpl_appd_list'></ul>
+        </fieldset>
+        <fieldset id='tmpl_menu_fields'>
+            <legend>コマンド</legend>
+            <ul id='tmpl_menu_list'></ul>
+        </fieldset>
+        <fieldset id='tmpl_inpt_fields'>
+            <legend>入力</legend>
+            <ul id='tmpl_inpt_list'></ul>
+        </fieldset>
+    </article>
+    <article id='guld_tmpl_data_pane'>
+        <fieldset id='hres_hero_fields'>
+            <legend>冒険者の詳細情報</legend>
+            <ul id='tmpl_hero_info'></ul>
+        </fieldset>
+    </article>
+    <article id='guld_shop_list_pane'>
+        <h2>故売屋</h2>
+        <fieldset id='shop_arms_fields'>
+            <legend>武具</legend>
+            <ul id='arms_list'></ul>
+        </fieldset>
+        <fieldset id='shop_shld_fields'>
+            <legend>防具</legend>
+            <ul id='shld_list'></ul>
+        </fieldset>
+        <fieldset id='shop_item_fields'>
+            <legend>道具</legend>
+            <ul id='item_list'></ul>
+        </fieldset>
+        <fieldset id='shop_drag_fields'>
+            <legend>薬品</legend>
+            <ul id='drag_list'></ul>
+        </fieldset>
+    </article>
+    <article id='guld_shop_data_pane'>
+        <fieldset id='shop_good_fields'>
+            <legend>アイテムの詳細情報</legend>
+            <ul id='shop_item_info'></ul>
         </fieldset>
     </article>
     <article id='guld_ldsv_list_pane'>
