@@ -1,12 +1,16 @@
 import { _alert }       from "../d_cmn/global";
 import {T_MakeEnumType} from "../d_utl/T_MakeEnumType";
+
 export const T_ViewMode:{[mode: string]: string} = {
     Menu:     'menu',
     Hres:     'hres',
+    Tmpl:     'tmpl',
+    Shop:     'shop',
     LdSv:     'ldsv',
     ToMz:     'tomz',
 } as const;
 export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
+
 
 export class C_SwitchView {
     protected static me:   C_SwitchView;
@@ -16,6 +20,8 @@ export class C_SwitchView {
 
     public Menu(): string {return T_ViewMode.Menu;}
     public Hres(): string {return T_ViewMode.Hres;}
+    public Tmpl(): string {return T_ViewMode.Tmpl;}
+    public Shop(): string {return T_ViewMode.Shop;}
     public LdSv(): string {return T_ViewMode.LdSv;}
     public ToMz(): string {return T_ViewMode.ToMz;}
 
@@ -28,6 +34,10 @@ export class C_SwitchView {
             C_SwitchView.article.mn_l = document.getElementById('guld_menu_list_pane') as HTMLElement;
             C_SwitchView.article.hr_l = document.getElementById('guld_hres_list_pane') as HTMLElement;
             C_SwitchView.article.hr_d = document.getElementById('guld_hres_data_pane') as HTMLElement;
+            C_SwitchView.article.tm_l = document.getElementById('guld_tmpl_list_pane') as HTMLElement;
+            C_SwitchView.article.tm_d = document.getElementById('guld_tmpl_data_pane') as HTMLElement;
+            C_SwitchView.article.sp_l = document.getElementById('guld_shop_list_pane') as HTMLElement;
+            C_SwitchView.article.sp_d = document.getElementById('guld_shop_data_pane') as HTMLElement;
             C_SwitchView.article.ls_l = document.getElementById('guld_ldsv_list_pane') as HTMLElement;
             C_SwitchView.article.ls_d = document.getElementById('guld_ldsv_data_pane') as HTMLElement;
             C_SwitchView.article.mz_l = document.getElementById('guld_tomz_maze_pane') as HTMLElement;
