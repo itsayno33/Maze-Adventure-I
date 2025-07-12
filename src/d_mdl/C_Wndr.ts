@@ -4,11 +4,17 @@ import { _get_uuid, _random_str } from "../d_utl/F_Rand";
 import { C_Hero, I_Hero, JSON_Hero } from "./C_Hero";
 
 
-export interface JSON_Wndr extends JSON_Hero {}
+export interface JSON_Wndr extends JSON_Hero {
+    boss_level?: number;
+    family?:     string;
+}
 
 export interface I_Wndr extends I_Hero {}
 
 export class C_Wndr extends C_Hero implements I_Wndr {
+    protected boss_level: number = 0;    // ボスレベル 0:通常, 1:小ボス, 2:中ボス, 3:大ボス
+    protected family: string = '放浪者'; // 放浪者, Wanderer
+
     public constructor(j?: JSON_Wndr) {
         super(j);
         this.my_name    = 'No Name Wonder';
@@ -17,20 +23,29 @@ export class C_Wndr extends C_Hero implements I_Wndr {
 
     protected __init(j?: JSON_Wndr): C_Wndr {
         super.__init(j);
+        if (j?.boss_level !== undefined) this.boss_level = j.boss_level;
+        if (j?.family     !== undefined) this.family = j.family;
         return this;
     }
     public free() {
         super.free();
     }
 
+    public hero_bonus(n: number): number {
+        return n * ( this.lv + this.boss_level + 1 );
+    }
+
     public random_make(hero_level?: number): C_Wndr {
         super.random_make(hero_level);
-        this.my_name  = "冒険者 " + _random_str(5);
+        this.my_name  = this.family + _random_str(5);
         return this;
     }
 
     public encode(): JSON_Wndr {
         const j = super.encode();
+        j.boss_level = this.boss_level;
+        j.family     = this.family;
+
         return j;
     }
 

@@ -378,7 +378,7 @@ public create_stair2(floor:number): C_PointDir {
 }
 
 // 階上と階下に階段を設置する（旧版）
-public create_stair(floor:number): C_PointDir {
+public create_stair(floor:number): {up: C_PointDir, dn: C_PointDir|undefined} {
     const H_size_x = (this.size.size_x() - 1) / 2;
     const H_size_y = (this.size.size_y() - 1) / 2;
     const pos_x    = 2 * _irand(0, H_size_x - 1) + 1;
@@ -404,7 +404,10 @@ public create_stair(floor:number): C_PointDir {
         }
     }
 
-    return new C_PointDir({x: pos_x, y: pos_y, z: floor, d: pos_d});
+    return {
+        up: new C_PointDir({x: pos_x, y: pos_y, z: floor, d: pos_d}),
+        dn: floor >= 1 ? new C_PointDir({x: pos_x, y: pos_y, z: floor - 1, d: pos_d}) : undefined,
+    }
 }
 
 public create_maze(floor: number): void {

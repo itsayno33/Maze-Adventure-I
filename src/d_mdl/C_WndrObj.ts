@@ -57,7 +57,8 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         j ??= {} as JSON_WndrObj; // jが未定義の場合は空のオブジェクトを用意
 
 
-        // loc_posが未定義の場合は初期位置を設定。decode(j)でthis.set_pd()を呼び出す
+        // loc_posが未定義の場合は初期位置を設定
+        // decode(j)でthis.set_pd()を呼び出す
         if (j.pos === undefined) j.pos ??= j.wowalk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
 
         // viewが未定義の場合はこれを初期化

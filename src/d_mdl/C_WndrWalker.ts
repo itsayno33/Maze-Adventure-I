@@ -110,11 +110,12 @@ export class C_WndrWalker extends C_Walker {
         this.cond ??= {} as T_Condition; // 初期化
         if (a.cond?.canMove !== undefined) this.cond.canMove  = (a.cond.canMove??'0') !== '0' ? true : false;
         if (a.cond?.canTurn !== undefined) this.cond.canTurn  = (a.cond.canTurn??'0') !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.canSlid  = (a.cond.canSlid??'0') !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.canUpDn  = (a.cond.canUpDn??'0') !== '0' ? true : false;
+        if (a.cond?.canSlid !== undefined) this.cond.canSlid  = (a.cond.canSlid??'0') !== '0' ? true : false;
+        if (a.cond?.canUpDn !== undefined) this.cond.canUpDn  = (a.cond.canUpDn??'0') !== '0' ? true : false;
         if (a.cond?.canThru !== undefined) this.cond.canThru  = (a.cond.canThru??'1') !== '0' ? true : false;
-        if (a.cond?.canMove !== undefined) this.cond.careWal  = (a.cond.careWal??'1') !== '0' ? true : false;
-    /**     mazeObjをデコードすると無限ループになる。向こうでもこのクラスをdecodeするので。
+        if (a.cond?.careWal !== undefined) this.cond.careWal  = (a.cond.careWal??'1') !== '0' ? true : false;
+    /**     mazeObjをデコードすると無限ループになる
+     *      向こうでもこのクラスをdecodeするので。
         if (a.cond?.mazeObj??false) {
             this.mazeObj = new C_MazeObj(a.cond.mazeObj);
         }
