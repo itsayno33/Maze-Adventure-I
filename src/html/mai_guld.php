@@ -306,13 +306,9 @@
             <legend>コマンド</legend>
             <ul id='tmpl_menu_list'></ul>
         </fieldset>
-        <fieldset id='tmpl_inpt_fields'>
-            <legend>入力</legend>
-            <ul id='tmpl_inpt_list'></ul>
-        </fieldset>
     </article>
     <article id='guld_tmpl_data_pane'>
-        <fieldset id='hres_hero_fields'>
+        <fieldset id='tmpl_hero_fields'>
             <legend>冒険者の詳細情報</legend>
             <ul id='tmpl_hero_info'></ul>
         </fieldset>
