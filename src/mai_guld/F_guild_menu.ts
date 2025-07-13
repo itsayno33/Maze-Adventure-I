@@ -122,6 +122,14 @@ function isOK(): void {
             g_ctls.deact();
             act_hres_menu();
             break;
+        case 'guld_tmpl': 
+            //g_ctls.deact();
+            //act_tmpl_menu();
+            break;
+        case 'guld_shop': 
+            //g_ctls.deact();
+            //act_hres_shop();
+            break;
         case 'guld_load': 
             g_ctls.deact();
             act_load_menu();
