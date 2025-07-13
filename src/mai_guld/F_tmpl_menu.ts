@@ -145,20 +145,31 @@ function init_menu_list():boolean {
 }
 function _go_hprc(): void {
     subview_act(T_SubView.MnCk);
+    const hero = team_list[cursor_Team.crsr.pos()]
+    if (hero.get_gold() < hero.get_abi_p_now('xd')) {
+        g_mvm.notice_message('お金が足りません');
+        return;
+    }
     mode = 'hprc';
-    display_default_message();
+    display_default_message(hero.get_abi_p_now('xd'));
     g_ctls.act(ctls_tmpl_hprc);
 }
 function _go_mprc(): void {
     subview_act(T_SubView.MnCk);
+    const hero = team_list[cursor_Team.crsr.pos()]
+    if (hero.get_gold() < hero.get_abi_m_now('xd')) {
+        g_mvm.notice_message('お金が足りません');
+        return;
+    }
     mode = 'mprc';
-    display_default_message();
+    display_default_message(hero.get_abi_m_now('xd'));
     g_ctls.act(ctls_tmpl_mprc);
 }
 function _go_sick(): void {
     subview_act(T_SubView.MnCk);
     mode = 'sick';
-    display_default_message();
+    const hero = team_list[cursor_Team.crsr.pos()]
+    display_default_message(hero.get_gold());
     g_ctls.act(ctls_tmpl_sick);
 }
 
@@ -449,8 +460,6 @@ function init_default_ctls(): boolean {
     try {
         if (!g_ctls.set(ctls_tmpl_nor))  return false;
         if (!g_ctls.set(ctls_tmpl_rtn))  return false;
-//        if (!g_ctls.set(ctls_tmpl_ipnm)) return false;
-//        if (!g_ctls.set(ctls_tmpl_cknm)) return false;
         if (!g_ctls.set(ctls_tmpl_hprc)) return false;
         if (!g_ctls.set(ctls_tmpl_mprc)) return false;
         if (!g_ctls.set(ctls_tmpl_sick)) return false;
@@ -623,12 +632,14 @@ function do_menu(): void {
 
 function isOK_hprc(): void {
     const hero = team_list[cursor_Team.crsr.pos()];
+    hero.sub_gold(hero.get_abi_p_now('xd'));
     hero.set_abi_p_all('xd', 0);
     cursor_Team.crsr.set_pos(0);
     go_back_view_mode('ＨＰが回復しました');
 }
 function isOK_mprc(): void {
     const hero = team_list[cursor_Team.crsr.pos()];
+    hero.sub_gold(hero.get_abi_m_now('xd'));
     hero.set_abi_m_all('xd', 0);
     cursor_Team.crsr.set_pos(0);
     go_back_view_mode('ＭＰが回復しました');

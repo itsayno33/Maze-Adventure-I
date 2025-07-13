@@ -38,6 +38,9 @@ export interface I_Hero {
     set_name(name: string): void
 
     is_alive(): boolean;
+    get_gold(): number;
+    set_gold(gold: number): void;
+    sub_gold(gold: number): boolean;
 
     get_abi_p_bsc(key: string): number;
     get_abi_p_ttl(key: string): number;
@@ -148,6 +151,18 @@ export class C_Hero implements I_JSON_Uniq {
         const hp = this.abi_p?.now.get('xp') ?? 0;
         const hd = this.abi_p?.now.get('xd') ?? 0;
         return hp - hd > 0;
+    }
+
+    public get_gold(): number {
+        return this.gold;
+    }
+    public set_gold(gold: number): void {
+        this.gold = gold;
+    }
+    public sub_gold(gold: number): boolean {
+        if (gold > this.gold) return false;
+        this.gold -= gold;
+        return true;
     }
 
     public get_abi_p_bsc(key: string): number {return this.abi_p?.bsc.get(key)??0}
