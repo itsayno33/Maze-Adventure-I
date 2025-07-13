@@ -191,6 +191,10 @@ body.tomz {
 #guld_menu_list_pane {grid-area: mn_l;}
 #guld_hres_list_pane {grid-area: hr_l;}
 #guld_hres_data_pane {grid-area: hr_d;}
+#guld_tmpl_list_pane {grid-area: tm_l;}
+#guld_tmpl_data_pane {grid-area: tm_d;}
+#guld_shop_list_pane {grid-area: sp_l;}
+#guld_shop_data_pane {grid-area: sp_d;}
 #guld_ldsv_list_pane {grid-area: ls_l;}
 #guld_ldsv_data_pane {grid-area: ls_d;}
 #guld_tomz_maze_pane {grid-area: mz_l;}
