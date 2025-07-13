@@ -46,6 +46,10 @@ body.menu {
 
 #guld_hres_list_pane.menu, 
 #guld_hres_data_pane.menu,
+#guld_tmpl_list_pane.menu, 
+#guld_tmpl_data_pane.menu,
+#guld_shop_list_pane.menu, 
+#guld_shop_data_pane.menu,
 #guld_ldsv_list_pane.menu, 
 #guld_ldsv_data_pane.menu, 
 #guld_tomz_maze_pane.menu, 
@@ -68,10 +72,66 @@ body.hres {
 {display: block;}
 
 #guld_menu_list_pane.hres, 
+#guld_tmpl_list_pane.hres, 
+#guld_tmpl_data_pane.hres, 
+#guld_shop_list_pane.hres, 
+#guld_shop_data_pane.hres, 
 #guld_ldsv_list_pane.hres, 
 #guld_ldsv_data_pane.hres, 
 #guld_tomz_maze_pane.hres, 
 #guld_tomz_mvpt_pane.hres 
+{display: none;}
+
+
+body.tmpl {
+    gap:                   var(--body_tmpl_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_tmpl_cols);
+    grid-template-rows:    var(--body_tmpl_rows);
+}
+
+#guld_head_pane.tmpl, 
+#guld_tmpl_list_pane.tmpl, 
+#guld_tmpl_data_pane.tmpl, 
+#guld_ctls_pane.tmpl, 
+#sytm_logs_pane.tmpl,
+#foot_pane.tmpl 
+{display: block;}
+
+#guld_menu_list_pane.tmpl, 
+#guld_hres_list_pane.tmpl, 
+#guld_hres_data_pane.tmpl,
+#guld_shop_list_pane.tmpl, 
+#guld_shop_data_pane.tmpl, 
+#guld_ldsv_list_pane.tmpl, 
+#guld_ldsv_data_pane.tmpl, 
+#guld_tomz_maze_pane.tmpl, 
+#guld_tomz_mvpt_pane.tmpl 
+{display: none;}
+
+
+body.shop {
+    gap:                   var(--body_shop_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_shop_cols);
+    grid-template-rows:    var(--body_shop_rows);
+}
+
+#guld_head_pane.shop, 
+#guld_shop_list_pane.shop, 
+#guld_shop_data_pane.shop, 
+#guld_ctls_pane.shop, 
+#sytm_logs_pane.shop,
+#foot_pane.shop 
+{display: block;}
+
+#guld_menu_list_pane.shop, 
+#guld_hres_list_pane.shop, 
+#guld_hres_data_pane.shop,
+#guld_tmpl_list_pane.shop, 
+#guld_tmpl_data_pane.shop, 
+#guld_ldsv_list_pane.shop, 
+#guld_ldsv_data_pane.shop, 
+#guld_tomz_maze_pane.shop, 
+#guld_tomz_mvpt_pane.shop 
 {display: none;}
 
 
@@ -92,6 +152,10 @@ body.ldsv {
 #guld_menu_list_pane.ldsv, 
 #guld_hres_list_pane.ldsv, 
 #guld_hres_data_pane.ldsv,
+#guld_tmpl_list_pane.ldsv, 
+#guld_tmpl_data_pane.ldsv,
+#guld_shop_list_pane.ldsv, 
+#guld_shop_data_pane.ldsv,
 #guld_tomz_maze_pane.ldsv, 
 #guld_tomz_mvpt_pane.ldsv 
 {display: none;}
@@ -114,6 +178,10 @@ body.tomz {
 #guld_menu_list_pane.tomz, 
 #guld_hres_list_pane.tomz, 
 #guld_hres_data_pane.tomz,
+#guld_tmpl_list_pane.tomz, 
+#guld_tmpl_data_pane.tomz,
+#guld_shop_list_pane.tomz, 
+#guld_shop_data_pane.tomz,
 #guld_ldsv_list_pane.tomz, 
 #guld_ldsv_data_pane.tomz 
 {display: none;}
@@ -181,6 +249,8 @@ h1 {
 #appd_list,
 #menu_list,
 #inpt_list,
+#tmpl_list,
+#shop_list,
 #ldsv_list, 
 #maze_list,
 #mvpt_list
@@ -195,6 +265,8 @@ h1 {
 #appd_list li,
 #menu_list li,
 #inpt_list li,
+#tmpl_list li, 
+#shop_list li, 
 #ldsv_list li, 
 #maze_list li,
 #mvpt_list li
@@ -359,6 +431,8 @@ p#guld_head_message {
 #menu_list,
 #edit_list,
 #appd_list,
+#tmpl_list 
+#shop_list 
 #ldsv_list 
 {
     column-count: var(--hres_list_count, 4); 
@@ -371,18 +445,28 @@ p#guld_head_message {
 
 #hres_hero_info,
 #edit_hero_info,
-#appd_hero_info {
+#appd_hero_info,
+#hres_hero_info,
+#tmpl_hero_info,
+#shop_good_info
+{
     display: grid;
     gap:  var(--hero_info_grid_gap, 0.5rem 1.0rem);
     grid: var(--hero_info_grid_template, none);
 }
 
-#hres_hero_info {
+#hres_hero_info,
+#tmpl_hero_info,
+#shop_good_info
+{
     list-style:   none;
     padding-left: 0px;
     text-align:   center;
 }
-#hres_hero_info li {
+#hres_hero_info li,
+#tmpl_hero_info li,
+#shop_good_info li
+{
     border: 2px dotted var(--hero_info_border_color, rgb(165, 255, 225));
 }
 

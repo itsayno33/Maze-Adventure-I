@@ -46,14 +46,14 @@
 ///   サブルーチン
 //////////////////////////////////////////////
 
-function new_team(): Team {
-    global $gv;
-    $x = 2 * random_int(0, (($gv->maze->get_size_x() - 1) / 2) - 1) + 1;
-    $y = 2 * random_int(0, (($gv->maze->get_size_y() - 1) / 2) - 1) + 1;
-    $z = 2 * random_int(0,  ($gv->maze->get_size_z() - 1));
-    $d = random_int(0, Direct::MAX);
-    return new Team(['x' => $x, 'y' => $y, 'z' => $z, 'd' => $d]);
-}
+//function new_team(): Team {
+//    global $gv;
+//    $x = 2 * random_int(0, (($gv->maze->get_size_x() - 1) / 2) - 1) + 1;
+//    $y = 2 * random_int(0, (($gv->maze->get_size_y() - 1) / 2) - 1) + 1;
+//    $z = 2 * random_int(0,  ($gv->maze->get_size_z() - 1));
+//    $d = random_int(0, Direct::MAX);
+//    return new Team(['x' => $x, 'y' => $y, 'z' => $z, 'd' => $d]);
+//}
 
 /*******************************************************************************/
 /*                                                                             */
@@ -339,7 +339,7 @@ function new_team(): Team {
     <article id='guld_shop_data_pane'>
         <fieldset id='shop_good_fields'>
             <legend>アイテムの詳細情報</legend>
-            <ul id='shop_item_info'></ul>
+            <ul id='shop_good_info'></ul>
         </fieldset>
     </article>
     <article id='guld_ldsv_list_pane'>
