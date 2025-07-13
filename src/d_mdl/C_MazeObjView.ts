@@ -266,7 +266,7 @@ export class C_MazeObjView implements I_MazeObjView {
         drow3D_cell(rect, this.col_f(), this.col_l());
         
         this._drow3D_textTOP(
-            this.letter(obje_dir) ?? '', 
+            this.my_letter ?? '', 
             rect, 
             "#333333"/*this.col_f()*/, 
             "#000000"/*this.col_l()*/

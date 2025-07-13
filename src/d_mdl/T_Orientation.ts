@@ -40,34 +40,34 @@ export function relativeOrientationDir(
     switch (pd_d) {
         case T_Direction.N:
             switch (me_d) {
+                case T_Direction.N: return T_Orientation.B;
+                case T_Direction.E: return T_Orientation.L;
+                case T_Direction.S: return T_Orientation.F;
+                case T_Direction.W: return T_Orientation.R;
+                default: return T_Orientation.X;
+            }
+        case T_Direction.E:
+            switch (me_d) {
+                case T_Direction.N: return T_Orientation.R;
+                case T_Direction.E: return T_Orientation.B;
+                case T_Direction.S: return T_Orientation.L;
+                case T_Direction.W: return T_Orientation.F;
+                default: return T_Orientation.X;
+            }
+        case T_Direction.S:
+            switch (me_d) {
                 case T_Direction.N: return T_Orientation.F;
                 case T_Direction.E: return T_Orientation.R;
                 case T_Direction.S: return T_Orientation.B;
                 case T_Direction.W: return T_Orientation.L;
                 default: return T_Orientation.X;
             }
-        case T_Direction.E:
-            switch (me_d) {
-                case T_Direction.N: return T_Orientation.R;
-                case T_Direction.E: return T_Orientation.F;
-                case T_Direction.S: return T_Orientation.L;
-                case T_Direction.W: return T_Orientation.B;
-                default: return T_Orientation.X;
-            }
-        case T_Direction.S:
-            switch (me_d) {
-                case T_Direction.N: return T_Orientation.B;
-                case T_Direction.E: return T_Orientation.R;
-                case T_Direction.S: return T_Orientation.F;
-                case T_Direction.W: return T_Orientation.L;
-                default: return T_Orientation.X;
-            }
         case T_Direction.W:
             switch (me_d) {
-                case T_Direction.N: return T_Orientation.R;
-                case T_Direction.E: return T_Orientation.B;
-                case T_Direction.S: return T_Orientation.L;
-                case T_Direction.W: return T_Orientation.F;
+                case T_Direction.N: return T_Orientation.L;
+                case T_Direction.E: return T_Orientation.F;
+                case T_Direction.S: return T_Orientation.R;
+                case T_Direction.W: return T_Orientation.B;
                 default: return T_Orientation.X;
             }
         default:

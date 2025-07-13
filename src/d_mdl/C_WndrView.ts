@@ -87,8 +87,10 @@ export class C_WndrView  extends C_MazeObjView implements I_MazeObjView {
     protected drow3D_obj_front(
         frot:  T_Wall, 
         back:  T_Wall, 
+        obje_dir: T_Direction = T_Direction.N, 
+        team_dir: T_Direction = T_Direction.N,
     ): T_Rect|undefined {
-        const rect = super.drow3D_obj_front(frot, back);
+        const rect = super.drow3D_obj_front(frot, back, obje_dir, team_dir);
         if (rect === undefined) return undefined;
         return rect;
     }
