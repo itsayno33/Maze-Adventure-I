@@ -82,6 +82,64 @@
             ;
 
 
+    --body_tmpl_gap: 0 0;
+    --body_tmpl_cols: 
+            3rem
+            [head-start foot-start tm_l-start tm_d-start]
+            auto
+            [tm_l-end tm_d-end ctls-start mssg-start]
+            auto
+            [head-end foot-end  mssg-end ctls-end]
+            3rem
+            ;
+    --body_tmpl_rows:
+            [head-start]
+            auto
+            [head-end tm_l-start ctls-start]
+            auto
+            [tm_l-end] 
+            auto
+            [tm_d-start] 
+            auto
+            [ctls-end mssg-start]
+            auto 
+            [tm_d-end mssg-end] 
+            auto
+            [foot-start]
+            100px
+            [foot-end]
+            ;
+
+
+    --body_shop_gap: 0 0;
+    --body_shop_cols: 
+            3rem
+            [head-start foot-start sp_l-start sp_d-start]
+            auto
+            [sp_l-end sp_d-end ctls-start mssg-start]
+            auto
+            [head-end foot-end  mssg-end ctls-end]
+            3rem
+            ;
+    --body_shop_rows:
+            [head-start]
+            auto
+            [head-end sp_l-start ctls-start]
+            auto
+            [sp_l-end] 
+            auto
+            [sp_d-start] 
+            auto
+            [ctls-end mssg-start]
+            auto 
+            [sp_d-end mssg-end] 
+            auto
+            [foot-start]
+            100px
+            [foot-end]
+            ;
+
+
     --body_ldsv_gap: 0 0;
     --body_ldsv_cols: 
             3rem
