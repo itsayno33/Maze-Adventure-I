@@ -298,10 +298,6 @@
             <legend>ギルド・メンバー</legend>
             <ul id='tmpl_guld_list'></ul>
         </fieldset>
-        <fieldset id='tmpl_appd_fields'>
-            <legend>求人募集メンバー</legend>
-            <ul id='tmpl_appd_list'></ul>
-        </fieldset>
         <fieldset id='tmpl_menu_fields'>
             <legend>コマンド</legend>
             <ul id='tmpl_menu_list'></ul>

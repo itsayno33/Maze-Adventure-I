@@ -8,7 +8,7 @@ import { _alert, g_mes }                 from "../d_cmn/global";
 import { act_guld_menu }                 from "./F_guild_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { g_mvm, g_team, g_guld, g_ctls, g_vsw } from "./global_for_guild";
-import { _json_alert, _json_to_str } from '../d_utl/F_Utility';
+import { _json_alert, _json_console, _json_to_str } from '../d_utl/F_Utility';
 
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
@@ -245,7 +245,7 @@ function init_dom_team_list(): boolean {
 }
 function update_dom_team_list():void {
     clear_dom_team_list();
-    for (let ii in team_list) {
+    for (const ii in team_list) {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = `${team_list[ii].name()}<p></p>`;
 
@@ -278,7 +278,7 @@ function init_dom_guld_list(): boolean {
     // 冒険者情報
     try {
         dom_guld_fields = document.getElementById('tmpl_guld_fields') as HTMLFieldSetElement;
-        dom_guld_list   = document.getElementById('tmpl_list')        as HTMLUListElement;
+        dom_guld_list   = document.getElementById('tmpl_guld_list')   as HTMLUListElement;
     } catch (err) {
         return false;
     }
@@ -291,7 +291,7 @@ function init_dom_guld_list(): boolean {
 }
 function update_dom_guld_list(): void {
     clear_dom_guld_list();
-    for (let ii in guld_list) {
+    for (const ii in guld_list) {
         const li = document.createElement('li') as HTMLLIElement;
         li.innerHTML = `${guld_list[ii].name()}<p></p>`;
 
