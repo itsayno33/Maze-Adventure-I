@@ -657,22 +657,23 @@ function do_menu(): void {
     menu_list[cursor_Menu.crsr.pos()].fnc();
 }
 
-function isOK_hprcXXX(): void {                                         // 未作成
+function isOK_hprc(): void {
     const hero = team_list[cursor_Team.crsr.pos()];
-
-    g_guld.add_hero(hero);
-    g_team.rmv_hero(hero);
-
-    if (!exist_team()) isSL();
-
+    hero.set_abi_p_all('xd', 0);
     cursor_Team.crsr.set_pos(0);
-    go_back_view_mode('チームから外しました');
+    go_back_view_mode('ＨＰが回復しました');
 }
-function isOK_mprcXXX(): void {                                         // 未作成
+function isOK_mprc(): void {
     const hero = team_list[cursor_Team.crsr.pos()];
+    hero.set_abi_m_all('xd', 0);
+    cursor_Team.crsr.set_pos(0);
+    go_back_view_mode('ＭＰが回復しました');
 }
-function isOK_sickXXX(): void {                                         // 未作成
+function isOK_sick(): void {
     const hero = team_list[cursor_Team.crsr.pos()];
+    // ここに状態異常を回復する処理を作る
+    cursor_Team.crsr.set_pos(0);
+    go_back_view_mode('状態が正常に戻りました');
 }
 
 function go_back_view_mode(msg: string): void {

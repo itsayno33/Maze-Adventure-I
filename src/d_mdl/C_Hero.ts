@@ -47,6 +47,16 @@ export interface I_Hero {
     get_abi_m_ttl(key: string): number;
     get_abi_m_now(key: string): number;
 
+    set_abi_p_all(key: string, val: number): void;
+    set_abi_p_bsc(key: string, val: number): void;
+    set_abi_p_ttl(key: string, val: number): void;
+    set_abi_p_now(key: string, val: number): void;
+
+    set_abi_m_all(key: string, val: number): void;
+    set_abi_m_bsc(key: string, val: number): void;
+    set_abi_m_ttl(key: string, val: number): void;
+    set_abi_m_now(key: string, val: number): void;
+
     hero_bonus(n: number):  number;
     hp_damage(dmg: number): number;
     hp_heal(heal: number):  number;
@@ -147,6 +157,24 @@ export class C_Hero implements I_JSON_Uniq {
     public get_abi_m_bsc(key: string): number {return this.abi_m?.bsc.get(key)??0}
     public get_abi_m_ttl(key: string): number {return this.abi_m?.ttl.get(key)??0}
     public get_abi_m_now(key: string): number {return this.abi_m?.now.get(key)??0}
+
+    public set_abi_p_all(key: string, val: number): void {
+        this.abi_p?.bsc.set(key, val);
+        this.abi_p?.ttl.set(key, val);
+        this.abi_p?.now.set(key, val);
+    }
+    public set_abi_p_bsc(key: string, val: number): void {this.abi_p?.bsc.set(key, val)}
+    public set_abi_p_ttl(key: string, val: number): void {this.abi_p?.ttl.set(key, val)}
+    public set_abi_p_now(key: string, val: number): void {this.abi_p?.now.set(key, val)}
+
+    public set_abi_m_all(key: string, val: number): void {
+        this.abi_m?.bsc.set(key, val);
+        this.abi_m?.ttl.set(key, val);
+        this.abi_m?.now.set(key, val);
+    }
+    public set_abi_m_bsc(key: string, val: number): void {this.abi_m?.bsc.set(key, val)}
+    public set_abi_m_ttl(key: string, val: number): void {this.abi_m?.ttl.set(key, val)}
+    public set_abi_m_now(key: string, val: number): void {this.abi_m?.now.set(key, val)}
 
     public hero_bonus(n: number): number {
         return n * ( this.lv + 1 );
