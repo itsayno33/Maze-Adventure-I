@@ -144,19 +144,19 @@ function init_menu_list():boolean {
     return true;
 }
 function _go_hprc(): void {
-    subview_act(T_SubView.HpRc);
+    subview_act(T_SubView.MnCk);
     mode = 'hprc';
     display_default_message();
     g_ctls.act(ctls_tmpl_hprc);
 }
 function _go_mprc(): void {
-    subview_act(T_SubView.MpRc);
+    subview_act(T_SubView.MnCk);
     mode = 'mprc';
     display_default_message();
     g_ctls.act(ctls_tmpl_mprc);
 }
 function _go_sick(): void {
-    subview_act(T_SubView.Sick);
+    subview_act(T_SubView.MnCk);
     mode = 'sick';
     display_default_message();
     g_ctls.act(ctls_tmpl_sick);
@@ -202,7 +202,6 @@ function init_view(): boolean {
     if (!init_dom_team_list()) return false; 
     if (!init_dom_guld_list()) return false; 
     if (!init_dom_menu_list()) return false; 
-//    if (!init_dom_inpt_list()) return false; 
 
     if (!init_cursor())          return false; 
     if (!init_dom_hero_detail()) return false; 
@@ -213,7 +212,6 @@ function update_view() {
     update_dom_team_list();
     update_dom_guld_list();
     update_dom_menu_list();
-//    update_dom_inpt_list();
 
     update_cursor();
     update_dom_hero_detail();
@@ -266,7 +264,6 @@ function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 }
 
 function clear_dom_team_list(): void {
-//    dom_team_list.innerHTML = '';
     while (dom_team_list.firstChild !== null) {
         dom_team_list.removeChild(dom_team_list.firstChild);
     }
@@ -463,7 +460,7 @@ function init_default_ctls(): boolean {
     return true;
 }
 const ctls_tmpl_rtn = {
-    name: 'hres_rtn', 
+    name: 'tmpl_rtn', 
     isOK:  isRT,
     isNG:  isRT,
     cpOK:  isRT,
@@ -472,7 +469,7 @@ const ctls_tmpl_rtn = {
     cpRT:  isRT,
 }
 const ctls_tmpl_nor = {
-    name: 'hres_nor', 
+    name: 'tmpl_nor', 
     do_U:  do_U,
     do_D:  do_D,
     do_L:  do_L,
@@ -486,22 +483,7 @@ const ctls_tmpl_nor = {
     cpSL:  isSL,
     cpRT:  isRT,
 }
-/*****************
-const ctls_hres_ipnm = {
-    name: 'tmpl_ipnm', 
-    isOK:  isOK_ipnm,
-    isNG:  isNG_chek,
-    cpOK:  isOK_ipnm,
-    cpNG:  isNG_chek,
-}
-const ctls_hres_cknm = {
-    name: 'tmpl_cknm', 
-    isOK:  isOK_cknm,
-    isNG:  isNG_cknm,
-    cpOK:  isOK_cknm,
-    cpNG:  isNG_cknm,
-}
-******************/
+
 const ctls_tmpl_hprc = {
     name: 'tmpl_hprc', 
     isOK:  isOK_hprc,
@@ -573,9 +555,6 @@ function subview_act_guld() {
 }
 
 function subview_act_menu() {
-//    clear_dom_inpt_list();
-//    dom_inpt_fields.style.display = 'none';
-
     cursor  = cursor_Menu; 
     cursor.crsr.set_pos(0);
 
@@ -586,18 +565,6 @@ function subview_act_menu() {
 function subview_act_mnck() {
 //    dom_inpt_fields.style.display = 'none';
 }    
-
-/************************************************
-function subview_act_ipnm() {
-    update_dom_inpt_list();
-    dom_inpt_fields.style.display = 'block';
-}    
-
-function subview_act_ipck() {
-    update_dom_inpt_list();
-    dom_inpt_fields.style.display = 'block';
-}    
-*************************************************/
 
 // カーソルの移動と決定・解除
 function do_U(): void {
@@ -687,19 +654,6 @@ function go_back_view_mode(msg: string): void {
     g_mvm.normal_message(msg);
 }
 
-/**************************************************
-function change_hero_name(hero: C_Hero): void {
-    let inpt_name: HTMLInputElement;
-    try {
-        inpt_name = document.getElementById('hres_name_inpt') as HTMLInputElement;
-    } catch (err) {
-        return;
-    }
-    if (inpt_name == null) return;
-
-    hero.set_name(inpt_name.value);
-}
-***************************************************/
 
 function isNG(): void {
     switch (cursor.kind) {
