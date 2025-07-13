@@ -97,7 +97,7 @@ export class C_WndrView  extends C_MazeObjView implements I_MazeObjView {
 
     protected _drow3D_textTOP(text: string, r: T_Rect, fill: string|null, line: string|null): void {
         const size_x = ( r.tr.x - r.tl.x );
-        const size_y = ( r.dl.y - r.tl.y ) / 3;
+        const size_y = ( r.dl.y - r.tl.y ) / 2;
 
         this._drow3D_text(
             text, 
@@ -127,7 +127,7 @@ export class C_WndrView  extends C_MazeObjView implements I_MazeObjView {
             text, 
             {
                 x: r.tl.x + (size_x / 2),
-                y: (r.tl.y + 2 * size_y) + (size_y / 2)
+                y: (r.tl.y + 2 * size_y) + (size_y / 3)
             }, 
             _min([size_x, size_y]), // 文字の最大幅
             fill, 
