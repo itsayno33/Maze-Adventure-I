@@ -266,10 +266,10 @@ function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 }
 
 function clear_dom_team_list(): void {
-    dom_team_list.innerHTML = '';
-//    while (dom_team_list.firstChild !== null) {
-//        dom_team_list.removeChild(dom_team_list.firstChild);
-//    }
+//    dom_team_list.innerHTML = '';
+    while (dom_team_list.firstChild !== null) {
+        dom_team_list.removeChild(dom_team_list.firstChild);
+    }
 }
 
 
