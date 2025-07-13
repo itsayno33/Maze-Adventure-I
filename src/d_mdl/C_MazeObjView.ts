@@ -3,6 +3,9 @@
 import { I_Abstract, JSON_Any } from "./C_SaveInfo";
 import { T_Wall }               from "../d_mdl/C_Wall";
 import { C_MazeObjView2X } from "./C_MazeObjView2X";
+import { _max, _min } from '../d_utl/F_Math';
+import { relativeOrientation, relativeOrientationDir, T_Orientation } from "./T_Orientation";
+import { T_Direction } from "./C_PointDir";
 
 
 export interface I_MazeObjView extends I_Abstract {
@@ -10,11 +13,12 @@ export interface I_MazeObjView extends I_Abstract {
     // 表示関係(2Dpre)./C_Wall
     layer:   ()=>number;
     letter:  (dir: number)=>string|null; // null: 見えない、何もない
+    dir:     ()=> T_Direction; // 方向(2Dpre)
 
     // 表示関係(3D)
     canShow: ()=>boolean;
     drow2D:  (floor: T_Rect, dir: number)=>void;
-    drow3D:  (frot:  T_Wall, back: T_Wall, dir: number)=>void;
+    drow3D:  (frot:  T_Wall, back: T_Wall, obje_dir: T_Direction, team_dir: T_Direction)=>void;
 
     pad_t:   ()=>number; //上側の空き(割合: 0から1) 
     pad_d:   ()=>number; //床側の空き(割合: 0から1) 
@@ -34,6 +38,7 @@ export interface JSON_MazeObjView extends JSON_Any {
     clname?: string,
     layer?:  number,
     letter?: string,
+    my_dir?:  T_Direction, // 方向(2Dpre)
     show?:   string,
     pad_t?:  number, // オブジェクト上部の隙間の割合(0.0 から 1.0) 
     pad_d?:  number, // オブジェクト下部の隙間の割合(0.0 から 1.0) 
@@ -75,8 +80,11 @@ export class C_MazeObjView implements I_MazeObjView {
 
     protected clname:    string = 'C_MazeObjView';
 
+    protected my_obje:   I_MazeObjView|undefined = undefined; // 迷宮表示用の親オブジェクト
+
     protected my_layer:  number;      // 2D表示の時のCSSレイヤー。同位置のオブジェの内この値が大きい物が表示される
     protected my_letter: string|null; // 2D表示の時の全角文字。nullなら透明
+    protected my_dir:    T_Direction = T_Direction.N; // 2D表示の時の方向(0:北, 1:東, 2:南, 3:西)
 
     protected my_show:   boolean;
     protected my_pad_t:  number; // オブジェクト上部の隙間の割合(0.0 から 1.0) 
@@ -98,6 +106,7 @@ export class C_MazeObjView implements I_MazeObjView {
 
         this.my_layer   =  -2;
         this.my_letter  =  null;
+        this.my_dir     =  T_Direction.N; // 方向(2Dpre)
 
         this.my_pad_t   =  0.0;
         this.my_pad_d   =  0.0;
@@ -123,6 +132,7 @@ export class C_MazeObjView implements I_MazeObjView {
         if (j.clname  !== undefined) this.clname    = j.clname;
         if (j.layer   !== undefined) this.my_layer  = j.layer;
         if (j.letter  !== undefined) this.my_letter = j.letter !== ''  ? j.letter : null; 
+        if (j.dir     !== undefined) this.my_dir    = j.dir    !== ''  ? j.dir : null; 
         if (j.pad_t   !== undefined) this.my_pad_t  = j.pad_t; 
         if (j.pad_d   !== undefined) this.my_pad_d  = j.pad_d; 
         if (j.pad_s   !== undefined) this.my_pad_s  = j.pad_s; 
@@ -141,11 +151,22 @@ export class C_MazeObjView implements I_MazeObjView {
 
     public free():void {}
 
+    public get_obje(): I_MazeObjView|undefined {
+        return this.my_obje;
+    }
+    public set_obje(obje: I_MazeObjView|undefined): I_MazeObjView|undefined {
+        this.my_obje = obje;
+        return this.my_obje;
+    }
+
     public layer(): number {return this.my_layer;}
     public set_layer(layer: number) {this.my_layer = layer}
 
     public letter(dir: number = 0):  string|null {return this.my_letter}
     public set_letter(letter: string|null): string|null {return this.my_letter = letter}
+
+    public dir(): T_Direction {return this.my_dir}
+    public set_dir(dir: T_Direction): T_Direction {return this.my_dir = dir}
 
     public canShow(): boolean {return this.my_show};
     public setShow(can_show: boolean): boolean {return this.my_show = can_show};
@@ -179,15 +200,15 @@ export class C_MazeObjView implements I_MazeObjView {
         drow2D_cell(rect, this.col_2(), this.col_L() ?? '#9999ff');
     }
 
-    public drow3D(frot: T_Wall, back: T_Wall, dir: number = 0): void {
+    public drow3D(frot: T_Wall, back: T_Wall, obje_dir: T_Direction = T_Direction.N, team_dir: T_Direction = T_Direction.N): void {
         this.drow3D_obj_back      (frot, back);
         this.drow3D_obj_down      (frot, back);
         this.drow3D_obj_top       (frot, back);
         this.drow3D_obj_right_side(frot, back);
         this.drow3D_obj_left_side (frot, back);
-        this.drow3D_obj_front     (frot, back);
+        this.drow3D_obj_front     (frot, back, obje_dir, team_dir);
     }
-    private drow3D_obj_down(
+    protected drow3D_obj_down(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -207,7 +228,7 @@ export class C_MazeObjView implements I_MazeObjView {
         drow3D_cell(rect, this.col_t(), this.col_l());
     }
 
-    private drow3D_obj_top(
+    protected drow3D_obj_top(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -226,11 +247,13 @@ export class C_MazeObjView implements I_MazeObjView {
         }
         drow3D_cell(rect, this.col_d(), this.col_l());
     }
-    private drow3D_obj_front(
+    protected drow3D_obj_front(
         frot:  T_Wall, 
         back:  T_Wall, 
-    ): void {
-        if (!this.canShow() || this.col_f() === null) return;
+        obje_dir: T_Direction = T_Direction.N,
+        team_dir: T_Direction = T_Direction.N,
+    ): T_Rect|undefined {
+        if (!this.canShow() || this.col_f() === null) return undefined;
     
         const o = __calc_padding_obj(this, frot, back);
         const rect: T_Rect = {
@@ -241,8 +264,23 @@ export class C_MazeObjView implements I_MazeObjView {
         }
     
         drow3D_cell(rect, this.col_f(), this.col_l());
+        
+        this._drow3D_textTOP(
+            this.letter(obje_dir) ?? '', 
+            rect, 
+            "#333333"/*this.col_f()*/, 
+            "#000000"/*this.col_l()*/
+        );
+        this._drow3D_textBTM(
+            relativeOrientationDir(obje_dir, team_dir),
+            rect, 
+            "#333333"/*this.col_f()*/, 
+            "#000000"/*this.col_l()*/
+        );
+
+        return rect;
     }
-    private drow3D_obj_back(
+    protected drow3D_obj_back(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -258,7 +296,7 @@ export class C_MazeObjView implements I_MazeObjView {
     
         drow3D_cell(rect, this.col_b(), this.col_l());
     }
-    private drow3D_obj_left_side(
+    protected drow3D_obj_left_side(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -274,7 +312,7 @@ export class C_MazeObjView implements I_MazeObjView {
     
         drow3D_cell(rect, this.col_s(), this.col_l());
     }
-    private drow3D_obj_right_side(
+    protected drow3D_obj_right_side(
         frot:  T_Wall, 
         back:  T_Wall, 
     ): void {
@@ -290,6 +328,9 @@ export class C_MazeObjView implements I_MazeObjView {
     
         drow3D_cell(rect, this.col_s(), this.col_l());
     }
+
+    protected _drow3D_textTOP(text: string,        r: T_Rect, fill: string|null, line: string|null): void {}
+    protected _drow3D_textBTM(dir:  T_Orientation, r: T_Rect, fill: string|null, line: string|null): void {}
     
 
     public encode(): JSON_MazeObjView {
@@ -297,6 +338,7 @@ export class C_MazeObjView implements I_MazeObjView {
             clname:  this.clname,
             layer:   this.my_layer,
             letter:  this.my_letter ?? '',
+            dir:     this.my_dir ?? T_Direction.N, // 方向(2Dpre)
             pad_t:   this.my_pad_t, 
             pad_d:   this.my_pad_d, 
             pad_s:   this.my_pad_s, 
@@ -465,3 +507,4 @@ function drow3D_cell(r: T_Rect, fill: string|null, line: string|null): void {
         con.stroke();
     }
 }
+

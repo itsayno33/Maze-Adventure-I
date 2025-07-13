@@ -15,9 +15,9 @@ export interface I_WndrView2X extends I_MazeObjView2X {}
 
 
 export class C_WndrView2X  extends C_MazeObjView2X implements I_MazeObjView2X {
-    public clname: string = 'WndrView'; // クラス名
-    public col_2_arw: string|null = null; // 矢印の色
-    public col_2_tri: string|null = null; // 矢印の輪郭の色
+    public clname: string = 'WndrView';    // クラス名
+    public col_2_arw:  string|null = null; // 矢印の色
+    public col_2_tri:  string|null = null; // 矢印の輪郭の色
     
     public constructor(j: JSON_WndrView2X) {
         super(j);
@@ -28,9 +28,9 @@ export class C_WndrView2X  extends C_MazeObjView2X implements I_MazeObjView2X {
         if (j === undefined) return this;
 
         super.__init(j);
-        if (j?.clname    !== undefined) this.clname   = j.clname;
-        if (j?.col_2_arw !== undefined) this.col_2_arw = j.col_2_arw;
-        if (j?.col_2_tri !== undefined) this.col_2_tri = j.col_2_tri;
+        if (j?.clname     !== undefined) this.clname     = j.clname;
+        if (j?.col_2_arw  !== undefined) this.col_2_arw  = j.col_2_arw;
+        if (j?.col_2_tri  !== undefined) this.col_2_tri  = j.col_2_tri;
 
         return this;
     }
@@ -51,17 +51,17 @@ export class C_WndrView2X  extends C_MazeObjView2X implements I_MazeObjView2X {
         // Draw the arrow
         switch (dir) {
             case T_Direction.N:  // ↑
-                this.drow2X_arrow(ctx, {x: (r.tl.x + r.tr.x)/2, y:r.tl.y}, r.dl, r.dr);break
+                this._drow2X_arrow(ctx, {x: (r.tl.x + r.tr.x)/2, y:r.tl.y}, r.dl, r.dr);break
             case T_Direction.E:  // →
-                this.drow2X_arrow(ctx, {y: (r.tr.y + r.dr.y)/2, x:r.tr.x}, r.tl, r.dl);break;
+                this._drow2X_arrow(ctx, {y: (r.tr.y + r.dr.y)/2, x:r.tr.x}, r.tl, r.dl);break;
             case T_Direction.S: // ↓
-                this.drow2X_arrow(ctx, {x: (r.dl.x + r.dr.x)/2, y:r.dl.y}, r.tr, r.tl);break;
+                this._drow2X_arrow(ctx, {x: (r.dl.x + r.dr.x)/2, y:r.dl.y}, r.tr, r.tl);break;
             case T_Direction.W: // ←
-                this.drow2X_arrow(ctx, {y: (r.tl.y + r.dl.y)/2, x:r.tl.x}, r.dr, r.tr);break;
+                this._drow2X_arrow(ctx, {y: (r.tl.y + r.dl.y)/2, x:r.tl.x}, r.dr, r.tr);break;
         }
     }
 
-    private drow2X_arrow(ctx: CanvasRenderingContext2D | null, top: T_xy, left: T_xy, right: T_xy): void {
+    protected _drow2X_arrow(ctx: CanvasRenderingContext2D | null, top: T_xy, left: T_xy, right: T_xy): void {
         if (ctx === undefined || ctx === null) return;
 
         ctx.beginPath();
@@ -81,8 +81,8 @@ export class C_WndrView2X  extends C_MazeObjView2X implements I_MazeObjView2X {
 
     public encode(): JSON_WndrView2X {
         const j = super.encode();
-        j.col_2_arw = this.col_2_arw ?? null; // 矢印の色
-        j.col_2_tri = this.col_2_tri ?? null; // 矢印の輪郭の色
+        j.col_2_arw  = this.col_2_arw  ?? null; // 矢印の色
+        j.col_2_tri  = this.col_2_tri  ?? null; // 矢印の輪郭の色
         
         return j;
     }

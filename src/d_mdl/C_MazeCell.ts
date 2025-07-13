@@ -7,6 +7,7 @@ import { C_MazeObj, I_MazeObj, JSON_MazeObj } from "./C_MazeObj";
 import { T_Wall }    from './C_Wall';
 import { T_Rect } from "./C_MazeObjView";
 import { new_mazeObj } from "./F_new_MazeObj";
+import { T_Direction } from "./C_PointDir";
 
 
 export interface JSON_MazeCell extends JSON_Any {
@@ -59,8 +60,13 @@ export class C_MazeCell  {
         this.my_obj.view()?.drow2D(rect, dir);
     }
 
-    public drow3D(frot: T_Wall, back: T_Wall, dir: number = 0): void {
-        this.my_obj.view()?.drow3D(frot, back, dir);
+    public drow3D(
+        frot: T_Wall, 
+        back: T_Wall, 
+        o_dir: T_Direction = T_Direction.N, 
+        t_dir: T_Direction = T_Direction.N
+    ): void {
+        this.my_obj.view()?.drow3D(frot, back, o_dir, t_dir);
     }
 
     public encode(): string {

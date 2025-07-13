@@ -12,7 +12,7 @@ export const T_Direction = {
 } as const;
 export type T_Direction = T_MakeEnumType<typeof T_Direction>;
 
-export var $DirectionName = {
+export var DirectionName = {
     0:  '北',
     1:  '東',
     2:  '南',

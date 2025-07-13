@@ -26,6 +26,13 @@ export class C_CurrentTeamView  implements I_MazeObjView {
             default: return '🌀';
         }
     }
+    dir(): T_Direction {
+        return this.my_team.getWalker().get_d() ?? T_Direction.N;
+    }
+    set_dir(d: T_Direction): void {
+        this.my_team.getWalker().set_d(d);
+    }
+    
     public canShow(): boolean{return false}
     public pad_t():   number {return 0.0} 
     public pad_d():   number {return 0.0} 
