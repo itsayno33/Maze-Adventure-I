@@ -3,6 +3,7 @@ import { act_load_menu, act_save_menu } from "./F_save_menu";
 import { act_hres_menu }                from "./F_hres_menu";
 import { act_tomz_menu }                from "./F_tomz_menu";
 import { g_ctls, g_mvm, g_vsw }         from "./global_for_guild";
+import { act_tmpl_menu } from "./F_tmpl_menu";
 
 let menu_list: HTMLUListElement;
 let menu_crsr: C_CtlCursor;
@@ -123,8 +124,8 @@ function isOK(): void {
             act_hres_menu();
             break;
         case 'guld_tmpl': 
-            //g_ctls.deact();
-            //act_tmpl_menu();
+            g_ctls.deact();
+            act_tmpl_menu();
             break;
         case 'guld_shop': 
             //g_ctls.deact();

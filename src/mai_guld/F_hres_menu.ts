@@ -9,6 +9,7 @@ import { act_guld_menu }                 from "./F_guild_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { g_mvm, g_team, g_guld, g_ctls, g_vsw } from "./global_for_guild";
 
+
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
 

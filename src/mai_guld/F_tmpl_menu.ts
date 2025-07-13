@@ -8,6 +8,7 @@ import { _alert, g_mes }                 from "../d_cmn/global";
 import { act_guld_menu }                 from "./F_guild_menu";
 import { hero_info_clear, hero_info_create, hero_info_form_set }   from "./F_hero_menu";
 import { g_mvm, g_team, g_guld, g_ctls, g_vsw } from "./global_for_guild";
+import { _json_alert, _json_to_str } from '../d_utl/F_Utility';
 
 let dom_team_fields : HTMLFieldSetElement;
 let dom_team_list:    HTMLUListElement;
@@ -17,9 +18,6 @@ let dom_guld_list:    HTMLUListElement;
 
 let dom_menu_fields : HTMLFieldSetElement;
 let dom_menu_list:    HTMLUListElement;
-
-let dom_inpt_fields : HTMLFieldSetElement;
-let dom_inpt_list:    HTMLUListElement;
 
 let dom_hero_fields : HTMLFieldSetElement;
 let dom_hero_detail : HTMLUListElement;
@@ -72,10 +70,11 @@ export function init_tmpl_menu(): void {
 
 export function act_tmpl_menu(): void {
     mode    = 'view';
- 
+
+    update_all();
     if (exist_data()) {
         g_ctls.act(ctls_tmpl_nor);
-        g_vsw.view(g_vsw.Hres());
+        g_vsw.view(g_vsw.Tmpl());
         display_default_message(); 
     } else {
         act_guld_menu();
@@ -97,6 +96,7 @@ async function init_all(): Promise<boolean> {
 }
 
 function update_all(): void {
+    update_data_list();
     start_TGA();
     update_view();
     update_ctls();
@@ -270,9 +270,10 @@ function _OK_team_Fnc(this: HTMLLIElement, e: MouseEvent): void {
 }
 
 function clear_dom_team_list(): void {
-    while (dom_team_list.firstChild !== null) {
-        dom_team_list.removeChild(dom_team_list.firstChild);
-    }
+    dom_team_list.innerHTML = '';
+//    while (dom_team_list.firstChild !== null) {
+//        dom_team_list.removeChild(dom_team_list.firstChild);
+//    }
 }
 
 

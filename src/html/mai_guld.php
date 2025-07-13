@@ -245,7 +245,7 @@
             <li id='guld_tmpl'>寺院
                 <p>　冒険者の治療や解呪をします</p>
             </li>
-            <li id='guld_load'>故売屋
+            <li id='guld_shop'>故売屋
                 <p>　武器やアイテムの売り買いができます</p>
             </li>
             <li id='guld_load'>冒険の呼び出し

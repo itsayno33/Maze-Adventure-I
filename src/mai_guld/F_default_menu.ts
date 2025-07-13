@@ -1,6 +1,7 @@
 import { init_guld_menu, act_guld_menu }  from "./F_guild_menu";
 import { init_hres_menu }                 from "./F_hres_menu";
 import { init_load_menu, init_save_menu } from "./F_save_menu";
+import { init_tmpl_menu } from "./F_tmpl_menu";
 import { init_tomz_menu }                 from "./F_tomz_menu";
 import { g_ctls }                         from "./global_for_guild";
 
@@ -35,6 +36,8 @@ export function init_menu() {
 
     init_guld_menu(); 
     init_hres_menu(); 
+    init_tmpl_menu(); 
+    //init_shop_menu(); 
     init_load_menu(); 
     init_save_menu(); 
     init_tomz_menu(); 
