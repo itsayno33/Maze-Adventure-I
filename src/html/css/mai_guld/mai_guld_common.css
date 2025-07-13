@@ -254,7 +254,12 @@ h1 {
 #menu_list,
 #inpt_list,
 #tmpl_list,
+#tmpl_guld_list,
+#tmpl_menu_list,
 #shop_list,
+#shld_list,
+#item_list,
+#drag_list,
 #ldsv_list, 
 #maze_list,
 #mvpt_list
@@ -271,7 +276,10 @@ h1 {
 #inpt_list li,
 #tmpl_list li, 
 #shop_list li, 
-#ldsv_list li, 
+#arms_list li, 
+#shld_list li, 
+#item_list li, 
+#drag_list li, 
 #maze_list li,
 #mvpt_list li
 {
