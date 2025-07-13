@@ -26,13 +26,9 @@ let team_list: C_Hero[];
 let guld_list: C_Hero[];
 let hero_detail: {[key: string]: HTMLLIElement};
 
-let new_hres: C_Hero[] = [];
-
 type T_menu_list = {id: string, title: string, fnc: ()=>void}[];
 let menu_list_for_team: T_menu_list;
 let menu_list_for_guld: T_menu_list;
-
-let inpt_name_list: {[id: string]: {id: string, label: HTMLLabelElement, input: HTMLInputElement}};
 
 const T_TGA_mode: {[kind: string]: number}  = {
     Hide: 0,
