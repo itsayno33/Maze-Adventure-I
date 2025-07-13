@@ -709,7 +709,7 @@ function isRT(): void {
 }
 
 
-function display_default_message(): void {
+function display_default_message(gold: number = 0): void {
     switch (mode) {
         case 'view':
             g_mvm.normal_message('冒険者を指名してください');
@@ -718,13 +718,13 @@ function display_default_message(): void {
             g_mvm.normal_message('どうしますか？');
             break;
         case 'hprc':
-            g_mvm.normal_message('この人のＨＰを回復しますか？');
+            g_mvm.notice_message(`この人のＨＰを回復しますか？　${gold} Goldかかります`);
             break;
         case 'mprc':
-            g_mvm.normal_message('この人のＭＰを回復しますか？');
+            g_mvm.notice_message(`この人のＭＰを回復しますか？　${gold} Goldかかります`);
             break;
         case 'sick':
-            g_mvm.normal_message('この人の状態異常を治しますか？');
+            g_mvm.notice_message(`この人の状態異常を治しますか？　${gold} Goldかかります`);
             break;
         default:
             g_mvm.clear_message();
