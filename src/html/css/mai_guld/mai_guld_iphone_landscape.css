@@ -106,7 +106,7 @@
             [head-end foot-end tm_l-end ctls-end]
             3rem
             ;
-    --body_hres_rows:
+    --body_tmpl_rows:
             [head-start]
             auto
             [head-end tm_l-start tm_d-start]
@@ -133,7 +133,7 @@
             [head-end foot-end sp_l-end ctls-end]
             3rem
             ;
-    --body_hres_rows:
+    --body_shop_rows:
             [head-start]
             auto
             [head-end sp_l-start sp_d-start]
