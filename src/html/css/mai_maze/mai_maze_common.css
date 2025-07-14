@@ -568,6 +568,126 @@ article#pane_ctls_boad #div_ctls_boad {
 
 }
 
+#pane_bttl_scrn {
+    display: grid;
+    gap:     var(--bttl_scrn_gap, 1rem 1.5rem);
+    grid-template-areas: "bttl_view bttl_cmmd bttl_slct";
+}
+
+#div_bttl_view {
+    grid-area: bttl_view;
+
+    justify-self: center;
+    align-self: auto;
+
+    display: grid;
+    gap:     var(--bttl_view_gap, 1rem 1.5rem);
+    grid-template-areas: "bt_enmy_trT_nm bt_enmy_trT_ac bt_enmy_trT_st bt_enmy_trT_lv bt_enmy_trT_hp bt_enmy_trT_mp"
+                         "bt_enmy_tr0_nm bt_enmy_tr0_ac bt_enmy_tr0_st bt_enmy_tr0_lv bt_enmy_tr0_hp bt_enmy_tr0_mp"
+                         "bt_enmy_tr1_nm bt_enmy_tr1_ac bt_enmy_tr1_st bt_enmy_tr1_lv bt_enmy_tr1_hp bt_enmy_tr1_mp"
+                         "bt_enmy_tr2_nm bt_enmy_tr2_ac bt_enmy_tr2_st bt_enmy_tr2_lv bt_enmy_tr2_hp bt_enmy_tr2_mp"
+                         "bt_enmy_tr3_nm bt_enmy_tr3_ac bt_enmy_tr3_st bt_enmy_tr3_lv bt_enmy_tr3_hp bt_enmy_tr3_mp"
+                        ". . . . . ."
+                         "bt_team_trT_nm  bt_team_trT_ac  bt_team_trT_st  bt_team_trT_lv  bt_team_trT_hp  bt_team_trT_mp"
+                         "bt_team_tr0_nm  bt_team_tr0_ac  bt_team_tr0_st  bt_team_tr0_lv  bt_team_tr0_hp  bt_team_tr0_mp"
+                         "bt_team_tr1_nm  bt_team_tr1_ac  bt_team_tr1_st  bt_team_tr1_lv  bt_team_tr1_hp  bt_team_tr1_mp"
+                         "bt_team_tr2_nm  bt_team_tr2_ac  bt_team_tr2_st  bt_team_tr2_lv  bt_team_tr2_hp  bt_team_tr2_mp"
+                         "bt_team_tr3_nm  bt_team_tr3_ac  bt_team_tr3_st  bt_team_tr3_lv  bt_team_tr3_hp  bt_team_tr3_mp";
+}
+
+#bttl_enmy_trT_nm { grid-area: bt_enmy_trT_nm; }
+#bttl_enmy_trT_ac { grid-area: bt_enmy_trT_ac; }
+#bttl_enmy_trT_st { grid-area: bt_enmy_trT_st; }
+#bttl_enmy_trT_lv { grid-area: bt_enmy_trT_lv; }
+#bttl_enmy_trT_hp { grid-area: bt_enmy_trT_hp; }
+#bttl_enmy_trT_mp { grid-area: bt_enmy_trT_mp; }
+
+#bttl_enmy_tr0_nm { grid-area: bt_enmy_tr0_nm; }
+#bttl_enmy_tr0_ac { grid-area: bt_enmy_tr0_ac; }
+#bttl_enmy_tr0_st { grid-area: bt_enmy_tr0_st; }
+#bttl_enmy_tr0_lv { grid-area: bt_enmy_tr0_lv; }
+#bttl_enmy_tr0_hp { grid-area: bt_enmy_tr0_hp; }
+#bttl_enmy_tr0_mp { grid-area: bt_enmy_tr0_mp; }
+
+#bttl_enmy_tr1_nm { grid-area: bt_enmy_tr1_nm; }
+#bttl_enmy_tr1_ac { grid-area: bt_enmy_tr1_ac; }
+#bttl_enmy_tr1_st { grid-area: bt_enmy_tr1_st; }
+#bttl_enmy_tr1_lv { grid-area: bt_enmy_tr1_lv; }
+#bttl_enmy_tr1_hp { grid-area: bt_enmy_tr1_hp; }
+#bttl_enmy_tr1_mp { grid-area: bt_enmy_tr1_mp; }
+
+#bttl_enmy_tr2_nm { grid-area: bt_enmy_tr2_nm; }
+#bttl_enmy_tr2_ac { grid-area: bt_enmy_tr2_ac; }
+#bttl_enmy_tr2_st { grid-area: bt_enmy_tr2_st; }
+#bttl_enmy_tr2_lv { grid-area: bt_enmy_tr2_lv; }
+#bttl_enmy_tr2_hp { grid-area: bt_enmy_tr2_hp; }
+#bttl_enmy_tr2_mp { grid-area: bt_enmy_tr2_mp; }
+
+#bttl_enmy_tr3_nm { grid-area: bt_enmy_tr3_nm; }
+#bttl_enmy_tr3_ac { grid-area: bt_enmy_tr3_ac; }
+#bttl_enmy_tr3_st { grid-area: bt_enmy_tr3_st; }
+#bttl_enmy_tr3_lv { grid-area: bt_enmy_tr3_lv; }
+#bttl_enmy_tr3_hp { grid-area: bt_enmy_tr3_hp; }
+#bttl_enmy_tr3_mp { grid-area: bt_enmy_tr3_mp; }
+
+#bttl_team_trT_nm { grid-area: bt_team_trT_nm; }
+#bttl_team_trT_ac { grid-area: bt_team_trT_ac; }
+#bttl_team_trT_st { grid-area: bt_team_trT_st; }
+#bttl_team_trT_lv { grid-area: bt_team_trT_lv; }
+#bttl_team_trT_hp { grid-area: bt_team_trT_hp; }
+#bttl_team_trT_mp { grid-area: bt_team_trT_mp; }
+
+#bttl_team_tr0_nm { grid-area: bt_team_tr0_nm; }
+#bttl_team_tr0_ac { grid-area: bt_team_tr0_ac; }
+#bttl_team_tr0_st { grid-area: bt_team_tr0_st; }
+#bttl_team_tr0_lv { grid-area: bt_team_tr0_lv; }
+#bttl_team_tr0_hp { grid-area: bt_team_tr0_hp; }
+#bttl_team_tr0_mp { grid-area: bt_team_tr0_mp; }
+
+#bttl_team_tr1_nm { grid-area: bt_team_tr1_nm; }
+#bttl_team_tr1_ac { grid-area: bt_team_tr1_ac; }
+#bttl_team_tr1_st { grid-area: bt_team_tr1_st; }
+#bttl_team_tr1_lv { grid-area: bt_team_tr1_lv; }
+#bttl_team_tr1_hp { grid-area: bt_team_tr1_hp; }
+#bttl_team_tr1_mp { grid-area: bt_team_tr1_mp; }    
+
+#bttl_team_tr2_nm { grid-area: bt_team_tr2_nm; }
+#bttl_team_tr2_ac { grid-area: bt_team_tr2_ac; }
+#bttl_team_tr2_st { grid-area: bt_team_tr2_st; }
+#bttl_team_tr2_lv { grid-area: bt_team_tr2_lv; }
+#bttl_team_tr2_hp { grid-area: bt_team_tr2_hp; }
+#bttl_team_tr2_mp { grid-area: bt_team_tr2_mp; }
+
+#bttl_team_tr3_nm { grid-area: bt_team_tr3_nm; }
+#bttl_team_tr3_ac { grid-area: bt_team_tr3_ac; }
+#bttl_team_tr3_st { grid-area: bt_team_tr3_st; }
+#bttl_team_tr3_lv { grid-area: bt_team_tr3_lv; }
+#bttl_team_tr3_hp { grid-area: bt_team_tr3_hp; }
+#bttl_team_tr3_mp { grid-area: bt_team_tr3_mp; }
+
+
+
+
+
+#bttl_cmmd {
+    grid-area: bttl_cmmd;
+
+    justify-self:center;
+    align-self: auto;
+
+    display: grid;
+}
+
+#bttl_slct {
+    grid-area: bttl_slct;
+
+    justify-self:center;
+    align-self: auto;
+
+    display: grid;
+}
+
+/*
 #bttl_team_table,
 #bttl_enmy_table 
 { 
@@ -585,6 +705,20 @@ article#pane_ctls_boad #div_ctls_boad {
     white-space: nowrap;
 
 }
+*/
+
+#bttl_team_ul *,
+#bttl_enmy_ul * 
+{
+    color:       var(--bttl_table_text_color, darkgreen);
+    font-family: var(--bttl_table_font_family, sans-serif);
+    font-size:   var(--bttl_table_font_size,   0.8rem);
+    line-height: var(--bttl_table_line_heght,  1.0rem);
+    text-align:  center;
+    white-space: nowrap;
+
+}
+
 
 #bttl_team_tr0_nm,
 #bttl_team_tr1_nm,
