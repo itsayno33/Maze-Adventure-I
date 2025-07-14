@@ -346,44 +346,29 @@ function new_team(): Team {
                 </thead>
                 <tbody id='bttl_enmy_body'>
                     <tr id='bttl_enmy_trT'>
-                        <th id='bttl_enmy_trT_nm'>名前</th>
-                        <th id='bttl_enmy_trT_ac'>行動</th>
-                        <th id='bttl_enmy_trT_st'>状態</th>
-                        <th id='bttl_enmy_trT_lv'>Lv</th>
-                        <th id='bttl_enmy_trT_hp'>ＨＰ</th>
-                        <th id='bttl_enmy_trT_mp'>ＭＰ</th>
+                        <th id='bttl_enmy_trT_nmlv'>名前<br />Lv</th>
+                        <th id='bttl_enmy_trT_acst'>行動<br />状態</th>
+                        <th id='bttl_enmy_trT_hpmp'>ＨＰ<br />ＭＰ</th>
                     </tr>
                     <tr id='bttl_enmy_tr0'>
-                        <td id='bttl_enmy_tr0_nm'>a</td>
-                        <td id='bttl_enmy_tr0_ac'>b</td>
-                        <td id='bttl_enmy_tr0_st'>c</td>
-                        <td id='bttl_enmy_tr0_lv'>d</td>
-                        <td id='bttl_enmy_tr0_hp'>e</td>
-                        <td id='bttl_enmy_tr0_mp'>f</td>
+                        <td id='bttl_enmy_tr0_nmlv'>a</td>
+                        <td id='bttl_enmy_tr0_acst'>b</td>
+                        <td id='bttl_enmy_tr0_hpmt'>e</td>
                     </tr>
                     <tr id='bttl_enmy_tr1'>
-                        <td id='bttl_enmy_tr1_nm'>aaaaaaaaaaaaaaa</td>
-                        <td id='bttl_enmy_tr1_ac'>逃げる</td>
-                        <td id='bttl_enmy_tr1_st'>　正常　</td>
-                        <td id='bttl_enmy_tr1_lv'>10,000</td>
-                        <td id='bttl_enmy_tr1_hp'>10,000 / 10,000</td>
-                        <td id='bttl_enmy_tr1_mp'>10,000 / 10,000</td>
+                        <td id='bttl_enmy_tr1_nmlv'>aaaaaaaaaaaaaaa<br />10,000</td>
+                        <td id='bttl_enmy_tr1_acst'>逃げる</br>正常</td>
+                        <td id='bttl_enmy_tr1_hpmp'>10,000 / 10,000<br />10,000 / 10,000</td>
                     </tr>
                     <tr id='bttl_enmy_tr2'>
-                        <td id='bttl_enmy_tr2_nm'></td>
-                        <td id='bttl_enmy_tr2_ac'></td>
-                        <td id='bttl_enmy_tr2_st'></td>
-                        <td id='bttl_enmy_tr2_lv'></td>
-                        <td id='bttl_enmy_tr2_hp'></td>
-                        <td id='bttl_enmy_tr2_mp'></td>
+                        <td id='bttl_enmy_tr2_nmlv'></td>
+                        <td id='bttl_enmy_tr2_acst'></td>
+                        <td id='bttl_enmy_tr2_hpmp'></td>
                     </tr>
                     <tr id='bttl_enmy_tr3'>
-                        <td id='bttl_enmy_tr3_nm'></td>
-                        <td id='bttl_enmy_tr3_ac'></td>
-                        <td id='bttl_enmy_tr3_st'></td>
-                        <td id='bttl_enmy_tr3_lv'></td>
-                        <td id='bttl_enmy_tr3_hp'></td>
-                        <td id='bttl_enmy_tr3_mp'></td>
+                        <td id='bttl_enmy_tr3_nmlv'></td>
+                        <td id='bttl_enmy_tr3_acst'></td>
+                        <td id='bttl_enmy_tr3_hpmp'></td>
                     </tr>
                 </tbody>
             </table>
@@ -392,44 +377,29 @@ function new_team(): Team {
                     <tr><th id='bttl_team_h3' colspan="6">仲間：</th></tr>
                 </thead>
                     <tr id='bttl_team_trT'>
-                        <th id='bttl_team_trT_nm'>名前</th>
-                        <th id='bttl_team_trT_ac'>行動</th>
-                        <th id='bttl_team_trT_st'>状態</th>
-                        <th id='bttl_team_trT_lv'>Lv</th>
-                        <th id='bttl_team_trT_hp'>ＨＰ</th>
-                        <th id='bttl_team_trT_mp'>ＭＰ</th>
+                        <th id='bttl_team_trT_nmlv'>名前<br />Lv</th>
+                        <th id='bttl_team_trT_acst'>行動<br />状態</th>
+                        <th id='bttl_team_trT_hpmp'>ＨＰ<br />ＭＰ</th>
                     </tr>
                     <tr id='bttl_team_tr0'>
-                        <td id='bttl_team_tr0_nm'></td>
-                        <td id='bttl_team_tr0_ac'></td>
-                        <td id='bttl_team_tr0_st'></td>
-                        <td id='bttl_team_tr0_lv'></td>
-                        <td id='bttl_team_tr0_hp'></td>
-                        <td id='bttl_team_tr0_mp'></td>
+                        <td id='bttl_team_tr0_nmlv'></td>
+                        <td id='bttl_team_tr0_acst'></td>
+                        <td id='bttl_team_tr0_hpmp'></td>
                     </tr>
                     <tr id='bttl_team_tr1'>
-                        <td id='bttl_team_tr1_nm'></td>
-                        <td id='bttl_team_tr1_ac'></td>
-                        <td id='bttl_team_tr1_st'></td>
-                        <td id='bttl_team_tr1_lv'></td>
-                        <td id='bttl_team_tr1_hp'></td>
-                        <td id='bttl_team_tr1_mp'></td>
+                        <td id='bttl_team_tr1_nmlv'></td>
+                        <td id='bttl_team_tr1_acst'></td>
+                        <td id='bttl_team_tr1_hpmp'></td>
                     </tr>
                     <tr id='bttl_team_tr2'>
-                        <td id='bttl_team_tr2_nm'></td>
-                        <td id='bttl_team_tr2_ac'></td>
-                        <td id='bttl_team_tr2_st'></td>
-                        <td id='bttl_team_tr2_lv'></td>
-                        <td id='bttl_team_tr2_hp'></td>
-                        <td id='bttl_team_tr2_mp'></td>
+                        <td id='bttl_team_tr2_nmlv'></td>
+                        <td id='bttl_team_tr2_acst'></td>
+                        <td id='bttl_team_tr2_hpmp'></td>
                     </tr>
                     <tr id='bttl_team_tr3'>
-                        <td id='bttl_team_tr3_nm'></td>
-                        <td id='bttl_team_tr3_ac'></td>
-                        <td id='bttl_team_tr3_st'></td>
-                        <td id='bttl_team_tr3_lv'></td>
-                        <td id='bttl_team_tr3_hp'></td>
-                        <td id='bttl_team_tr3_mp'></td>
+                        <td id='bttl_team_tr3_nmlv'></td>
+                        <td id='bttl_team_tr3_acst'></td>
+                        <td id='bttl_team_tr3_hpmp'></td>
                     </tr>
                 </tbody>
             </table>
