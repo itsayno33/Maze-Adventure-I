@@ -5,6 +5,7 @@ export const T_ViewMode:{[mode: string]: string} = {
     Batt:     'batt',
     Menu:     'menu',
     LdSv:     'ldsv',
+    Bttl:     'bttl',
 } as const;
 export type T_ViewMode = T_MakeEnumType<typeof T_ViewMode>;
 
@@ -19,6 +20,7 @@ export class C_SwitchView {
     public Menu(): string {return T_ViewMode.Menu;}
     public MvPt(): string {return T_ViewMode.Menu;}
     public LdSv(): string {return T_ViewMode.LdSv;}
+    public Bttl(): string {return T_ViewMode.Bttl;}
 
     protected constructor() {
         C_SwitchView.all_class = Object.values(T_ViewMode);
@@ -32,6 +34,8 @@ export class C_SwitchView {
             C_SwitchView.article.menu_l = document.getElementById('pane_menu_list') as HTMLElement;
             C_SwitchView.article.ldsv_l = document.getElementById('pane_ldsv_list') as HTMLElement;
             C_SwitchView.article.ldsv_d = document.getElementById('pane_ldsv_data') as HTMLElement;
+            C_SwitchView.article.bttl_s = document.getElementById('pane_bttl_scrn') as HTMLElement;
+            C_SwitchView.article.bttl_m = document.getElementById('pane_bttl_mesg') as HTMLElement;            
             C_SwitchView.article.menu_m = document.getElementById('pane_menu_mesg') as HTMLElement;
             C_SwitchView.article.game_m = document.getElementById('pane_maze_mesg') as HTMLElement;
             C_SwitchView.article.contls = document.getElementById('pane_ctls_boad') as HTMLElement;
