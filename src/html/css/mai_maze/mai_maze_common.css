@@ -569,6 +569,31 @@ article#pane_ctls_boad #div_ctls_boad {
 }
 
 
+#bttl_team_table *,
+#bttl_enmy_table * 
+{
+    color:       var(--bttl_table_text_color, darkgreen);
+    font-family: var(--bttl_table_font_family, sans-serif);
+    font-size:   var(--bttl_table_font_size,   0.8rem);
+    line-height: var(--bttl_table_line_heght,  1.0rem);
+    text-align:  center;
+}
+
+#bttl_team_tr0_nm,
+#bttl_team_tr1_nm,
+#bttl_team_tr2_nm,
+#bttl_team_tr3_nm,
+#bttl_enmy_tr0_nm,
+#bttl_enmy_tr1_nm,
+#bttl_enmy_tr2_nm,
+#bttl_enmy_tr3_nm
+{
+    color:       var(--bttl_table_name_text_color, darkblue);
+    font-family: var(--bttl_table_name_font_family, sans-serif);
+    font-size:   var(--bttl_table_name_font_size,   0.8rem);
+    line-height: var(--bttl_table_name_line_heght,  1.0rem);
+    text-align:  left;
+}
 
 
 
