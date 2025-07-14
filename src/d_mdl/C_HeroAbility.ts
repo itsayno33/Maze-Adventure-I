@@ -73,13 +73,13 @@ export class C_HeroAbility implements I_JSON {
 
         const hl   = hero_level + 1; // ヒーローレベルの初期値
 
-        this.v.str =  _inrand(5,   20, 2.0) * hl;
-        this.v.pwr =  _inrand(5,   20, 2.0) * hl;
-        this.v.vit =  _inrand(5,   20, 2.0) * hl;
-        this.v.dex =  _inrand(5,   20, 2.0) * hl;
-        this.v.agi =  _inrand(5,   20, 2.0) * hl;
-        this.v.tec =  _inrand(5,   20, 2.0) * hl;
-        this.v.luk =  _inrand(5,   20, 2.0) * hl;
+        this.v.str +=  _inrand(5,   20, 2.0) * hl;
+        this.v.pwr +=  _inrand(5,   20, 2.0) * hl;
+        this.v.vit +=  _inrand(5,   20, 2.0) * hl;
+        this.v.dex +=  _inrand(5,   20, 2.0) * hl;
+        this.v.agi +=  _inrand(5,   20, 2.0) * hl;
+        this.v.tec +=  _inrand(5,   20, 2.0) * hl;
+        this.v.luk +=  _inrand(5,   20, 2.0) * hl;
 
         
         this.v.xd  =  0;

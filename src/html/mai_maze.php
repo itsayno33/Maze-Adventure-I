@@ -337,9 +337,28 @@ function new_team(): Team {
     </article>
     <article id ='pane_bttl_scrn'>
         <h2>バトル・モード</h2>
+        <div id='div_bttl_view'>
+            <div id='bttl_enmy'></div>
+            <div id='bttl_team'></div>
+        </div>
+        <div id='bttl_cmmd'>
+            <ul id='bttl_cmmd_ul'>
+                <li id='bttl_atk'>攻撃</li>
+                <li id='bttl_spl'>魔法</li>
+                <li id='bttl_def'>防御</li>
+                <li id='bttl_avd'>回避</li>
+                <li id='bttl_cvr'>かばう</li>
+                <li id='bttl_run'>逃げる</li>
+                <li id='bttl_use'>使う</li>
+                <li id='bttl_thr'>祈る</li>
+            </ul>
+        </div>
+        <div id='bttl_slct'></div>
     </article>
     <article id ='pane_bttl_mesg'>
-        <p id='bttl_mesg'>バトル・メッセージ</p>
+        <div id='bttl_mesg'>
+            <p id='bttl_mesg_p'>バトル・メッセージ</p>
+        </div>
     </article>
         <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
         <p id='menu_mesg'></p>
