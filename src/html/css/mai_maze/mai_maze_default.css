@@ -118,6 +118,33 @@
             [footer-end]
             ;
 
+    
+    --body_bttl_gap: 1rem 1.5rem;
+    --body_bttl_cols: 
+            var(--body_lyt_left_gap, 3rem)
+            [header-start footer-start message-start bttl_s-start bttl_m-start menu_m-start]
+            1fr
+            [bttl_m-end contls-start]
+            auto
+            [header-end footer-end bttl_s-end menu_m-end message-end contls-end]
+            var(--body_lyt_right_gap, 3rem)
+            ;
+    --body_bttl_rows:
+            [header-start]
+            var(--body_lyt_row_header_height,  100px)
+            [header-end menu_m-start]
+            auto
+            [menu_m-end bttl_s-start] 
+            auto
+            [bttl_s-end bttl_m-start contls-start]
+            1fr
+            [bttl_m-end contls-end message-start]
+            auto
+            [message-end footer-start]
+            var(--body_lyt_row_footer_height,  100px)
+            [footer-end]
+            ;
+
             
     
     --info_h2_font_size:  16px;

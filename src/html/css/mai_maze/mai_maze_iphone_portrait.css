@@ -144,6 +144,31 @@
         ;
 
 
+--body_bttl_gap: 1.5rem 0.5rem;
+--body_bttl_cols: 
+        0.5rem
+        [header-start footer-start bttl_s-start bttl_m-start contls-start message-start]
+        1fr
+        [header-end footer-end bttl_s-end bttl_m-end contls-end message-end]
+        0.5rem
+        ;
+--body_bttl_rows:
+        [header-start]
+        auto
+        [header-end bttl_s-start]
+        auto
+        [bttl_s-end bttl_m-start]
+        auto
+        [bttl_m-end contls-start] 
+        auto
+        [contls-end message-start]
+        auto
+        [message-end footer-start]
+        var(--body_lyt_row_footer_height,  100px)
+        [footer-end]
+        ;
+
+
     font-size: 16px;
 
     --viewCh_pre_margin:        0px;

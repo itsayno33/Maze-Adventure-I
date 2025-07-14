@@ -335,7 +335,8 @@ function new_team(): Team {
             </ul>
         </fieldset>
     </article>
-    <article id='pane_menu_mesg'>
+    <article id ='pane_bttl_scrn'></article>
+    <article id ='pane_bttl_mesg'></article>
         <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
         <p id='menu_mesg'></p>
         <button id='n_cp1' type='button' name='n_cp1' value='N'>いいえ（Ｎ）</button>
@@ -345,6 +346,7 @@ function new_team(): Team {
     <article id='pane_maze_mesg'>
         <p id='maze_mesg'></p>
     </article>
+    <article id='pane_menu_mesg'>
     <article id ='pane_ctls_boad'> 
         <div id ='div_ctls_boad'>
         <div id='ctls_boad'>

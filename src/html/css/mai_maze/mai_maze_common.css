@@ -49,7 +49,9 @@ body.move {
 #pane_menu_list.move,
 #pane_ldsv_list.move,
 #pane_ldsv_data.move,
-#pane_menu_mesg.move 
+#pane_menu_mesg.move,
+#pane_bttl_scrn.move,
+#pane_bttl_mesg.move
 {display: none;}
 
 
@@ -72,7 +74,9 @@ body.menu {
 #pane_maze_vw3D.menu,
 #pane_ldsv_list.menu,
 #pane_ldsv_data.menu,
-#pane_maze_mesg.menu 
+#pane_maze_mesg.menu,
+#pane_bttl_scrn.menu,
+#pane_bttl_mesg.menu
 {display: none;}
 
 
@@ -95,7 +99,34 @@ body.ldsv {
 #pane_maze_vw2m.ldsv,
 #pane_maze_vw3D.ldsv,
 #pane_menu_list.ldsv,
-#pane_maze_mesg.ldsv 
+#pane_maze_mesg.ldsv, 
+#pane_bttl_scrn.ldsv,
+#pane_bttl_mesg.ldsv
+{display: none; }
+
+
+/* 戦闘画面のレイアウト関係 */
+body.bttl {
+    display: grid;
+    gap:                   var(--body_bttl_gap, 1rem 1.5rem);
+    grid-template-columns: var(--body_bttl_cols);
+    grid-template-rows:    var(--body_bttl_rows);
+}
+
+#pane_bttl_scrn.bttl,
+#pane_bttl_mesg.bttl,
+#pane_menu_mesg.bttl,
+#pane_ctls_boad.bttl,
+#pane_sytm_logs.bttl
+{display: block;}
+
+#pane_maze_vw2D.bttl,
+#pane_maze_vw2m.bttl,
+#pane_maze_vw3D.bttl,
+#pane_menu_list.bttl,
+#pane_maze_mesg.bttl, 
+#pane_ldsv_list.bttl,
+#pane_ldsv_data.bttl
 {display: none; }
 
 
@@ -106,6 +137,8 @@ body.ldsv {
 #pane_menu_list {grid-area: menu_l;}
 #pane_ldsv_list {grid-area: ldsv_l;}
 #pane_ldsv_data {grid-area: ldsv_d;}
+#pane_bttl_scrn {grid-area: bttl_s;}
+#pane_bttl_mesg {grid-area: bttl_m;}
 #pane_menu_mesg {grid-area: menu_m;}
 #pane_maze_mesg {grid-area: maze_m;}
 #pane_ctls_boad {grid-area: contls;}
