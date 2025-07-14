@@ -568,12 +568,30 @@ article#pane_ctls_boad #div_ctls_boad {
 
 }
 
-#pane_bttl_scrn {
+
+
+/* 
+ *  戦闘画面のレイアウト関係 *
+ */
+
+
+#div_bttl_scrn {
     display: grid;
     gap:     var(--bttl_scrn_gap, 1rem 1.5rem);
-    grid-template-areas: "bttl_enmy_view bttl_cmmd bttl_slct"
+    grid-template-areas: "bttl_enmy_h3   bttl_cmmd bttl_slct"
+                         "bttl_enmy_view bttl_cmmd bttl_slct"
+                         "bttl_team_h3   bttl_cmmd bttl_slct"
                          "bttl_team_view bttl_cmmd bttl_slct";
 }
+
+#bttl_enmy_h3   { grid-area: bttl_enmy_h3; }
+#bttl_enmy_ul   { grid-area: bttl_enmy_view; }
+#bttl_team_h3   { grid-area: bttl_team_h3; }
+#bttl_team_ul   { grid-area: bttl_team_view; }
+#bttl_cmmd_ul   { grid-area: bttl_cmmd; }
+#bttl_slct_ul   { grid-area: bttl_slct; }
+
+
 
 #bttl_enmy_ul {
     grid-area: bttl_enmy_view;
@@ -604,6 +622,13 @@ article#pane_ctls_boad #div_ctls_boad {
                          "bt_team_tr2_nm  bt_team_tr2_ac  bt_team_tr2_st  bt_team_tr2_lv  bt_team_tr2_hp  bt_team_tr2_mp"
                          "bt_team_tr3_nm  bt_team_tr3_ac  bt_team_tr3_st  bt_team_tr3_lv  bt_team_tr3_hp  bt_team_tr3_mp";
 }
+
+#bttl_enmy_ul li { display: grid;}
+#bttl_team_ul li { display: grid;}
+
+#bttl_enmy_ul li span { display: grid;}
+#bttl_team_ul li span { display: grid;}
+
 
 #bttl_enmy_trT_nm { grid-area: bt_enmy_trT_nm; }
 #bttl_enmy_trT_ac { grid-area: bt_enmy_trT_ac; }
@@ -756,7 +781,7 @@ article#pane_ctls_boad #div_ctls_boad {
     padding-top:    0.5em;
     padding-bottom: 0.5em;
 
-    column-count: var(--bttl_cmmd_list_cols, 2);
+    column-count: var(--bttl_cmmd_list_cols, 1);
 }
 
 #bttl_slct_ul {
@@ -772,6 +797,10 @@ article#pane_ctls_boad #div_ctls_boad {
     column-count: var(--bttl_slct_list_cols, 2);
 }
 
+
+/*
+ *  システムログのレイアウト関係 *
+ */
 
 
 #pane_sytm_logs {
