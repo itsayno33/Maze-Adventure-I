@@ -335,8 +335,12 @@ function new_team(): Team {
             </ul>
         </fieldset>
     </article>
-    <article id ='pane_bttl_scrn'></article>
-    <article id ='pane_bttl_mesg'></article>
+    <article id ='pane_bttl_scrn'>
+        <h2>バトル・モード</h2>
+    </article>
+    <article id ='pane_bttl_mesg'>
+        <p id='bttl_mesg'>バトル・メッセージ</p>
+    </article>
         <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
         <p id='menu_mesg'></p>
         <button id='n_cp1' type='button' name='n_cp1' value='N'>いいえ（Ｎ）</button>
