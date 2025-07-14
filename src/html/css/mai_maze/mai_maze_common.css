@@ -577,50 +577,66 @@ article#pane_ctls_boad #div_ctls_boad {
 
 #div_bttl_scrn {
     display: grid;
-    gap:     var(--bttl_scrn_gap, 1rem 1.5rem);
-    grid-template-areas: "bttl_enmy_h3   bttl_cmmd bttl_slct"
-                         "bttl_enmy_view bttl_cmmd bttl_slct"
-                         "bttl_team_h3   bttl_cmmd bttl_slct"
-                         "bttl_team_view bttl_cmmd bttl_slct";
+    gap: 0.5rem 0.5rem;
+    grid-template-areas: "bttl_enmy_h3 bttl_cmmd bttl_slct"
+                         "bttl_enmy_ul bttl_cmmd bttl_slct"
+                         "bttl_team_h3 bttl_cmmd bttl_slct"
+                         "bttl_team_ul bttl_cmmd bttl_slct";
 }
 
 #bttl_enmy_h3   { grid-area: bttl_enmy_h3; }
-#bttl_enmy_ul   { grid-area: bttl_enmy_view; }
+#bttl_enmy_ul   { grid-area: bttl_enmy_ul; }
 #bttl_team_h3   { grid-area: bttl_team_h3; }
-#bttl_team_ul   { grid-area: bttl_team_view; }
+#bttl_team_ul   { grid-area: bttl_team_ul; }
 #bttl_cmmd_ul   { grid-area: bttl_cmmd; }
 #bttl_slct_ul   { grid-area: bttl_slct; }
 
 
 
 #bttl_enmy_ul {
-    grid-area: bttl_enmy_view;
-
     justify-self: center;
     align-self: auto;
 
     display: grid;
-    gap:     var(--bttl_view_gap, 1rem 1.5rem);
-    grid-template-areas: "bt_enmy_trT_nm bt_enmy_trT_ac bt_enmy_trT_st bt_enmy_trT_lv bt_enmy_trT_hp bt_enmy_trT_mp"
-                         "bt_enmy_tr0_nm bt_enmy_tr0_ac bt_enmy_tr0_st bt_enmy_tr0_lv bt_enmy_tr0_hp bt_enmy_tr0_mp"
-                         "bt_enmy_tr1_nm bt_enmy_tr1_ac bt_enmy_tr1_st bt_enmy_tr1_lv bt_enmy_tr1_hp bt_enmy_tr1_mp"
-                         "bt_enmy_tr2_nm bt_enmy_tr2_ac bt_enmy_tr2_st bt_enmy_tr2_lv bt_enmy_tr2_hp bt_enmy_tr2_mp"
-                         "bt_enmy_tr3_nm bt_enmy_tr3_ac bt_enmy_tr3_st bt_enmy_tr3_lv bt_enmy_tr3_hp bt_enmy_tr3_mp";
+    row-gap: 0.5rem;
+    grid-template-areas: 
+                        "bt_enmy_trT"
+                        "bt_enmy_tr0"
+                        "bt_enmy_tr1"
+                        "bt_enmy_tr2"
+                        "bt_enmy_tr3";
 }
 
-#bttl_team_ul {
-    grid-area: bttl_team_view;
+#bttl_enmy_trT { grid-area: bt_enmy_trT; }
+#bttl_enmy_tr0 { grid-area: bt_enmy_tr0; }
+#bttl_enmy_tr1 { grid-area: bt_enmy_tr1; }
+#bttl_enmy_tr2 { grid-area: bt_enmy_tr2; }
+#bttl_enmy_tr3 { grid-area: bt_enmy_tr3; }
 
-    justify-self: center;
-    align-self: auto;
-
+#bttl_enmy_trT {
     display: grid;
-    gap:     var(--bttl_view_gap, 1rem 1.5rem);
-    grid-template-areas: "bt_team_trT_nm  bt_team_trT_ac  bt_team_trT_st  bt_team_trT_lv  bt_team_trT_hp  bt_team_trT_mp"
-                         "bt_team_tr0_nm  bt_team_tr0_ac  bt_team_tr0_st  bt_team_tr0_lv  bt_team_tr0_hp  bt_team_tr0_mp"
-                         "bt_team_tr1_nm  bt_team_tr1_ac  bt_team_tr1_st  bt_team_tr1_lv  bt_team_tr1_hp  bt_team_tr1_mp"
-                         "bt_team_tr2_nm  bt_team_tr2_ac  bt_team_tr2_st  bt_team_tr2_lv  bt_team_tr2_hp  bt_team_tr2_mp"
-                         "bt_team_tr3_nm  bt_team_tr3_ac  bt_team_tr3_st  bt_team_tr3_lv  bt_team_tr3_hp  bt_team_tr3_mp";
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_trT_nm bt_enmy_trT_ac bt_enmy_trT_st bt_enmy_trT_lv bt_enmy_trT_hp bt_enmy_trT_mp"
+}
+#bttl_enmy_tr0 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr0_nm bt_enmy_tr0_ac bt_enmy_tr0_st bt_enmy_tr0_lv bt_enmy_tr0_hp bt_enmy_tr0_mp"
+}
+#bttl_enmy_tr1 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr1_nm bt_enmy_tr1_ac bt_enmy_tr1_st bt_enmy_tr1_lv bt_enmy_tr1_hp bt_enmy_tr1_mp"
+}
+#bttl_enmy_tr2 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr2_nm bt_enmy_tr2_ac bt_enmy_tr2_st bt_enmy_tr2_lv bt_enmy_tr2_hp bt_enmy_tr2_mp"
+}
+#bttl_enmy_tr3 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr3_nm bt_enmy_tr3_ac bt_enmy_tr3_st bt_enmy_tr3_lv bt_enmy_tr3_hp bt_enmy_tr3_mp"
 }
 
 #bttl_enmy_ul li { display: grid;}
@@ -768,6 +784,18 @@ article#pane_ctls_boad #div_ctls_boad {
     font-family: var(--bttl_table_name_font_family, sans-serif);
     font-size:   var(--bttl_table_name_font_size,   0.8rem);
     line-height: var(--bttl_table_name_line_heght,  1.0rem);
+    text-align:  left;
+}
+
+#bttl_team_tr0_ac,
+#bttl_team_tr1_ac,
+#bttl_team_tr2_ac,
+#bttl_team_tr3_ac,
+#bttl_enmy_tr0_ac,
+#bttl_enmy_tr1_ac,
+#bttl_enmy_tr2_ac,
+#bttl_enmy_tr3_ac
+{
     text-align:  left;
 }
 

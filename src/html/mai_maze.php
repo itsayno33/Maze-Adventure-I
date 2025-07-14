@@ -343,12 +343,12 @@ function new_team(): Team {
             <h3 id='bttl_enmy_h3'>敵：</h3>
             <ul id='bttl_enmy_ul'>
                 <li id='bttl_enmy_trT'>
-                    <li id='bttl_enmy_trT_nm'>名前</li>
-                    <li id='bttl_enmy_trT_ac'>行動</li>
-                    <li id='bttl_enmy_trT_st'>状態</li>
-                    <li id='bttl_enmy_trT_lv'>Lv</li>
-                    <li id='bttl_enmy_trT_hp'>ＨＰ</li>
-                    <li id='bttl_enmy_trT_mp'>ＭＰ</li>
+                    <span id='bttl_enmy_trT_nm'>名前</span>
+                    <span id='bttl_enmy_trT_ac'>行動</span>
+                    <span id='bttl_enmy_trT_st'>状態</span>
+                    <span id='bttl_enmy_trT_lv'>Lv</span>
+                    <span id='bttl_enmy_trT_hp'>ＨＰ</span>
+                    <span id='bttl_enmy_trT_mp'>ＭＰ</span>
                 </li>
                 <li id='bttl_enmy_tr0'>
                     <span id='bttl_enmy_tr0_nm'>a</span>
@@ -359,12 +359,12 @@ function new_team(): Team {
                     <span id='bttl_enmy_tr0_mp'>f</span>
                 </li>
                 <li id='bttl_enmy_tr1'>
-                    <span id='bttl_enmy_tr1_nm'></span>
-                    <span id='bttl_enmy_tr1_ac'></span>
-                    <span id='bttl_enmy_tr1_st'></span>
-                    <span id='bttl_enmy_tr1_lv'></span>
-                    <span id='bttl_enmy_tr1_hp'></span>
-                    <span id='bttl_enmy_tr1_mp'></span>
+                    <span id='bttl_enmy_tr1_nm'>aaaaaaaaaaaaaaa</span>
+                    <span id='bttl_enmy_tr1_ac'>逃げる</span>
+                    <span id='bttl_enmy_tr1_st'>　正常　</span>
+                    <span id='bttl_enmy_tr1_lv'>10,000</span>
+                    <span id='bttl_enmy_tr1_hp'>10,000 / 10,000</span>
+                    <span id='bttl_enmy_tr1_mp'>10,000 / 10,000</span>
                 </li>
                 <li id='bttl_enmy_tr2'>
                     <span id='bttl_enmy_tr2_nm'></span>
@@ -386,12 +386,12 @@ function new_team(): Team {
             <h3 id = 'bttl_team_h3'>仲間：</h3>
             <ul id='bttl_team_ul'>
                 <li id='bttl_team_trT'>
-                    <li id='bttl_team_trT_nm'>名前</li>
-                    <li id='bttl_team_trT_ac'>行動</li>
-                    <li id='bttl_team_trT_st'>状態</li>
-                    <li id='bttl_team_trT_lv'>Lv</li>
-                    <li id='bttl_team_trT_hp'>ＨＰ</li>
-                    <li id='bttl_team_trT_mp'>ＭＰ</li>
+                    <span id='bttl_team_trT_nm'>名前</span>
+                    <span id='bttl_team_trT_ac'>行動</span>
+                    <span id='bttl_team_trT_st'>状態</span>
+                    <span id='bttl_team_trT_lv'>Lv</span>
+                    <span id='bttl_team_trT_hp'>ＨＰ</span>
+                    <span id='bttl_team_trT_mp'>ＭＰ</span>
                 </li>
                 <li id='bttl_team_tr0'>
                     <span id='bttl_team_tr0_nm'></span>
