@@ -338,8 +338,98 @@ function new_team(): Team {
     <article id ='pane_bttl_scrn'>
         <h2>バトル・モード</h2>
         <div id='div_bttl_view'>
-            <div id='bttl_enmy'></div>
-            <div id='bttl_team'></div>
+            <div id='bttl_enmy'>
+                <table id='bttl_enmy_table'>
+                    <tbody id='bttl_enmy_tbody'>
+                        <tr id='bttl_enmy_trT'>
+                            <th id='bttl_enmy_trT_nm'>名前</th>
+                            <th id='bttl_enmy_trT_ac'>行動</th>
+                            <th id='bttl_enmy_trT_st'>状態</th>
+                            <th id='bttl_enmy_trT_lv'>Lv</th>
+                            <th id='bttl_enmy_trT_hp'>ＨＰ</th>
+                            <th id='bttl_enmy_trT_mp'>ＭＰ</th>
+                        </tr>
+                        <tr id='bttl_enmy_tr0'>
+                            <td id='bttl_enmy_tr0_nm'></td>
+                            <td id='bttl_enmy_tr0_ac'></td>
+                            <td id='bttl_enmy_tr0_st'></td>
+                            <td id='bttl_enmy_tr0_lv'></td>
+                            <td id='bttl_enmy_tr0_hp'></td>
+                            <td id='bttl_enmy_tr0_mp'></td>
+                        </tr>
+                        <tr id='bttl_enmy_tr1'>
+                            <td id='bttl_enmy_tr1_nm'></td>
+                            <td id='bttl_enmy_tr1_ac'></td>
+                            <td id='bttl_enmy_tr1_st'></td>
+                            <td id='bttl_enmy_tr1_lv'></td>
+                            <td id='bttl_enmy_tr1_hp'></td>
+                            <td id='bttl_enmy_tr1_mp'></td>
+                        </tr>
+                        <tr id='bttl_enmy_tr2'>
+                            <td id='bttl_enmy_tr2_nm'></td>
+                            <td id='bttl_enmy_tr2_ac'></td>
+                            <td id='bttl_enmy_tr2_st'></td>
+                            <td id='bttl_enmy_tr2_lv'></td>
+                            <td id='bttl_enmy_tr2_hp'></td>
+                            <td id='bttl_enmy_tr2_mp'></td>
+                        </tr>
+                        <tr id='bttl_enmy_tr3'>
+                            <td id='bttl_enmy_tr3_nm'></td>
+                            <td id='bttl_enmy_tr3_ac'></td>
+                            <td id='bttl_enmy_tr3_st'></td>
+                            <td id='bttl_enmy_tr3_lv'></td>
+                            <td id='bttl_enmy_tr3_hp'></td>
+                            <td id='bttl_enmy_tr3_mp'></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id='bttl_team'>
+                <table id='bttl_team_table'>
+                    <tbody id='bttl_team_tbody'>
+                        <tr id='bttl_team_trT'>
+                            <th id='bttl_team_trT_nm'>名前</th>
+                            <th id='bttl_team_trT_ac'>行動</th>
+                            <th id='bttl_team_trT_st'>状態</th>
+                            <th id='bttl_team_trT_lv'>Lv</th>
+                            <th id='bttl_team_trT_hp'>ＨＰ</th>
+                            <th id='bttl_team_trT_mp'>ＭＰ</th>
+                        </tr>
+                        <tr id='bttl_team_tr0'>
+                            <td id='bttl_team_tr0_nm'></td>
+                            <td id='bttl_team_tr0_ac'></td>
+                            <td id='bttl_team_tr0_st'></td>
+                            <td id='bttl_team_tr0_lv'></td>
+                            <td id='bttl_team_tr0_hp'></td>
+                            <td id='bttl_team_tr0_mp'></td>
+                        </tr>
+                        <tr id='bttl_team_tr1'>
+                            <td id='bttl_team_tr1_nm'></td>
+                            <td id='bttl_team_tr1_ac'></td>
+                            <td id='bttl_team_tr1_st'></td>
+                            <td id='bttl_team_tr1_lv'></td>
+                            <td id='bttl_team_tr1_hp'></td>
+                            <td id='bttl_team_tr1_mp'></td>
+                        </tr>
+                        <tr id='bttl_team_tr2'>
+                            <td id='bttl_team_tr2_nm'></td>
+                            <td id='bttl_team_tr2_ac'></td>
+                            <td id='bttl_team_tr2_st'></td>
+                            <td id='bttl_team_tr2_lv'></td>
+                            <td id='bttl_team_tr2_hp'></td>
+                            <td id='bttl_team_tr2_mp'></td>
+                        </tr>
+                        <tr id='bttl_team_tr3'>
+                            <td id='bttl_team_tr3_nm'></td>
+                            <td id='bttl_team_tr3_ac'></td>
+                            <td id='bttl_team_tr3_st'></td>
+                            <td id='bttl_team_tr3_lv'></td>
+                            <td id='bttl_team_tr3_hp'></td>
+                            <td id='bttl_team_tr3_mp'></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
         <div id='bttl_cmmd'>
             <ul id='bttl_cmmd_ul'>
@@ -356,8 +446,8 @@ function new_team(): Team {
         <div id='bttl_slct'></div>
     </article>
     <article id ='pane_bttl_mesg'>
+        <h2 id='bttl_mesg_p'>バトル・メッセージ</h2>
         <div id='bttl_mesg'>
-            <p id='bttl_mesg_p'>バトル・メッセージ</p>
         </div>
     </article>
         <button id='r_cp1' type='button' name='r_cp1' value='R'>戻る（Ｒ）</button>
