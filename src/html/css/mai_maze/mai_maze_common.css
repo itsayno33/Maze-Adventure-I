@@ -616,14 +616,15 @@ article#pane_ctls_boad #div_ctls_boad {
 }
 */
 
-#bttl_scrn 
+#bttl_enmy,
+#bttl_team 
 { 
     border:#0000ff solid 1px;
     border-radius: 0.5rem;
 }
 
-#bttl_scrn *,
-#bttl_scrn * 
+#bttl_enmy *,
+#bttl_team * 
 {
     color:       var(--bttl_table_text_color, darkgreen);
     font-family: var(--bttl_table_font_family, sans-serif);
@@ -631,8 +632,10 @@ article#pane_ctls_boad #div_ctls_boad {
     line-height: var(--bttl_table_line_heght,  1.0rem);
     text-align:  center;
     white-space: nowrap;
+    /******************
     border:#0000ff solid 1px;
     margin: 0%;
+    *******************/
 
 }
 

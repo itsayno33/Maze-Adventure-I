@@ -340,9 +340,11 @@ function new_team(): Team {
     <article id ='pane_bttl_scrn'>
         <h2 id="bttl_h2">バトル・モード</h2>
         <div id='div_bttl_scrn'>
-            <table id='bttl_scrn' bordercolor="#0000ff">
-                <tbody id='bttl_enmy_body'>
+            <table id='bttl_enmy' bordercolor="#0000ff">
+                <thead>
                     <tr><th id='bttl_enmy_h3' colspan="6">敵：</th></tr>
+                </thead>
+                <tbody id='bttl_enmy_body'>
                     <tr id='bttl_enmy_trT'>
                         <th id='bttl_enmy_trT_nm'>名前</th>
                         <th id='bttl_enmy_trT_ac'>行動</th>
@@ -383,7 +385,12 @@ function new_team(): Team {
                         <td id='bttl_enmy_tr3_hp'></td>
                         <td id='bttl_enmy_tr3_mp'></td>
                     </tr>
-                    <tr><th id='bttl_enmy_h3' colspan="6">仲間：</th></tr>
+                </tbody>
+            </table>
+            <table id='bttl_team' bordercolor="#0000ff">
+                <thead>
+                    <tr><th id='bttl_team_h3' colspan="6">仲間：</th></tr>
+                </thead>
                     <tr id='bttl_team_trT'>
                         <th id='bttl_team_trT_nm'>名前</th>
                         <th id='bttl_team_trT_ac'>行動</th>
