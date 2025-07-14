@@ -639,6 +639,11 @@ article#pane_ctls_boad #div_ctls_boad {
 
 }
 
+#bttl_enmy_h3,
+#bttl_team_h3
+{
+    text-align: left;
+}
 
 #bttl_team_tr0_nm,
 #bttl_team_tr1_nm,
