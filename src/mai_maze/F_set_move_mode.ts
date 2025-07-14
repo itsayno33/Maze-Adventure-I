@@ -20,8 +20,6 @@ import {
     g_ctls,
     g_ds,
     g_hres,
-    g_view2D,
-    g_view2M,
     g_hresInfo,
     g_obje,
     clr_g_obje, 
@@ -236,7 +234,7 @@ function hero_on_event(): void {
         if (o === undefined) continue;
         if (o instanceof C_Team) continue;   // C_TeamもObjとして登録されているが無視する
         // 各オブジェクトのイベントを処理
-        if (o.within(pos)) {
+        if (o.within(pos)) {                              // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
             o.free();
             g_maze.rmv_obj(o);
         }

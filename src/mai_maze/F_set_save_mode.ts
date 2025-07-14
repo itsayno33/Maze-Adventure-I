@@ -3,7 +3,6 @@ import { C_UrlOpt }            from "../d_utl/C_UrlOpt";
 import { T_Lckd }              from "../d_mdl/C_Location";
 import { C_PointDir }          from "../d_mdl/C_PointDir";
 import { I_MazeObj  }          from "../d_mdl/C_MazeObj";
-import { C_SaveData }          from "../d_mdl/C_SaveData";
 import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
@@ -18,9 +17,6 @@ import {
     g_maze, 
     g_team, 
     g_hres,
-    g_view2D,
-    g_view2M,
-    g_obje,
     g_hresInfo,
     clr_g_hres,
     clr_g_obje,
@@ -28,9 +24,6 @@ import {
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
 import { C_SaveInfo } from "../d_mdl/C_SaveInfo";
-import { C_WndrView } from "../d_mdl/C_WndrView";
-import { C_WndrWalker, I_WndrWalker } from '../d_mdl/C_WndrWalker';
-import { C_DrowMap2D, C_DrowMap2X } from "./C_DrowMap2X";
 
 let   for_save: boolean  = false;
 
