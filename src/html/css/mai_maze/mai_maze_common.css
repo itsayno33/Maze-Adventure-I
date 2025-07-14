@@ -579,6 +579,7 @@ article#pane_ctls_boad #div_ctls_boad {
     display: grid;
     gap: 0.5rem 0.5rem;
     grid-template-areas:
+        "bt_scrn bt_cmmd bt_slct"
         "bt_scrn bt_cmmd bt_slct";
 }
 
