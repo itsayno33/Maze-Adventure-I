@@ -339,7 +339,7 @@ function new_team(): Team {
         <h2>バトル・モード</h2>
         <div id='div_bttl_view'>
             <div id='bttl_enmy'>
-                <h3>敵：</h3>
+                <h3 id='bttl_enmy_h3'>敵：</h3>
                 <ul id='bttl_enmy_ul'>
                     <li id='bttl_enmy_trT'>
                         <li id='bttl_enmy_trT_nm'>名前</li>
@@ -384,7 +384,7 @@ function new_team(): Team {
                 </ul>
             </div>
             <div id='bttl_team'>
-                <h3>仲間</h3>
+                <h3 id = 'bttl_team_h3'>仲間：</h3>
                 <ul id='bttl_team_ul'>
                     <li id='bttl_team_trT'>
                         <li id='bttl_team_trT_nm'>名前</li>
