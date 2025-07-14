@@ -578,14 +578,144 @@ article#pane_ctls_boad #div_ctls_boad {
 #div_bttl_scrn {
     display: grid;
     gap: 0.5rem 0.5rem;
-    grid-template-areas:
-        "bt_scrn bt_cmmd bt_slct";
+    grid-template-areas: "bttl_enmy_h3 bttl_cmmd bttl_slct"
+                         "bttl_enmy_ul bttl_cmmd bttl_slct"
+                         "bttl_team_h3 bttl_cmmd bttl_slct"
+                         "bttl_team_ul bttl_cmmd bttl_slct";
 }
 
-#bttl_h2      { grid-area: bt_h2; }
-#bttl_scrn    { grid-area: bt_scrn; }
-#bttl_cmmd_ul { grid-area: bt_cmmd; }
-#bttl_slct_ul { grid-area: bt_slct; }
+#bttl_enmy_h3   { grid-area: bttl_enmy_h3; }
+#bttl_enmy_ul   { grid-area: bttl_enmy_ul; }
+#bttl_team_h3   { grid-area: bttl_team_h3; }
+#bttl_team_ul   { grid-area: bttl_team_ul; }
+#bttl_cmmd_ul   { grid-area: bttl_cmmd; }
+#bttl_slct_ul   { grid-area: bttl_slct; }
+
+
+
+#bttl_enmy_ul {
+    justify-self: center;
+    align-self: auto;
+
+    display: grid;
+    row-gap: 0.5rem;
+    grid-template-areas: 
+                        "bt_enmy_trT"
+                        "bt_enmy_tr0"
+                        "bt_enmy_tr1"
+                        "bt_enmy_tr2"
+                        "bt_enmy_tr3";
+}
+
+#bttl_enmy_trT { grid-area: bt_enmy_trT; }
+#bttl_enmy_tr0 { grid-area: bt_enmy_tr0; }
+#bttl_enmy_tr1 { grid-area: bt_enmy_tr1; }
+#bttl_enmy_tr2 { grid-area: bt_enmy_tr2; }
+#bttl_enmy_tr3 { grid-area: bt_enmy_tr3; }
+
+#bttl_enmy_trT {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_trT_nm bt_enmy_trT_ac bt_enmy_trT_st bt_enmy_trT_lv bt_enmy_trT_hp bt_enmy_trT_mp"
+}
+#bttl_enmy_tr0 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr0_nm bt_enmy_tr0_ac bt_enmy_tr0_st bt_enmy_tr0_lv bt_enmy_tr0_hp bt_enmy_tr0_mp"
+}
+#bttl_enmy_tr1 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr1_nm bt_enmy_tr1_ac bt_enmy_tr1_st bt_enmy_tr1_lv bt_enmy_tr1_hp bt_enmy_tr1_mp"
+}
+#bttl_enmy_tr2 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr2_nm bt_enmy_tr2_ac bt_enmy_tr2_st bt_enmy_tr2_lv bt_enmy_tr2_hp bt_enmy_tr2_mp"
+}
+#bttl_enmy_tr3 {
+    display: grid;
+    column-gap: 0.5rem;
+    grid-template-areas: "bt_enmy_tr3_nm bt_enmy_tr3_ac bt_enmy_tr3_st bt_enmy_tr3_lv bt_enmy_tr3_hp bt_enmy_tr3_mp"
+}
+
+#bttl_enmy_ul li { display: grid;}
+#bttl_team_ul li { display: grid;}
+
+#bttl_enmy_ul li span { display: grid;}
+#bttl_team_ul li span { display: grid;}
+
+
+#bttl_enmy_trT_nm { grid-area: bt_enmy_trT_nm; }
+#bttl_enmy_trT_ac { grid-area: bt_enmy_trT_ac; }
+#bttl_enmy_trT_st { grid-area: bt_enmy_trT_st; }
+#bttl_enmy_trT_lv { grid-area: bt_enmy_trT_lv; }
+#bttl_enmy_trT_hp { grid-area: bt_enmy_trT_hp; }
+#bttl_enmy_trT_mp { grid-area: bt_enmy_trT_mp; }
+
+#bttl_enmy_tr0_nm { grid-area: bt_enmy_tr0_nm; }
+#bttl_enmy_tr0_ac { grid-area: bt_enmy_tr0_ac; }
+#bttl_enmy_tr0_st { grid-area: bt_enmy_tr0_st; }
+#bttl_enmy_tr0_lv { grid-area: bt_enmy_tr0_lv; }
+#bttl_enmy_tr0_hp { grid-area: bt_enmy_tr0_hp; }
+#bttl_enmy_tr0_mp { grid-area: bt_enmy_tr0_mp; }
+
+#bttl_enmy_tr1_nm { grid-area: bt_enmy_tr1_nm; }
+#bttl_enmy_tr1_ac { grid-area: bt_enmy_tr1_ac; }
+#bttl_enmy_tr1_st { grid-area: bt_enmy_tr1_st; }
+#bttl_enmy_tr1_lv { grid-area: bt_enmy_tr1_lv; }
+#bttl_enmy_tr1_hp { grid-area: bt_enmy_tr1_hp; }
+#bttl_enmy_tr1_mp { grid-area: bt_enmy_tr1_mp; }
+
+#bttl_enmy_tr2_nm { grid-area: bt_enmy_tr2_nm; }
+#bttl_enmy_tr2_ac { grid-area: bt_enmy_tr2_ac; }
+#bttl_enmy_tr2_st { grid-area: bt_enmy_tr2_st; }
+#bttl_enmy_tr2_lv { grid-area: bt_enmy_tr2_lv; }
+#bttl_enmy_tr2_hp { grid-area: bt_enmy_tr2_hp; }
+#bttl_enmy_tr2_mp { grid-area: bt_enmy_tr2_mp; }
+
+#bttl_enmy_tr3_nm { grid-area: bt_enmy_tr3_nm; }
+#bttl_enmy_tr3_ac { grid-area: bt_enmy_tr3_ac; }
+#bttl_enmy_tr3_st { grid-area: bt_enmy_tr3_st; }
+#bttl_enmy_tr3_lv { grid-area: bt_enmy_tr3_lv; }
+#bttl_enmy_tr3_hp { grid-area: bt_enmy_tr3_hp; }
+#bttl_enmy_tr3_mp { grid-area: bt_enmy_tr3_mp; }
+
+#bttl_team_trT_nm { grid-area: bt_team_trT_nm; }
+#bttl_team_trT_ac { grid-area: bt_team_trT_ac; }
+#bttl_team_trT_st { grid-area: bt_team_trT_st; }
+#bttl_team_trT_lv { grid-area: bt_team_trT_lv; }
+#bttl_team_trT_hp { grid-area: bt_team_trT_hp; }
+#bttl_team_trT_mp { grid-area: bt_team_trT_mp; }
+
+#bttl_team_tr0_nm { grid-area: bt_team_tr0_nm; }
+#bttl_team_tr0_ac { grid-area: bt_team_tr0_ac; }
+#bttl_team_tr0_st { grid-area: bt_team_tr0_st; }
+#bttl_team_tr0_lv { grid-area: bt_team_tr0_lv; }
+#bttl_team_tr0_hp { grid-area: bt_team_tr0_hp; }
+#bttl_team_tr0_mp { grid-area: bt_team_tr0_mp; }
+
+#bttl_team_tr1_nm { grid-area: bt_team_tr1_nm; }
+#bttl_team_tr1_ac { grid-area: bt_team_tr1_ac; }
+#bttl_team_tr1_st { grid-area: bt_team_tr1_st; }
+#bttl_team_tr1_lv { grid-area: bt_team_tr1_lv; }
+#bttl_team_tr1_hp { grid-area: bt_team_tr1_hp; }
+#bttl_team_tr1_mp { grid-area: bt_team_tr1_mp; }    
+
+#bttl_team_tr2_nm { grid-area: bt_team_tr2_nm; }
+#bttl_team_tr2_ac { grid-area: bt_team_tr2_ac; }
+#bttl_team_tr2_st { grid-area: bt_team_tr2_st; }
+#bttl_team_tr2_lv { grid-area: bt_team_tr2_lv; }
+#bttl_team_tr2_hp { grid-area: bt_team_tr2_hp; }
+#bttl_team_tr2_mp { grid-area: bt_team_tr2_mp; }
+
+#bttl_team_tr3_nm { grid-area: bt_team_tr3_nm; }
+#bttl_team_tr3_ac { grid-area: bt_team_tr3_ac; }
+#bttl_team_tr3_st { grid-area: bt_team_tr3_st; }
+#bttl_team_tr3_lv { grid-area: bt_team_tr3_lv; }
+#bttl_team_tr3_hp { grid-area: bt_team_tr3_hp; }
+#bttl_team_tr3_mp { grid-area: bt_team_tr3_mp; }
+
 
 
 
@@ -614,16 +744,9 @@ article#pane_ctls_boad #div_ctls_boad {
 { 
     border-width: 0cap;
 }
-*/
 
-#bttl_scrn 
-{ 
-    border:#0000ff solid 1px;
-    border-radius: 0.5rem;
-}
-
-#bttl_scrn *,
-#bttl_scrn * 
+#bttl_team_table *,
+#bttl_enmy_table * 
 {
     color:       var(--bttl_table_text_color, darkgreen);
     font-family: var(--bttl_table_font_family, sans-serif);
@@ -631,8 +754,19 @@ article#pane_ctls_boad #div_ctls_boad {
     line-height: var(--bttl_table_line_heght,  1.0rem);
     text-align:  center;
     white-space: nowrap;
-    border:#0000ff solid 1px;
-    margin: 0%;
+
+}
+*/
+
+#bttl_team_ul *,
+#bttl_enmy_ul * 
+{
+    color:       var(--bttl_table_text_color, darkgreen);
+    font-family: var(--bttl_table_font_family, sans-serif);
+    font-size:   var(--bttl_table_font_size,   0.8rem);
+    line-height: var(--bttl_table_line_heght,  1.0rem);
+    text-align:  center;
+    white-space: nowrap;
 
 }
 
