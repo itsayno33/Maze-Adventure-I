@@ -4,6 +4,7 @@ import { do_move_bottom_half, act_move_mode } from "./F_set_move_mode";
 import { act_load_mode, act_save_mode   }     from "./F_set_save_mode";
 import { act_mvpt_mode}                       from "./F_set_mvpt_mode";
 import { g_ctls, g_cvm, g_vsw }               from "./global_for_maze";
+import { act_bttl_mode } from "./F_set_bttl_mode";
 
 let   dom_menu_list:  HTMLUListElement;
 let   menu_list_crsr: C_CtlCursor;
@@ -70,7 +71,13 @@ function __isOK(id: string): void {
         case 'menu_load': do_load();return;
         case 'menu_save': do_save();return;
         case 'menu_mvpt': do_mvpt();return;
+        case 'menu_bttl': do_bttl();return; //仮
     }
+}
+
+//仮の処理
+function do_bttl(): void {
+    act_bttl_mode();
 }
 
 function isNG(): void {
