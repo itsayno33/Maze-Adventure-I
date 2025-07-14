@@ -568,6 +568,11 @@ article#pane_ctls_boad #div_ctls_boad {
 
 }
 
+#bttl_team_table,
+#bttl_enmy_table 
+{ 
+    border-width: 0cap;
+}
 
 #bttl_team_table *,
 #bttl_enmy_table * 
