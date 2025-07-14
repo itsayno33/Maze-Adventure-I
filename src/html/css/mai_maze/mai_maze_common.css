@@ -582,6 +582,8 @@ article#pane_ctls_boad #div_ctls_boad {
     font-size:   var(--bttl_table_font_size,   0.8rem);
     line-height: var(--bttl_table_line_heght,  1.0rem);
     text-align:  center;
+    white-space: nowrap;
+
 }
 
 #bttl_team_tr0_nm,
@@ -598,6 +600,32 @@ article#pane_ctls_boad #div_ctls_boad {
     font-size:   var(--bttl_table_name_font_size,   0.8rem);
     line-height: var(--bttl_table_name_line_heght,  1.0rem);
     text-align:  left;
+}
+
+#bttl_cmmd_ul {
+    color:            chocolate;
+    background-color: cornsilk;
+
+    font-size:    var(--bttl_cmmd_list_font_size, 0.9rem);
+    line-height:  var(--bttl_cmmd_list_line_hght, 1.0rem);
+
+    padding-top:    0.5em;
+    padding-bottom: 0.5em;
+
+    column-count: var(--bttl_cmmd_list_cols, 2);
+}
+
+#bttl_slct_ul {
+    color:            chocolate;
+    background-color: cornsilk;
+
+    font-size:    var(--bttl_slct_list_font_size, 0.9rem);
+    line-height:  var(--bttl_slct_list_line_hght, 1.0rem);
+
+    padding-top:    0.5em;
+    padding-bottom: 0.5em;
+
+    column-count: var(--bttl_slct_list_cols, 2);
 }
 
 

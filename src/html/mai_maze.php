@@ -443,7 +443,9 @@ function new_team(): Team {
                 <li id='bttl_thr'>祈る</li>
             </ul>
         </div>
-        <div id='bttl_slct'></div>
+        <div id='bttl_slct'>
+            <ul id='bttl_slct_ul'></ul>
+        </div>
     </article>
     <article id ='pane_bttl_mesg'>
         <h2 id='bttl_mesg_p'>バトル・メッセージ</h2>
