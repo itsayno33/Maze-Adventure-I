@@ -589,23 +589,21 @@ article#pane_ctls_boad #div_ctls_boad {
 #bttl_slct_ul { grid-area: bt_slct; }
 
 
-
-
+#bttl_cmmd_ul,
+#bttl_slct_ul 
+{
+    list-style: none;
+    padding: 1rem;
+}
 #bttl_cmmd {
-    grid-area: bttl_cmmd;
-
     justify-self:center;
     align-self: auto;
-
     display: grid;
 }
 
 #bttl_slct {
-    grid-area: bttl_slct;
-
     justify-self:center;
     align-self: auto;
-
     display: grid;
 }
 
