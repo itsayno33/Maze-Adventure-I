@@ -32,7 +32,7 @@ export interface JSON_WndrObj extends JSON_MazeObj {
 export interface I_WndrObj extends I_MazeObj {
     free():    void;
     walker():  I_WndrWalker|undefined;       // C_WndrWalkerオブジェクトを呼出
-    set_walker(wowalk: I_WndrWalker|undefined): void; // C_WndrWalkerオブジェクトを設定
+    set_walker(walk: I_WndrWalker|undefined): void; // C_WndrWalkerオブジェクトを設定
     wres():    I_Wres|undefined;       // C_WndrWalkerオブジェクトを呼出
     set_wres  (wres:   I_Wres|undefined):       void; // C_WndrWalkerオブジェクトを設定
     encode():  JSON_WndrObj;                 // JSON_WndrObj形式でエンコード
@@ -41,7 +41,7 @@ export interface I_WndrObj extends I_MazeObj {
 
 export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     public clname: string = 'C_WndrObj';
-    protected wowalk: I_WndrWalker|undefined; // WndrWalkerオブジェクト
+    protected walk: I_WndrWalker|undefined; // WndrWalkerオブジェクト
     protected myWres: I_Wres      |undefined;
     private   dmy:    string = 'ダミー'; // ダミー変数
 
@@ -59,7 +59,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
 
         // loc_posが未定義の場合は初期位置を設定
         // decode(j)でthis.set_pd()を呼び出す
-        if (j.pos === undefined) j.pos ??= j.wowalk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
+        if (j.pos === undefined) j.pos ??= j.walk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
 
         // viewが未定義の場合はこれを初期化
         // Viewはdecode(j)でJSON_WndrWalkerViewを使用して生成する
@@ -72,7 +72,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
                 col_2_arw: '#ffffff', col_2_tri: '#cc6666',
         } as JSON_WndrView;
         
-        j.wowalk ??= {} as JSON_WndrWalker;
+        j.walk ??= {} as JSON_WndrWalker;
         j.wres   ??= {} as JSON_Wres;
 
         if (j !== undefined) this.__init(j);
@@ -83,7 +83,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         if (j?.clname   !== undefined) this.clname    = j.clname;
 
         // loc_posが未定義の場合は初期位置を設定
-        if (j?.pos  === undefined && j.wowalk.loc_pos  !== undefined)  j.pos = j.wowalk.loc_pos; 
+        if (j?.pos  === undefined && j.walk?.loc_pos  !== undefined)  j.pos = j.walk.loc_pos; 
         if (j?.pos  !== undefined)  this.set_pd(new C_PointDir(j.pos)); 
 
         if (j?.view     !== undefined) {
@@ -92,17 +92,17 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
             this.setView2M(new C_WndrView2X(j.view));
         }
 
-        if (j?.wowalk   !== undefined) {
-            j.wowalk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定
+        if (j?.walk   !== undefined) {
+            j.walk.loc_pos ??= ( j?.pos ?? {x:1, y:1, z:0, d:0} ); // loc_posが未定義の場合は初期位置を設定
 
-                                                                        //console.log('C_WndrObj.__init() json_output = ');_json_output(j); // デバッグ用：wowalkの内容を出力
+                                                                        //console.log('C_WndrObj.__init() json_output = ');_json_output(j); // デバッグ用：walkの内容を出力
 
-            this.wowalk        = new_walker(j.wowalk);
-            this.wowalk?.set_mazeObj(this); // MazeObjを設定
+            this.walk        = new_walker(j.walk);
+            this.walk?.set_mazeObj(this); // MazeObjを設定
         }
         if (j?.wres !== undefined) {
             this.myWres = new C_Wres(j.wres);
-            this.myWres.set_walker(this.wowalk);
+            this.myWres.set_walker(this.walk);
         }
 
         if (j?.stat?.wo !== undefined) {
@@ -111,12 +111,12 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         return this;
     }
     public free():void {
-        this.wowalk?.free(); this.wowalk = undefined;
+        this.walk?.free(); this.walk = undefined;
         this.myWres?.free(); this.myWres = undefined;
     }
 
-    public walker(): I_WndrWalker|undefined {return this.wowalk;}
-    public set_walker(wowalk: I_WndrWalker|undefined): void {this.wowalk = wowalk;}
+    public walker(): I_WndrWalker|undefined {return this.walk;}
+    public set_walker(walk: I_WndrWalker|undefined): void {this.walk = walk;}
 
     public wres():  I_Wres|undefined {return this.myWres??undefined;}
     public set_wres(wres: I_Wres|undefined): void {this.myWres = wres;}
@@ -124,7 +124,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     public encode(): JSON_WndrObj {
         const j = super.encode() as JSON_WndrObj;
         j.clname = this.clname;
-        j.wowalk = this.wowalk?.encode() ?? undefined;
+        j.walk = this.walk?.encode() ?? undefined;
         j.wres   = this.myWres?.encode() ?? undefined;
         j.stat     ??= {};
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数

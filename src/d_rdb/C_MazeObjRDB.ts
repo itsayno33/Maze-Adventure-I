@@ -135,7 +135,7 @@ export class C_MazeObjRDB {
             )
         `
         const j  = obje.encode();
-        j.wowalk ??= {};
+        j.walk   ??= {};
 
         //Debug
 /***************************
@@ -161,7 +161,7 @@ export class C_MazeObjRDB {
             pos_z:       j.pos?.z??0,
             pos_d:       j.pos?.d??0,
             view:        JSON?.stringify(j.view)??"{}",
-            walker:      JSON?.stringify(j.wowalk)??"{}", // C_MazeObjの初期値
+            walker:      JSON?.stringify(j.walk)??"{}", // C_MazeObjの初期値
             stat:        JSON?.stringify(j.stat)??"{}",
         })
         .catch(err=>{
@@ -224,7 +224,7 @@ export class C_MazeObjRDB {
                 maze_uid:  j.maze_uid,
                 pos:       {x: j.pos_x, y: j.pos_y, z: j.pos_z, d: j.pos_d},
                 view:      JSON.parse(j.view??'{}')   as any, // C_MazeObjViewの初期値
-                wowalk:    JSON.parse(j.walker??'{}') as any, // C_MazeObjの初期値
+                walk:      JSON.parse(j.walker??'{}') as any, // C_MazeObjの初期値
                 stat:      JSON.parse(j.stat??'{}')   as any, // C_MazeObjの初期値
                 can_thr:   jj.can_thr ?? '1',                 // C_MazeObjの初期値
                 h_w_dmg:   jj.h_w_dmg ?? 0,                   // C_MazeObjの初期値
