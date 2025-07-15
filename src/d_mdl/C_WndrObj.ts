@@ -122,9 +122,9 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     public set_wres(wres: I_Wres|undefined): void {this.myWres = wres;}
 
     public encode(): JSON_WndrObj {
-        const j = super.encode() as JSON_WndrObj;
+        const j  = super.encode() as JSON_WndrObj;
         j.clname = this.clname;
-        j.walk = this.walk?.encode() ?? undefined;
+        j.walk   = this.walk?.encode()   ?? undefined;
         j.wres   = this.myWres?.encode() ?? undefined;
         j.stat     ??= {};
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
