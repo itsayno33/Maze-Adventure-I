@@ -55,7 +55,11 @@ export class C_Wres  implements I_Wres {
     public wres(): I_Wndr[]               {return this.myWres??[]};
     public set_wres(wres: I_Wndr[]):void  {if (wres !== undefined && wres.length > 0) this.myWres = wres;}
     public clr_wres():void                {this.myWres = [];}
-    public add_wres(wndr: I_Wndr):void    {if (wndr !== undefined) this.myWres?.push(wndr)}
+    public add_wres(wndr: I_Wndr):void
+    {
+        this.myWres ??= [];
+        if (wndr !== undefined) this.myWres.push(wndr)
+    }
 
     public walker(): I_WndrWalker|undefined {return this.wowalk;}
     public set_walker(wowalk: I_WndrWalker|undefined): void {this.wowalk = wowalk;}
