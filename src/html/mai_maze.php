@@ -340,47 +340,10 @@ function new_team(): Team {
     <article id ='pane_bttl_scrn'>
         <h2 id="bttl_h2">バトル・モード</h2>
         <div id='div_bttl_scrn'>
-            <table id='bttl_enmy' bordercolor="#0000ff">
-                <thead>
-                    <tr><th id='bttl_enmy_h3' colspan="6">敵：</th></tr>
-                </thead>
-                <tbody id='bttl_enmy_body'>
-                    <tr id='bttl_enmy_trT'>
-                        <th id='bttl_enmy_trT_nmlv'>名前<br />Lv</th>
-                        <th id='bttl_enmy_trT_acst'>行動<br />状態</th>
-                        <th id='bttl_enmy_trT_hpmp'>ＨＰ<br />ＭＰ</th>
-                    </tr>
-                    <tr id='bttl_enmy_tr0'>
-                        <td id='bttl_enmy_tr0_nmlv'>a</td>
-                        <td id='bttl_enmy_tr0_acst'>b</td>
-                        <td id='bttl_enmy_tr0_hpmt'>e</td>
-                    </tr>
-                    <tr id='bttl_enmy_tr1'>
-                        <td id='bttl_enmy_tr1_nmlv'>aaaaaaaaaaaaaaa<br />10,000</td>
-                        <td id='bttl_enmy_tr1_acst'>逃げる</br>正常</td>
-                        <td id='bttl_enmy_tr1_hpmp'>10,000 / 10,000<br />10,000 / 10,000</td>
-                    </tr>
-                    <tr id='bttl_enmy_tr2'>
-                        <td id='bttl_enmy_tr2_nmlv'></td>
-                        <td id='bttl_enmy_tr2_acst'></td>
-                        <td id='bttl_enmy_tr2_hpmp'></td>
-                    </tr>
-                    <tr id='bttl_enmy_tr3'>
-                        <td id='bttl_enmy_tr3_nmlv'></td>
-                        <td id='bttl_enmy_tr3_acst'></td>
-                        <td id='bttl_enmy_tr3_hpmp'></td>
-                    </tr>
-                </tbody>
-            </table>
             <table id='bttl_team' bordercolor="#0000ff">
                 <thead>
                     <tr><th id='bttl_team_h3' colspan="6">仲間：</th></tr>
                 </thead>
-                    <tr id='bttl_team_trT'>
-                        <th id='bttl_team_trT_nmlv'>名前<br />Lv</th>
-                        <th id='bttl_team_trT_acst'>行動<br />状態</th>
-                        <th id='bttl_team_trT_hpmp'>ＨＰ<br />ＭＰ</th>
-                    </tr>
                     <tr id='bttl_team_tr0'>
                         <td id='bttl_team_tr0_nmlv'></td>
                         <td id='bttl_team_tr0_acst'></td>
@@ -400,6 +363,33 @@ function new_team(): Team {
                         <td id='bttl_team_tr3_nmlv'></td>
                         <td id='bttl_team_tr3_acst'></td>
                         <td id='bttl_team_tr3_hpmp'></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id='bttl_enmy' bordercolor="#0000ff">
+                <thead>
+                    <tr><th id='bttl_enmy_h3' colspan="6">敵：</th></tr>
+                </thead>
+                <tbody id='bttl_enmy_body'>
+                    <tr id='bttl_enmy_tr0'>
+                        <td id='bttl_enmy_tr0_nmlv'>a</td>
+                        <td id='bttl_enmy_tr0_acst'>b</td>
+                        <td id='bttl_enmy_tr0_hpmt'>e</td>
+                    </tr>
+                    <tr id='bttl_enmy_tr1'>
+                        <td id='bttl_enmy_tr1_nmlv'>aaaaaaaaaaaaaaa<br />ＬＶ：10,000</td>
+                        <td id='bttl_enmy_tr1_acst'>行動：逃げる</br>状態：正　常</td>
+                        <td id='bttl_enmy_tr1_hpmp'>ＨＰ： 10,000 / 10,000<br />ＭＰ： 10,000 / 10,000</td>
+                    </tr>
+                    <tr id='bttl_enmy_tr2'>
+                        <td id='bttl_enmy_tr2_nmlv'></td>
+                        <td id='bttl_enmy_tr2_acst'></td>
+                        <td id='bttl_enmy_tr2_hpmp'></td>
+                    </tr>
+                    <tr id='bttl_enmy_tr3'>
+                        <td id='bttl_enmy_tr3_nmlv'></td>
+                        <td id='bttl_enmy_tr3_acst'></td>
+                        <td id='bttl_enmy_tr3_hpmp'></td>
                     </tr>
                 </tbody>
             </table>
