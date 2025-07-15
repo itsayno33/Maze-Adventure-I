@@ -1,7 +1,6 @@
 import { C_CtlCursor } from "../d_ctl/C_CtlCursor";
 import { C_Hero } from "../d_mdl/C_Hero";
 import { C_Wndr } from "../d_mdl/C_Wndr";
-import { act_menu_mode } from "./F_set_menu_mode";
 import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { g_ctls, g_cvm, g_vsw } from "./global_for_maze";
 
