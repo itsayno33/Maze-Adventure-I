@@ -629,8 +629,8 @@ article#pane_ctls_boad #div_ctls_boad {
 {
     color:       var(--bttl_table_text_color, darkgreen);
     font-family: var(--bttl_table_font_family, sans-serif);
-    font-size:   var(--bttl_table_font_size,   0.8rem);
-    line-height: var(--bttl_table_line_heght,  0.9rem);
+    font-size:   var(--bttl_table_font_size,   1.2rem);
+    line-height: var(--bttl_table_line_heght,  1.5rem);
     text-align:  justify;
     white-space: nowrap;
     /******************
@@ -657,8 +657,8 @@ article#pane_ctls_boad #div_ctls_boad {
 {
     color:       var(--bttl_table_name_text_color, darkblue);
     font-family: var(--bttl_table_name_font_family, sans-serif);
-    font-size:   var(--bttl_table_name_font_size,   0.8rem);
-    line-height: var(--bttl_table_name_line_heght,  0.9rem);
+    font-size:   var(--bttl_table_name_font_size,   1.2rem);
+    line-height: var(--bttl_table_name_line_heght,  1.5rem);
     text-align:  left;
 }
 
@@ -678,21 +678,21 @@ article#pane_ctls_boad #div_ctls_boad {
     color:            chocolate;
     background-color: cornsilk;
 
-    font-size:    var(--bttl_cmmd_list_font_size, 0.9rem);
-    line-height:  var(--bttl_cmmd_list_line_hght, 1.0rem);
+    font-size:    var(--bttl_cmmd_list_font_size, 1.2rem);
+    line-height:  var(--bttl_cmmd_list_line_hght, 1.5rem);
 
     padding-top:    0.5em;
     padding-bottom: 0.5em;
 
-    column-count: var(--bttl_cmmd_list_cols, 4);
+    column-count: var(--bttl_cmmd_list_cols, 1);
 }
 
 #bttl_slct_ul {
     color:            chocolate;
     background-color: cornsilk;
 
-    font-size:    var(--bttl_slct_list_font_size, 0.9rem);
-    line-height:  var(--bttl_slct_list_line_hght, 1.0rem);
+    font-size:    var(--bttl_slct_list_font_size, 1.2rem);
+    line-height:  var(--bttl_slct_list_line_hght, 1.5rem);
 
     padding-top:    0.5em;
     padding-bottom: 0.5em;
