@@ -72,7 +72,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
                 col_2_arw: '#ffffff', col_2_tri: '#cc6666',
         } as JSON_WndrView;
         
-        j.walk ??= {} as JSON_WndrWalker;
+        j.walk   ??= {} as JSON_WndrWalker;
         j.wres   ??= {} as JSON_Wres;
 
         if (j !== undefined) this.__init(j);
