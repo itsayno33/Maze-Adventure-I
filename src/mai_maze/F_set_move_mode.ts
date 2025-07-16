@@ -210,9 +210,8 @@ function action_obj(): void {
                     continue;
                 }
                 case 'Block':
-                    const wnderers = wres.wres();
                     // ここでダメージ処理
-                    for (const wndr of wnderers) {
+                    for (const wndr of wres) {
                         if (wndr === undefined) continue;
                         if (!wndr.is_alive())   continue;
                         wndr.hp_damage(action.dmg);

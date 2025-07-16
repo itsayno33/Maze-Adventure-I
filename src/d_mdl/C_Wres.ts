@@ -40,7 +40,7 @@ export class C_Wres  implements I_Wres {
 //ww        // C_WonderWalkerは__init()で*必ず*生成される
 //ww        // よって未定義のまま呼び出さないように初期値を設定する
 //ww        j.walk ??= {} as JSON_WndrWalker;
-                                                                         _json_console(j,'C_wres.constructor: '); // デバッグ用：C_Wresの初期化時にjの内容を出力
+                                                                        //_json_console(j,'C_wres.constructor: '); // デバッグ用：C_Wresの初期化時にjの内容を出力
         this.__init(j);
     }
     public free():void {
