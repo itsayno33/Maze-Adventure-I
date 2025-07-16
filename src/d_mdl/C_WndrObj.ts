@@ -13,7 +13,7 @@ import { C_PointDir }   from './C_PointDir';
 import { _json_output } from "../d_utl/F_Utility";
 import { C_WndrView2X } from "./C_WndrView2X";
 import { new_walker } from "./F_new_Walker";
-import { I_Wndr, JSON_Wndr } from "./C_Wndr";
+import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
 import { C_Wres, I_Wres, JSON_Wres } from "./C_Wres";
 
 export interface JSON_WndrObjSTAT extends JSON_MazeObjSTAT {
@@ -33,16 +33,17 @@ export interface I_WndrObj extends I_MazeObj {
     free():    void;
     walker():  I_WndrWalker|undefined;       // C_WndrWalkerオブジェクトを呼出
     set_walker(walk: I_WndrWalker|undefined): void; // C_WndrWalkerオブジェクトを設定
-    wres():    I_Wres|undefined;       // C_WndrWalkerオブジェクトを呼出
-    set_wres  (wres:   I_Wres|undefined):       void; // C_WndrWalkerオブジェクトを設定
+    wres():    I_Wndr[]|undefined;           // C_WndrWalkerオブジェクトを呼出
+    set_wres  (wres:   I_Wndr[]|undefined):   void; // C_WndrWalkerオブジェクトを設定
+    add_wndr(wndr: I_Wndr): void;            // C_Wndrオブジェクトを追加
     encode():  JSON_WndrObj;                 // JSON_WndrObj形式でエンコード
-    decode(j:  JSON_WndrObj|undefined): I_WndrObj;   // JSON_WndrObj形式でデコード
+    decode(j:  JSON_WndrObj|undefined): I_WndrObj;  // JSON_WndrObj形式でデコード
 }
 
 export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     public clname: string = 'C_WndrObj';
     protected walk: I_WndrWalker|undefined; // WndrWalkerオブジェクト
-    protected myWres: I_Wres      |undefined;
+    protected myWres: I_Wndr[]  |undefined;
     private   dmy:    string = 'ダミー'; // ダミー変数
 
     public constructor(j?: JSON_MazeObj) {
@@ -59,7 +60,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
 
         // loc_posが未定義の場合は初期位置を設定
         // decode(j)でthis.set_pd()を呼び出す
-        if (j.pos === undefined) j.pos ??= j.walk.loc_pos ?? {x:1, y:1, z:0, d:0}; 
+        if (j.pos === undefined) j.pos ??= j.walk?.loc_pos ?? {x:1, y:1, z:0, d:0}; 
 
         // viewが未定義の場合はこれを初期化
         // Viewはdecode(j)でJSON_WndrWalkerViewを使用して生成する
@@ -100,9 +101,14 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
             this.walk        = new_walker(j.walk);
             this.walk?.set_mazeObj(this); // MazeObjを設定
         }
-        if (j?.wres !== undefined) {
-            this.myWres = new C_Wres(j.wres);
-            this.myWres.set_walker(this.walk);
+        if (j?.wres !== undefined && (j.wres?.length??0) > 0) {
+            this.myWres = [];
+            for (const jw of (j.wres as JSON_Wndr[])) {
+                if (jw === undefined) continue;
+
+                const wndr = new C_Wndr(jw);
+                this.myWres.push(wndr);
+            }
         }
 
         if (j?.stat?.wo !== undefined) {
@@ -112,20 +118,29 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
     }
     public free():void {
         this.walk?.free(); this.walk = undefined;
-        this.myWres?.free(); this.myWres = undefined;
+        for (const wndr of this.myWres ?? []) {
+            if (wndr === undefined) continue;
+            wndr.free();
+        }
     }
 
     public walker(): I_WndrWalker|undefined {return this.walk;}
     public set_walker(walk: I_WndrWalker|undefined): void {this.walk = walk;}
 
-    public wres():  I_Wres|undefined {return this.myWres??undefined;}
-    public set_wres(wres: I_Wres|undefined): void {this.myWres = wres;}
+    public wres():  I_Wndr[]|undefined {return this.myWres??undefined;}
+    public set_wres(wres: I_Wndr[]|undefined): void {this.myWres = wres;}
+    public add_wndr(wndr: I_Wndr): void {
+        this.myWres ??= [];
+        this.myWres.push(wndr);
+    }   
 
     public encode(): JSON_WndrObj {
-        const j  = super.encode() as JSON_WndrObj;
-        j.clname = this.clname;
-        j.walk   = this.walk?.encode()   ?? undefined;
-        j.wres   = this.myWres?.encode() ?? undefined;
+        const wres: JSON_Wndr[]|undefined = this.myWres?.map((wndr) => wndr.encode());
+
+        const j    = super.encode() as JSON_WndrObj;
+        j.clname   = this.clname;
+        j.walk     = this.walk?.encode()   ?? undefined;
+        j.wres     = wres;
         j.stat     ??= {};
         j.stat.wo  = {dmy: this.dmy}; // ダミー変数
         return j;

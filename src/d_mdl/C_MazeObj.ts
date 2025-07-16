@@ -13,6 +13,7 @@ import {
 import { C_WndrWalker, I_WndrWalker } from "./C_WndrWalker";
 import { C_MazeObjView2X, I_MazeObjView2X } from "./C_MazeObjView2X";
 import { I_Wres } from "./C_Wres";
+import { I_Wndr } from "./C_Wndr";
 
 
 export interface JSON_MazeObjSTAT {
@@ -43,8 +44,9 @@ export interface I_MazeObj extends I_JSON_Uniq, I_Abstract {
     setView:    (view: I_MazeObjView|undefined)=>void;
     walker:     ()=>I_WndrWalker|undefined;
     set_walker: (wdwalk: I_WndrWalker|undefined)=>void;
-    wres:       ()=>I_Wres|undefined;
-    set_wres:   (wres: I_Wres|undefined)=>void;
+    wres:       ()=>I_Wndr[]|undefined;
+    set_wres:   (wres: I_Wndr[]|undefined)=>void;
+    add_wndr:   (wndr: I_Wndr)=>void;
     canThrough: ()=>boolean;
     hitDamage: ()=>number;
     encode:     ()=>JSON_MazeObj;
@@ -126,10 +128,11 @@ export class C_MazeObj implements I_MazeObj {
         this.my_walker = walker;
     }
 
-    public wres(): I_Wres|undefined {return undefined;}
-    public set_wres(wres: I_Wres|undefined): void {
+    public wres(): I_Wndr[]|undefined {return undefined;}
+    public set_wres(wres: I_Wndr[]|undefined): void {
         return;
     }
+    public add_wndr(wndr: I_Wndr): void {return}
 
     public canThrough(): boolean {return this.can_thr}
     public setThrough(thr: boolean): boolean {return this.can_thr = thr}
