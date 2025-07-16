@@ -138,7 +138,6 @@ export class C_MazeObjRDB {
         const j  = obje.encode();
         j.walk   ??= {};
         j.wndr   ??= {};
-        j.stat   ??= {};
         //Debug
 /***************************
     console.log("C_MazeObjRDB: add_tbl() called:");
@@ -162,10 +161,10 @@ export class C_MazeObjRDB {
             pos_y:       j.pos?.y??0,
             pos_z:       j.pos?.z??0,
             pos_d:       j.pos?.d??0,
-            view:        JSON?.stringify(j.view)??"{}",
-            walk:        JSON?.stringify(j.walk)??"{}",
-            wndr:        JSON?.stringify(j.wndr)??"{}",
-            stat:        JSON?.stringify(j.stat)??"{}",
+            view:        JSON.stringify(j?.view??{}),
+            walk:        JSON.stringify(j?.walk??{}),
+            wndr:        JSON.stringify(j?.wndr??{}),
+            stat:        JSON.stringify(j?.stat??{}),
         })
         .catch(err=>{
             mes.set_err_message(`SQLエラー 3: ${insert_obje_SQL}`);
@@ -220,18 +219,18 @@ export class C_MazeObjRDB {
     }
 
     public static from_stringArray_to_JSON(j: I_tbl_obje): JSON_MazeObj {
-        const jj = JSON.parse(j.stat??'{}') as any; // C_MazeObjの初期値
+        const jj = JSON.parse(j?.stat??'{}') as any; // C_MazeObjの初期値
         return {
                 clname:    j.cl_name,
                 uniq_id:   j.uniq_id, 
                 maze_uid:  j.maze_uid,
                 pos:       {x: j.pos_x, y: j.pos_y, z: j.pos_z, d: j.pos_d},
-                view:      JSON.parse(j.view??'{}')   as any, // C_MazeObjViewの初期値
-                walk:      JSON.parse(j.walk??'{}')   as any, // C_MazeWalkerの初期値
-                wndr:      JSON.parse(j.wndr??'{}')   as any, // C_Wndrの初期値
-                stat:      JSON.parse(j.stat??'{}')   as any, // C_MazeObjの初期値(諸々のステータス)
-                can_thr:   jj.can_thr ?? '1',                 // C_MazeObjの初期値(自身の透過可否)
-                h_w_dmg:   jj.h_w_dmg ?? 0,                   // C_MazeObjの初期値(自身に衝突した相手の基本ダメージ)
+                view:      JSON.parse(j?.view??'{}')   as any, // C_MazeObjViewの初期値
+                walk:      JSON.parse(j?.walk??'{}')   as any, // C_MazeWalkerの初期値
+                wndr:      JSON.parse(j?.wndr??'{}')   as any, // C_Wndrの初期値
+                stat:      JSON.parse(j?.stat??'{}')   as any, // C_MazeObjの初期値(諸々のステータス)
+                can_thr:   jj?.can_thr ?? '1',                 // C_MazeObjの初期値(自身の透過可否)
+                h_w_dmg:   jj?.h_w_dmg ?? 0,                   // C_MazeObjの初期値(自身に衝突した相手の基本ダメージ)
             };
     }
 }
