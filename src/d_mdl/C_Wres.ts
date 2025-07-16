@@ -1,6 +1,7 @@
 "use strict";
 
 import { _get_uuid }                 from "../d_utl/F_Rand";
+import { _json_console } from "../d_utl/F_Utility";
 import { I_JSON_Uniq, JSON_Any }     from "./C_SaveInfo";
 import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
 import { JSON_WndrObj } from "./C_WndrObj";
@@ -39,7 +40,7 @@ export class C_Wres  implements I_Wres {
 //ww        // C_WonderWalkerは__init()で*必ず*生成される
 //ww        // よって未定義のまま呼び出さないように初期値を設定する
 //ww        j.walk ??= {} as JSON_WndrWalker;
-        
+                                                                         _json_console(j,'C_wres.constructor: '); // デバッグ用：C_Wresの初期化時にjの内容を出力
         this.__init(j);
     }
     public free():void {
@@ -92,7 +93,7 @@ export class C_Wres  implements I_Wres {
         if (j.uniq_id  !== undefined) this.uniq_id  = j.uniq_id;
         if (j.wres     !== undefined  &&  (j.wres?.length??-1) > 0) {
             this.myWres = [];
-            for (const wres of j.wres) this.myWres.push(new C_Wndr(wres));
+            for (const wndr of j.wres) this.myWres.push(new C_Wndr(wndr));
         }
 
 //ww        if (j?.walk   !== undefined) {
