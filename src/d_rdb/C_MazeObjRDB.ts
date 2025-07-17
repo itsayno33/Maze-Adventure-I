@@ -19,7 +19,7 @@ interface I_tbl_obje extends mysql.RowDataPacket {
     pos_d:       number,  // 向き(0:N, 1:E, 2:S, 3:W, 99:X)
     view:        string,  // C_MazeObjViewクラスの初期値
     walk:        string,  // C_MazeObjクラスの初期値
-    wndr:        string,  // C_MazeObjクラスの初期値
+    wres:        string,  // C_MazeObjクラスの初期値
     stat:        string,  // C_MazeObjクラスの初期値
   }
 interface I_lastInsert extends mysql.RowDataPacket {
@@ -91,7 +91,7 @@ export class C_MazeObjRDB {
             SELECT 	id,       save_id,  uniq_id, 
                     maze_uid, cl_name, 
                     pos_x,    pos_y,    pos_z,   pos_d, 
-                    view,     walk,     wndr,    stat 
+                    view,     walk,     wres,    stat 
             FROM tbl_obje
             WHERE   save_id = :save_id AND maze_uid = :maze_uid
         `
@@ -127,17 +127,17 @@ export class C_MazeObjRDB {
             INSERT INTO tbl_obje(
                 save_id,  uniq_id, maze_uid, cl_name, 
                 pos_x,    pos_y,   pos_z,    pos_d, 
-                view,     walk,    wndr,     stat 
+                view,     walk,    wres,     stat 
             )
             VALUES (
                 :save_id,  :uniq_id, :maze_uid, :cl_name, 
                 :pos_x,    :pos_y,   :pos_z,    :pos_d, 
-                :view,     :walk,    :wndr,     :stat 
+                :view,     :walk,    :wres,     :stat 
             )
         `
         const j  = obje.encode();
         j.walk   ??= {};
-        j.wndr   ??= {};
+        j.wres   ??= {};
         //Debug
 /***************************
     console.log("C_MazeObjRDB: add_tbl() called:");
@@ -163,7 +163,7 @@ export class C_MazeObjRDB {
             pos_d:       j.pos?.d??0,
             view:        JSON.stringify(j?.view??{}),
             walk:        JSON.stringify(j?.walk??{}),
-            wndr:        JSON.stringify(j?.wndr??{}),
+            wres:        JSON.stringify(j?.wres??[]),
             stat:        JSON.stringify(j?.stat??{}),
         })
         .catch(err=>{
@@ -227,7 +227,7 @@ export class C_MazeObjRDB {
                 pos:       {x: j.pos_x, y: j.pos_y, z: j.pos_z, d: j.pos_d},
                 view:      JSON.parse(j?.view??'{}')   as any, // C_MazeObjViewの初期値
                 walk:      JSON.parse(j?.walk??'{}')   as any, // C_MazeWalkerの初期値
-                wndr:      JSON.parse(j?.wndr??'{}')   as any, // C_Wndrの初期値
+                wres:      JSON.parse(j?.wres??'{}')   as any, // C_Wresの初期値
                 stat:      JSON.parse(j?.stat??'{}')   as any, // C_MazeObjの初期値(諸々のステータス)
                 can_thr:   jj?.can_thr ?? '1',                 // C_MazeObjの初期値(自身の透過可否)
                 h_w_dmg:   jj?.h_w_dmg ?? 0,                   // C_MazeObjの初期値(自身に衝突した相手の基本ダメージ)
