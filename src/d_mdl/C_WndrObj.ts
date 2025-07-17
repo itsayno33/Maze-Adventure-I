@@ -10,7 +10,7 @@ import {
 import { C_WndrView, JSON_WndrView }      from "./C_WndrView";
 import { I_WndrWalker, JSON_WndrWalker }  from "./C_WndrWalker";
 import { C_PointDir }   from './C_PointDir';
-import { _json_output } from "../d_utl/F_Utility";
+import { _json_console, _json_output } from "../d_utl/F_Utility";
 import { C_WndrView2X } from "./C_WndrView2X";
 import { new_walker } from "./F_new_Walker";
 import { C_Wndr, I_Wndr, JSON_Wndr } from "./C_Wndr";
@@ -23,9 +23,9 @@ export interface JSON_WndrObjSTAT extends JSON_MazeObjSTAT {
 }
 export interface JSON_WndrObj extends JSON_MazeObj {
     clname?:    string,
-    walk?:      JSON_WndrWalker|undefined,
-    wndr?:      JSON_Wndr      |undefined,
     view?:      JSON_WndrView  |undefined,
+    walk?:      JSON_WndrWalker|undefined,
+    wndr?:      JSON_Wndr[]    |undefined,
     stat?:      JSON_WndrObjSTAT, // C_WndrObjのサブクラスの初期値を保持する
 }
 
@@ -74,7 +74,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         } as JSON_WndrView;
         
         j.walk   ??= {} as JSON_WndrWalker;
-        j.wres   ??= {} as JSON_Wres;
+        j.wres   ??= [] as JSON_Wndr[];
 
         if (j !== undefined) this.__init(j);
     }
@@ -103,7 +103,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
         }
         if (j?.wres !== undefined && (j.wres?.length??0) > 0) {
             this.myWres = [];
-            for (const jw of (j.wres as JSON_Wndr[])) {
+            for (const jw of j.wres) {
                 if (jw === undefined) continue;
 
                 const wndr = new C_Wndr(jw);
@@ -136,6 +136,7 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
 
     public encode(): JSON_WndrObj {
         const wres: JSON_Wndr[]|undefined = this.myWres?.map((wndr) => wndr.encode());
+
 
         const j    = super.encode() as JSON_WndrObj;
         j.clname   = this.clname;
