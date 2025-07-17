@@ -35,7 +35,7 @@ export class C_WndrObjBoss2 extends C_WndrObj {
 
         j.view ??= {};
         for (const key in new_view) {
-            if (new_view[key] === undefined) continue;
+            if (j.view[key] !== undefined) continue;
             j.view[key] = new_view[key];
         }
 
@@ -47,7 +47,7 @@ export class C_WndrObjBoss2 extends C_WndrObj {
 
         j.walk ??= {};
         for (const key in new_walk) {
-            if (new_walk[key] === undefined) continue;
+            if (j.walk[key] !== undefined) continue;
             j.walk[key] = new_walk[key];
         }
 
@@ -60,9 +60,9 @@ export class C_WndrObjBoss2 extends C_WndrObj {
         ] as JSON_WndrObj[];
 
         j.wres ??= [];
-        for (const wndr of new_wres) {
-            if (wndr === undefined) continue;
-            j.wres.push(wndr);
+        for (const new_wndr of new_wres) {
+            if ((j.wres?.length ?? 4) > 3 ) break;
+            j.wres.push(new_wndr);
         }
 
         _json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力

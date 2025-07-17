@@ -55,8 +55,8 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
 
                                                                    //console.log('##############');_json_output(j??{}); // デバッグ用：C_WndrObjの初期化時にjの内容を出力
 
-        j ??= {} as JSON_WndrObj; // jが未定義の場合は空のオブジェクトを用意
-
+//        j ??= {} as JSON_WndrObj; // jが未定義の場合は空のオブジェクトを用意
+        if (j === undefined) return; // jが未定義の場合はViewやwalker等の初期化はしない
 
         // loc_posが未定義の場合は初期位置を設定
         // decode(j)でthis.set_pd()を呼び出す
@@ -73,8 +73,8 @@ export class C_WndrObj  extends C_MazeObj implements I_WndrObj {
                 col_2_arw: '#ffffff', col_2_tri: '#cc6666',
         } as JSON_WndrView;
         
-        j.walk   ??= {} as JSON_WndrWalker;
-        j.wres   ??= [] as JSON_Wndr[];
+//        j.walk   ??= {} as JSON_WndrWalker;
+//        j.wres   ??= [] as JSON_Wndr[];
 
         if (j !== undefined) this.__init(j);
     }

@@ -62,6 +62,7 @@ export class C_MazeObj implements I_MazeObj {
     protected my_view2D: I_MazeObjView2X|undefined;
     protected my_view2M: I_MazeObjView2X|undefined;
     protected my_walker: I_WndrWalker|undefined; // C_Walkerオブジェクト(抽象プロパティ)
+    protected my_wres  : I_Wndr[]|undefined;     // C_Wndrの配列オブジェクト(抽象プロパティ)
     protected can_thr:   boolean;
     protected hit_dmg:   number;
 
@@ -74,6 +75,7 @@ export class C_MazeObj implements I_MazeObj {
         this.my_view2D  =  undefined;
         this.my_view2M  =  undefined;
         this.my_walker  =  undefined; // C_Walkerオブジェクトは初期化しない
+        this.my_wres    =  undefined; // C_Wresオブジェクトは初期化しない
         this.can_thr    =  true;
         this.hit_dmg    =  0;
 
@@ -108,6 +110,7 @@ export class C_MazeObj implements I_MazeObj {
         this.my_view2D?.free();this.my_view2D  =  undefined;
         this.my_view2M?.free();this.my_view2M  =  undefined;
         this.my_walker?.free();this.my_walker  =  undefined; // C_Walkerオブジェクトは初期化しない
+                               this.my_wres    =  undefined; // C_Wndrオブジェクトは初期化しない
     }
 
     public uid(): string {return this.uniq_id}
@@ -128,11 +131,14 @@ export class C_MazeObj implements I_MazeObj {
         this.my_walker = walker;
     }
 
-    public wres(): I_Wndr[]|undefined {return undefined;}
+    public wres(): I_Wndr[]|undefined {return this.my_wres;}
     public set_wres(wres: I_Wndr[]|undefined): void {
-        return;
+        this.my_wres = wres;
     }
-    public add_wndr(wndr: I_Wndr): void {return}
+    public add_wndr(wndr: I_Wndr): void {
+        this.my_wres ??= [];
+        this.my_wres.push(wndr);
+    }
 
     public canThrough(): boolean {return this.can_thr}
     public setThrough(thr: boolean): boolean {return this.can_thr = thr}
