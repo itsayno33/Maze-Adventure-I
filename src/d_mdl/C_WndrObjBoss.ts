@@ -10,17 +10,11 @@ export class C_WndrObjBoss2 extends C_WndrObj {
     public constructor(j?: JSON_WndrObj) {
         super(undefined);
         this.clname = 'C_WndrObjBoss2';
+        if (j === undefined) return; // jが未定義の場合はViewやwalker等の初期化はしない
 
         // 特定の初期化処理が必要な場合はここに追加(__init()の処理はマスト)
-        this.__init(j);
-    }
-
-    public __init(j: JSON_WndrObj|undefined): C_WndrObjBoss2 {
-
-        j = j ?? {} as JSON_WndrObj;
 
         // WndrObjの基本情報を設定
-        j.clname ??= 'C_WndrObjBoss2';
         j.pos    ??= j.walk?.loc_pos ?? {x:1, y:1, z:0, d:0}; // 位置は親の位置を引き継ぐ
 
         // ビューの設定
@@ -64,6 +58,11 @@ export class C_WndrObjBoss2 extends C_WndrObj {
             if ((j.wres?.length ?? 4) > 3 ) break;
             j.wres.push(new_wndr);
         }
+
+        this.__init(j);
+    }
+
+    public __init(j: JSON_WndrObj|undefined): C_WndrObjBoss2 {
 
         _json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力
         super.__init(j);
