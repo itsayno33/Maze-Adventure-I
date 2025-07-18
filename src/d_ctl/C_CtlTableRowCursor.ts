@@ -1,3 +1,13 @@
+/*
+ * Tableではなく、Tbodyを対象としたカーソル制御クラス
+ * カーソル制御クラスは行方向のみ
+ * 
+ * 1. tbodyの配下にtrのみがあることを前提とする。
+ * 2. trの配下にtdのみがあることを前提とする。
+ * 
+ * 未テスト。多分バグあり
+*/
+
 import { _ceil, _floor, _isNum } from "../d_utl/F_Math";
 import { _alert }                from "../d_cmn/global";
 

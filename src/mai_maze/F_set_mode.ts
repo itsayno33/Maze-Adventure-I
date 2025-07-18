@@ -13,6 +13,7 @@ import { init_SL_mode }   from "./F_set_save_mode";
 import { init_UD_mode }   from "./F_set_UD_mode";
 import { T_CtlsMode }          from "./T_CtlsMode";
 import { g_ctls, g_ctls_mode } from "./global_for_maze";
+import { init_bttl_mode } from "./F_set_bttl_mode";
 
 export function init_all_mode(): void {
     g_ctls.deact();
@@ -20,7 +21,8 @@ export function init_all_mode(): void {
     init_menu_mode();
     init_mvpt_mode();
     init_SL_mode();
-    init_UD_mode()
+    init_UD_mode();
+    init_bttl_mode();
 }
 export function hide_controlles(): void {
 //    g_ctls_mode[0] = T_CtlsMode.Nop;

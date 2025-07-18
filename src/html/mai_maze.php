@@ -344,6 +344,7 @@ function new_team(): Team {
                 <thead>
                     <tr><th id='bttl_team_h3' colspan="6">仲間：</th></tr>
                 </thead>
+                <tbody id='bttl_team_body'>
                     <tr id='bttl_team_tr0'>
                         <td id='bttl_team_tr0_nmlv'></td>
                         <td id='bttl_team_tr0_acst'></td>
