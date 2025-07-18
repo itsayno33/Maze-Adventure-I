@@ -90,10 +90,11 @@ export class C_CtlTableRowCursor {
             --indx;
         } else {
             // 最上段(上端)
-            indx += rows - 1;
-            while (indx > this._leng - 1) {
-                --indx;
-            }
+            indx = rows - 1;
+            //indx += rows - 1;
+            //while (indx > this._leng - 1) {
+            //    --indx;
+            //}
         } 
         this._indx = indx; this.high_light_on();
         return this._indx;
@@ -109,17 +110,19 @@ export class C_CtlTableRowCursor {
             ++indx;
         } else {
             // 最下段(下端)
-            indx -= rows - 1;
-            while (indx % rows !== 0 && indx < this._leng - 1) {
-                ++indx;
-            }
+            indx = 0;
+            //indx -= rows - 1;
+            //while (indx % rows !== 0 && indx < this._leng - 1) {
+            //    ++indx;
+            //}
         } 
         this._indx = indx; this.high_light_on();
         return this._indx;
     }
     
     protected __get_rows(): number {
-        return _ceil(this._leng / this._cols, 0);
+        return this._leng;
+        //return _ceil(this._leng / this._cols, 0);
     }
     // DOMリスト一覧の行数の取得
     protected __get_leng(): number {
