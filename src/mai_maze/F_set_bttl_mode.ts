@@ -191,9 +191,10 @@ function update_team_view(): void {
                                + '　魔法：'
                                + (hero?.get_abi_m_now('lv')??'???').toString();
 
-            dom.acst.innerHTML = '　不明　'
+            dom.acst.innerHTML = '　待機　'
                                + '<br />'
-                               +  hero.is_alive() ? '　正常　' : '戦闘不能';
+                               + (hero.is_alive() ? '　正常　' : '戦闘不能');
+
             dom.hpmp.innerHTML = 'ＨＰ：'
                                + (hero.get_abi_p_now('xp') - hero.get_abi_p_now('xd')).toString() + ' / ' 
                                +  hero.get_abi_p_now('xp').toString()
@@ -222,9 +223,9 @@ function update_enmy_view(): void {
                                + '　魔法：'
                                + (wndr?.get_abi_m_now('lv')??'???').toString();
 
-            dom.acst.innerHTML = '　不明　'
+            dom.acst.innerHTML = '　待機　'
                                + '<br />'
-                               +  wndr.is_alive() ? '　正常　' : '戦闘不能';
+                               + (wndr.is_alive() ? '　正常　' : '戦闘不能');
 
             dom.hpmp.innerHTML = 'ＨＰ：'
                                + (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
@@ -256,7 +257,7 @@ function init_ctls(): void{
         dom_slct_list = document.getElementById('bttl_slct_ul')   as HTMLUListElement;
 
         ccr_team_list = C_CtlTableRowCursor.getObj(tby_team_list);
-//        ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
+        ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
         ccr_cmmd_list = C_CtlCursor.getObj(dom_cmmd_list);
         ccr_slct_list = C_CtlCursor.getObj(dom_slct_list);
     } catch(err) {

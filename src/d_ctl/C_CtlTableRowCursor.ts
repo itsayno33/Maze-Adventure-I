@@ -30,6 +30,7 @@ export class C_CtlTableRowCursor {
     protected _rows: number;
     protected _cols: number;
     protected _indx: number;
+    protected _is_act: boolean = false;
 
     protected constructor(list?: HTMLTableSectionElement) {
         C_CtlTableRowCursor.me ??= {}
@@ -149,6 +150,8 @@ export class C_CtlTableRowCursor {
     public high_light_on(): void {
         if (this._list === undefined) return;
 
+        if (!this.is_act()) return;
+
         this.high_light_off();
         const tr = this._list.children.item(this._indx) as HTMLTableRowElement;
         this.__high_light_on(tr, true);
@@ -189,6 +192,18 @@ export class C_CtlTableRowCursor {
             }
         }
     }
+    public act(): void {
+        this._is_act = true;
+        this.high_light_on();
+    }
+    public dact(): void {
+        this._is_act = false;
+        this.high_light_off();
+    }
+    public is_act(): boolean {
+        return this._is_act;
+    }
+
     public alert(): void {
         _alert(
               "CtlCursor: "

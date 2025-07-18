@@ -631,8 +631,8 @@ article#pane_ctls_boad #div_ctls_boad {
     color:       var(--bttl_table_text_color, darkblue);
     background-color: #98fb98;
     font-family: var(--bttl_table_font_family, sans-serif);
-    font-size:   var(--bttl_table_font_size,   1.2rem);
-    line-height: var(--bttl_table_line_heght,  1.5rem);
+    font-size:   var(--bttl_table_font_size,   1.0rem);
+    line-height: var(--bttl_table_line_heght,  1.2rem);
     text-align:  justify;
     white-space: nowrap;
     /******************
@@ -659,8 +659,8 @@ article#pane_ctls_boad #div_ctls_boad {
 {
     color:       var(--bttl_table_name_text_color, darkblue);
     font-family: var(--bttl_table_name_font_family, sans-serif);
-    font-size:   var(--bttl_table_name_font_size,   1.2rem);
-    line-height: var(--bttl_table_name_line_heght,  1.5rem);
+    font-size:   var(--bttl_table_name_font_size,   1.0rem);
+    line-height: var(--bttl_table_name_line_heght,  1.2rem);
     text-align:  left;
 }
 
