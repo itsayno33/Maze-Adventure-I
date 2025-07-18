@@ -183,22 +183,28 @@ function update_team_view(): void {
         const hero = mdl_team_list[i];
         const dom  = dom_team_list[i];
         if (hero !== undefined) {
-            dom.nmlv.textContent =  hero.name() 
-                                 + '<br />'
-                                 +  hero.get_abi_p_now('lv').toString();
+            dom.nmlv.innerHTML =  hero.name() 
+                               + '<br />'
+                               + 'Lv：'
+                               + '　物理：'
+                               + (hero?.get_abi_p_now('lv')??'???').toString()
+                               + '　魔法：'
+                               + (hero?.get_abi_m_now('lv')??'???').toString();
 
-            dom.acst.textContent = '　不明　'
-                                 + '<br />'
-                                 +  hero.is_alive()? '　正常　' : '戦闘不能';
-            dom.hpmp.textContent = (hero.get_abi_p_now('xp') - hero.get_abi_p_now('xd')).toString() + ' / ' 
-                                 +  hero.get_abi_p_now('xp').toString()
-                                 + '<br />'
-                                 + (hero.get_abi_m_now('xp') - hero.get_abi_m_now('xd')).toString() + ' / ' 
-                                 +  hero.get_abi_m_now('xp').toString();
+            dom.acst.innerHTML = '　不明　'
+                               + '<br />'
+                               +  hero.is_alive() ? '　正常　' : '戦闘不能';
+            dom.hpmp.innerHTML = 'ＨＰ：'
+                               + (hero.get_abi_p_now('xp') - hero.get_abi_p_now('xd')).toString() + ' / ' 
+                               +  hero.get_abi_p_now('xp').toString()
+                               + '<br />'
+                               + 'ＭＰ：'
+                               + (hero.get_abi_m_now('xp') - hero.get_abi_m_now('xd')).toString() + ' / ' 
+                               +  hero.get_abi_m_now('xp').toString();
         } else {
-            dom.nmlv.textContent = '';
-            dom.acst.textContent = '';
-            dom.hpmp.textContent = '';
+            dom.nmlv.innerHTML = '';
+            dom.acst.innerHTML = '';
+            dom.hpmp.innerHTML = '';
         }
 
     }
@@ -210,15 +216,21 @@ function update_enmy_view(): void {
         if (wndr !== undefined) {
             dom.nmlv.innerHTML =  wndr.name() 
                                + '<br />'
-                               + (wndr?.get_abi_p_now('lv')??'???').toString();
+                               + 'Lv：'
+                               + '　物理：'
+                               + (wndr?.get_abi_p_now('lv')??'???').toString()
+                               + '　魔法：'
+                               + (wndr?.get_abi_m_now('lv')??'???').toString();
 
             dom.acst.innerHTML = '　不明　'
                                + '<br />'
-                               +  wndr.is_alive()? '　正常　' : '戦闘不能';
+                               +  wndr.is_alive() ? '　正常　' : '戦闘不能';
 
-            dom.hpmp.innerHTML = (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
+            dom.hpmp.innerHTML = 'ＨＰ：'
+                               + (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
                                +  wndr.get_abi_p_now('xp')?.toString()
                                + '<br />'
+                               + 'ＭＰ：'
                                + (wndr.get_abi_m_now('xp') - wndr.get_abi_m_now('xd')).toString() + ' / ' 
                                +  wndr.get_abi_m_now('xp')?.toString();
         } else {
@@ -243,8 +255,8 @@ function init_ctls(): void{
         dom_cmmd_list = document.getElementById('bttl_cmmd_ul')   as HTMLUListElement;
         dom_slct_list = document.getElementById('bttl_slct_ul')   as HTMLUListElement;
 
-        ccr_team_list = C_CtlTableRowCursor.getObj(tby_team_list);
-        ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
+//        ccr_team_list = C_CtlTableRowCursor.getObj(tby_team_list);
+//        ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
         ccr_cmmd_list = C_CtlCursor.getObj(dom_cmmd_list);
         ccr_slct_list = C_CtlCursor.getObj(dom_slct_list);
     } catch(err) {
