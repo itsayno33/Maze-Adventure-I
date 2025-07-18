@@ -235,15 +235,15 @@ function hero_on_event(): void {
         if (o.get_pd().within(pos)) {                 // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
             act_bttl_mode(o);
         } else {
-    // 移動先が階段なら階段の処理
-    const kind = g_maze.get_cell(g_team.get_pd())?.getKind();
-    switch (kind) {
-        case T_MzKind.StrUp:
-        case T_MzKind.StrDn:
-        case T_MzKind.StrUD:
-            do_stairs_motion(kind);
-            return; // 階段の処理が終わったらここでreturn
-    }
+            // 移動先が階段なら階段の処理
+            const kind = g_maze.get_cell(g_team.get_pd())?.getKind();
+            switch (kind) {
+                case T_MzKind.StrUp:
+                case T_MzKind.StrDn:
+                case T_MzKind.StrUD:
+                    do_stairs_motion(kind);
+                    return; // 階段の処理が終わったらここでreturn
+            }
         }
     }
 };
