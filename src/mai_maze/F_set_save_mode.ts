@@ -8,7 +8,7 @@ import { POST_and_move_page }  from "../d_cmn/F_POST";
 import { general_load, general_save, get_save_info }    from "../d_cmn/F_load_and_save";
 import { _alert, g_mes, g_my_url, g_save, g_start_env } from "../d_cmn/global";
 import { act_menu_mode }       from "./F_set_menu_mode";
-import { act_move_mode, do_move_bottom_half, init_g_wres } from "./F_set_move_mode";
+import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
 import { 
     g_ctls,
     g_cvm, 
@@ -19,7 +19,6 @@ import {
     g_hres,
     g_hresInfo,
     clr_g_hres,
-    clr_g_obje,
     init_g_view2X, 
 } from "./global_for_maze";
 import { T_Ctls } from "./C_DefaultCtls";
@@ -608,8 +607,8 @@ function decode_common(): void {
 
     // WndrWalker関連のデコード
     //for (const i in g_obje) delete g_obje[i];
-    clr_g_obje()
-    init_g_wres();
+//    clr_g_obje()
+//    init_g_wres();
 
     // MazeにTeamを追加
     g_maze.add_obj(g_team as I_MazeObj);

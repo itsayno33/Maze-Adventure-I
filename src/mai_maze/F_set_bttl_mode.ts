@@ -3,6 +3,7 @@ import { C_CtlTableRowCursor } from "../d_ctl/C_CtlTableRowCursor";
 import { I_Hero }              from "../d_mdl/C_Hero";
 import { I_MazeObj }           from "../d_mdl/C_MazeObj";
 import { I_Wndr }              from "../d_mdl/C_Wndr";
+import { _json_alert, _json_to_str } from "../d_utl/F_Utility";
 import { act_move_mode, do_move_bottom_half }   from "./F_set_move_mode";
 import { g_ctls, g_cvm, g_maze, g_team, g_vsw } from "./global_for_maze";
 
@@ -192,8 +193,8 @@ function update_team_view(): void {
             dom.hpmp.textContent = (hero.get_abi_p_now('xp') - hero.get_abi_p_now('xd')).toString() + ' / ' 
                                  +  hero.get_abi_p_now('xp').toString()
                                  + '<br />'
-                                 + (hero.get_abi_p_now('xp') - hero.get_abi_p_now('xd')).toString() + ' / ' 
-                                 +  hero.get_abi_p_now('xp').toString();
+                                 + (hero.get_abi_m_now('xp') - hero.get_abi_m_now('xd')).toString() + ' / ' 
+                                 +  hero.get_abi_m_now('xp').toString();
         } else {
             dom.nmlv.textContent = '';
             dom.acst.textContent = '';
@@ -207,22 +208,23 @@ function update_enmy_view(): void {
         const wndr = mdl_enmy_list[i];
         const dom  = dom_enmy_list[i];
         if (wndr !== undefined) {
-            dom.nmlv.textContent =  wndr.name() 
-                                 + '<br />'
-                                 +  wndr.get_abi_p_now('lv').toString();
+            dom.nmlv.innerHTML =  wndr.name() 
+                               + '<br />'
+                               + (wndr?.get_abi_p_now('lv')??'???').toString();
 
-            dom.acst.textContent = '　不明　'
-                                 + '<br />'
-                                 +  wndr.is_alive()? '　正常　' : '戦闘不能';
-            dom.hpmp.textContent = (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
-                                 +  wndr.get_abi_p_now('xp').toString()
-                                 + '<br />'
-                                 + (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
-                                 +  wndr.get_abi_p_now('xp').toString();
+            dom.acst.innerHTML = '　不明　'
+                               + '<br />'
+                               +  wndr.is_alive()? '　正常　' : '戦闘不能';
+
+            dom.hpmp.innerHTML = (wndr.get_abi_p_now('xp') - wndr.get_abi_p_now('xd')).toString() + ' / ' 
+                               +  wndr.get_abi_p_now('xp')?.toString()
+                               + '<br />'
+                               + (wndr.get_abi_m_now('xp') - wndr.get_abi_m_now('xd')).toString() + ' / ' 
+                               +  wndr.get_abi_m_now('xp')?.toString();
         } else {
-            dom.nmlv.textContent = '';
-            dom.acst.textContent = '';
-            dom.hpmp.textContent = '';
+            dom.nmlv.innerHTML = '';
+            dom.acst.innerHTML = '';
+            dom.hpmp.innerHTML = '';
         }
 
     }

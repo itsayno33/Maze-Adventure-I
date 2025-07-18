@@ -64,7 +64,7 @@ export class C_WndrObjBoss2 extends C_WndrObj {
 
     public __init(j: JSON_WndrObj|undefined): C_WndrObjBoss2 {
 
-        _json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力
+        //_json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力
         super.__init(j);
 
         return this;
@@ -130,7 +130,7 @@ export class C_WndrObjBoss3 extends C_WndrObj {
     }
     public __init(j: JSON_WndrObj|undefined): C_WndrObjBoss2 {
 
-        _json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力
+        //_json_console(j, 'C_WndrObjBoss2.__init() json_output = '); // デバッグ用：初期化時にjの内容を出力
         super.__init(j);
 
         return this;

@@ -29,7 +29,6 @@ export let g_view2D: C_DrowMap2D;
 export let g_view2M: C_DrowMap2M;
 
 import { C_WndrObj, I_WndrObj }       from "../d_mdl/C_WndrObj";
-export let g_obje: (I_WndrObj|undefined)[] = []; // WndrObjの配列
 
 import { C_HresInfo } from "./C_HresInfo";
 export let g_hresInfo: C_HresInfo;
@@ -247,11 +246,11 @@ function stop_double_click(): void {
 export function clr_g_hres(): void {
     g_hres = [];
 }
-
+/********
 export function clr_g_obje(): void {
     g_obje = [];
 }
-
+********/
 export function init_g_view2X(): void {
     g_view2D = C_DrowMap2X.getObj({
         div_id:    'div_maze_vw2D', 
@@ -278,7 +277,7 @@ function install_objs(num: number = 1): void {
             pos:    {x:x, y:y, z:0, d:0},
         });
         g_maze.add_obj(obje as I_WndrObj);
-        g_obje.push(obje); // WndrObjの配列に追加
+//        g_obje.push(obje); // WndrObjの配列に追加
     }
     // 通り抜けできるオブジェを置く
     for (let i = 0; i < num; i++) {

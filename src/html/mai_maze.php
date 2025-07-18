@@ -375,7 +375,7 @@ function new_team(): Team {
                     <tr id='bttl_enmy_tr0'>
                         <td id='bttl_enmy_tr0_nmlv'>a</td>
                         <td id='bttl_enmy_tr0_acst'>b</td>
-                        <td id='bttl_enmy_tr0_hpmt'>e</td>
+                        <td id='bttl_enmy_tr0_hpmp'>e</td>
                     </tr>
                     <tr id='bttl_enmy_tr1'>
                         <td id='bttl_enmy_tr1_nmlv'>aaaaaaaaaaaaaaa<br />ＬＶ：10,000</td>

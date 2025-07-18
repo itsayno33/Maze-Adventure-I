@@ -21,8 +21,6 @@ import {
     g_ds,
     g_hres,
     g_hresInfo,
-    g_obje,
-    clr_g_obje, 
 } from "./global_for_maze";
 
 import { can_move_team, can_turn_team } from "./F_GM_Hres_move_and_turn";
@@ -31,6 +29,7 @@ import { display_maze2D } from "./F_display_maze2D";
 import { can_move_wndr } from "./F_GM_Wndr_move_and_turn";
 import { C_Team } from "../d_mdl/C_Team";
 import { act_bttl_mode } from "./F_set_bttl_mode";
+import { _json_alert } from "../d_utl/F_Utility";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -95,33 +94,46 @@ function change_unexp_to_floor(p: C_Point): void {
 function go_F(): void {
     const rslt = g_team.getWalker().hope_p_fwd();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_B(): void {
     const rslt = g_team.getWalker().hope_p_bak();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_L(): void {
     const rslt = g_team.getWalker().hope_p_lft();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_R(): void {
     const rslt = g_team.getWalker().hope_p_rgt();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function tr_R(): void {
     const rslt = g_team.getWalker().hope_turn_r();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    //stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_off');
 }
 function tr_L(): void {
     const rslt = g_team.getWalker().hope_turn_l();
     move_check(rslt);
+    hero_on_event(); // オブジェとの遭遇処理
+    //stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_off');
 }
+
 function move_check(r: I_HopeAction): void {
     g_mvm.clear_message();
     //g_maze全体のオブジェ行動の処理
@@ -140,22 +152,15 @@ function move_check(r: I_HopeAction): void {
             const _move_rslt = can_move_team(r);
             if (_move_rslt.ok) {
                 // 進行方向へ進む
-                g_team.getWalker().set_pd(r.subj)
+                g_team.getWalker().set_pd(r.subj);
                 // HP自動回復
                 for (const hero of g_hres) {
                     if (hero === undefined) continue;
                     if (!hero.is_alive())   continue;
                     hero.hp_auto_heal();
                 }
+                
 
-                // 移動先が階段なら階段の処理
-                const kind = g_maze.get_cell(r.subj)?.getKind();
-                switch (kind) {
-                    case T_MzKind.StrUp:
-                    case T_MzKind.StrDn:
-                    case T_MzKind.StrUD:
-                        do_stairs_motion(kind);
-                }
             } else {               //   alert ( 'r.res = ' + _rslt.res ); 
                 // 進行方向へ進めない
                 // ダメージ処理
@@ -165,13 +170,25 @@ function move_check(r: I_HopeAction): void {
                     if (!hero.is_alive())   continue;
                     hero.hp_damage(damage);
                 }
+                // ぶつかったメッセージ処理
                 dont_move(r);
             }
             break;
     }
-    hero_on_event();
     g_hresInfo.update();
 } 
+
+function stairs_check(r: I_HopeAction): void {
+    // 移動先が階段なら階段の処理
+    const kind = g_maze.get_cell(r.subj)?.getKind();
+    switch (kind) {
+        case T_MzKind.StrUp:
+        case T_MzKind.StrDn:
+        case T_MzKind.StrUD:
+            do_stairs_motion(kind);
+    }
+
+}
 
 function dont_move(r: I_HopeAction): void {
     g_mvm.normal_message('進めない！（笑）');
@@ -183,7 +200,7 @@ function around_obj(r: I_HopeAction): void {}
 
 // g_maze全体のオブジェの行動処理
 function action_obj(): void {
-    for (const obje of g_obje) {
+    for (const obje of g_maze.get_obj_array()) {
         if (obje === undefined) continue;
 
         const walker = obje.walker();
@@ -234,22 +251,22 @@ function hero_on_event(): void {
         if (o === undefined) continue;
         if (o instanceof C_Team) continue;   // C_TeamもObjとして登録されているが無視する
         // 各オブジェクトのイベントを処理
-        if (o.within(pos)) {                 // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
+        if (o.get_pd().within(pos)) {                 // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
             act_bttl_mode(o);
         }
     }
     //g_objeの更新
-    clr_g_obje();
-    init_g_wres();
+//    clr_g_obje();
+//    init_g_wres();
 };
-
+/***********
 export function init_g_wres(): void {
     for (const obje of g_maze.get_obj_array()) {
         if (obje.walker() === undefined) continue;
         g_obje.push(obje);
     }
 }
-
+***********/
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
