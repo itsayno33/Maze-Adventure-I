@@ -71,14 +71,14 @@ function __isOK(id: string): void {
         case 'menu_load': do_load();return;
         case 'menu_save': do_save();return;
         case 'menu_mvpt': do_mvpt();return;
-        case 'menu_bttl': do_bttl();return; //仮
+//        case 'menu_bttl': do_bttl();return; //仮
     }
 }
 
 //仮の処理
-function do_bttl(): void {
-    act_bttl_mode();
-}
+//function do_bttl(): void {
+//    act_bttl_mode();
+//}
 
 function isNG(): void {
     g_cvm.clear_message();

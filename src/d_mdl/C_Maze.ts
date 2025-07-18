@@ -159,7 +159,8 @@ export class C_Maze implements I_Locate, I_JSON_Uniq {
         
         this.objs[obj.uid()] = obj;
     }
-    public rmv_obj(obj: I_MazeObj): void {
+    public rmv_obj(obj: I_MazeObj|undefined): void {
+        if (obj === undefined) return;
         delete this.objs[obj.uid()];
     }
     public get_obj_array(): I_MazeObj[] {

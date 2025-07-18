@@ -1,19 +1,19 @@
-import { C_CtlCursor } from "../d_ctl/C_CtlCursor";
+import { C_CtlCursor }         from "../d_ctl/C_CtlCursor";
 import { C_CtlTableRowCursor } from "../d_ctl/C_CtlTableRowCursor";
-import { C_CtlTbodyCursor } from "../d_ctl/C_CtlTbodyCursor";
-import { C_Hero } from "../d_mdl/C_Hero";
-import { C_Wndr } from "../d_mdl/C_Wndr";
-import { act_move_mode, do_move_bottom_half } from "./F_set_move_mode";
-import { g_ctls, g_cvm, g_vsw } from "./global_for_maze";
+import { I_Hero }              from "../d_mdl/C_Hero";
+import { I_MazeObj }           from "../d_mdl/C_MazeObj";
+import { I_Wndr }              from "../d_mdl/C_Wndr";
+import { act_move_mode, do_move_bottom_half }   from "./F_set_move_mode";
+import { g_ctls, g_cvm, g_maze, g_team, g_vsw } from "./global_for_maze";
 
 //type T_TableCol = 'nmlv' | 'acst' | 'hpmp';
 
-let mdl_team_list: (C_Hero|undefined)[];
+let mdl_team_list: (I_Hero|undefined)[];
 let dom_team_list: {[key: string]: HTMLTableCellElement}[];
 let tby_team_list: HTMLTableSectionElement;
 let ccr_team_list: C_CtlTableRowCursor;
 
-let mdl_enmy_list: (C_Wndr|undefined)[];
+let mdl_enmy_list: (I_Wndr|undefined)[];
 let dom_enmy_list: {[key: string]: HTMLTableCellElement}[];
 let tby_enmy_list: HTMLTableSectionElement;
 let ccr_enmy_list: C_CtlTableRowCursor;
@@ -32,13 +32,19 @@ let idx:   number   =   0;
 const Hero_max: number = 4;
 const Wndr_max: number = 4;
 
+let enmy_obje: I_MazeObj|undefined = undefined;
+
 export function init_bttl_mode(): void {
     init_all();
 }
 
-export function act_bttl_mode(hres: C_Hero[], wres: C_Wndr[]): void {
-    set_team_data(hres);
-    set_enmy_data(wres);
+export function act_bttl_mode(obje: I_MazeObj|undefined): void {
+    if (obje === undefined || obje.wres() === undefined || (obje.wres()?.length??0) < 1) return;
+
+    enmy_obje = obje;
+
+    set_team_data(g_team.hres());
+    set_enmy_data(obje.wres()??[]);
     update_all();
 
     g_cvm.clear_message();
@@ -48,6 +54,20 @@ export function act_bttl_mode(hres: C_Hero[], wres: C_Wndr[]): void {
     g_ctls.act(ctls_bttl_nor);
     g_vsw.view(g_vsw.Bttl()); 
 }
+
+
+// 仲間データをセット
+// 将来的にはここでフォーメーション(2行3列)もセット
+function set_team_data(hres: I_Hero[]): void {
+    mdl_team_list = hres;
+}
+
+// 敵データをセット
+// 将来的にはここでフォーメーション(2行3列)もセット
+function set_enmy_data(wres: I_Wndr[]): void {
+    mdl_enmy_list = wres;
+}
+
 
 function init_all(): void {
     init_data();
@@ -102,18 +122,6 @@ function update_enmy_data(): void {}
 function update_cmmd_data(): void {}
 function update_slct_data(): void {}
 
-
-// 仲間データをセット
-// 将来的にはここでフォーメーション(2行3列)もセット
-function set_team_data(hres: C_Hero[]): void {
-    mdl_team_list = hres;
-}
-
-// 敵データをセット
-// 将来的にはここでフォーメーション(2行3列)もセット
-function set_enmy_data(wres: C_Wndr[]): void {
-    mdl_enmy_list = wres;
-}
 
 
 /*　
@@ -260,6 +268,12 @@ function do_L(): void {}
 function do_R(): void {}
 function isOK(): void {}
 function isNG(): void {
+    // 敵オブジェを迷宮からもメモリからも消去
+    g_maze.rmv_obj(enmy_obje?? undefined);
+    enmy_obje?.free();
+    enmy_obje = undefined;
+
+    // 戦闘モードを終了して移動モードに戻る
     g_cvm.clear_message();
     act_move_mode();
     do_move_bottom_half('blink_off');

@@ -30,6 +30,7 @@ import { _irand } from "../d_utl/F_Rand";
 import { display_maze2D } from "./F_display_maze2D";
 import { can_move_wndr } from "./F_GM_Wndr_move_and_turn";
 import { C_Team } from "../d_mdl/C_Team";
+import { act_bttl_mode } from "./F_set_bttl_mode";
 
 const ctls_move_nor = {
     name: 'move_nor', 
@@ -233,9 +234,8 @@ function hero_on_event(): void {
         if (o === undefined) continue;
         if (o instanceof C_Team) continue;   // C_TeamもObjとして登録されているが無視する
         // 各オブジェクトのイベントを処理
-        if (o.within(pos)) {                              // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
-            o.free();
-            g_maze.rmv_obj(o);
+        if (o.within(pos)) {                 // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
+            act_bttl_mode(o);
         }
     }
     //g_objeの更新
