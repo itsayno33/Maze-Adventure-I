@@ -52,7 +52,7 @@ export function act_bttl_mode(obje: I_MazeObj|undefined): void {
     TECS_mode = 'Team';
     //idx = 0;
     //ccr_team_list.set_pos(idx);
-    g_ctls.act(ctls_bttl_nor);
+    g_ctls.act(ctls_bttl_team);
     g_vsw.view(g_vsw.Bttl()); 
 }
 
@@ -260,6 +260,15 @@ function init_ctls(): void{
         ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
         ccr_cmmd_list = C_CtlCursor.getObj(dom_cmmd_list);
         ccr_slct_list = C_CtlCursor.getObj(dom_slct_list);
+
+        ccr_team_list.act();
+        ccr_enmy_list.dact();
+        ccr_cmmd_list.dact();
+        ccr_slct_list.dact();
+
+        g_ctls.set(ctls_bttl_nor);
+        g_ctls.set(ctls_bttl_team);
+        
     } catch(err) {
         alert('Error: ' + err);
     }
@@ -268,29 +277,42 @@ function init_ctls(): void{
 function update_ctls(): void {}
 
 const ctls_bttl_nor = {
-    name: 'menu_nor', 
-    do_U:  do_U,
-    do_D:  do_D,
-    isOK:  isOK,
-    isNG:  isNG,
-    isRT:  isNG,
-    cpRT:  isNG,
+    name: 'bttl_nor', 
+    isNG:  isRT,
+    isRT:  isRT,
+    cpRT:  isRT,
 }
-
-function do_U(): void {}
-function do_D(): void {}
-function do_L(): void {}
-function do_R(): void {}
-function isOK(): void {}
-function isNG(): void {
+function isRT(): void {
     // 敵オブジェを迷宮からもメモリからも消去
-    g_maze.rmv_obj(enmy_obje?? undefined);
-    enmy_obje?.free();
-    enmy_obje = undefined;
+    //g_maze.rmv_obj(enmy_obje?? undefined); //テスト中なので仮にコメントアウト
+    //enmy_obje?.free();
+    //enmy_obje = undefined;
 
     // 戦闘モードを終了して移動モードに戻る
     g_cvm.clear_message();
     act_move_mode();
     do_move_bottom_half('blink_off');
 }
+
+const ctls_bttl_team = {
+    name: 'bttl_team', 
+    do_U:  do_U_team,
+    do_D:  do_D_team,
+    isOK:  isOK_team,
+    isNG:  isRT_team,
+    isRT:  isRT_team,
+    cpRT:  isRT_team,
+}
+
+function do_U_team(): void {
+    idx = ccr_team_list.pos_U(); alert('do_U_team: ' + idx);
+}
+
+function do_D_team(): void {
+    idx = ccr_team_list.pos_D(); alert('do_D_team: ' + idx);
+}
+
+function isOK_team(): void {}
+function isRT_team(): void {isRT();}
+
 
