@@ -9,6 +9,7 @@ export class C_CtlCursor {
     protected _leng: number;
     protected _cols: number;
     protected _indx: number;
+    protected _is_act: boolean = true;
 
     protected constructor(list?: HTMLElement) {
         C_CtlCursor.me ??= {}
@@ -171,6 +172,8 @@ export class C_CtlCursor {
     public high_light_on(): void {
         if (this._list === undefined) return;
 
+        if (!this.is_act()) return;
+
         const children = this._list.children;
         const len      = children.length;
         if (this._indx < 0 || this._indx > len - 1) return;
@@ -214,6 +217,17 @@ export class C_CtlCursor {
                 p.style.display         = 'none';
             }
         }
+    }
+    public act(): void {
+        this._is_act = true;
+        this.high_light_on();
+    }
+    public dact(): void {
+        this._is_act = false;
+        this.high_light_off();
+    }
+    public is_act(): boolean {
+        return this._is_act;
     }
     public alert(): void {
         _alert(
