@@ -272,7 +272,7 @@ function key_press_function(e: KeyboardEvent):void  {
                 e.preventDefault();
                 (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyO':
+        case 'KeyK':
                 if (ne) (document.getElementById('u_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowDown': 
@@ -280,31 +280,29 @@ function key_press_function(e: KeyboardEvent):void  {
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
         case 'Numpad2': 
+        case 'KeyJ':
                 (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyL':
+        case 'Semicolon':
                 if (!ne) break; 
                 if (g_debug.isON()) {
                     do_instant_load();
-                } else {
-                    (document.getElementById('d_arr') as HTMLButtonElement)?.click();
                 }
+        case 'KeyL':
+                (document.getElementById('r_arr') as HTMLButtonElement)?.click();
             break;
         case 'ArrowLeft': 
         case 'Numpad1': 
                 e.preventDefault();
                 (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
-        case 'KeyK':
+        case 'KeyH':
                 if (ne) (document.getElementById('l_arr') as HTMLButtonElement)?.click();
                 break;
         case 'ArrowRight': 
         case 'Numpad3': 
                 e.preventDefault();
                 (document.getElementById('r_arr') as HTMLButtonElement)?.click();
-                break;
-        case 'Semicolon':
-                if (ne) (document.getElementById('r_arr') as HTMLButtonElement)?.click();
                 break;
         case 'Enter':
         case 'NumpadEnter':
