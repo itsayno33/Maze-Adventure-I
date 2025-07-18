@@ -305,11 +305,11 @@ const ctls_bttl_team = {
 }
 
 function do_U_team(): void {
-    idx = ccr_team_list.pos_U(); alert('do_U_team: ' + idx);
+    idx = ccr_team_list.pos_U();
 }
 
 function do_D_team(): void {
-    idx = ccr_team_list.pos_D(); alert('do_D_team: ' + idx);
+    idx = ccr_team_list.pos_D();
 }
 
 function isOK_team(): void {}
