@@ -95,42 +95,35 @@ function go_F(): void {
     const rslt = g_team.getWalker().hope_p_fwd();
     move_check(rslt);
     hero_on_event(); // オブジェとの遭遇処理
-    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_B(): void {
     const rslt = g_team.getWalker().hope_p_bak();
     move_check(rslt);
     hero_on_event(); // オブジェとの遭遇処理
-    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_L(): void {
     const rslt = g_team.getWalker().hope_p_lft();
     move_check(rslt);
     hero_on_event(); // オブジェとの遭遇処理
-    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function go_R(): void {
     const rslt = g_team.getWalker().hope_p_rgt();
     move_check(rslt);
     hero_on_event(); // オブジェとの遭遇処理
-    stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_on');
 }
 function tr_R(): void {
     const rslt = g_team.getWalker().hope_turn_r();
     move_check(rslt);
-    hero_on_event(); // オブジェとの遭遇処理
-    //stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_off');
 }
 function tr_L(): void {
     const rslt = g_team.getWalker().hope_turn_l();
     move_check(rslt);
     hero_on_event(); // オブジェとの遭遇処理
-    //stairs_check(rslt);  // 移動先が階段なら階段の処理
     do_move_bottom_half('blink_off');
 }
 
@@ -177,18 +170,6 @@ function move_check(r: I_HopeAction): void {
     }
     g_hresInfo.update();
 } 
-
-function stairs_check(r: I_HopeAction): void {
-    // 移動先が階段なら階段の処理
-    const kind = g_maze.get_cell(r.subj)?.getKind();
-    switch (kind) {
-        case T_MzKind.StrUp:
-        case T_MzKind.StrDn:
-        case T_MzKind.StrUD:
-            do_stairs_motion(kind);
-    }
-
-}
 
 function dont_move(r: I_HopeAction): void {
     g_mvm.normal_message('進めない！（笑）');
@@ -253,20 +234,20 @@ function hero_on_event(): void {
         // 各オブジェクトのイベントを処理
         if (o.get_pd().within(pos)) {                 // 戦闘（バトル：bttl）イベントはココ！act_bttl_mode()
             act_bttl_mode(o);
+        } else {
+    // 移動先が階段なら階段の処理
+    const kind = g_maze.get_cell(g_team.get_pd())?.getKind();
+    switch (kind) {
+        case T_MzKind.StrUp:
+        case T_MzKind.StrDn:
+        case T_MzKind.StrUD:
+            do_stairs_motion(kind);
+            return; // 階段の処理が終わったらここでreturn
+    }
         }
     }
-    //g_objeの更新
-//    clr_g_obje();
-//    init_g_wres();
 };
-/***********
-export function init_g_wres(): void {
-    for (const obje of g_maze.get_obj_array()) {
-        if (obje.walker() === undefined) continue;
-        g_obje.push(obje);
-    }
-}
-***********/
+
 
 export function do_move_bottom_half(blink_mode: string): void {   //alert('Floor? = ' + g_team.get_p().z);
     change_unexp_to_floor(g_team.get_pd());
