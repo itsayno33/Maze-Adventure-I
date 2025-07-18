@@ -255,7 +255,7 @@ function init_ctls(): void{
         dom_cmmd_list = document.getElementById('bttl_cmmd_ul')   as HTMLUListElement;
         dom_slct_list = document.getElementById('bttl_slct_ul')   as HTMLUListElement;
 
-//        ccr_team_list = C_CtlTableRowCursor.getObj(tby_team_list);
+        ccr_team_list = C_CtlTableRowCursor.getObj(tby_team_list);
 //        ccr_enmy_list = C_CtlTableRowCursor.getObj(tby_enmy_list);
         ccr_cmmd_list = C_CtlCursor.getObj(dom_cmmd_list);
         ccr_slct_list = C_CtlCursor.getObj(dom_slct_list);

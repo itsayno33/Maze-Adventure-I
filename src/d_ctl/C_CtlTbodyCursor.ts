@@ -212,12 +212,15 @@ export class C_CtlTbodyCursor {
         for (var j = 0; j < elm.children.length; j++) {
             const p = elm.children.item(j) as HTMLElement;
             if (isOn) {
+                p.style.fontWeight      = 'bold';
+                p.style.color           = bg_color;
+                p.style.backgroundColor = fw_color;
+//                p.style.display         = 'table-cell';
+            } else {
                 p.style.fontWeight      = 'normal';
                 p.style.color           = fw_color;
                 p.style.backgroundColor = bg_color;
-                p.style.display         = 'block';
-            } else {
-                p.style.display         = 'none';
+//                p.style.display         = 'none';
             }
         }
     }

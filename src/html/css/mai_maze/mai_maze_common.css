@@ -620,12 +620,16 @@ article#pane_ctls_boad #div_ctls_boad {
 { 
     border:#0000ff solid 1px;
     border-radius: 0.5rem;
+
+    color:       var(--bttl_table_text_color, darkgreen);
+    background-color: #98fb98;
 }
 
 #bttl_enmy *,
 #bttl_team * 
 {
-    color:       var(--bttl_table_text_color, darkgreen);
+    color:       var(--bttl_table_text_color, darkblue);
+    background-color: #98fb98;
     font-family: var(--bttl_table_font_family, sans-serif);
     font-size:   var(--bttl_table_font_size,   1.2rem);
     line-height: var(--bttl_table_line_heght,  1.5rem);
