@@ -21,6 +21,7 @@ export class C_HeroAbility implements I_JSON {
         cnc: 0,  // 機運値(チャンス)
     
         // 以下、いわゆるステータス。上記の計算に影響。ヒーローレベルやステータスアップで加算
+        lvl: 0,  // ヒーローレベル。経験値を得ることで上昇
         str: 0,  // 根性。攻撃/防御力にも影響。HP/MP回復やアイテムの最大所持重量にボーナス
         pwr: 0,  // 基本的強さ。攻撃力に影響
         vit: 0,  // 耐久力。HP/MPの最大値や防御力、回復値に影響を与える
@@ -69,10 +70,11 @@ export class C_HeroAbility implements I_JSON {
         this.v.cnc =  Math.ceil( 3*this.v.luk                + 2*this.v.tec );
     }
 
-    public random_make(hero_level: number = 0): C_HeroAbility {
+    public random_make(hero_level: number = 1): C_HeroAbility {
 
-        const hl   = hero_level + 1; // ヒーローレベルの初期値
+        const hl   = hero_level + 0; // ヒーローレベルの初期値
 
+        this.v.lvl +=  hl;
         this.v.str +=  _inrand(5,   20, 2.0) * hl;
         this.v.pwr +=  _inrand(5,   20, 2.0) * hl;
         this.v.vit +=  _inrand(5,   20, 2.0) * hl;

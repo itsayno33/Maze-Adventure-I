@@ -4,6 +4,7 @@ import { C_HeroAbility, JSON_Hero_Ability} from "./C_HeroAbility";
 import { I_JSON_Uniq,   JSON_Any }         from "./C_SaveInfo";
 import { _get_uuid, _inrand, _irand, _random_str }  from "../d_utl/F_Rand";
 import { C_GoodsList, JSON_GoodsList } from "./C_GoodsListNG";
+import { _max } from "../d_utl/F_Math";
 
 export interface JSON_Hero extends JSON_Any {
     id?:        number, 
@@ -65,7 +66,7 @@ export interface I_Hero {
     hp_damage(dmg: number): number;
     hp_heal(heal: number):  number;
     hp_auto_heal():         number;
-    random_make(hero_level: number): C_Hero;
+    random_make(hero_level_p: number, hero_level_m: number): C_Hero;
 
     encode(): JSON_Hero;
     decode(j: JSON_Hero):void;
@@ -198,6 +199,12 @@ export class C_Hero implements I_JSON_Uniq {
     public hero_bonus(n: number): number {
         return n * ( this.lv + 1 );
     }
+    public hero_bonus_p(n: number): number {
+        return n * ( (this.abi_p?.now.get('lvl')??0) + 1 );
+    }
+    public hero_bonus_m(n: number): number {
+        return n * ( (this.abi_m?.now.get('lvl')??0) + 1 );
+    }
 
     public hp_damage(dmg: number): number {
         const xp_now  = this.abi_p?.now.get('xp') ?? 0;
@@ -239,13 +246,13 @@ export class C_Hero implements I_JSON_Uniq {
         this.abi_m?.now.decode(this.abi_m?.ttl.encode()??{});
     }
 
-    public random_make(hero_level: number = 0): C_Hero {
+    public random_make(hero_level_p: number = 1, hero_level_m: number = 1): C_Hero {
         this.my_id    = 0; // --Hero::$max_id;
         this.my_name  = "冒険者 " + _random_str(5);
         this.sex      = _irand( 0,     1); 
         this.age      = _irand( 15,   25); 
         this.state    = 0; 
-        this.lv       = hero_level; 
+        this.lv       = _max([hero_level_p, hero_level_m, 1]); 
         this.gold     = _irand( 500, 1000); 
         this.val      = {
             skp: {ttl: 0, now: 0}, 
@@ -255,10 +262,10 @@ export class C_Hero implements I_JSON_Uniq {
 
 
         const abi_p_bsc = this.abi_p?.bsc;
-        abi_p_bsc?.random_make(hero_level);
+        abi_p_bsc?.random_make(hero_level_p);
 
         const abi_m_bsc = this.abi_m?.bsc;
-        abi_m_bsc?.random_make(hero_level);
+        abi_m_bsc?.random_make(hero_level_m);
 
         this.copy_bsc_to_ttl();
         this.copy_ttl_to_now();

@@ -13,7 +13,7 @@ export interface I_Wndr extends I_Hero {
     boss_level():               number;
     set_boss_level(n: number):  I_Wndr;
     hero_bonus(n: number):      number;
-    random_make(lv?: number):   C_Wndr;
+    random_make(lv_p?: number, lv_m?: number):   C_Wndr;
     encode():                   JSON_Wndr;
     decode(j?: JSON_Wndr):      I_Wndr;
 }
@@ -53,8 +53,8 @@ export class C_Wndr extends C_Hero implements I_Wndr {
         return n * ( this.lv + this._boss_level + 1 );
     }
 
-    public random_make(hero_level: number = 0): C_Wndr {
-        super.random_make(hero_level);
+    public random_make(hero_level_p: number = 1, hero_level_m: number = 0): C_Wndr {
+        super.random_make(hero_level_p, hero_level_m);
         this.my_name  = `${this._family} ${_random_str(5)}`;
         return this;
     }
