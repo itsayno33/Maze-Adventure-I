@@ -48,7 +48,7 @@ export class C_MazeInfo {
                 lv:     	 1, 
                 size_x: 	11, 
                 size_y: 	11, 
-                size_z: 	 3, 
+                size_z: 	 2, 
                 max_room: 	 2, 
                 room_size: 	 3 
             }),
@@ -60,7 +60,7 @@ export class C_MazeInfo {
                 lv:     	 1, 
                 size_x: 	21, 
                 size_y: 	21, 
-                size_z: 	 5, 
+                size_z: 	 3, 
                 max_room: 	 3, 
                 room_size: 	 3 
             }),
@@ -72,7 +72,7 @@ export class C_MazeInfo {
                 lv:     	 1, 
                 size_x: 	25, 
                 size_y: 	25, 
-                size_z: 	 7, 
+                size_z: 	 6, 
                 max_room: 	 5, 
                 room_size: 	 3 
             }),
@@ -84,7 +84,7 @@ export class C_MazeInfo {
                 lv:     	 1, 
                 size_x: 	31, 
                 size_y: 	31, 
-                size_z: 	10, 
+                size_z: 	 9, 
                 max_room: 	 5, 
                 room_size: 	 5 
             }),
