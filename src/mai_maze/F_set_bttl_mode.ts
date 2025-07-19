@@ -371,10 +371,24 @@ function isRT(): void {
     do_move_bottom_half('blink_off');
 }
 function isRT_team(): void {isRT();}
-function isRT_cmmd(): void {go_team_mode();}
-function isRT_slct(): void {go_cmmd_mode();}
-function isRT_enmy(): void {doNotSlct?go_cmmd_mode():go_slct_mode();}
-function isRT_chek(): void {doNotEnmy?(doNotSlct?go_cmmd_mode():go_slct_mode()):go_enmy_mode();}
+function isRT_cmmd(): void {
+    ccr_cmmd_list.dact();
+    ccr_cmmd_list.set_pos(0);
+    go_team_mode();
+}
+function isRT_slct(): void {
+    ccr_slct_list.dact();
+    ccr_slct_list.set_pos(0);
+    go_cmmd_mode();
+}
+function isRT_enmy(): void {
+    ccr_enmy_list.dact();
+    ccr_enmy_list.set_pos(0);
+    doNotSlct?go_cmmd_mode():go_slct_mode();
+}
+function isRT_chek(): void {
+    doNotEnmy?(doNotSlct?go_cmmd_mode():go_slct_mode()):go_enmy_mode();
+}
 
 
 
@@ -391,7 +405,6 @@ function go_team_mode(): void {
 function go_cmmd_mode(): void {
     TECS_mode = 'Cmmd';
     display_message();
-    ccr_team_list.act();
     ccr_cmmd_list.act();
     ccr_slct_list.dact();
     ccr_enmy_list.dact();
@@ -401,8 +414,6 @@ function go_cmmd_mode(): void {
 function go_slct_mode(): void {
     TECS_mode = 'Slct';
     display_message();
-    ccr_team_list.act();
-    ccr_cmmd_list.act();
     ccr_slct_list.act();
     ccr_enmy_list.dact();
     g_ctls.act(ctls_bttl_slct);
@@ -411,9 +422,6 @@ function go_slct_mode(): void {
 function go_enmy_mode(): void {
     TECS_mode = 'Enmy';
     display_message();
-    ccr_team_list.act();
-    ccr_cmmd_list.act();
-    doNotSlct ? ccr_slct_list.dact() : ccr_slct_list.act();
     ccr_enmy_list.act();
     g_ctls.act(ctls_bttl_enmy);
 }
@@ -421,10 +429,6 @@ function go_enmy_mode(): void {
 function go_chek_mode(): void {
     TECS_mode = 'Chek';
     display_message();
-    ccr_team_list.act();
-    ccr_cmmd_list.act();
-    ccr_slct_list.act();
-    ccr_enmy_list.act();
     g_ctls.act(ctls_bttl_chek);
 }
 
