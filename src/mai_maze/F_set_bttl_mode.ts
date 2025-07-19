@@ -32,6 +32,19 @@ let ccr_slct_list: C_CtlCursor;
 let TECS_mode: 'Team' | 'Enmy' | 'Cmmd' | 'Slct' | 'Chek' | 'Bttl' = 'Team';
 let idx:   number   =   0;
 
+type combatAction = {
+    [myId: string]: {                 // 仲間・敵のUID
+        urId: string,                 // 対象のUID
+        isHr: boolean,                // 仲間かどうか
+        cmmd: number | undefined,     // コマンドのインデックス
+        slct: string | undefined,     // 選択肢のUID
+    } | undefined
+}
+
+const heroCmbAct: combatAction = {}; // 味方の戦闘アクション・データ
+const enmyCmbAct: combatAction = {}; // 敵の戦闘アクション・データ
+const ordrCmbAct: combatAction = {}; // 敵味方混合で行動順を付けた戦闘アクション・データ
+
 let doNotSlct: boolean = true; // 選択肢を選ぶかどうか
 let doNotEnmy: boolean = true; // 敵を選ぶかどうか
 
