@@ -36,6 +36,7 @@ export interface I_Hero {
     uid():  string;
     name(): string;
     set_name(name: string): void
+    lvl(): number;
 
     is_alive(): boolean;
     get_gold(): number;
@@ -146,6 +147,9 @@ export class C_Hero implements I_JSON_Uniq {
         this.my_name = name;
     }
 
+    public lvl(): number {
+        return this.lv;
+    }
 
     public is_alive(): boolean {
         const hp = this.abi_p?.now.get('xp') ?? 0;

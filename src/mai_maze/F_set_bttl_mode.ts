@@ -204,7 +204,6 @@ function update_team_view(): void {
             dom.nmlv.innerHTML =  hero.name() 
                                + '<br />'
                                + 'Lv：'
-                               + '　物理：'
                                + (hero?.get_abi_p_now('lv')??'???').toString()
                                + '　魔法：'
                                + (hero?.get_abi_m_now('lv')??'???').toString();
