@@ -34,10 +34,10 @@ let idx:   number   =   0;
 
 type combatAction = {
     [myId: string]: {                 // 仲間・敵のUID
-        urId: string,                 // 対象のUID
-        isHr: boolean,                // 仲間かどうか
-        cmmd: number | undefined,     // コマンドのインデックス
-        slct: string | undefined,     // 選択肢のUID
+        isHr: boolean | undefined,    // myIDが仲間(true)か敵(false)か
+        urId: string  | undefined,    // 対象のUID
+        cmmd: string  | undefined,    // コマンドのID
+        slct: string  | undefined,    // 選択肢のUID
     } | undefined
 }
 
@@ -208,7 +208,7 @@ function update_team_view(): void {
                                + '　魔法：'
                                + (hero?.get_abi_m_now('lvl')??'???').toString();
 
-            dom.acst.innerHTML = '　待機　'
+            dom.acst.innerHTML = actionName(i)
                                + '<br />'
                                + (hero.is_alive() ? '　正常　' : '戦闘不能');
 
@@ -240,7 +240,7 @@ function update_enmy_view(): void {
                                + '　魔法：'
                                + (wndr?.get_abi_m_now('lvl')??'???').toString();
 
-            dom.acst.innerHTML = '　待機　'
+            dom.acst.innerHTML = '待機'
                                + '<br />'
                                + (wndr.is_alive() ? '　正常　' : '戦闘不能');
 
@@ -257,6 +257,21 @@ function update_enmy_view(): void {
             dom.hpmp.innerHTML = '';
         }
 
+    }
+}
+function actionName(idx: number): string {
+    const hero      = mdl_team_list[idx]?.uid()??'';
+    const action_id = heroCmbAct[hero]?.cmmd;
+    switch (action_id) {
+        case 'bttl_def': return '防御';
+        case 'bttl_avd': return '回避';
+        case 'bttl_run': return '逃げる';
+        case 'bttl_atk': return '攻撃';
+        case 'bttl_drg': return '飲食';
+        case 'bttl_cvr': return 'かばう';
+        case 'bttl_spl': return '魔法';
+        case 'bttl_use': return '使う';
+        default:         return '待機';
     }
 }
 function update_cmmd_view(): void {}
@@ -299,6 +314,7 @@ function init_ctls(): void{
 
 function update_ctls(): void {}
 
+
 function do_U_team(): void {
     idx = ccr_team_list.pos_U();
 }
@@ -310,13 +326,6 @@ function do_U_slct(): void {
 }
 function do_U_enmy(): void {
     idx = ccr_enmy_list.pos_U();
-}
-
-function do_L_slct(): void {
-    idx = ccr_slct_list.pos_L();
-}
-function do_R_slct(): void {
-    idx = ccr_slct_list.pos_R();
 }
 
 
@@ -334,11 +343,33 @@ function do_D_enmy(): void {
 }
 
 
+function do_L_slct(): void {
+    idx = ccr_slct_list.pos_L();
+}
+function do_R_slct(): void {
+    idx = ccr_slct_list.pos_R();
+}
+
+
 function isOK_team(): void {
+    const hero = mdl_team_list[ccr_team_list.pos()]?.uid()??'';
+
+    heroCmbAct[hero] = {
+        isHr: true, // 仲間(true)か敵(false)か
+        urId: undefined, // 対象のUID
+        cmmd: undefined, // コマンドのインデックス
+        slct: undefined, // 選択肢のUID
+    };
+
     go_cmmd_mode();
 }
+
 function isOK_cmmd(): void {
+    const hero = mdl_team_list[ccr_team_list.pos()]?.uid()??'';
     const cmmd = dom_cmmd_list.children[ccr_cmmd_list.pos()].id;
+
+    if (heroCmbAct[hero] !== undefined) heroCmbAct[hero].cmmd = cmmd, // コマンドのインデックス
+    
     doNotSlct = true; // 選択肢を選ばない
     doNotEnmy = true; // 選択肢を選ばない
     switch (cmmd) {
@@ -352,7 +383,7 @@ function isOK_cmmd(): void {
                     doNotSlct = true;  // 選択肢を選ばない
                     doNotEnmy = false; // 敵を選ぶ
                     break;
-                case 'bttl_drg':  // 飲む
+                case 'bttl_drg':  // 飲食
                 case 'bttl_cvr':  // かばう
                     doNotSlct = false; // 選択肢を選ぶ
                     doNotEnmy = true;  // 敵を選ばない
@@ -365,15 +396,39 @@ function isOK_cmmd(): void {
     }
     doNotEnmy ? (doNotSlct ? go_chek_mode() : go_slct_mode()) : (doNotSlct ? go_enmy_mode() : go_slct_mode());
 }
+
 function isOK_slct(): void {
+    const hero = mdl_team_list[ccr_team_list.pos()]?.uid()??'';
+    const slct = dom_slct_list.children[ccr_slct_list.pos()].id;
+
+    if (heroCmbAct[hero] !== undefined) heroCmbAct[hero].slct = slct, // 選択肢のUID
+
     doNotEnmy ? go_chek_mode() : go_enmy_mode();
 }
+
 function isOK_enmy(): void {
+    const hero = mdl_team_list[ccr_team_list.pos()]?.uid()??'';
+    const enmy = mdl_enmy_list[ccr_enmy_list.pos()]?.uid()??'';
+
+    if (heroCmbAct[hero] !== undefined) heroCmbAct[hero].urId = enmy, // 敵のUID
     go_chek_mode();
 }
+
 function isOK_chek(): void {
-    go_team_mode();
+    update_team_view();
+    update_enmy_view();
+    
+    let isReady: boolean = true;
+    let cnt = 0;
+    for (const hero in heroCmbAct) {
+        if (heroCmbAct[hero]?.cmmd === undefined) {
+            isReady = false;
+            break;
+        }
+    }
+    isReady ? go_bttl_mode() : go_chek_mode();
 }
+
 function isOK_bttl(): void {
     go_team_mode(); // 仮 (後でバトル解決・オブジェ削除・moveモード移行に変更)
 }
@@ -389,6 +444,8 @@ function isRT(): void {
     act_move_mode();
     do_move_bottom_half('blink_off');
 }
+
+
 function isRT_team(): void {isRT();}
 function isRT_cmmd(): void {
     ccr_cmmd_list.dact();
@@ -562,6 +619,7 @@ function display_message(): void {
         case 'Cmmd': msg = 'コマンドを選択してください'; break;
         case 'Slct': msg = '選択肢を選んでください'; break;
         case 'Chek': msg = 'これでいいですか？'; break;
+        case 'Bttl': msg = '戦闘を開始します'; break;
         default:     msg = '不明なモードです';
     }
     g_cvm.notice_message(msg);

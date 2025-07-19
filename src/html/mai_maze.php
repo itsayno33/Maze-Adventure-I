@@ -402,7 +402,7 @@ function new_team(): Team {
                 <li id='bttl_cvr'>かばう<p></p></li>
                 <li id='bttl_run'>逃げる<p></p></li>
                 <li id='bttl_use'>使う<p></p></li>
-                <li id='bttl_drg'>飲む<p></p></li>
+                <li id='bttl_drg'>飲食<p></p></li>
             </ul>
             <ul id='bttl_slct_ul'>
                 <li>マジック・アロー</li>
