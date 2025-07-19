@@ -269,7 +269,7 @@ function init_ctls(): void{
         g_ctls.set(ctls_bttl_cmmd);
         g_ctls.set(ctls_bttl_slct);
         g_ctls.set(ctls_bttl_enmy);
-        
+        g_ctls.set(ctls_bttl_chek);
     } catch(err) {
         alert('Error: ' + err);
     }
@@ -395,7 +395,7 @@ function go_chek_mode(): void {
     ccr_cmmd_list.act();
     ccr_slct_list.act();
     ccr_enmy_list.act();
-    g_ctls.act(ctls_bttl_nor);
+    g_ctls.act(ctls_bttl_chek);
 }
 
 
