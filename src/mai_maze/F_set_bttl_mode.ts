@@ -29,7 +29,7 @@ let mdl_slct_list: string[];
 let dom_slct_list: HTMLUListElement;
 let ccr_slct_list: C_CtlCursor;
 
-let TECS_mode: 'Team' | 'Enmy' | 'Cmmd' | 'Slct' | 'Chek' | 'Done' = 'Team';
+let TECS_mode: 'Team' | 'Enmy' | 'Cmmd' | 'Slct' | 'Chek' | 'Bttl' = 'Team';
 let idx:   number   =   0;
 
 let doNotSlct: boolean = true; // 選択肢を選ぶかどうか
@@ -279,7 +279,7 @@ function init_ctls(): void{
         g_ctls.set(ctls_bttl_slct);
         g_ctls.set(ctls_bttl_enmy);
         g_ctls.set(ctls_bttl_chek);
-        g_ctls.set(ctls_bttl_done);
+        g_ctls.set(ctls_bttl_bttl);
     } catch(err) {
         alert('Error: ' + err);
     }
@@ -362,7 +362,7 @@ function isOK_enmy(): void {
 function isOK_chek(): void {
     go_team_mode();
 }
-function isOK_done(): void {
+function isOK_bttl(): void {
     go_team_mode(); // 仮 (後でバトル解決・オブジェ削除・moveモード移行に変更)
 }
 
@@ -396,7 +396,7 @@ function isRT_enmy(): void {
 function isRT_chek(): void {
     doNotEnmy ? (doNotSlct ? go_cmmd_mode() : go_slct_mode()) : go_enmy_mode();
 }
-function isRT_done(): void {
+function isRT_bttl(): void {
     go_team_mode();
 }
 
@@ -450,11 +450,11 @@ function go_chek_mode(): void {
     g_ctls.act(ctls_bttl_chek);
 }
 
-function go_done_mode(): void {
-    TECS_mode = 'Done';
+function go_bttl_mode(): void {
+    TECS_mode = 'Bttl';
     display_message();
     clr_border();
-    g_ctls.act(ctls_bttl_done);
+    g_ctls.act(ctls_bttl_bttl);
 }
 
 function clr_border(): void {
@@ -532,14 +532,14 @@ const ctls_bttl_chek = {
     cpRT:  isRT_chek,
 }
 
-const ctls_bttl_done = {
-    name: 'bttl_done', 
-    isOK:  isOK_done,
-    cpOK:  isOK_done,
-    isNG:  isRT_done,
-    cpNG:  isRT_done,
-    isRT:  isRT_done,
-    cpRT:  isRT_done,
+const ctls_bttl_bttl = {
+    name: 'bttl_bttl', 
+    isOK:  isOK_bttl,
+    cpOK:  isOK_bttl,
+    isNG:  isRT_bttl,
+    cpNG:  isRT_bttl,
+    isRT:  isRT_bttl,
+    cpRT:  isRT_bttl,
 }
 
 function display_message(): void {
