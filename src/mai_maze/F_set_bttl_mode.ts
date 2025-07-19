@@ -204,9 +204,9 @@ function update_team_view(): void {
             dom.nmlv.innerHTML =  hero.name() 
                                + '<br />'
                                + 'Lv：'
-                               + (hero?.get_abi_p_now('lv')??'???').toString()
+                               + (hero?.get_abi_p_now('lvl')??'???').toString()
                                + '　魔法：'
-                               + (hero?.get_abi_m_now('lv')??'???').toString();
+                               + (hero?.get_abi_m_now('lvl')??'???').toString();
 
             dom.acst.innerHTML = '　待機　'
                                + '<br />'
@@ -236,9 +236,9 @@ function update_enmy_view(): void {
                                + '<br />'
                                + 'Lv：'
                                + '　物理：'
-                               + (wndr?.get_abi_p_now('lv')??'???').toString()
+                               + (wndr?.get_abi_p_now('lvl')??'???').toString()
                                + '　魔法：'
-                               + (wndr?.get_abi_m_now('lv')??'???').toString();
+                               + (wndr?.get_abi_m_now('lvl')??'???').toString();
 
             dom.acst.innerHTML = '　待機　'
                                + '<br />'
