@@ -373,14 +373,14 @@ function new_team(): Team {
                 </thead>
                 <tbody id='bttl_enmy_body'>
                     <tr id='bttl_enmy_tr0'>
-                        <td id='bttl_enmy_tr0_nmlv'>a</td>
-                        <td id='bttl_enmy_tr0_acst'>b</td>
-                        <td id='bttl_enmy_tr0_hpmp'>e</td>
+                        <td id='bttl_enmy_tr0_nmlv'></td>
+                        <td id='bttl_enmy_tr0_acst'></td>
+                        <td id='bttl_enmy_tr0_hpmp'></td>
                     </tr>
                     <tr id='bttl_enmy_tr1'>
-                        <td id='bttl_enmy_tr1_nmlv'>aaaaaaaaaaaaaaa<br />ＬＶ：10,000</td>
-                        <td id='bttl_enmy_tr1_acst'>行動：逃げる</br>状態：正　常</td>
-                        <td id='bttl_enmy_tr1_hpmp'>ＨＰ： 10,000 / 10,000<br />ＭＰ： 10,000 / 10,000</td>
+                        <td id='bttl_enmy_tr1_nmlv'></td>
+                        <td id='bttl_enmy_tr1_acst'></td>
+                        <td id='bttl_enmy_tr1_hpmp'></td>
                     </tr>
                     <tr id='bttl_enmy_tr2'>
                         <td id='bttl_enmy_tr2_nmlv'></td>
@@ -395,16 +395,20 @@ function new_team(): Team {
                 </tbody>
             </table>
             <ul id='bttl_cmmd_ul'>
-                <li id='bttl_atk'>攻撃</li>
-                <li id='bttl_spl'>魔法</li>
-                <li id='bttl_def'>防御</li>
-                <li id='bttl_avd'>回避</li>
-                <li id='bttl_cvr'>かばう</li>
-                <li id='bttl_run'>逃げる</li>
-                <li id='bttl_use'>使う</li>
-                <li id='bttl_thr'>祈る</li>
+                <li id='bttl_atk'>攻撃<p></p></li>
+                <li id='bttl_spl'>魔法<p></p></li>
+                <li id='bttl_def'>防御<p></p></li>
+                <li id='bttl_avd'>回避<p></p></li>
+                <li id='bttl_cvr'>かばう<p></p></li>
+                <li id='bttl_run'>逃げる<p></p></li>
+                <li id='bttl_use'>使う<p></p></li>
+                <li id='bttl_thr'>祈る<p></p></li>
             </ul>
-            <ul id='bttl_slct_ul'></ul>
+            <ul id='bttl_slct_ul'>
+                <li>マジック・アロー</li>
+                <li>マジック・シールド</li>
+                <li>マジック・ヒール</li>
+            </ul>
         </div>
     </article>
     <article id ='pane_bttl_mesg'>
