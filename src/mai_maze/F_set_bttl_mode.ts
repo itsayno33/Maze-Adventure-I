@@ -30,6 +30,8 @@ let ccr_slct_list: C_CtlCursor;
 let TECS_mode: 'Team' | 'Enmy' | 'Cmmd' | 'Slct' | 'Chek' = 'Team';
 let idx:   number   =   0;
 
+let haveToSlct: boolean = false; // 選択肢を選んだかどうか
+
 const Hero_max: number = 4;
 const Wndr_max: number = 4;
 
@@ -166,7 +168,9 @@ function init_enmy_view(): void {
     }
 }
 
-function init_cmmd_view(): void {}
+function init_cmmd_view(): void {
+    dom_cmmd_list = document.getElementById('bttl_cmmd') as HTMLUListElement;
+}
 function init_slct_view(): void {}
 
 function update_view(): void {
@@ -316,7 +320,23 @@ function isOK_team(): void {
     go_cmmd_mode();
 }
 function isOK_cmmd(): void {
-    go_slct_mode();
+    const cmmd = dom_cmmd_list.children[ccr_cmmd_list.pos()].id;
+    haveToSlct = false; // 選択肢を選ばない
+    switch (cmmd) {
+                case 'bttl_atk':  // 攻撃
+                case 'bttl_def':  // 防御
+                case 'bttl_avd':  // 回避
+                case 'bttl_run':  // 逃げる
+                    haveToSlct = false; // 選択肢を選ばない
+                    break;
+                case 'bttl_spl':  // 魔法
+                case 'bttl_use':  // 使う
+                case 'bttl_pry':  // 祈る
+                case 'bttl_cvr':  // かばう
+                    haveToSlct = true;  // 選択肢を選ぶ
+                    break;
+    }
+    haveToSlct ? go_slct_mode() : go_enmy_mode();
 }
 function isOK_slct(): void {
     go_enmy_mode();
@@ -343,7 +363,7 @@ function isRT(): void {
 function isRT_team(): void {isRT();}
 function isRT_cmmd(): void {go_team_mode();}
 function isRT_slct(): void {go_cmmd_mode();}
-function isRT_enmy(): void {go_slct_mode();}
+function isRT_enmy(): void {haveToSlct?go_slct_mode():go_cmmd_mode();}
 function isRT_chek(): void {go_enmy_mode();}
 
 
@@ -383,7 +403,7 @@ function go_enmy_mode(): void {
     display_message();
     ccr_team_list.act();
     ccr_cmmd_list.act();
-    ccr_slct_list.act();
+    haveToSlct ? ccr_slct_list.act() : ccr_slct_list.dact();
     ccr_enmy_list.act();
     g_ctls.act(ctls_bttl_enmy);
 }
