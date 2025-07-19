@@ -55,7 +55,7 @@ export class C_Wndr extends C_Hero implements I_Wndr {
 
     public random_make(hero_level: number = 0): C_Wndr {
         super.random_make(hero_level);
-        this.my_name  = this._family + _random_str(5);
+        this.my_name  = `${this._family} ${_random_str(5)}`;
         return this;
     }
 
