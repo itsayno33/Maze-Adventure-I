@@ -592,6 +592,9 @@ article#pane_ctls_boad #div_ctls_boad {
 #bttl_cmmd_ul,
 #bttl_slct_ul 
 {
+    border:#0000ff solid 1px;
+    border-radius: 0.5rem;
+
     list-style: none;
     padding: 1rem;
 }
