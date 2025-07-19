@@ -11,11 +11,13 @@ import { g_ctls, g_cvm, g_maze, g_team, g_vsw } from "./global_for_maze";
 
 let mdl_team_list: (I_Hero|undefined)[];
 let dom_team_list: {[key: string]: HTMLTableCellElement}[];
+let tbl_team_list: HTMLTableElement;
 let tby_team_list: HTMLTableSectionElement;
 let ccr_team_list: C_CtlTableRowCursor;
 
 let mdl_enmy_list: (I_Wndr|undefined)[];
 let dom_enmy_list: {[key: string]: HTMLTableCellElement}[];
+let tbl_enmy_list: HTMLTableElement;
 let tby_enmy_list: HTMLTableSectionElement;
 let ccr_enmy_list: C_CtlTableRowCursor;
 
@@ -254,6 +256,8 @@ function update_slct_view(): void {}
 
 function init_ctls(): void{
     try {
+        tbl_team_list = document.getElementById('bttl_team') as HTMLTableElement;
+        tbl_enmy_list = document.getElementById('bttl_enmy') as HTMLTableElement;
         tby_team_list = document.getElementById('bttl_team_body') as HTMLTableSectionElement;
         tby_enmy_list = document.getElementById('bttl_enmy_body') as HTMLTableSectionElement;
         dom_cmmd_list = document.getElementById('bttl_cmmd_ul')   as HTMLUListElement;
@@ -384,10 +388,10 @@ function isRT_slct(): void {
 function isRT_enmy(): void {
     ccr_enmy_list.dact();
     ccr_enmy_list.set_pos(0);
-    doNotSlct?go_cmmd_mode():go_slct_mode();
+    doNotSlct ? go_cmmd_mode() : go_slct_mode();
 }
 function isRT_chek(): void {
-    doNotEnmy?(doNotSlct?go_cmmd_mode():go_slct_mode()):go_enmy_mode();
+    doNotEnmy ? (doNotSlct ? go_cmmd_mode() : go_slct_mode()) : go_enmy_mode();
 }
 
 
@@ -395,6 +399,8 @@ function isRT_chek(): void {
 function go_team_mode(): void {
     TECS_mode = 'Team';
     display_message();
+    clr_border();
+    tbl_team_list.style.borderWidth = '5px';
     ccr_team_list.act();
     ccr_cmmd_list.dact();
     ccr_slct_list.dact();
@@ -405,6 +411,8 @@ function go_team_mode(): void {
 function go_cmmd_mode(): void {
     TECS_mode = 'Cmmd';
     display_message();
+    clr_border();
+    dom_cmmd_list.style.borderWidth = '5px';
     ccr_cmmd_list.act();
     ccr_slct_list.dact();
     ccr_enmy_list.dact();
@@ -414,6 +422,8 @@ function go_cmmd_mode(): void {
 function go_slct_mode(): void {
     TECS_mode = 'Slct';
     display_message();
+    clr_border();
+    dom_slct_list.style.borderWidth = '5px';
     ccr_slct_list.act();
     ccr_enmy_list.dact();
     g_ctls.act(ctls_bttl_slct);
@@ -422,6 +432,8 @@ function go_slct_mode(): void {
 function go_enmy_mode(): void {
     TECS_mode = 'Enmy';
     display_message();
+    clr_border();
+    tbl_enmy_list.style.borderWidth = '5px';
     ccr_enmy_list.act();
     g_ctls.act(ctls_bttl_enmy);
 }
@@ -429,9 +441,16 @@ function go_enmy_mode(): void {
 function go_chek_mode(): void {
     TECS_mode = 'Chek';
     display_message();
+    clr_border();
     g_ctls.act(ctls_bttl_chek);
 }
 
+function clr_border(): void {
+    tbl_team_list.style.borderWidth = '1px';
+    tbl_enmy_list.style.borderWidth = '1px';
+    dom_cmmd_list.style.borderWidth = '1px';
+    dom_slct_list.style.borderWidth = '1px';
+}
 
 const ctls_bttl_nor = {
     name: 'bttl_nor', 
