@@ -415,8 +415,6 @@ function isOK_enmy(): void {
 }
 
 function isOK_chek(): void {
-    update_team_view();
-    update_enmy_view();
     
     let isReady: boolean = true;
     let cnt = 0;
@@ -513,6 +511,9 @@ function go_enmy_mode(): void {
 }
 
 function go_chek_mode(): void {
+    update_team_view();
+    update_enmy_view();
+
     TECS_mode = 'Chek';
     display_message();
     clr_border();
