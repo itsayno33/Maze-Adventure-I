@@ -33,7 +33,8 @@ let TECS_mode: 'Team' | 'Enmy' | 'Cmmd' | 'Slct' | 'Chek' | 'Bttl' = 'Team';
 let idx:   number   =   0;
 
 type combatAction = {
-    [myId: string]: {                 // 仲間・敵のUID
+    [id: string]: {                 // 仲間・敵のUID
+        myId: string  | undefined,    // 自分のUID
         isHr: boolean | undefined,    // myIDが仲間(true)か敵(false)か
         urId: string  | undefined,    // 対象のUID
         cmmd: string  | undefined,    // コマンドのID
@@ -312,7 +313,19 @@ function init_ctls(): void{
     }
 };
 
-function update_ctls(): void {}
+function update_ctls(): void {
+    for (const hero of mdl_team_list) {
+        if (hero === undefined) continue;
+        const myId = hero.uid();
+        heroCmbAct[myId] = {
+            myId: myId, // 自分のUID
+            isHr: true, // 仲間(true)か敵(false)か
+            urId: undefined, // 対象のUID
+            cmmd: undefined, // コマンドのインデックス
+            slct: undefined, // 選択肢のUID
+        };
+    }
+}
 
 
 function do_U_team(): void {
@@ -353,14 +366,15 @@ function do_R_slct(): void {
 
 function isOK_team(): void {
     const hero = mdl_team_list[ccr_team_list.pos()]?.uid()??'';
-
+/*********
     heroCmbAct[hero] = {
+        myId: hero, // 自分のUID
         isHr: true, // 仲間(true)か敵(false)か
         urId: undefined, // 対象のUID
         cmmd: undefined, // コマンドのインデックス
         slct: undefined, // 選択肢のUID
     };
-
+********/
     go_cmmd_mode();
 }
 
@@ -424,7 +438,7 @@ function isOK_chek(): void {
             break;
         }
     }
-    isReady ? go_bttl_mode() : go_chek_mode();
+    isReady ? go_bttl_mode() : go_team_mode();
 }
 
 function isOK_bttl(): void {
