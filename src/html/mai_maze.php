@@ -306,8 +306,6 @@ function new_team(): Team {
                 <p>直前までの冒険を保存できます</p></li>
             <li id='menu_mvpt'>街への帰還
                 <p>街(冒険者ギルド)へジャンプします</p></li>
-            <li id='menu_bttl'>いきなりバトル（仮）
-                <p>戦闘画面のテスト用です。完成したら消えます</p></li>
         </ul>
     </article>
     <article id='pane_ldsv_list'>
