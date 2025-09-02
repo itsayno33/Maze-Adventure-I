@@ -8,7 +8,7 @@
 
 import { C_ObjList, I_ObjList, JSON_ObjList } from "./C_ObjList";
 import { C_Goods, JSON_Goods, T_GoodsKind }   from "./C_GoodsNG";
-import { C_Good, I_Good, JSON_Good }          from './C_Good';
+import { C_Good, I_Good, JSON_Good }          from './C_Good_NG2';
 
 
 export interface JSON_GoodsList extends JSON_ObjList {

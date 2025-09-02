@@ -1,5 +1,5 @@
 import { _get_uuid, _irand, _nrand } from "../d_utl/F_Rand";
-import { I_Abis, JSON_Abis, C_Abis } from './C_Abis';
+import { I_Abis, JSON_Abis, C_Abis } from './C_Abis_NG2';
 import { _round } from '../d_utl/F_Math';
 
 export interface JSON_Gnrl extends JSON_Abis {
@@ -17,7 +17,7 @@ export interface I_Gnrl extends I_Abis {
     try_confirme:  (try_seed: number)=>number, 
     do_confirme:   ()=>string,
     set_own_name:  (org_name: string)=>string, 
-    set_own_gold:  (org_gold: number)=>number, 
+    set_own_value: (org_value: number)=>number, 
 }
 
 export class C_Gnrl extends C_Abis implements I_Gnrl{
@@ -51,7 +51,7 @@ export class C_Gnrl extends C_Abis implements I_Gnrl{
         this.orgn_value = undefined; 
 //        this.value      = this.gnrl_value; 
 
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
 
     public try_confirme(try_seed: number): number {
@@ -73,7 +73,7 @@ export class C_Gnrl extends C_Abis implements I_Gnrl{
         this.my_name   = orgn_name;
         return this.my_name;
     }
-    public set_own_gold(orgn_value: number): number {
+    public set_own_value(orgn_value: number): number {
         this.orgn_value = orgn_value;
         this.value      = orgn_value;
         return this.value;
@@ -87,21 +87,21 @@ export class C_Gnrl extends C_Abis implements I_Gnrl{
 //        j.gnrl_value = this.gnrl_value;
 //        j.real_value = this.real_value;
         j.orgn_value = this.orgn_value ?? 0;
-        j.is_real    = this.is_real ? '1' : '0';
+        j.is_real    = this.is_real    ? '1' : '0';
         j.is_orgn    = this.is_orgn    ? '1' : '0';
         j.real_lv    = this.real_lv;
         j.gnrl_ratio = this.gnrl_ratio;
 
         return j;
     }
-    public decode(j: JSON_Gnrl): C_Gnrl {
+    public __init(j: JSON_Gnrl): C_Gnrl {
         if (j === undefined) return this;
-        super.decode(j);
+        super.__init(j);
 
         if (j.real_lv    !== undefined) this.real_lv    = j.real_lv;
         if (j.gnrl_ratio !== undefined) this.gnrl_ratio = j.gnrl_ratio;
-        if (j.is_real    !== undefined) this.is_real    = j.is_real    != '0' ? true : false;
-        if (j.is_orgn    !== undefined) this.is_orgn    = j.is_orgn    != '0' ? true : false;
+        if (j.is_real    !== undefined) this.is_real    = (j.is_real != '0');
+        if (j.is_orgn    !== undefined) this.is_orgn    = (j.is_orgn != '0');
 
         if (j.gnrl_name  !== undefined) this.gnrl_name  = j.gnrl_name;
         if (j.real_name  !== undefined) this.real_name  = j.real_name;
@@ -117,5 +117,11 @@ export class C_Gnrl extends C_Abis implements I_Gnrl{
 //        else this.value = this.is_real ? this.real_value : this.gnrl_value;
 
         return this;
+    }
+    public decode(j: JSON_Gnrl): C_Gnrl {
+        if (j === undefined) return this;
+        this.__init(j);
+        return this;
+    
     }
 }

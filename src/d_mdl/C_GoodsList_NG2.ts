@@ -1,7 +1,7 @@
 "use strict";
 
 import { I_JSON, JSON_Any }             from "./C_SaveInfo";
-import { C_Good,  I_Good,  JSON_Good }  from "./C_Good";
+import { C_Good,  I_Good,  JSON_Good }  from "./C_Good_NG2";
 
 export interface JSON_GoodsListElement {
     elm: JSON_Good,

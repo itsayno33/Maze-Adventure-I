@@ -1,8 +1,8 @@
 import { T_MakeEnumType }                        from "../d_utl/T_MakeEnumType";
 import { _get_uuid, _igrand, _irand, _nrand }    from "../d_utl/F_Rand";
 import { _round }                                from "../d_utl/F_Math";
-import { C_GoodsList, JSON_GoodsList }           from "./C_GoodsList";
-import { C_Good, I_Good, JSON_Good, T_GoodKind } from "./C_Good";
+import { C_GoodsList, JSON_GoodsList }           from "./C_GoodsList_NG2";
+import { C_Good, I_Good, JSON_Good, T_GoodKind } from "./C_Good_NG2";
 
 /**********************
  * 宝箱 (10000代)

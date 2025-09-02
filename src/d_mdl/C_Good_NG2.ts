@@ -1,7 +1,7 @@
 import { T_MakeEnumType }                     from "../d_utl/T_MakeEnumType";
 import { _get_uuid, _igrand, _irand, _nrand } from "../d_utl/F_Rand";
 import { _round }                             from "../d_utl/F_Math";
-import { I_Gnrl, JSON_Gnrl, C_Gnrl }          from './C_Gnrl';
+import { I_Gnrl, JSON_Gnrl, C_Gnrl }          from './C_Gnrl_NG2';
 import { C_Coin }                             from "./C_Coin";
 import { C_Chst }                             from "./C_Chst";
 
@@ -13,7 +13,8 @@ export const T_GoodKind:{[lckd: string]: number}  = {
     Shld:  5,
     Drug:  6,
     Item:  7,
-//    Enmy:  8,
+    Scrl:  8,
+//    Enmy:  9,
     Othr: 99,
 } as const;
 export type T_GoodKind = T_MakeEnumType<typeof T_GoodKind>;
@@ -31,6 +32,7 @@ const GoodKind_mb_name: {[kind: number]: string} = {
     5:  '装備',
     6:  '薬品',
     7:  '装飾',
+    8:  '巻物',
    99:  '伺か',
 } as const;
 
@@ -70,6 +72,7 @@ export class C_Good extends C_Gnrl implements I_Good {
 /***            case T_GoodKind.Shld:
 /***            case T_GoodKind.Drug:
 /***            case T_GoodKind.Item:
+/***            case T_GoodKind.Scrl:
 /***            case T_GoodKind.Othr:
 /***                return new C_Good(j);
 /***            default:
@@ -97,15 +100,17 @@ export class C_Good extends C_Gnrl implements I_Good {
 //    protected real_lv:    number;  // 鑑定の難易度(0から100)
 //    protected gnrl_ratio: number;  // 鑑定で確定する
 
+
     protected goodkind:  T_GoodKind; // 種別番号（例：1:宝箱、2:硬貨、...）
     protected item_num:  number;     // 個別の種類の番号（例：1:木の宝箱、2:銅鍵付きの宝箱、...）サブクラスで使う
     protected item_num_max = 9999999;
+
     public    constructor(j?: JSON_Good) {
         super(j);
 
         this.goodkind  = T_GoodKind.Unkn;
         this.item_num  = this.item_num_max;
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
 
     public good_kind():    T_GoodKind {return this.goodkind;}
@@ -126,12 +131,17 @@ export class C_Good extends C_Gnrl implements I_Good {
 
         return j;
     }
-    public decode(j: JSON_Good): C_Good {
-        super.decode(j);
+    public __init(j: JSON_Good): C_Good {
+        super.__init(j);
         if (j === undefined) return this;
         if (j.goodkind  !== undefined) this.goodkind  = T_GoodKind[j.goodkind];
         if (j.item_num  !== undefined) this.item_num  = j.item_num;
 
+        return this;
+    }
+    public decode(j: JSON_Good): C_Good {
+        if (j === undefined) return this;
+        this.__init(j);
         return this;
     }
 }

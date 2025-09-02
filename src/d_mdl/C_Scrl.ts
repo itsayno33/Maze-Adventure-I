@@ -6,7 +6,7 @@ import { I_JSON_Uniq, JSON_Any } from './C_SaveInfo';
 
 export interface JSON_Scrl extends JSON_Any {
     uid?:    string;
-    clname?: string; // Class name for the scroll
+    clname?: string;  // Class name for the scroll
     name?:   string;  // Name of the scroll
 }
 

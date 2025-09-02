@@ -6,6 +6,7 @@ export interface JSON_Abis extends JSON_Any {
     uniq_id?:    string,
     my_name?:    string,
     value?:      number,
+    gnrl_ratio?: number,
     abi_p?:      JSON_Hero_Ability,
     abi_m?:      JSON_Hero_Ability,
 }
@@ -16,8 +17,12 @@ export interface I_Abis extends I_JSON_Uniq {
     gold:          ()=>number, 
     abi_p:         (key: string)=>number, 
     abi_m:         (key: string)=>number, 
-    set_abi_p:     (abi: C_HeroAbility)=>void, 
-    set_abi_m:     (abi: C_HeroAbility)=>void, 
+    set_abi_p:     (key: string, val: number)=>void, 
+    set_abi_m:     (key: string, val: number)=>void, 
+    clr_abis_p:    ()=>void, 
+    clr_abis_m:    ()=>void, 
+    set_abis_p:    (abi: C_HeroAbility)=>void, 
+    set_abis_m:    (abi: C_HeroAbility)=>void, 
 }
 
 export class C_Abis implements I_Abis {
@@ -38,7 +43,7 @@ export class C_Abis implements I_Abis {
         this.my_abi_p    = new C_HeroAbility();
         this.my_abi_m    = new C_HeroAbility();
 
-        if (j !== undefined) this.decode(j);
+        if (j !== undefined) this.__init(j);
     }
 
     public uid():        string {return this.uniq_id;};
@@ -55,10 +60,25 @@ export class C_Abis implements I_Abis {
         if (val === undefined) return 0;
         return Math.round(val * this.gnrl_ratio);
     }
-    public set_abi_p(abi: C_HeroAbility): void {
+
+    public set_abi_p(key: string, val: number): void {
+        this.my_abi_p.set(key, val);
+    }
+    public set_abi_m(key: string, val: number): void {
+        this.my_abi_m.set(key, val);
+    }
+
+    public clr_abis_p(): void {
+        this.my_abi_p = new C_HeroAbility();
+    }
+    public clr_abis_m(): void {
+        this.my_abi_m = new C_HeroAbility();
+    }
+
+    public set_abis_p(abi: C_HeroAbility): void {
         this.my_abi_p = abi;
     }
-    public set_abi_m(abi: C_HeroAbility): void {
+    public set_abis_m(abi: C_HeroAbility): void {
         this.my_abi_m = abi;
     }
 
@@ -73,7 +93,7 @@ export class C_Abis implements I_Abis {
         }
     }
 
-    public decode(j: JSON_Abis): C_Abis {
+    public __init(j: JSON_Abis): C_Abis {
         if (j === undefined) return this;
 
         if (j.uniq_id    !== undefined) this.uniq_id    = j.uniq_id;
@@ -85,5 +105,9 @@ export class C_Abis implements I_Abis {
 
         return this;
     }
+    public decode(j: JSON_Abis): C_Abis {
+        if (j === undefined) return this;
+        this.__init(j);
+        return this;
+    }
 }
-
